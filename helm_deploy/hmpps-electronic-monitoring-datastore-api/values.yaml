@@ -1,11 +1,11 @@
 generic-service:
-  nameOverride: hmpps-template-kotlin
+  nameOverride: hmpps-electronic-monitoring-datastore-api
   productId: "HMPPS529" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-template-kotlin
+    repository: quay.io/hmpps/hmpps-electronic-monitoring-datastore-api
     tag: app_version # override at deployment time
     port: 8080
 
@@ -13,6 +13,9 @@ generic-service:
     enabled: true
     host: app-hostname.local # override per environment
     tlsSecretName: hmpps-template-kotlin-cert
+    # TODO: Do we need to change this secret name?
+    # Do we need to make this match the secret record we create in the namespace?
+    # This seems unlikely, as it looks like secrets and secret-names are per-environment
 
   # Environment variables to load into the deployment
   env:
@@ -29,13 +32,15 @@ generic-service:
   namespace_secrets:
     hmpps-template-kotlin:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+      # TODO: Check that the appinsights_instrumentaitonKey exists in the NS
       # Example client registration secrets
       EXAMPLE_API_CLIENT_ID: "TEMPLATE_KOTLIN_API_CLIENT_ID"
       EXAMPLE_API_CLIENT_SECRET: "TEMPLATE_KOTLIN_API_CLIENT_SECRET"
+      # TODO: add in appropriate client registration details - once these exist in the namespace
 
   allowlist:
     groups:
       - internal
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-template-kotlin
+  targetApplication: hmpps-electronic-monitoring-datastore-api
