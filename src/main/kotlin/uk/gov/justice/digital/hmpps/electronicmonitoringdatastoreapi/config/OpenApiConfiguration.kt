@@ -26,17 +26,17 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
         Server().url("http://localhost:8080").description("Local"),
       ),
     )
-    .tags(
-      listOf(
-        // TODO: Remove the Popular and Examples tag and start adding your own tags to group your resources
-        Tag().name("Popular")
-          .description("The most popular endpoints. Look here first when deciding which endpoint to use."),
-        Tag().name("Examples").description("Endpoints for searching for a prisoner within a prison"),
-      ),
-    )
+    // TODO: Add tags for OpenAPI - below are commented out Popular and Examples tags
+    // .tags(
+    //   listOf(
+    //     Tag().name("Popular")
+    //       .description("The most popular endpoints. Look here first when deciding which endpoint to use."),
+    //     Tag().name("Examples").description("Endpoints for searching for a prisoner within a prison"),
+    //   ),
+    // )
     .info(
-      Info().title("HMPPS Template Kotlin").version(version)
-        .contact(Contact().name("HMPPS Digital Studio").email("feedback@digital.justice.gov.uk")),
+      Info().title("HMPPS Electronic Monitoring datastore API").version(version)
+        .contact(Contact().name("Electronic Monitoring").email("hmpps-ems-platform-team@digital.justice.gov.uk")),
     )
     // TODO: Remove the default security schema and start adding your own schemas and roles to describe your
     // service authorisation requirements
