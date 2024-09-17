@@ -51,7 +51,7 @@ EXCLUDES="( -path ./build -o -path ./out -o -path ./.git -o -path ./.gradle -o -
 find . $EXCLUDES -prune -o -type f -exec sed -i \
   -e "s/hmpps-template-kotlin/$PROJECT_NAME/g" \
   -e "s/template-kotlin/$PROJECT_NAME_WITHOUT_HMPPS/g" \
-  -e "s/HMPPS Template Kotlin/$PROJECT_DESCRIPTION/g" \
+  -e "s/HMPPS Electronic Monitoring Datastore Api/$PROJECT_DESCRIPTION/g" \
   -e "s/HmppsTemplateKotlin/$CLASS_NAME/g" \
   -e "s/templatepackagename/$PACKAGE_NAME/g" {} \;
 
