@@ -12,7 +12,7 @@ generic-service:
   ingress:
     enabled: true
     host: app-hostname.local # override per environment
-    tlsSecretName: hmpps-template-kotlin-cert
+    tlsSecretName: hmpps-electronic-monitoring-datastore-cert
     # TODO: Do we need to change this secret name?
     # Do we need to make this match the secret record we create in the namespace?
     # This seems unlikely, as it looks like secrets and secret-names are per-environment
