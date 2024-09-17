@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.templatepackagename.config
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
@@ -20,9 +20,9 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
   fun customOpenAPI(): OpenAPI = OpenAPI()
     .servers(
       listOf(
-        Server().url("https://template-kotlin-dev.hmpps.service.justice.gov.uk").description("Development"),
-        Server().url("https://template-kotlin-preprod.hmpps.service.justice.gov.uk").description("Pre-Production"),
-        Server().url("https://template-kotlin.hmpps.service.justice.gov.uk").description("Production"),
+        Server().url("https://electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk").description("Development"),
+        Server().url("https://electronic-monitoring-datastore-api-preprod.hmpps.service.justice.gov.uk").description("Pre-Production"),
+        Server().url("https://electronic-monitoring-datastore-api.hmpps.service.justice.gov.uk").description("Production"),
         Server().url("http://localhost:8080").description("Local"),
       ),
     )
@@ -42,11 +42,11 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
     // service authorisation requirements
     .components(
       Components().addSecuritySchemes(
-        "template-kotlin-ui-role",
+        "electronic-monitoring-datastore-api-ui-role",
         SecurityScheme().addBearerJwtRequirement("ROLE_TEMPLATE_KOTLIN__UI"),
       ),
     )
-    .addSecurityItem(SecurityRequirement().addList("template-kotlin-ui-role", listOf("read")))
+    .addSecurityItem(SecurityRequirement().addList("electronic-monitoring-datastore-api-ui-role", listOf("read")))
 }
 
 private fun SecurityScheme.addBearerJwtRequirement(role: String): SecurityScheme =
