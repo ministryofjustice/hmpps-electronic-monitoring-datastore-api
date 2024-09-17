@@ -25,6 +25,7 @@ Call http://localhost:8080/health with a browser to get app health info.
 
 ### Running with Docker
 
+
 There is also a `docker-compose.yml` that can be used to run a local instance of the template in docker and also an
 instance of HMPPS Auth (required if your service calls out to other services using a token).
 
@@ -42,6 +43,15 @@ docker compose pull && docker compose up --scale hmpps-electronic-monitoring-dat
 
 will just start a docker instance of HMPPS Auth. The application should then be started with a `dev` active profile
 in Intellij.
+## Note on remaining TODOs and Examples from template app
+
+We have tried to provide some examples of best practice in the application - so there are lots of TODOs in the code
+where changes are required to meet your requirements. There is an `ExampleResource` that includes best practice and also
+serve as spring security examples. The template typescript project has a demonstration that calls this endpoint as well.
+
+For the demonstration, rather than introducing a dependency on a different service, this application calls out to
+itself. This is only to show a service calling out to another service and is certainly not recommended!
+
 
 ## Note on remaining TODOs and Examples from template app
 
