@@ -19,6 +19,12 @@ Call http://localhost:8080/health with a browser to get app health info.
 
 ### Running with Docker
 
+### Checking the app has started successfully:
+If using docker, your app is probably exposed at `localhost:8080`.  
+Call http://localhost:8080/health with a browser to get app health info.
+
+### Running with Docker
+
 There is also a `docker-compose.yml` that can be used to run a local instance of the template in docker and also an
 instance of HMPPS Auth (required if your service calls out to other services using a token).
 
