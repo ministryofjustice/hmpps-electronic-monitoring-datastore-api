@@ -1,10 +1,10 @@
 info.app:
-  name: HMPPS Template Kotlin
+  name: HMPPS Electronic Monitoring Datastore API
   version: 1.0
 
 spring:
   application:
-    name: hmpps-template-kotlin
+    name: hmpps-electronic-monitoring-datastore-api
   codec:
     max-in-memory-size: 10MB
 
@@ -28,12 +28,12 @@ spring:
         registration:
           # example client registration for calling out to other services
           # TODO: Remove / replace this registration
-          example-api:
-            provider: hmpps-auth
-            client-id: ${example-api.client.id}
-            client-secret: ${example-api.client.secret}
-            authorization-grant-type: client_credentials
-            scope: read
+          # example-api:
+          #   provider: hmpps-auth
+          #   client-id: ${example-api.client.id}
+          #   client-secret: ${example-api.client.secret}
+          #   authorization-grant-type: client_credentials
+          #   scope: read
 
 server:
   port: 8080
