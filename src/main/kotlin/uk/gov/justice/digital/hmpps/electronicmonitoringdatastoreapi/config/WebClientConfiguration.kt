@@ -3,11 +3,11 @@ package uk.gov.justice.digital.hmpps.templatepackagename.config
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
 import org.springframework.web.reactive.function.client.WebClient
-import uk.gov.justice.hmpps.kotlin.auth.authorisedWebClient
 import uk.gov.justice.hmpps.kotlin.auth.healthWebClient
 import java.time.Duration
+// import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
+// import uk.gov.justice.hmpps.kotlin.auth.authorisedWebClient
 
 @Configuration
 class WebClientConfiguration(
@@ -25,7 +25,7 @@ class WebClientConfiguration(
   // @Bean
   // fun exampleApiHealthWebClient(builder: WebClient.Builder): WebClient = builder.healthWebClient(exampleApiBaseUri, healthTimeout)
 
-  // This is an example of a bean for calling other services 
+  // This is an example of a bean for calling other services
   // @Bean
   // fun exampleApiWebClient(authorizedClientManager: OAuth2AuthorizedClientManager, builder: WebClient.Builder): WebClient =
   //   builder.authorisedWebClient(authorizedClientManager, registrationId = "example-api", url = exampleApiBaseUri, timeout)
