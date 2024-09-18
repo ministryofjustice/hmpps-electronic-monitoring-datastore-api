@@ -77,7 +77,6 @@ workflows:
 #             branches:
 #               only:
 #                 - main
-#                 - deploy-dev
 #          requires:
 #            - deploy_dev
 #      - hmpps/deploy_env:
