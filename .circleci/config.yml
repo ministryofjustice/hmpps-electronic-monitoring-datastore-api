@@ -41,10 +41,6 @@ workflows:
           filters:
             tags:
               ignore: /.*/
-            branches:
-              only:
-                - main
-                - deploy-dev
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_multiplatform_docker:
