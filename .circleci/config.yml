@@ -22,8 +22,8 @@ jobs:
           keys:
             - gradle-{{ checksum "build.gradle.kts" }}
             - gradle-
-      # - run:
-      #     command: ./gradlew check
+      - run:
+          command: ./gradlew check
       - save_cache:
           paths:
             - ~/.gradle
@@ -39,11 +39,8 @@ workflows:
     jobs:
       - validate:
           filters:
-            # tags:
-            #   ignore: /.*/
-            branches:
-              only:
-                - main
+            tags:
+              ignore: /.*/
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_multiplatform_docker:
@@ -52,6 +49,7 @@ workflows:
             branches:
               only:
                 - main
+                - deploy-dev
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -63,6 +61,7 @@ workflows:
             branches:
               only:
                 - main
+                - deploy-dev
           requires:
             - validate
             - build_docker
@@ -70,6 +69,10 @@ workflows:
           helm_timeout: 5m
 #      - request-preprod-approval:
 #          type: approval
+#          filters:
+#             branches:
+#               only:
+#                 - main
 #          requires:
 #            - deploy_dev
 #      - hmpps/deploy_env:
