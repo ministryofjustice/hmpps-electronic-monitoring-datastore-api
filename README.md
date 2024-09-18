@@ -43,6 +43,16 @@ docker compose pull && docker compose up --scale hmpps-electronic-monitoring-dat
 
 will just start a docker instance of HMPPS Auth. The application should then be started with a `dev` active profile
 in Intellij.
+
+## Deployment
+> Force-push your code to branch `deploy-dev` to deploy it to dev.  
+> This cannot deploy past dev, but is otherwise the same as the main deployment pipeline.
+>
+> This is configured in [.circleci/config.yml](/.circleci/config.yml) in the `hmpps/deploy_env:` action for dev.
+
+- `main` is deployed via [CircleCI](https://app.circleci.com/pipelines/github/ministryofjustice/hmpps-electronic-monitoring-datastore-api)
+- Kubernetes logs can be found on [Kibana](https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(columns:!(log,kubernetes.pod_id),filters:!(('state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.namespace_name.keyword,negate:!f,params:(query:tst-em-example-app-jkn-dev),type:phrase),query:(match_phrase:(kubernetes.namespace_name.keyword:tst-em-example-app-jkn-dev))),('state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.pod_name,negate:!f,params:(query:hmpps-electronic-monitoring-datastore-api),type:phrase),query:(match_phrase:(kubernetes.pod_name:hmpps-electronic-monitoring-datastore-api)))),index:'167701b0-f8c0-11ec-b95c-1d65c3682287',interval:auto,query:(language:kuery,query:''),sort:!()))
+
 ## Note on remaining TODOs and Examples from template app
 
 We have tried to provide some examples of best practice in the application - so there are lots of TODOs in the code
