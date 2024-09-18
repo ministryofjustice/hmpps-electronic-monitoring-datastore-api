@@ -22,8 +22,8 @@ jobs:
           keys:
             - gradle-{{ checksum "build.gradle.kts" }}
             - gradle-
-      # - run:
-      #     command: ./gradlew check
+      - run:
+          command: ./gradlew check
       - save_cache:
           paths:
             - ~/.gradle
@@ -39,8 +39,8 @@ workflows:
     jobs:
       - validate:
           filters:
-            # tags:
-            #   ignore: /.*/
+            tags:
+              ignore: /.*/
             branches:
               only:
                 - main
