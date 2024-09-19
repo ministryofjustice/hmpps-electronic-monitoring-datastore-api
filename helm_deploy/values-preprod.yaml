@@ -5,7 +5,7 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: hmpps-electronic-monitoring-datastore-api-preprod.hmpps.service.justice.gov.uk
+    host: electronic-monitoring-datastore-api-preprod.hmpps.service.justice.gov.uk
     # TODO: Create certificate as per https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/custom-domain-cert.html
 
   env:
