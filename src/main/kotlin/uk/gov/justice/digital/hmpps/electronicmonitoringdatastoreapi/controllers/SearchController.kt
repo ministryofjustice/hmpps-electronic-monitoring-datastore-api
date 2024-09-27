@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
+@PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
 @RequestMapping(value = ["/search"], produces = ["application/json"])
 class SearchController {
 
   @GetMapping("/cases")
-  fun getCases(): String {
-    return "true"
-  }
+  fun getCases(): String = "true"
 }

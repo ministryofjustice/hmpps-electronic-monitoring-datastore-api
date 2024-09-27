@@ -45,7 +45,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     fun `should return OK`() {
       webTestClient.get()
         .uri("/example/time")
-        .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
         .exchange()
         .expectStatus()
         .isOk

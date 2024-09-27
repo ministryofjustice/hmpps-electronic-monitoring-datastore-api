@@ -5,13 +5,14 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
-class SearchControllerIntegrationTest: IntegrationTestBase() {
+class SearchControllerIntegrationTest : IntegrationTestBase() {
 
   @Nested
   @DisplayName("GET /search/cases")
   inner class GetCases {
 
     val baseUri: String = "/example/time"
+
     @Test
     fun `should return unauthorized if no token`() {
       webTestClient.get()
@@ -40,11 +41,12 @@ class SearchControllerIntegrationTest: IntegrationTestBase() {
         .expectStatus()
         .isForbidden
     }
+
     @Test
     fun `should return OK`() {
       webTestClient.get()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
         .exchange()
         .expectStatus()
         .isOk

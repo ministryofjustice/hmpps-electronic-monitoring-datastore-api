@@ -1,13 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
-import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
-import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import io.swagger.v3.oas.models.servers.Server
-import io.swagger.v3.oas.models.tags.Tag
 import org.springframework.boot.info.BuildProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,9 +28,8 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
         .contact(Contact().name("HMPPS Digital Studio").email("feedback@digital.justice.gov.uk")),
     )
 
-
-    // TODO: Remove the default security schema and start adding your own schemas and roles to describe your
-    // service authorisation requirements
+  // TODO: Remove the default security schema and start adding your own schemas and roles to describe your
+  // service authorisation requirements
 //    .components(
 //      Components().addSecuritySchemes(
 //        "electronic-monitoring-datastore-api-ui-role",
