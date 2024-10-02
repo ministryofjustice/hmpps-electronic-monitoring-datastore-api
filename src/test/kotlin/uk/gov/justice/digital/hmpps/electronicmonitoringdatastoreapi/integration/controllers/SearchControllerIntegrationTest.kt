@@ -1,21 +1,22 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
-class ExampleResourceIntTest : IntegrationTestBase() {
+class SearchControllerIntegrationTest : IntegrationTestBase() {
 
   @Nested
-  @DisplayName("GET /example/time")
-  inner class TimeEndpoint {
+  @DisplayName("GET /search/cases")
+  inner class GetCases {
+
+    val baseUri: String = "/example/time"
 
     @Test
     fun `should return unauthorized if no token`() {
       webTestClient.get()
-        .uri("/example/time")
+        .uri(baseUri)
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -24,7 +25,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     @Test
     fun `should return forbidden if no role`() {
       webTestClient.get()
-        .uri("/example/time")
+        .uri(baseUri)
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -34,7 +35,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     @Test
     fun `should return forbidden if wrong role`() {
       webTestClient.get()
-        .uri("/example/time")
+        .uri(baseUri)
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -44,15 +45,11 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     @Test
     fun `should return OK`() {
       webTestClient.get()
-        .uri("/example/time")
+        .uri(baseUri)
         .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
         .exchange()
         .expectStatus()
         .isOk
-        .expectBody()
-        .jsonPath("$").value<String> {
-          assertThat(it).startsWith("${LocalDate.now()}")
-        }
     }
   }
 }

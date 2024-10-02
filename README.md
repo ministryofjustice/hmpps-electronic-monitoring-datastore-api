@@ -62,14 +62,3 @@ serve as spring security examples. The template typescript project has a demonst
 For the demonstration, rather than introducing a dependency on a different service, this application calls out to
 itself. This is only to show a service calling out to another service and is certainly not recommended!
 
-
-## Note on remaining TODOs and Examples from template app
-
-We have tried to provide some examples of best practice in the application - so there are lots of TODOs in the code
-where changes are required to meet your requirements. There is an `ExampleResource` that includes best practice and also
-serve as spring security examples. The template typescript project has a demonstration that calls this endpoint as well.
-
-For the demonstration, rather than introducing a dependency on a different service, this application calls out to
-itself. This is only to show a service calling out to another service and is certainly not recommended!
-
-

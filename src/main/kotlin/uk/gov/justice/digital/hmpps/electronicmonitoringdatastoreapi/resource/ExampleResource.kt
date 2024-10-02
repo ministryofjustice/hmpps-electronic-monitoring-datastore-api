@@ -19,9 +19,11 @@ import java.time.LocalDateTime
 // TODO: This is an example and should renamed / replaced
 @RestController
 // Role here is specific to the UI.
-@PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
+@PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
 @RequestMapping(value = ["/example"], produces = ["application/json"])
-class ExampleResource(private val exampleApiService: ExampleApiService) {
+class ExampleResource(
+  private val exampleApiService: ExampleApiService,
+) {
 
   @GetMapping("/time")
   @Tag(name = "Examples")
