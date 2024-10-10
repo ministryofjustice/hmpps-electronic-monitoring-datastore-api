@@ -11,7 +11,7 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
   @DisplayName("GET /search/cases")
   inner class GetCases {
 
-    val baseUri: String = "/example/time"
+    val baseUri: String = "/search/cases"
 
     @Test
     fun `should return unauthorized if no token`() {
@@ -24,8 +24,10 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should return forbidden if no role`() {
+      val uri = "$baseUri/234"
+
       webTestClient.get()
-        .uri(baseUri)
+        .uri(uri)
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -34,8 +36,10 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should return forbidden if wrong role`() {
+      val uri = "$baseUri/234"
+
       webTestClient.get()
-        .uri(baseUri)
+        .uri(uri)
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -44,8 +48,10 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should return OK`() {
+      val uri = "$baseUri/234"
+
       webTestClient.get()
-        .uri(baseUri)
+        .uri(uri)
         .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
         .exchange()
         .expectStatus()

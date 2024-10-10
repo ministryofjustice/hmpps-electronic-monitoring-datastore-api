@@ -12,9 +12,10 @@ class SearchControllerTest {
     private val sut: SearchController = SearchController()
 
     @Test
-    fun `returns response`() {
-      val result: String = sut.getCases()
-      val expected = "true"
+    fun `Accepts caseId as parameter`() {
+      val caseId = "12345"
+      val result: String = sut.getCases(caseId)
+      val expected = "Successful search with ID 12345"
       Assertions.assertThat(result).isEqualTo(expected)
     }
   }
