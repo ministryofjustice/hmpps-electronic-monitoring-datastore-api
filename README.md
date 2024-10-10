@@ -36,6 +36,17 @@ docker compose pull && docker compose up --scale hmpps-electronic-monitoring-dat
 will just start a docker instance of HMPPS Auth. The application should then be started with a `dev` active profile
 in Intellij.
 
+## Vulnerability analysis
+Gradle includes OWASP dependency checking. Run this locally using:
+1. `./gradlew dependencyCheckUpdate --info` to update the definitions file
+2. `./gradlew dependencyCheckAnalyze --info` to run the check.
+The results will be found in [./build/reports/dependency-check-report.html](./build/reports/dependency-check-report.html)
+
+To run trivy analysis on the built image locally, run:
+1. `docker compose build` to build the image
+2. `brew install aquasecurity/trivy/trivy` to install trivy
+3. `trivy image <your image uid>` to scan.
+
 ## Deployment
 > Force-push your code to branch `deploy-dev` to deploy it to dev.  
 > This cannot deploy past dev, but is otherwise the same as the main deployment pipeline.
