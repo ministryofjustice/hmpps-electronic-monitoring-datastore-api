@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
+import net.minidev.json.JSONObject
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,8 +18,11 @@ class SearchController {
       required = true,
       name = "caseID",
     ) caseId: String,
-  ): String {
-    val response = "Successful search with ID $caseId"
+  ): JSONObject {
+    val response: JSONObject = JSONObject(
+      mapOf("data" to "You have successfully queried case $caseId"),
+    )
+
     return response
   }
 }
