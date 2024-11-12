@@ -17,7 +17,7 @@ class OrderControllerTest {
       val orderId = "obviously-real-id"
       val userToken = "real-token"
       val expected = JSONObject(
-        mapOf("data" to "This is the data for order obviously-real-id")
+        mapOf("data" to "This is the data for order obviously-real-id"),
       )
 
       val result: JSONObject = sut.getOrder(orderId, userToken)
@@ -29,7 +29,7 @@ class OrderControllerTest {
       val orderId = "invalid-order"
       val userToken = "real-token"
       val expected = JSONObject(
-        mapOf("data" to "No order with ID invalid-order could be found")
+        mapOf("data" to "No order with ID invalid-order could be found"),
       )
 
       val result: JSONObject = sut.getOrder(orderId, userToken)
@@ -41,7 +41,7 @@ class OrderControllerTest {
       val orderId = "obviously-real-id"
       val userToken = "nonsense-token"
       val expected = JSONObject(
-        mapOf("data" to "Unauthorised request with user token nonsense-token")
+        mapOf("data" to "Unauthorised request with user token nonsense-token"),
       )
 
       val result: JSONObject = sut.getOrder(orderId, userToken)
@@ -52,7 +52,7 @@ class OrderControllerTest {
     fun `returns "Unauthorised request" if userToken is not supplied`() {
       val orderId = "obviously-real-id"
       val expected = JSONObject(
-        mapOf("data" to "Unauthorised request with user token no-token-supplied")
+        mapOf("data" to "Unauthorised request with user token no-token-supplied"),
       )
 
       val result: JSONObject = sut.getOrder(orderId)
@@ -67,22 +67,22 @@ class OrderControllerTest {
 
     @Test
     fun `Returns true if token is valid`() {
-      val expected: Boolean = true;
-      val userToken: String = "real-token";
+      val expected: Boolean = true
+      val userToken: String = "real-token"
 
       val result = sut.checkValidUser(userToken)
 
-      Assertions.assertThat(result).isEqualTo(expected);
+      Assertions.assertThat(result).isEqualTo(expected)
     }
 
     @Test
     fun `Returns false if token is invalid`() {
-      val expected: Boolean = false;
-      val userToken: String = "invalid-token";
+      val expected: Boolean = false
+      val userToken: String = "invalid-token"
 
       val result = sut.checkValidUser(userToken)
 
-      Assertions.assertThat(result).isEqualTo(expected);
+      Assertions.assertThat(result).isEqualTo(expected)
     }
   }
 }

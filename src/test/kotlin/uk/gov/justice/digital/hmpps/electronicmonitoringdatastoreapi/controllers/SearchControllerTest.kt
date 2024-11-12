@@ -16,7 +16,7 @@ class SearchControllerTest {
     fun `Accepts caseId as parameter`() {
       val caseId = "obviously-fake-data"
       val expected = JSONObject(
-        mapOf("data" to "You have successfully queried case obviously-fake-data")
+        mapOf("data" to "You have successfully queried case obviously-fake-data"),
       )
 
       val result: JSONObject = sut.getCases(caseId)

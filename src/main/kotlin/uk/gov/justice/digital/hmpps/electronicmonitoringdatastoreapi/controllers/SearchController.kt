@@ -20,7 +20,7 @@ class SearchController {
     ) caseId: String,
   ): JSONObject {
     val response: JSONObject = JSONObject(
-      mapOf("data" to "You have successfully queried case $caseId")
+      mapOf("data" to "You have successfully queried case $caseId"),
     )
 
     return response
