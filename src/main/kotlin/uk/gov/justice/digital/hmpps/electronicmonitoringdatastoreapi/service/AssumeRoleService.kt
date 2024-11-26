@@ -2,11 +2,10 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.sts.StsClient;
+import software.amazon.awssdk.services.sts.StsClient
 import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
-import software.amazon.awssdk.services.sts.model.AssumeRoleRequest;
-import software.amazon.awssdk.services.sts.model.Credentials;
-
+import software.amazon.awssdk.services.sts.model.AssumeRoleRequest
+import software.amazon.awssdk.services.sts.model.Credentials
 
 class AssumeRoleService {
   fun getModernisationPlatformRole(): Credentials {

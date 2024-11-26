@@ -29,7 +29,7 @@ class SearchController {
 
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(): JSONObject {
-    val athenaService = AthenaService();
+    val athenaService = AthenaService()
     val result: String = athenaService.getQueryResult()
 
     val response: JSONObject = JSONObject(

@@ -2,13 +2,21 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
-import software.amazon.awssdk.services.athena.model.*
-import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
+import software.amazon.awssdk.services.athena.model.AthenaException
+import software.amazon.awssdk.services.athena.model.ColumnInfo
+import software.amazon.awssdk.services.athena.model.GetQueryExecutionRequest
+import software.amazon.awssdk.services.athena.model.GetQueryExecutionResponse
+import software.amazon.awssdk.services.athena.model.GetQueryResultsRequest
+import software.amazon.awssdk.services.athena.model.QueryExecutionContext
+import software.amazon.awssdk.services.athena.model.QueryExecutionState
+import software.amazon.awssdk.services.athena.model.ResultConfiguration
+import software.amazon.awssdk.services.athena.model.Row
+import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.sts.model.Credentials
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientFactory
 
 // We will instantiate as new for now
-class AthenaService  {
+class AthenaService {
 
   private val clientFactory = AthenaClientFactory()
   private val stsService = AssumeRoleService()
@@ -41,7 +49,6 @@ class AthenaService  {
   }
 
   fun getQueryResult(querystring: String = ExampleConstants.QUERY_EXAMPLE): String {
-
     val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider()
 
     val athenaClient = AthenaClient.builder()
@@ -81,7 +88,6 @@ class AthenaService  {
         .startQueryExecution(startQueryExecutionRequest)
 
       return startQueryExecutionResponse.queryExecutionId()
-
     } catch (e: AthenaException) {
       e.printStackTrace()
       System.exit(1)
@@ -119,7 +125,6 @@ class AthenaService  {
 
   // This code retrieves the results of a query
   fun processResultRows(athenaClient: AthenaClient, queryExecutionId: String?): String {
-
     val sb = StringBuilder()
 
     try {
@@ -139,7 +144,6 @@ class AthenaService  {
       e.printStackTrace()
       System.exit(1)
     }
-
 
     return sb.toString()
   }

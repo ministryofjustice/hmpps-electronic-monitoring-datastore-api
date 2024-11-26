@@ -12,14 +12,14 @@ class AthenaClientFactoryTest {
 
     @Test
     fun `should exist`() {
-      val myFactory = AthenaClientFactory();
+      val myFactory = AthenaClientFactory()
 
       Assertions.assertNotNull(myFactory)
     }
 
     @Test
     fun `has a creds method`() {
-      val myFactory = AthenaClientFactory();
+      val myFactory = AthenaClientFactory()
       val expected: String = "DefaultCredentialsProvider(providerChain=LazyAwsCredentialsProvider(delegate=Lazy(value=Uninitialized)))"
       val result: DefaultCredentialsProvider = myFactory.acquireCredentials()
 

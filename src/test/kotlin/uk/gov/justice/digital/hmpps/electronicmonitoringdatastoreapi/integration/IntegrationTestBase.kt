@@ -11,11 +11,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.ExampleApiExtension.Companion.exampleApi
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.AwsMockServerExtension
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.AwsMockServerExtension.Companion.awsApi
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
-@ExtendWith(HmppsAuthApiExtension::class, ExampleApiExtension::class, AwsMockServerExtension::class)
+@ExtendWith(HmppsAuthApiExtension::class, ExampleApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
@@ -35,6 +33,5 @@ abstract class IntegrationTestBase {
   protected fun stubPingWithResponse(status: Int) {
     hmppsAuth.stubHealthPing(status)
     exampleApi.stubHealthPing(status)
-    awsApi.stubHealthPing(status)
   }
 }
