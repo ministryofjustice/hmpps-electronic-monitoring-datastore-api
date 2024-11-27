@@ -74,16 +74,33 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
         .contentType(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()
-        .is5xxServerError // Expect a 400 Bad Request when no body is sent
+        .isUnauthorized // Expect a 400 Bad Request when no body is sent
+    }
+
+    @Test
+    fun `should fail when no user token is provided`() {
+      webTestClient.post()
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))) // No X-User-Token header
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{}")
+        .exchange()
+        .expectStatus()
+        .isUnauthorized // Expect 401 Unauthorized because X-User-Token is missing
+        .expectBody()
+        .jsonPath("$.userMessage").isEqualTo("Missing required header 'X-User-Token'")
     }
 
     @Test
     fun `should succeed with empty body`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .headers {
+          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
+          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
+        }
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue("{}") // Sending an empty JSON body
+        .bodyValue("{}")
         .exchange()
         .expectStatus()
         .isOk // Endpoint should handle an empty body
@@ -104,7 +121,10 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
 
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .headers {
+          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
+          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
+        }
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody) // Sending a valid body
         .exchange()

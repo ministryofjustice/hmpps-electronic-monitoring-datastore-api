@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
@@ -31,7 +32,10 @@ class SearchController {
   }
 
   @PostMapping("/orders")
-  fun searchOrders(@RequestBody searchCriteria: SearchCriteria): List<Order> {
+  fun searchOrders(
+    @RequestHeader("X-User-Token", required = true) userToken: String,
+    @RequestBody searchCriteria: SearchCriteria,
+  ): List<Order> {
     return listOf(
       Order(
         dataType = "am",

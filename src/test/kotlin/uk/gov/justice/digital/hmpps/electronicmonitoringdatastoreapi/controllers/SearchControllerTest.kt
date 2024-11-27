@@ -33,6 +33,7 @@ class SearchControllerTest {
     @Test
     fun `Returns a list of orders`() {
       // Arrange: Create search criteria
+      val userToken = "fake-token"
       val searchCriteria = SearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
@@ -44,7 +45,7 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<Order> = sut.searchOrders(searchCriteria)
+      val result: List<Order> = sut.searchOrders(userToken, searchCriteria)
 
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
