@@ -4,6 +4,8 @@
 generic-service:
   replicaCount: 2
 
+  serviceAccountName: "hmpps-electronic-monitoring-datastore-dev-athena-service-account"
+
   ingress:
     host: electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk
     # TODO: Create certificate as per https://user-guide.cloud-platform.service.justice.gov.uk/documentation/other-topics/custom-domain-cert.html
