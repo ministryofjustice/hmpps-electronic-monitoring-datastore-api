@@ -47,8 +47,6 @@ class SearchController {
     return response
   }
 
-  private inline fun <reified T : Enum<T>> getEnumValue(name: String): T? = enumValues<T>().find { it.name == name }
-
   @PostMapping("/custom-query")
   fun queryAthena(
     @RequestHeader("X-User-Token", required = true) userToken: String,
