@@ -4,7 +4,7 @@
 generic-service:
   replicaCount: 2
 
-  serviceAccountName: "hmpps-electronic-monitoring-datastore-dev-athena-service-account"
+  serviceAccountName: "hmpps-electronic-monitoring-datastore-dev-athena"
 
   ingress:
     host: electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk
