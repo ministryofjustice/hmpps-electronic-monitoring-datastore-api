@@ -20,18 +20,6 @@ class AthenaService {
 
   private val clientFactory = AthenaClientFactory()
   private val stsService = AssumeRoleService()
-  private val cloudPlatformCreds: Credentials
-
-//  @Throws(InterruptedException::class)
-//  @JvmStatic
-  init {
-    // Acquire credentials
-    cloudPlatformCreds = stsService.getModernisationPlatformRole()
-
-    // We'll need to load in values from somewhere too
-
-    // build the client separately for each query
-  }
 
   object ExampleConstants {
     const val CLIENT_EXECUTION_TIMEOUT = 1000
