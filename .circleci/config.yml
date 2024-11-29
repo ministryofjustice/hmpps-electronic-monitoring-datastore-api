@@ -6,7 +6,7 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: em-engineers-moj-madetech
+    default: em-datastore-alerts
   releases-slack-channel:
     type: string
     default: em-engineers-moj-madetech
