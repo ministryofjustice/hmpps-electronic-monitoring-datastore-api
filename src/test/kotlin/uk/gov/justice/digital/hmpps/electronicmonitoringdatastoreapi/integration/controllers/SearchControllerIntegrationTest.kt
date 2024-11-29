@@ -210,6 +210,7 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
         .expectBody()
         .jsonPath("$.queryString").isEqualTo("fake-test-querystring")
         .jsonPath("$.isErrored").isNotEmpty
+        .jsonPath("$.athenaRole").isNotEmpty
     }
   }
 }

@@ -48,8 +48,8 @@ class AthenaService {
     const val ATHENA_DEFAULT_DATABASE = "test_database" // change the database to match your database
   }
 
-  fun getQueryResult(querystring: String = ExampleConstants.QUERY_EXAMPLE): String {
-    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider()
+  fun getQueryResult(role: AthenaRole, querystring: String = ExampleConstants.QUERY_EXAMPLE): String {
+    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
 
     val athenaClient = AthenaClient.builder()
       .region(Region.EU_WEST_2)

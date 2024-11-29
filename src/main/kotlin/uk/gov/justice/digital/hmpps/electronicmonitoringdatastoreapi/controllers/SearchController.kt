@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Custo
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 @RestController
@@ -37,7 +38,7 @@ class SearchController {
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(): JSONObject {
     val athenaService = AthenaService()
-    val result: String = athenaService.getQueryResult()
+    val result: String = athenaService.getQueryResult(AthenaRole.DEV)
 
     val response: JSONObject = JSONObject(
       mapOf("data" to result),
@@ -46,21 +47,25 @@ class SearchController {
     return response
   }
 
+  private inline fun <reified T : Enum<T>> getEnumValue(name: String): T? = enumValues<T>().find { it.name == name }
+
   @PostMapping("/custom-query")
   fun queryAthena(
     @RequestHeader("X-User-Token", required = true) userToken: String,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
     @RequestBody customQuery: CustomQuery,
   ): CustomQueryResponse {
     val queryString: String = customQuery.queryString
-
+    val validatedRole: AthenaRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
     val result: String
 
     try {
       val athenaService = AthenaService()
-      result = athenaService.getQueryResult(queryString)
+      result = athenaService.getQueryResult(validatedRole, queryString)
     } catch (e: Exception) {
       return CustomQueryResponse(
         queryString = queryString,
+        athenaRole = validatedRole.name,
         isErrored = true,
         errorMessage = e.message.toString(),
       )
@@ -68,6 +73,7 @@ class SearchController {
 
     return CustomQueryResponse(
       queryString = queryString,
+      athenaRole = validatedRole.name,
       isErrored = false,
       queryResponse = result,
     )
