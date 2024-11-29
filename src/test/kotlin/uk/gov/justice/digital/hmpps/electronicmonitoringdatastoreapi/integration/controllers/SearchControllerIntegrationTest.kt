@@ -138,4 +138,78 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
         .jsonPath("$[0].dataType").isEqualTo("am")
     }
   }
+
+  @Nested
+  @DisplayName("POST /search/custom-query")
+  inner class QueryAthena {
+
+    val baseUri: String = "/search/custom-query"
+
+    @Test
+    fun `should fail when no body is sent`() {
+      webTestClient.post()
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .contentType(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .isUnauthorized // Expect a 400 Bad Request when no body is sent
+    }
+
+    @Test
+    fun `should fail when no user token is provided`() {
+      webTestClient.post()
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))) // No X-User-Token header
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{}")
+        .exchange()
+        .expectStatus()
+        .isUnauthorized // Expect 401 Unauthorized because X-User-Token is missing
+        .expectBody()
+        .jsonPath("$.userMessage").isEqualTo("Missing required header 'X-User-Token'")
+    }
+
+    @Test
+    fun `should fail with empty body with 500 error`() {
+      webTestClient.post()
+        .uri(baseUri)
+        .headers {
+          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
+          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
+        }
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{}")
+        .exchange()
+        .expectStatus()
+        .is5xxServerError
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON)
+        .expectBody()
+    }
+
+    @Test
+    fun `should return correct fields with valid body`() {
+      val requestBody = mapOf(
+        "queryString" to "fake-test-querystring",
+      )
+
+      webTestClient.post()
+        .uri(baseUri)
+        .headers {
+          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
+          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
+        }
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(requestBody) // Sending a valid body
+        .exchange()
+        .expectStatus()
+        .isOk // Endpoint should handle a valid body
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON)
+        .expectBody()
+        .jsonPath("$.queryString").isEqualTo("fake-test-querystring")
+        .jsonPath("$.isErrored").isNotEmpty
+    }
+  }
 }

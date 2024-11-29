@@ -5,6 +5,8 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
 
@@ -50,6 +52,44 @@ class SearchControllerTest {
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
       assertThat(result).allMatch { it is Order } // Ensure all elements are of type Order
+    }
+  }
+
+  @Nested
+  inner class QueryAthena {
+
+    @Test
+    fun `Returns response object of the correct type`() {
+      val queryString = "fake query string"
+      val userToken = "fake-token"
+      val queryObject = CustomQuery(queryString = queryString)
+
+      val expectedResult = CustomQueryResponse(
+        queryString = queryString,
+        isErrored = false,
+      )
+
+      val result: CustomQueryResponse = sut.queryAthena(userToken, queryObject)
+
+      assertThat(result).isInstanceOf(CustomQueryResponse::class.java)
+    }
+
+    @Test
+    fun `Returns error response`() {
+      val queryString = "fake query string"
+      val userToken = "fake-token"
+      val queryObject = CustomQuery(queryString = queryString)
+
+      val expectedResult = CustomQueryResponse(
+        queryString = queryString,
+        isErrored = true,
+      )
+
+      val result: CustomQueryResponse = sut.queryAthena(userToken, queryObject)
+
+      assertThat(result).isNotNull // Ensure the result is not empty
+      assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)
+      assertThat(result.queryString).isEqualTo(expectedResult.queryString) // Ensure all elements are of type Order
     }
   }
 }
