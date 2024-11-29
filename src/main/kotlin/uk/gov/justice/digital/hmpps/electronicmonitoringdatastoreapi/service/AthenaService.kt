@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.athena.model.QueryExecutionState
 import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.Row
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
-import software.amazon.awssdk.services.sts.model.Credentials
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientFactory
 
 // We will instantiate as new for now
