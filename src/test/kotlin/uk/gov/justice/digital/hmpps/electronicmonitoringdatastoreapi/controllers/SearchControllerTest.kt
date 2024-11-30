@@ -62,14 +62,16 @@ class SearchControllerTest {
     fun `Returns response object of the correct type`() {
       val queryString = "fake query string"
       val userToken = "fake-token"
+      val queryRole = "fake-role"
       val queryObject = CustomQuery(queryString = queryString)
 
       val expectedResult = CustomQueryResponse(
         queryString = queryString,
         isErrored = false,
+        athenaRole = "fake",
       )
 
-      val result: CustomQueryResponse = sut.queryAthena(userToken, queryObject)
+      val result: CustomQueryResponse = sut.queryAthena(userToken, queryRole, queryObject)
 
       assertThat(result).isInstanceOf(CustomQueryResponse::class.java)
     }
@@ -78,14 +80,16 @@ class SearchControllerTest {
     fun `Returns error response`() {
       val queryString = "fake query string"
       val userToken = "fake-token"
+      val queryRole = "fake-role"
       val queryObject = CustomQuery(queryString = queryString)
 
       val expectedResult = CustomQueryResponse(
         queryString = queryString,
         isErrored = true,
+        athenaRole = "fake",
       )
 
-      val result: CustomQueryResponse = sut.queryAthena(userToken, queryObject)
+      val result: CustomQueryResponse = sut.queryAthena(userToken, queryRole, queryObject)
 
       assertThat(result).isNotNull // Ensure the result is not empty
       assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)

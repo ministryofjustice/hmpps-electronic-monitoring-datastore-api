@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.athena.model.QueryExecutionState
 import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.Row
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
-import software.amazon.awssdk.services.sts.model.Credentials
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientFactory
 
 // We will instantiate as new for now
@@ -20,18 +19,6 @@ class AthenaService {
 
   private val clientFactory = AthenaClientFactory()
   private val stsService = AssumeRoleService()
-  private val cloudPlatformCreds: Credentials
-
-//  @Throws(InterruptedException::class)
-//  @JvmStatic
-  init {
-    // Acquire credentials
-    cloudPlatformCreds = stsService.getModernisationPlatformRole()
-
-    // We'll need to load in values from somewhere too
-
-    // build the client separately for each query
-  }
 
   object ExampleConstants {
     const val CLIENT_EXECUTION_TIMEOUT = 1000
@@ -48,8 +35,8 @@ class AthenaService {
     const val ATHENA_DEFAULT_DATABASE = "test_database" // change the database to match your database
   }
 
-  fun getQueryResult(querystring: String = ExampleConstants.QUERY_EXAMPLE): String {
-    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider()
+  fun getQueryResult(role: AthenaRole, querystring: String = ExampleConstants.QUERY_EXAMPLE): String {
+    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
 
     val athenaClient = AthenaClient.builder()
       .region(Region.EU_WEST_2)
