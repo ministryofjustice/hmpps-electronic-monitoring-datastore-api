@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 // @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH') and hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
@@ -20,6 +21,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 @RequestMapping(value = ["/orders"], produces = ["application/json"])
 class OrderController(
   @Autowired val repository: OrderInformationRepository,
+  @Autowired val auditService: AuditService,
 ) {
 
   @GetMapping("/getMockOrderSummary/{orderId}")
@@ -32,6 +34,12 @@ class OrderController(
   ): ResponseEntity<OrderInformation> {
     val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
+
+    auditService.createEvent(
+      "GET_MOCK_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
+
     return ResponseEntity.ok(orderInfo)
   }
 
@@ -53,6 +61,11 @@ class OrderController(
     }
 
     return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
+
+    auditService.createEvent(
+      "GET_SPECIALS_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
 
     return ResponseEntity.ok(
       repository.getMockOrderInformation(orderId),
@@ -87,6 +100,11 @@ class OrderController(
       keyOrderInformation = keyInfo.queryResponse ?: fakeOrder.keyOrderInformation,
       subjectHistoryReport = fakeOrder.subjectHistoryReport,
       documents = fakeOrder.documents,
+    )
+
+    auditService.createEvent(
+      "GET_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
     )
 
     return ResponseEntity.ok(result)
