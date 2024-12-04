@@ -60,9 +60,27 @@ minutes.
 
 ## Usage
 
-### Running the application locally
+### Running the application locally from the CLI
 
-To run the application using IntelliJ:
+The application comes with a `dev` spring profile that includes default settings for running locally. This is not
+necessary when deploying to kubernetes as these values are included in the helm configuration templates -
+e.g. `values-dev.yaml`.
+
+### Checking the app has started successfully:
+If using docker, your app is probably exposed at `localhost:8080`.  
+Call http://localhost:8080/health with a browser to get app health info.
+
+### Running with Docker
+There is also a `docker-compose.yml` that can be used to run a local instance of the template in docker and also an
+instance of HMPPS Auth (required if your service calls out to other services using a token).
+
+```bash
+docker compose pull && docker compose up
+```
+
+will build the application and run it and HMPPS Auth within a local docker instance.
+
+### Running the application locally using Intellij
 
 1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0`
 , which will just start a docker instance of the database and HMPPS Auth.
@@ -83,44 +101,8 @@ SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 
 Then visit [http://localhost:8080/health](http://localhost:8081/health).
 
-
-
-
-
-
-
-
-
-## Running the application locally
-
-The application comes with a `dev` spring profile that includes default settings for running locally. This is not
-necessary when deploying to kubernetes as these values are included in the helm configuration templates -
-e.g. `values-dev.yaml`.
-
-### Checking the app has started successfully:
-If using docker, your app is probably exposed at `localhost:8080`.  
-Call http://localhost:8080/health with a browser to get app health info.
-
-### Running with Docker
-There is also a `docker-compose.yml` that can be used to run a local instance of the template in docker and also an
-instance of HMPPS Auth (required if your service calls out to other services using a token).
-
-```bash
-docker compose pull && docker compose up
-```
-
-will build the application and run it and HMPPS Auth within a local docker instance.
-
-### Running the application in Intellij
-
-```bash
-docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0
-```
-
-will just start a docker instance of HMPPS Auth. The application should then be started with a `dev` active profile
-in Intellij.
-
 ## Vulnerability analysis
+
 Gradle includes OWASP dependency checking. Run this locally using:
 1. `./gradlew dependencyCheckUpdate --info` to update the definitions file
 2. `./gradlew dependencyCheckAnalyze --info` to run the check.
@@ -135,6 +117,7 @@ To run trivy analysis on the built image locally, run:
 This project has Jacoco integrated, and this will run after each test run. The generated report can be found [here](build/reports/jacoco/test/html/index.html) and can be opened in your browser.
 
 ## Deployment
+
 > Force-push your code to branch `deploy-dev` to deploy it to dev.  
 > This cannot deploy past dev, but is otherwise the same as the main deployment pipeline.
 >
@@ -151,4 +134,3 @@ serve as spring security examples. The template typescript project has a demonst
 
 For the demonstration, rather than introducing a dependency on a different service, this application calls out to
 itself. This is only to show a service calling out to another service and is certainly not recommended!
-

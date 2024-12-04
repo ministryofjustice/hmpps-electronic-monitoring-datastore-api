@@ -14,12 +14,14 @@ class AuditService(
   private val hmppsQueueService: HmppsQueueService,
   private val objectMapper: ObjectMapper,
 ) {
-
   private val auditQueue by lazy { hmppsQueueService.findByQueueId("audit") as HmppsQueue }
   private val auditSqsClient by lazy { auditQueue.sqsClient }
   private val auditQueueUrl by lazy { auditQueue.queueUrl }
 
-  fun createEvent(what: String, detail: String) {
+  fun createEvent(
+    what: String,
+    detail: Map<String, String?>,
+  ) {
     auditSqsClient.sendMessage(
       SendMessageRequest.builder()
         .queueUrl(auditQueueUrl)
@@ -27,7 +29,7 @@ class AuditService(
           objectMapper.writeValueAsString(
             HmppsAuditEvent(
               what = what,
-              details = detail,
+              details = objectMapper.writeValueAsString(detail),
               who = "Unknown",
             ),
           ),

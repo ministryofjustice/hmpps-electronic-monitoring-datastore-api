@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -17,11 +18,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Searc
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/search"], produces = ["application/json"])
-class SearchController {
+class SearchController(
+  @Autowired val auditService: AuditService,
+) {
 
 //  @GetMapping("/cases/{caseID}")
 //  fun getCases(
@@ -90,6 +94,11 @@ class SearchController {
       )
     }
 
+    auditService.createEvent(
+      "SEARCH_WITH_CUSTOM_QUERY",
+      mapOf("queryString" to athenaQuery.queryString),
+    )
+
     return AthenaQueryResponse<String>(
       queryString = queryString,
       athenaRole = validatedRole.name,
@@ -113,6 +122,11 @@ class SearchController {
 
     // 2: query repository
     val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
+
+    auditService.createEvent(
+      "SEARCH_ORDERS",
+      mapOf("legacySubjectId" to searchCriteria.legacySubjectId),
+    )
 
     return ResponseEntity<List<Order>>(
       result.queryResponse,
