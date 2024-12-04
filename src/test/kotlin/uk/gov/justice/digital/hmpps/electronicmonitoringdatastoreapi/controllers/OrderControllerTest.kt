@@ -4,13 +4,16 @@ import net.minidev.json.JSONObject
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 class OrderControllerTest {
+  private val auditService: AuditService = mock()
 
   @Nested
   inner class GetOrder {
 
-    private val sut: OrderController = OrderController()
+    private val sut: OrderController = OrderController(auditService)
 
     @Test
     fun `Returns data if correct params supplied`() {
@@ -37,7 +40,7 @@ class OrderControllerTest {
     }
 
     @Test
-    fun `returns "Unauthorised request" if userToken is invalid`() {
+    fun `returns 'Unauthorised request' if userToken is invalid`() {
       val orderId = "obviously-real-id"
       val userToken = "nonsense-token"
       val expected = JSONObject(
@@ -49,7 +52,7 @@ class OrderControllerTest {
     }
 
     @Test
-    fun `returns "Unauthorised request" if userToken is not supplied`() {
+    fun `returns 'Unauthorised request' if userToken is not supplied`() {
       val orderId = "obviously-real-id"
       val expected = JSONObject(
         mapOf("data" to "Unauthorised request with user token no-token-supplied"),
@@ -63,7 +66,7 @@ class OrderControllerTest {
   @Nested
   inner class CheckValidUser {
 
-    private val sut: OrderController = OrderController()
+    private val sut: OrderController = OrderController(auditService)
 
     @Test
     fun `Returns true if token is valid`() {
