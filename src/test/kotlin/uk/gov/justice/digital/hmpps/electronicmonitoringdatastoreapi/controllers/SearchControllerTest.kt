@@ -5,14 +5,17 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 class SearchControllerTest {
+  private val auditService: AuditService = mock()
 
-  private val sut: SearchController = SearchController()
+  private val sut: SearchController = SearchController(auditService)
 
   @Nested
   inner class GetSearchResult {

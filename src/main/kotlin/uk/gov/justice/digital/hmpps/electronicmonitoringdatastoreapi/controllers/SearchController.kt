@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
 import net.minidev.json.JSONObject
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,11 +17,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Searc
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
 @RequestMapping(value = ["/search"], produces = ["application/json"])
-class SearchController {
+class SearchController(
+  @Autowired val auditService: AuditService,
+) {
 
   @GetMapping("/cases/{caseID}")
   fun getCases(
@@ -32,6 +36,8 @@ class SearchController {
     val response: JSONObject = JSONObject(
       mapOf("data" to "You have successfully queried case $caseId"),
     )
+
+    auditService.createEvent("GET_CASES", "Get case with caseID: $caseId has been retrieved")
 
     return response
   }
