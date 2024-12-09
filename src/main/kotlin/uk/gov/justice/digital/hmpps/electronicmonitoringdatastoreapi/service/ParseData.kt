@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.json.JSONObject
 import software.amazon.awssdk.services.athena.model.ColumnInfo
 import software.amazon.awssdk.services.athena.model.ColumnNullable
@@ -76,4 +78,33 @@ class ParseData {
       fullName = "JOHN BROWNLIE",
     ),
   )
+
+  fun mapColumns(resultSet: ResultSet): Map<String, Int> = resultSet.resultSetMetadata().columnInfo()
+    .mapIndexed { index, columnInfo -> columnInfo.name() to index }
+    .toMap()
+
+  fun checkRequiredColumns(resultSet: ResultSet, requiredColumns: List<String>): Boolean {
+    val allPresent: Boolean = requiredColumns.all { it in mapColumns(resultSet) }
+    return allPresent
+  }
+
+  fun maptoOrders(resultSet: ResultSet): List<MiniOrder> {
+    val mapper = jacksonObjectMapper()
+      .registerKotlinModule()
+      .apply {
+        propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
+      }
+
+    val recievedColumnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
+
+    val mappedRows: List<Map<String, String?>> = resultSet.rows().drop(1).map { row ->
+      row.data().mapIndexed { index, datum ->
+        recievedColumnNames[index] to datum.varCharValue()
+      }.toMap()
+    }
+
+    return mappedRows.map { row ->
+      mapper.convertValue(row, MiniOrder::class.java)
+    }
+  }
 }

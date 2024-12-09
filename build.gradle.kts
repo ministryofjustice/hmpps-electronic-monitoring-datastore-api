@@ -21,6 +21,7 @@ dependencies {
   implementation("software.amazon.awssdk:sts:2.29.29")
 //  implementation("org.json:json:20230227")
   implementation("org.json:json:20240303")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.1.0")
   testImplementation("org.wiremock:wiremock-standalone:3.10.0")
