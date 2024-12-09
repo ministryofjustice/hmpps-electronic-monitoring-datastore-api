@@ -5,15 +5,15 @@ data class AthenaQueryResponse<T>(
   val athenaRole: String,
   val errorMessage: String? = null,
   val isErrored: Boolean = false,
-  val queryResponse: T? = null
+  val queryResponse: T? = null,
 )
 
-//data class OrderQueryResponse: AthenaQueryResponse(
+// data class OrderQueryResponse: AthenaQueryResponse(
 //  val queryMetadata: AthenaQueryResponse,
 //  val queryResult: List<Order>? = null
-//) {}
+// ) {}
 //
-//data class CustomQueryResponse(
+// data class CustomQueryResponse(
 //  val queryMetadata: AthenaQueryResponse,
 //  val queryResult: String? = null
-//)
+// )

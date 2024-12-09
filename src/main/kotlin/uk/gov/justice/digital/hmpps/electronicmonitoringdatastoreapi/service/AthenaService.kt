@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
-import software.amazon.awssdk.services.athena.model.ColumnInfo
 import software.amazon.awssdk.services.athena.model.GetQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.GetQueryExecutionResponse
 import software.amazon.awssdk.services.athena.model.GetQueryResultsRequest
@@ -12,7 +11,6 @@ import software.amazon.awssdk.services.athena.model.QueryExecutionContext
 import software.amazon.awssdk.services.athena.model.QueryExecutionState
 import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.ResultSet
-import software.amazon.awssdk.services.athena.model.Row
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientFactory
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
@@ -39,7 +37,6 @@ class AthenaService {
   }
 
   fun getQueryResult(role: AthenaRole, querystring: String): ResultSet {
-
     val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
 
     val athenaClient = AthenaClient.builder()
@@ -127,7 +124,6 @@ class AthenaService {
 
       val queryResults: GetQueryResultsResponse = athenaClient.getQueryResults(getQueryResultsRequest)
       return queryResults.resultSet()
-
     } catch (e: AthenaException) {
       throw AthenaClientException("Error submitting query to Athena: ${e.message}")
       // e.printStackTrace()
@@ -172,6 +168,4 @@ class AthenaService {
 //
 //    return sb.toString()
 //  }
-
-
 }

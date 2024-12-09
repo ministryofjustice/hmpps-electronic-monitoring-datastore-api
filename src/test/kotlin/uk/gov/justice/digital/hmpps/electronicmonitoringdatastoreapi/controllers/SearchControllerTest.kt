@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
-import net.minidev.json.JSONObject
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.json.JSONObject
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
@@ -25,7 +25,7 @@ class SearchControllerTest {
       )
 
       val result: JSONObject = sut.getCases(caseId)
-      Assertions.assertThat(result).isEqualTo(expected)
+      Assertions.assertThat(result.toString()).isEqualTo(expected.toString())
     }
   }
 

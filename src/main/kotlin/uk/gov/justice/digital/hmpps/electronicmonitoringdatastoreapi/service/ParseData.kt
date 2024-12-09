@@ -1,11 +1,11 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.json.JSONObject
-import software.amazon.awssdk.services.athena.model.GetQueryResultsResponse
 
 class ParseData {
 
-  val sampleData: JSONObject = JSONObject("""{
+  val sampleData: JSONObject = JSONObject(
+    """{
   "ResultSet": {
     "Rows": [
       {
@@ -132,12 +132,12 @@ class ParseData {
     }
   },
   "UpdateCount": 0
-}""")
+}""",
+  )
 
   fun parse(): Boolean {
-    val temp = GetQueryResultsResponse
+//    val temp = GetQueryResultsResponse
 
-    return true;
+    return true
   }
-
 }

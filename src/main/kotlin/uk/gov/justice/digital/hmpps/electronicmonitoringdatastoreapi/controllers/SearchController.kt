@@ -1,10 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
-import net.minidev.json.JSONObject
+import org.json.JSONObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -12,13 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.HmppsElectronicMonitoringDatastoreApiExceptionHandler
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.*
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
-import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
 @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
@@ -32,9 +33,8 @@ class SearchController {
       name = "caseID",
     ) caseId: String,
   ): JSONObject {
-    val response: JSONObject = JSONObject(
-      mapOf("data" to "You have successfully queried case $caseId"),
-    )
+    val response: JSONObject = JSONObject()
+    response.put("data", "You have successfully queried case $caseId")
 
     return response
   }
@@ -42,11 +42,13 @@ class SearchController {
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(): JSONObject {
     val athenaService = AthenaService()
-    val result: String = athenaService.getQueryResult(AthenaRole.DEV)
+    val fakeQuery: String = "SELECT * FROM dummy_table_1 limit 10;"
+    val resultSet: ResultSet = athenaService.getQueryResult(AthenaRole.DEV, fakeQuery)
+    val stringResult: String = resultSet.toString()
 
-    val response: JSONObject = JSONObject(
-      mapOf("data" to result),
-    )
+//    val response: JSONObject = JSONObject()
+//    response.put("data", stringResult)
+    val response: JSONObject = JSONObject(resultSet)
 
     return response
   }
@@ -63,7 +65,8 @@ class SearchController {
 
     try {
       val athenaService = AthenaService()
-      result = athenaService.getQueryResult(validatedRole, queryString)
+      val resultSet: ResultSet = athenaService.getQueryResult(validatedRole, queryString)
+      result = resultSet.toString()
     } catch (e: Exception) {
       return AthenaQueryResponse(
         queryString = queryString,
@@ -85,27 +88,25 @@ class SearchController {
   fun searchOrders(
     @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> {
-    return OrderRepository.getFakeOrders()
-  }
+  ): List<Order> = OrderRepository.getFakeOrders()
 
   /*
-  * Plan: Hex. architecture: use my AthenaQueryResponse and AthenaQuery to send data ABOUT queries internally to my application
-  *
-  * So, what goes *in*: commands: so the query, and any command objects
-  * Repository vs service: service manages the CONNECTION - so will sit below the data layer
-  * => different 'repositories' implement the service
-  *
-  * => put a bunch into the repository layer
-  * OR, service -> orders repository -> generic repository ~ CLIENT
-  *
-  * refactor!
-  * 1) OrderService [holds and manages objects of the <Order> type
-  * 2) Queries AthenaService [generic]
-  *
-  * so for now: we just call it OrderRepository ; move AthenaService calls to there
-  * Also add a GenericQueryService -> Nah, this can just be the base athena service
-  */
+   * Plan: Hex. architecture: use my AthenaQueryResponse and AthenaQuery to send data ABOUT queries internally to my application
+   *
+   * So, what goes *in*: commands: so the query, and any command objects
+   * Repository vs service: service manages the CONNECTION - so will sit below the data layer
+   * => different 'repositories' implement the service
+   *
+   * => put a bunch into the repository layer
+   * OR, service -> orders repository -> generic repository ~ CLIENT
+   *
+   * refactor!
+   * 1) OrderService [holds and manages objects of the <Order> type
+   * 2) Queries AthenaService [generic]
+   *
+   * so for now: we just call it OrderRepository ; move AthenaService calls to there
+   * Also add a GenericQueryService -> Nah, this can just be the base athena service
+   */
 
   @PostMapping("/orders-temp")
   fun searchOrdersTemp(
@@ -115,7 +116,7 @@ class SearchController {
     val repository = OrderRepository()
 
     // 2: query repository
-    val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria);
+    val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
 
     if (result.isErrored) {
       throw AthenaClientException(result.errorMessage ?: "no error message sent")
@@ -123,6 +124,7 @@ class SearchController {
 
     return ResponseEntity<List<Order>>(
       result.queryResponse,
-      HttpStatus.OK)
+      HttpStatus.OK,
+    )
   }
 }

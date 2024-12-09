@@ -88,4 +88,4 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
   }
 }
 
-class AthenaClientException constructor(message: String): Exception(message) {}
+class AthenaClientException constructor(message: String) : Exception(message)
