@@ -10,3 +10,11 @@ data class Order(
   val orderStartDate: String,
   val orderEndDate: String,
 )
+
+data class MiniOrder(
+  val legacySubjectId: Long,
+  val legacyOrderId: Long,
+  val firstName: String,
+  val lastName: String,
+  val fullName: String
+)

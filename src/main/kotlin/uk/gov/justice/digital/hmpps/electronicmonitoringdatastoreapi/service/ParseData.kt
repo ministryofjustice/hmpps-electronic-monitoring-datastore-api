@@ -1,143 +1,78 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
+import org.json.JSONArray
 import org.json.JSONObject
+import software.amazon.awssdk.services.athena.model.*
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MiniOrder
 
 class ParseData {
+  fun resultSetFromJson(string: String): ResultSet {
+    return resultSetFromJson(JSONObject(string))
+  }
 
-  val sampleData: JSONObject = JSONObject(
-    """{
-  "ResultSet": {
-    "Rows": [
-      {
-        "Data": [
-          {
-            "VarCharValue": "legacy_subject_id"
-          },
-          {
-            "VarCharValue": "legacy_order_id"
-          },
-          {
-            "VarCharValue": "first_name"
-          },
-          {
-            "VarCharValue": "last_name"
-          },
-          {
-            "VarCharValue": "full_name"
-          }
-        ]
-      },
-      {
-        "Data": [
-          {
-            "VarCharValue": "1253587"
-          },
-          {
-            "VarCharValue": "1250042"
-          },
-          {
-            "VarCharValue": "ELLEN"
-          },
-          {
-            "VarCharValue": "RIPLY"
-          },
-          {
-            "VarCharValue": "ELLEN RIPLY"
-          }
-        ]
-      },
-      {
-        "Data": [
-          {
-            "VarCharValue": "1034415"
-          },
-          {
-            "VarCharValue": "1032792"
-          },
-          {
-            "VarCharValue": "JOHN"
-          },
-          {
-            "VarCharValue": "BROWNLIE"
-          },
-          {
-            "VarCharValue": "JOHN BROWNLIE"
-          }
-        ]
+  fun resultSetFromJson(jsonData: JSONObject): ResultSet {
+    val rows: List<Row> = jsonData
+      .getJSONObject("ResultSet")
+      .getJSONArray("Rows")
+      .map { row ->
+        Row.builder()
+          .data(
+            (row as JSONObject).getJSONArray("Data").map { dataJson ->
+            Datum.builder()
+              .varCharValue((dataJson as JSONObject).optString("VarCharValue", null))
+              .build()
+          })
+          .build()
       }
-    ],
-    "ResultSetMetadata": {
-      "ColumnInfo": [
-        {
-          "CatalogName": "hive",
-          "SchemaName": "",
-          "TableName": "",
-          "Name": "legacy_subject_id",
-          "Label": "legacy_subject_id",
-          "Type": "bigint",
-          "Precision": 19,
-          "Scale": 0,
-          "Nullable": "UNKNOWN",
-          "CaseSensitive": false
-        },
-        {
-          "CatalogName": "hive",
-          "SchemaName": "",
-          "TableName": "",
-          "Name": "legacy_order_id",
-          "Label": "legacy_order_id",
-          "Type": "bigint",
-          "Precision": 19,
-          "Scale": 0,
-          "Nullable": "UNKNOWN",
-          "CaseSensitive": false
-        },
-        {
-          "CatalogName": "hive",
-          "SchemaName": "",
-          "TableName": "",
-          "Name": "first_name",
-          "Label": "first_name",
-          "Type": "varchar",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "Nullable": "UNKNOWN",
-          "CaseSensitive": true
-        },
-        {
-          "CatalogName": "hive",
-          "SchemaName": "",
-          "TableName": "",
-          "Name": "last_name",
-          "Label": "last_name",
-          "Type": "varchar",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "Nullable": "UNKNOWN",
-          "CaseSensitive": true
-        },
-        {
-          "CatalogName": "hive",
-          "SchemaName": "",
-          "TableName": "",
-          "Name": "full_name",
-          "Label": "full_name",
-          "Type": "varchar",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "Nullable": "UNKNOWN",
-          "CaseSensitive": true
-        }
-      ]
+
+    val columnInfo: List<ColumnInfo> = jsonData
+      .getJSONObject("ResultSet")
+      .getJSONObject("ResultSetMetadata")
+      .getJSONArray("ColumnInfo")
+      .map { columnJson ->
+      val column = columnJson as JSONObject
+      ColumnInfo.builder()
+        .catalogName(column.getString("CatalogName"))
+        .schemaName(column.getString("SchemaName"))
+        .tableName(column.getString("TableName"))
+        .name(column.getString("Name"))
+        .label(column.getString("Label"))
+        .type(column.getString("Type"))
+        .precision(column.getInt("Precision"))
+        .scale(column.getInt("Scale"))
+        .nullable(ColumnNullable.valueOf(column.getString("Nullable").uppercase()))
+        .caseSensitive(column.getBoolean("CaseSensitive"))
+        .build()
     }
-  },
-  "UpdateCount": 0
-}""",
-  )
 
-  fun parse(): Boolean {
-//    val temp = GetQueryResultsResponse
+    val resultSet: ResultSet = ResultSet.builder()
+      .rows(rows)
+      .resultSetMetadata(
+        ResultSetMetadata.builder()
+          .columnInfo(columnInfo)
+          .build()
+      )
+      .build()
 
-    return true
+    return resultSet
+  }
+
+  fun parseOrders(resultSet: ResultSet): List<MiniOrder> {
+    return listOf(
+      MiniOrder(
+        legacySubjectId = 1234567,
+        legacyOrderId = 1250042,
+        firstName = "ELLEN",
+        lastName = "RIPLY",
+        fullName = "ELLEN RIPLY"
+      ),
+      MiniOrder(
+        legacySubjectId = 1034415,
+        legacyOrderId = 1032792,
+        firstName = "JOHN",
+        lastName = "BROWNLIE",
+        fullName = "JOHN BROWNLIE"
+      ),
+    )
   }
 }
