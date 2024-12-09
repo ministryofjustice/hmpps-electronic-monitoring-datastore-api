@@ -1,13 +1,11 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.service
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers
 
 import org.assertj.core.api.Assertions
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MiniOrder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.ParseData
 
-class ParseDataTest {
+class AthenaHelperTest {
 
   val defaultResultSet: String = """{
   "ResultSet": {
@@ -141,10 +139,7 @@ class ParseDataTest {
 
   @Test
   fun `Can convert JSON to ResultSet object`() {
-    val sut = ParseData()
-
-    val testResultSetJson: JSONObject = JSONObject(
-      """{
+    val testResultSetJson: String = """{
   "ResultSet": {
     "Rows": [
       {
@@ -180,47 +175,17 @@ class ParseDataTest {
     }
   },
   "UpdateCount": 0
-}""",
-    )
+}
+    """.trimIndent()
 
-    val resultSet: ResultSet = sut.resultSetFromJson(testResultSetJson)
+    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(testResultSetJson)
 
     Assertions.assertThat(resultSet).isInstanceOf(ResultSet::class.java)
   }
 
   @Test
-  fun `Can map ResultSet to appropriate Order objects`() {
-    val sut = ParseData()
-
-    val resultSet: ResultSet = sut.resultSetFromJson(defaultResultSet)
-
-    val expected: List<MiniOrder> = listOf(
-      MiniOrder(
-        legacySubjectId = 1234567,
-        legacyOrderId = 1250042,
-        firstName = "ELLEN",
-        lastName = "RIPLY",
-        fullName = "ELLEN RIPLY",
-      ),
-      MiniOrder(
-        legacySubjectId = 1034415,
-        legacyOrderId = 1032792,
-        firstName = "JOHN",
-        lastName = "BROWNLIE",
-        fullName = "JOHN BROWNLIE",
-      ),
-    )
-
-    val result: List<MiniOrder> = sut.parseOrders(resultSet)
-
-    Assertions.assertThat(result).isEqualTo(expected)
-  }
-
-  @Test
   fun `Can extract column names from ColumnInfo object`() {
-    val sut = ParseData()
-
-    val resultSet: ResultSet = sut.resultSetFromJson(defaultResultSet)
+    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
 
     val expectedColumns: Map<String, Int> = mapOf(
       Pair("legacy_subject_id", 0),
@@ -230,44 +195,43 @@ class ParseDataTest {
       Pair("full_name", 4),
     )
 
-    val actualColumns = sut.mapColumns(resultSet)
+    val actualColumns = AthenaHelper.mapColumns(resultSet)
 
     Assertions.assertThat(actualColumns).isEqualTo(expectedColumns)
   }
 
   @Test
-  fun `Can check a set of columns exists in the mapped column output`() {
-    val sut = ParseData()
-
-    val resultSet: ResultSet = sut.resultSetFromJson(defaultResultSet)
-
-    val realColumns: List<String> = listOf(
-      "legacy_subject_id",
-      "legacy_order_id",
-      "last_name",
-      "full_name",
-      "first_name",
+  fun `Can extract a list of properties from a class`() {
+    data class ArbitraryClass(
+      val firstField: String,
+      val BADLYNamedField: Boolean?,
+      val ThirdField: Long = 4455566,
     )
 
-    val fakeColumns: List<String> = listOf("cheeseburger", "last_name")
+    val expected = listOf<String>("first_field", "badlynamed_field", "third_field")
 
-    Assertions.assertThat(sut.checkRequiredColumns(resultSet, realColumns)).isTrue()
-    Assertions.assertThat(sut.checkRequiredColumns(resultSet, fakeColumns)).isFalse()
+    val result: List<String> = AthenaHelper.extractFieldNames(ArbitraryClass::class)
+
+    Assertions.assertThat(result).hasSameElementsAs(expected)
   }
 
   @Test
-  fun `Can map the ResultSet to a list of orders`() {
-    val sut = ParseData()
+  fun `Can check whether a set of fields exists in the mapped column output`() {
+    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
 
-    val resultSet: ResultSet = sut.resultSetFromJson(defaultResultSet)
+    val testClass = MiniOrder::class
+    val realColumns: List<String> = AthenaHelper.extractFieldNames(testClass)
 
-//    data class fakeObject(
-//      val firstField: String,
-//      val secondField: Boolean?,
-//      val thirdField: Long = 4455566
-//    )
-//
-//    val expected = listOf<String>("firstField", "secondField", "thirdField")
+    val fakeColumns: List<String> = listOf("cheeseburger", "last_name")
+
+    Assertions.assertThat(AthenaHelper.checkRequiredColumns(resultSet, testClass)).isTrue()
+    Assertions.assertThat(AthenaHelper.checkRequiredColumns(resultSet, realColumns)).isTrue()
+    Assertions.assertThat(AthenaHelper.checkRequiredColumns(resultSet, fakeColumns)).isFalse()
+  }
+
+  @Test
+  fun `Can map the ResultSet to an generic object`() {
+    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
 
     val expected: List<MiniOrder> = listOf(
       MiniOrder(
@@ -286,8 +250,22 @@ class ParseDataTest {
       ),
     )
 
-    val result = sut.maptoOrders(resultSet)
+    val result = AthenaHelper.mapTo<MiniOrder>(resultSet)
 
     Assertions.assertThat(result).isEqualTo(expected)
+  }
+
+  @Test
+  fun `Mapping fails if mapping to object with wrong set of fields`() {
+    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
+
+    data class FakeObject(
+      val firstField: String,
+      val secondField: Boolean?,
+      val thirdField: Long = 4455566,
+    )
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
+      .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
   }
 }

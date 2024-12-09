@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -12,28 +14,36 @@ import software.amazon.awssdk.services.athena.model.QueryExecutionState
 import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientFactory
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 
 // We will instantiate as new for now
 class AthenaService {
-
-  private val clientFactory = AthenaClientFactory()
   private val stsService = AssumeRoleService()
+  private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
+  private val sleepLength: Long = 1000
+  private val databaseName: String = "test_database"
+//  const val CLIENT_EXECUTION_TIMEOUT = 1000 // TODO: Remove unused constant
 
-  object ExampleConstants {
-    const val CLIENT_EXECUTION_TIMEOUT = 1000
-    const val ATHENA_OUTPUT_BUCKET = "s3://emds-dev-athena-query-results-20240917144028307600000004" // change the Amazon S3 bucket name to match
+  companion object {
+    inline fun <reified T> mapTo(resultSet: ResultSet): List<T> {
+      val mapper = jacksonObjectMapper()
+        .registerKotlinModule()
+        .apply {
+          propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
+        }
 
-    // your environment
-    // Demonstrates how to query a table with a comma-separated value (CSV) table.
-    // For information, see
-    // https://docs.aws.amazon.com/athena/latest/ug/work-with-data.html
-    const val QUERY_EXAMPLE = "SELECT * FROM dummy_table_1 limit 10;" // change the Query statement to match
+      val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
 
-    // your environment
-    const val SLEEP_AMOUNT_IN_MS: Long = 1000
-    const val ATHENA_DEFAULT_DATABASE = "test_database" // change the database to match your database
+      val mappedRows: List<Map<String, String?>> = resultSet.rows().drop(1).map { row ->
+        row.data().mapIndexed { i, datum ->
+          columnNames[i] to datum.varCharValue()
+        }.toMap()
+      }
+
+      return mappedRows.map { row ->
+        mapper.convertValue(row, T::class.java)
+      }
+    }
   }
 
   fun getQueryResult(role: AthenaRole, querystring: String): ResultSet {
@@ -62,12 +72,12 @@ class AthenaService {
     return try {
       // The QueryExecutionContext allows us to set the database.
       val queryExecutionContext = QueryExecutionContext.builder()
-        .database(ExampleConstants.ATHENA_DEFAULT_DATABASE)
+        .database(databaseName)
         .build()
 
       // The result configuration specifies where the results of the query should go.
       val resultConfiguration = ResultConfiguration.builder()
-        .outputLocation(ExampleConstants.ATHENA_OUTPUT_BUCKET)
+        .outputLocation(outputBucket)
         .build()
 
       val startQueryExecutionRequest = StartQueryExecutionRequest.builder()
@@ -109,7 +119,7 @@ class AthenaService {
         isQueryStillRunning = false
       } else {
         // Sleep an amount of time before retrying again.
-        Thread.sleep(ExampleConstants.SLEEP_AMOUNT_IN_MS)
+        Thread.sleep(sleepLength)
       }
       println("The current status is: $queryState")
     }

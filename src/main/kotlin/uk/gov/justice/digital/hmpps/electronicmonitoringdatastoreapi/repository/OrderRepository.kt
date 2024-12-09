@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import software.amazon.awssdk.services.athena.model.ResultSet
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
@@ -73,28 +74,87 @@ class OrderRepository {
       ),
     )
 
-    fun parseOrders(resultSet: ResultSet): List<Order> = getFakeOrders()
+    fun validateSearchCriteria(criteria: SearchCriteria): SearchCriteria {
+      if (criteria.legacySubjectId == null &&
+        criteria.firstName == null &&
+        criteria.lastName == null &&
+        criteria.alias == null &&
+        criteria.dobDay == null &&
+        criteria.dobMonth == null &&
+        criteria.dobYear == null
+      ) {
+        throw IllegalArgumentException("At least one search criteria must be populated")
+      }
 
-    fun parseSearchCriteria(criteria: SearchCriteria): AthenaQuery = AthenaQuery(
-      queryString = """
-          SELECT 
-            legacy_subject_id, 
-            full_name, 
-            primary_address_line_1, 
-            primary_address_line_2, 
-            primary_address_line_3, 
-            primary_address_post_code, 
-            order_start_date, 
-            order_end_date 
-          FROM 
-            test_database.order_details 
-          WHERE 
-            legacy_subject_id = ${criteria.legacySubjectId}
-      """.trimIndent(),
-    )
+      if (criteria.legacySubjectId != null) {
+        try {
+          (criteria.legacySubjectId ?: "").toLong()
+        } catch (e: Exception) {
+          throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
+        }
+      }
+
+      // TODO: Handle Date of Birth, once it's in the data...
+
+      return criteria
+    }
+
+    fun parseSearchCriteria(criteria: SearchCriteria): AthenaQuery {
+      validateSearchCriteria(criteria)
+      var existingCriteria: Boolean = false
+
+      val builder: StringBuilder = StringBuilder()
+      builder.append(
+        """
+        SELECT 
+          legacy_subject_id, 
+          full_name, 
+          primary_address_line_1, 
+          primary_address_line_2, 
+          primary_address_line_3, 
+          primary_address_post_code, 
+          order_start_date, 
+          order_end_date 
+        FROM 
+          test_database.order_details
+        WHERE 
+        """.trimIndent(),
+      )
+
+      if (criteria.legacySubjectId != null) {
+        builder.append("legacy_subject_id = ${criteria.legacySubjectId}")
+        existingCriteria = true
+      }
+
+      if (!criteria.firstName.isNullOrBlank()) {
+        builder.append("${if (existingCriteria) " OR" else ""} upper(first_name) = upper('${criteria.firstName}')")
+        existingCriteria = true
+      }
+
+      if (!criteria.lastName.isNullOrBlank()) {
+        builder.append("${if (existingCriteria) " OR" else ""} upper(last_name) = upper('${criteria.lastName}')")
+        existingCriteria = true
+      }
+
+      if (!criteria.alias.isNullOrBlank()) {
+        builder.append("${if (existingCriteria) " OR" else ""} upper(alias) = upper('${criteria.alias}')")
+        existingCriteria = true
+      }
+
+      builder.toString()
+
+      return AthenaQuery(
+        queryString = builder.toString(),
+      )
+    }
   }
 
   private val athenaService = AthenaService()
+
+  fun parseOrders(resultSet: ResultSet): List<Order> {
+    return getFakeOrders() // TODO: Early return, testing/demo early.
+    return AthenaHelper.mapTo<Order>(resultSet)
+  }
 
   fun getOrders(criteria: SearchCriteria): AthenaQueryResponse<List<Order>> {
     val athenaQuery: AthenaQuery = OrderRepository.parseSearchCriteria(criteria)

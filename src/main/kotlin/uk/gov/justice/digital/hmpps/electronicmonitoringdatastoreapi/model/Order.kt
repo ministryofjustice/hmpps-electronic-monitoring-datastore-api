@@ -12,9 +12,9 @@ data class Order(
 )
 
 data class MiniOrder(
-  val legacySubjectId: Long,
-  val legacyOrderId: Long,
   val firstName: String,
-  val lastName: String,
   val fullName: String,
+  val lastName: String,
+  val legacyOrderId: Long,
+  val legacySubjectId: Long,
 )
