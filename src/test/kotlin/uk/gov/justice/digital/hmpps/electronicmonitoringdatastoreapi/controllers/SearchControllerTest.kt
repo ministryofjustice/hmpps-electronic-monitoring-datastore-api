@@ -5,8 +5,8 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CustomQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
 
@@ -63,17 +63,17 @@ class SearchControllerTest {
       val queryString = "fake query string"
       val userToken = "fake-token"
       val queryRole = "fake-role"
-      val queryObject = CustomQuery(queryString = queryString)
+      val queryObject = AthenaQuery(queryString = queryString)
 
-      val expectedResult = CustomQueryResponse(
+      val expectedResult = AthenaQueryResponse<String>(
         queryString = queryString,
         isErrored = false,
         athenaRole = "fake",
       )
 
-      val result: CustomQueryResponse = sut.queryAthena(userToken, queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = sut.queryAthena(userToken, queryRole, queryObject)
 
-      assertThat(result).isInstanceOf(CustomQueryResponse::class.java)
+      assertThat(result).isInstanceOf(AthenaQueryResponse::class.java)
     }
 
     @Test
@@ -81,15 +81,15 @@ class SearchControllerTest {
       val queryString = "fake query string"
       val userToken = "fake-token"
       val queryRole = "fake-role"
-      val queryObject = CustomQuery(queryString = queryString)
+      val queryObject = AthenaQuery(queryString = queryString)
 
-      val expectedResult = CustomQueryResponse(
+      val expectedResult = AthenaQueryResponse<String>(
         queryString = queryString,
         isErrored = true,
         athenaRole = "fake",
       )
 
-      val result: CustomQueryResponse = sut.queryAthena(userToken, queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = sut.queryAthena(userToken, queryRole, queryObject)
 
       assertThat(result).isNotNull // Ensure the result is not empty
       assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)

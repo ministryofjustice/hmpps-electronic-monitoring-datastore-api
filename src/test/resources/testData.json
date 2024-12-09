@@ -1,0 +1,1210 @@
+// Query:
+> aws athena start-query-execution --query-string "select * from test_database.order_details limit 10" --work-group 800964199911-default
+> aws athena get-query-results --query-execution-id "84986a62-79c1-462f-9eee-9e75cf4f4cb5"
+{
+  "ResultSet": {
+    "Rows": [
+      {
+        "Data": [
+          {
+            "VarCharValue": "legacy_subject_id"
+          },
+          {
+            "VarCharValue": "legacy_order_id"
+          },
+          {
+            "VarCharValue": "first_name"
+          },
+          {
+            "VarCharValue": "last_name"
+          },
+          {
+            "VarCharValue": "full_name"
+          },
+          {
+            "VarCharValue": "alias"
+          },
+          {
+            "VarCharValue": "date_of_birth"
+          },
+          {
+            "VarCharValue": "adult_or_child"
+          },
+          {
+            "VarCharValue": "sex"
+          },
+          {
+            "VarCharValue": "contact"
+          },
+          {
+            "VarCharValue": "primary_address_line_1"
+          },
+          {
+            "VarCharValue": "primary_address_line_2"
+          },
+          {
+            "VarCharValue": "primary_address_line_3"
+          },
+          {
+            "VarCharValue": "primary_address_post_code"
+          },
+          {
+            "VarCharValue": "phone_or_mobile_number"
+          },
+          {
+            "VarCharValue": "ppo"
+          },
+          {
+            "VarCharValue": "mappa"
+          },
+          {
+            "VarCharValue": "technical_bail"
+          },
+          {
+            "VarCharValue": "wearing_wrist_pid"
+          },
+          {
+            "VarCharValue": "manual_risk"
+          },
+          {
+            "VarCharValue": "offence_risk"
+          },
+          {
+            "VarCharValue": "post_code_risk"
+          },
+          {
+            "VarCharValue": "false_limb_risk"
+          },
+          {
+            "VarCharValue": "migrated_risk"
+          },
+          {
+            "VarCharValue": "range_risk"
+          },
+          {
+            "VarCharValue": "report_risk"
+          },
+          {
+            "VarCharValue": "order_start_date"
+          },
+          {
+            "VarCharValue": "order_end_date"
+          },
+          {
+            "VarCharValue": "order_type"
+          },
+          {
+            "VarCharValue": "order_type_description"
+          },
+          {
+            "VarCharValue": "order_type_detail"
+          },
+          {
+            "VarCharValue": "notifying_organisation_details_name"
+          },
+          {
+            "VarCharValue": "responsible_organisation"
+          },
+          {
+            "VarCharValue": "responsible_organisation_details_region"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1253587"
+          },
+          {
+            "VarCharValue": "1250042"
+          },
+          {
+            "VarCharValue": "ELLEN"
+          },
+          {
+            "VarCharValue": "RIPLY"
+          },
+          {
+            "VarCharValue": "ELLEN RIPLY"
+          },
+          {},
+          {
+            "VarCharValue": "1949-10-08"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Female"
+          },
+          {},
+          {
+            "VarCharValue": "310 Lightbowne Road, Moston"
+          },
+          {
+            "VarCharValue": "Moston"
+          },
+          {
+            "VarCharValue": "Manchester"
+          },
+          {
+            "VarCharValue": "M40 0FJ"
+          },
+          {
+            "VarCharValue": "07971234567"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2019-10-24"
+          },
+          {
+            "VarCharValue": "2020-03-24"
+          },
+          {
+            "VarCharValue": "Community"
+          },
+          {
+            "VarCharValue": "CJA03 Suspended Sentence"
+          },
+          {
+            "VarCharValue": "Single Requirement Curfew"
+          },
+          {
+            "VarCharValue": "Liverpool Magistrates' Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1034415"
+          },
+          {
+            "VarCharValue": "1032792"
+          },
+          {
+            "VarCharValue": "JOHN"
+          },
+          {
+            "VarCharValue": "BROWNLIE"
+          },
+          {
+            "VarCharValue": "JOHN BROWNLIE"
+          },
+          {},
+          {
+            "VarCharValue": "1970-08-02"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Male"
+          },
+          {},
+          {
+            "VarCharValue": "Flat 25a, Worrall Street"
+          },
+          {
+            "VarCharValue": "Worrall Street"
+          },
+          {
+            "VarCharValue": "Congleton"
+          },
+          {
+            "VarCharValue": "CW12 1DT"
+          },
+          {},
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2016-04-05"
+          },
+          {
+            "VarCharValue": "2016-04-05"
+          },
+          {
+            "VarCharValue": "Pre-Trial"
+          },
+          {
+            "VarCharValue": "Bail"
+          },
+          {
+            "VarCharValue": "Standalone"
+          },
+          {
+            "VarCharValue": "Chester Crown Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1253646"
+          },
+          {
+            "VarCharValue": "1250098"
+          },
+          {
+            "VarCharValue": "KEVIN"
+          },
+          {
+            "VarCharValue": "MCCALLASTER"
+          },
+          {
+            "VarCharValue": "KEVIN MCCALLASTER"
+          },
+          {},
+          {
+            "VarCharValue": "2003-03-08"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Male"
+          },
+          {},
+          {
+            "VarCharValue": "Thorpe Park, Staines Lane"
+          },
+          {
+            "VarCharValue": "Staines Lane"
+          },
+          {
+            "VarCharValue": "Chertsey"
+          },
+          {
+            "VarCharValue": "KT16 8PN"
+          },
+          {
+            "VarCharValue": "07971234567"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2019-10-30"
+          },
+          {
+            "VarCharValue": "2020-02-29"
+          },
+          {
+            "VarCharValue": "Community"
+          },
+          {
+            "VarCharValue": "Youth Rehabilitation Order"
+          },
+          {
+            "VarCharValue": "Single Requirement Curfew"
+          },
+          {
+            "VarCharValue": "Birmingham Magistrates' Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1344310"
+          },
+          {
+            "VarCharValue": "1335774"
+          },
+          {
+            "VarCharValue": "KERMIT"
+          },
+          {
+            "VarCharValue": "THE FROG"
+          },
+          {
+            "VarCharValue": "KERMIT THE FROG"
+          },
+          {},
+          {
+            "VarCharValue": "2000-01-01"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Male"
+          },
+          {},
+          {
+            "VarCharValue": "Anfield Road"
+          },
+          {
+            "VarCharValue": ""
+          },
+          {
+            "VarCharValue": "Liverpool"
+          },
+          {
+            "VarCharValue": "L4 0TH"
+          },
+          {},
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2021-05-11"
+          },
+          {
+            "VarCharValue": "2021-09-08"
+          },
+          {
+            "VarCharValue": "Community"
+          },
+          {
+            "VarCharValue": "GPS Community Multi Order"
+          },
+          {
+            "VarCharValue": "Curfew (Without Location Tracking)"
+          },
+          {
+            "VarCharValue": "Manchester and Salford Magistrates Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1252708"
+          },
+          {
+            "VarCharValue": "1249178"
+          },
+          {
+            "VarCharValue": "JODIE"
+          },
+          {
+            "VarCharValue": "FOSTER TEST"
+          },
+          {
+            "VarCharValue": "JODIE FOSTER TEST"
+          },
+          {},
+          {
+            "VarCharValue": "1994-09-02"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Female"
+          },
+          {},
+          {
+            "VarCharValue": "53 Park Street"
+          },
+          {
+            "VarCharValue": ""
+          },
+          {
+            "VarCharValue": "Bristol"
+          },
+          {
+            "VarCharValue": "BS1 5NT"
+          },
+          {
+            "VarCharValue": "0758945656"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2019-10-24"
+          },
+          {
+            "VarCharValue": "2020-03-23"
+          },
+          {
+            "VarCharValue": "Community"
+          },
+          {
+            "VarCharValue": "CJA03 Community Order"
+          },
+          {
+            "VarCharValue": "Single Requirement Curfew"
+          },
+          {
+            "VarCharValue": "Basingstoke Magistrates' Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1357938"
+          },
+          {
+            "VarCharValue": "1349196"
+          },
+          {
+            "VarCharValue": "MEGAN"
+          },
+          {
+            "VarCharValue": "FOX"
+          },
+          {
+            "VarCharValue": "MEGAN FOX"
+          },
+          {},
+          {
+            "VarCharValue": "2000-01-01"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Female"
+          },
+          {},
+          {
+            "VarCharValue": "Turf Moor, Harry Potts Way"
+          },
+          {
+            "VarCharValue": "Harry Potts Way"
+          },
+          {
+            "VarCharValue": "Burnley"
+          },
+          {
+            "VarCharValue": "BB10 4BX"
+          },
+          {
+            "VarCharValue": "07979874167"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2021-08-09"
+          },
+          {
+            "VarCharValue": "2022-02-09"
+          },
+          {
+            "VarCharValue": "Community"
+          },
+          {
+            "VarCharValue": "GPS Community Multi Order"
+          },
+          {
+            "VarCharValue": "Curfew & Location Tracking"
+          },
+          {
+            "VarCharValue": "Manchester and Salford Magistrates Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1360409"
+          },
+          {
+            "VarCharValue": "1351638"
+          },
+          {
+            "VarCharValue": "ASH"
+          },
+          {
+            "VarCharValue": "KETCHUM"
+          },
+          {
+            "VarCharValue": "ASH KETCHUM"
+          },
+          {},
+          {
+            "VarCharValue": "2000-01-01"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Male"
+          },
+          {},
+          {
+            "VarCharValue": "Boundary Park, Furtherwood Road"
+          },
+          {
+            "VarCharValue": "Furtherwood Road"
+          },
+          {
+            "VarCharValue": "Oldham"
+          },
+          {
+            "VarCharValue": "OL1 2PA"
+          },
+          {},
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2021-08-27"
+          },
+          {
+            "VarCharValue": "2022-02-24"
+          },
+          {
+            "VarCharValue": "Community"
+          },
+          {
+            "VarCharValue": "GPS Community Multi Order"
+          },
+          {
+            "VarCharValue": "Curfew & Location Tracking"
+          },
+          {
+            "VarCharValue": "Manchester and Salford Magistrates Court"
+          },
+          {},
+          {
+            "VarCharValue": "No Organisation Identified"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1315695"
+          },
+          {
+            "VarCharValue": "1310501"
+          },
+          {
+            "VarCharValue": "WALTER"
+          },
+          {
+            "VarCharValue": "WHITE"
+          },
+          {
+            "VarCharValue": "WALTER WHITE"
+          },
+          {},
+          {
+            "VarCharValue": "1956-01-01"
+          },
+          {
+            "VarCharValue": "Adult"
+          },
+          {
+            "VarCharValue": "Male"
+          },
+          {},
+          {
+            "VarCharValue": "Etihad Stadium, Rowsley Street"
+          },
+          {
+            "VarCharValue": "Rowsley Street"
+          },
+          {
+            "VarCharValue": "Manchester"
+          },
+          {
+            "VarCharValue": "M11 3FF"
+          },
+          {},
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No Mappa"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {
+            "VarCharValue": "2020-12-04"
+          },
+          {
+            "VarCharValue": "2021-02-04"
+          },
+          {
+            "VarCharValue": "Post Release"
+          },
+          {
+            "VarCharValue": "HDC"
+          },
+          {
+            "VarCharValue": "Automatic Conditional Release"
+          },
+          {
+            "VarCharValue": "HMP Manchester"
+          },
+          {
+            "VarCharValue": "Probation Services"
+          },
+          {
+            "VarCharValue": "Manchester Probation Services - Miles Platting"
+          }
+        ]
+      }
+    ],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "legacy_subject_id",
+          "Label": "legacy_subject_id",
+          "Type": "bigint",
+          "Precision": 19,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": false
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "legacy_order_id",
+          "Label": "legacy_order_id",
+          "Type": "bigint",
+          "Precision": 19,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": false
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "first_name",
+          "Label": "first_name",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "last_name",
+          "Label": "last_name",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "full_name",
+          "Label": "full_name",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "alias",
+          "Label": "alias",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "date_of_birth",
+          "Label": "date_of_birth",
+          "Type": "date",
+          "Precision": 0,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": false
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "adult_or_child",
+          "Label": "adult_or_child",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "sex",
+          "Label": "sex",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "contact",
+          "Label": "contact",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_1",
+          "Label": "primary_address_line_1",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_2",
+          "Label": "primary_address_line_2",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_3",
+          "Label": "primary_address_line_3",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_post_code",
+          "Label": "primary_address_post_code",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "phone_or_mobile_number",
+          "Label": "phone_or_mobile_number",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "ppo",
+          "Label": "ppo",
+          "Type": "varchar",
+          "Precision": 3,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "mappa",
+          "Label": "mappa",
+          "Type": "varchar",
+          "Precision": 8,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "technical_bail",
+          "Label": "technical_bail",
+          "Type": "varchar",
+          "Precision": 3,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "wearing_wrist_pid",
+          "Label": "wearing_wrist_pid",
+          "Type": "varchar",
+          "Precision": 3,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "manual_risk",
+          "Label": "manual_risk",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "offence_risk",
+          "Label": "offence_risk",
+          "Type": "boolean",
+          "Precision": 0,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": false
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "post_code_risk",
+          "Label": "post_code_risk",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "false_limb_risk",
+          "Label": "false_limb_risk",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "migrated_risk",
+          "Label": "migrated_risk",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "range_risk",
+          "Label": "range_risk",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "report_risk",
+          "Label": "report_risk",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_start_date",
+          "Label": "order_start_date",
+          "Type": "date",
+          "Precision": 0,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": false
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_end_date",
+          "Label": "order_end_date",
+          "Type": "date",
+          "Precision": 0,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": false
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_type",
+          "Label": "order_type",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_type_description",
+          "Label": "order_type_description",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_type_detail",
+          "Label": "order_type_detail",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "notifying_organisation_details_name",
+          "Label": "notifying_organisation_details_name",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "responsible_organisation",
+          "Label": "responsible_organisation",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "responsible_organisation_details_region",
+          "Label": "responsible_organisation_details_region",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        }
+      ]
+    }
+  },
+  "UpdateCount": 0
+}
