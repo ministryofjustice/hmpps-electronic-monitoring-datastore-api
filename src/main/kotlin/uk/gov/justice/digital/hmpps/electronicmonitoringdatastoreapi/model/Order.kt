@@ -16,5 +16,5 @@ data class MiniOrder(
   val legacyOrderId: Long,
   val firstName: String,
   val lastName: String,
-  val fullName: String
+  val fullName: String,
 )

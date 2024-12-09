@@ -5,7 +5,6 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MiniOrder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.ParseData
 
 class ParseDataTest {
@@ -63,7 +62,8 @@ class ParseDataTest {
   fun `Can map ResultSet to appropriate Order objects`() {
     val sut = ParseData()
 
-    val resultSet: ResultSet = sut.resultSetFromJson("""{
+    val resultSet: ResultSet = sut.resultSetFromJson(
+      """{
   "ResultSet": {
     "Rows": [
       {
@@ -190,7 +190,8 @@ class ParseDataTest {
     }
   },
   "UpdateCount": 0
-}""")
+}""",
+    )
 
     val expected: List<MiniOrder> = listOf(
       MiniOrder(
@@ -198,14 +199,14 @@ class ParseDataTest {
         legacyOrderId = 1250042,
         firstName = "ELLEN",
         lastName = "RIPLY",
-        fullName = "ELLEN RIPLY"
+        fullName = "ELLEN RIPLY",
       ),
       MiniOrder(
         legacySubjectId = 1034415,
         legacyOrderId = 1032792,
         firstName = "JOHN",
         lastName = "BROWNLIE",
-        fullName = "JOHN BROWNLIE"
+        fullName = "JOHN BROWNLIE",
       ),
     )
 
