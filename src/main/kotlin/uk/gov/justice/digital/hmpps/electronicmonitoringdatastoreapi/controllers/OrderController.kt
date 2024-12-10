@@ -103,14 +103,8 @@ class OrderController {
     @PathVariable orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
   ): ResponseEntity<Any> {
-    val orderInfo: OrderInformation? = OrderInformationRepository.getOrderInformation(orderId)
-    return if (orderInfo != null) {
-      ResponseEntity.ok(orderInfo)
-    } else {
-      ResponseEntity
-        .notFound()
-        .build()
-    }
+    val orderInfo: OrderInformation = OrderInformationRepository.getMockOrderInformation(orderId)
+    return ResponseEntity.ok(orderInfo)
   }
 
   fun checkValidUser(userToken: String): Boolean {
