@@ -22,6 +22,7 @@ class AthenaService {
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
   private val databaseName: String = "test_database"
+  private val defaultRole: AthenaRole = AthenaRole.DEV
 //  const val CLIENT_EXECUTION_TIMEOUT = 1000 // TODO: Remove unused constant
 
   companion object {
@@ -46,13 +47,18 @@ class AthenaService {
     }
   }
 
-  fun getQueryResult(role: AthenaRole, querystring: String): ResultSet {
+  private fun startClient(role: AthenaRole): AthenaClient {
     val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
 
-    val athenaClient = AthenaClient.builder()
+    return AthenaClient.builder()
       .region(Region.EU_WEST_2)
       .credentialsProvider(modernisationPlatformCredentialsProvider)
       .build()
+  }
+
+  // Initialise a query, wait for completion, and return the ResultSet
+  fun getQueryResult(role: AthenaRole = defaultRole, querystring: String): ResultSet {
+    val athenaClient = startClient(role)
 
     val queryExecutionId = submitAthenaQuery(athenaClient, querystring)
 
@@ -65,8 +71,15 @@ class AthenaService {
     return output
   }
 
-  // Submits a sample query to Amazon Athena and returns the execution ID of the
-  // query.
+  // Submits a query to Amazon Athena and returns the execution ID
+  @Throws(AthenaClientException::class)
+  fun startQuery(role: AthenaRole = defaultRole, querystring: String): String {
+    val athenaClient = startClient(role)
+    val queryId: String = submitAthenaQuery(athenaClient, querystring)
+    athenaClient.close()
+    return queryId
+  }
+
   @Throws(AthenaClientException::class)
   private fun submitAthenaQuery(athenaClient: AthenaClient, querystring: String): String {
     return try {
@@ -125,6 +138,15 @@ class AthenaService {
     }
   }
 
+  // Retrieve the results of a query by execution ID (non-paged)
+  @Throws(AthenaClientException::class)
+  private fun retrieveResults(role: AthenaRole = defaultRole, queryExecutionId: String?): ResultSet {
+    val athenaClient = startClient(role)
+    val results: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    athenaClient.close()
+    return results
+  }
+
   @Throws(AthenaClientException::class)
   private fun retrieveResults(athenaClient: AthenaClient, queryExecutionId: String?): ResultSet {
     return try {
@@ -140,42 +162,4 @@ class AthenaService {
       throw e
     }
   }
-
-//  // This code retrieves the results of a query
-//  fun processResultRows(athenaClient: AthenaClient, queryExecutionId: String?): String {
-//    val sb = StringBuilder()
-//
-//    try {
-//      // Max Results can be set but if its not set,
-//      // it will choose the maximum page size.
-//      val getQueryResultsRequest = GetQueryResultsRequest.builder()
-//        .queryExecutionId(queryExecutionId)
-//        .build()
-//      val getQueryResultsResults = athenaClient
-//        .getQueryResultsPaginator(getQueryResultsRequest)
-//      for (result in getQueryResultsResults) {
-//        val columnInfoList = result.resultSet().resultSetMetadata().columnInfo()
-//        val results = result.resultSet().rows()
-//        sb.append(processRow(results, columnInfoList))
-//      }
-//    } catch (e: AthenaException) {
-//      e.printStackTrace()
-//      System.exit(1)
-//    }
-//
-//    return sb.toString()
-//  }
-//
-//  private fun processRow(row: List<Row>, columnInfoList: List<ColumnInfo>): String {
-//    val sb = StringBuilder()
-//
-//    for (myRow in row) {
-//      val allData = myRow.data()
-//      for (data in allData) {
-//        sb.append("The value of the column is " + data.varCharValue())
-//      }
-//    }
-//
-//    return sb.toString()
-//  }
 }

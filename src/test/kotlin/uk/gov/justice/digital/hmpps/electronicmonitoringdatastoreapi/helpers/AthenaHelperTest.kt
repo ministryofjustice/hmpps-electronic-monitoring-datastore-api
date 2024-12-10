@@ -137,6 +137,12 @@ class AthenaHelperTest {
   """.trimIndent()
 
   @Test
+  fun `Can be instantiated`() {
+    val sut = AthenaHelper()
+    Assertions.assertThat(sut).isNotNull()
+  }
+
+  @Test
   fun `Can convert JSON to ResultSet object`() {
     val testResultSetJson: String = """{
   "ResultSet": {

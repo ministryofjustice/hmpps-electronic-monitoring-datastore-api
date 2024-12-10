@@ -12,7 +12,13 @@ class OrderRepositoryTest {
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
 
   @Test
-  fun `returns fake orders if needed`() {
+  fun `OrderRepository can be instantiated`() {
+    val sut = OrderRepository()
+    Assertions.assertThat(sut).isNotNull()
+  }
+
+  @Test
+  fun `GetFakeOrders() returns List of Orders`() {
     val result: List<Order> = OrderRepository.getFakeOrders()
 
     Assertions.assertThat(result).contains(
@@ -154,4 +160,17 @@ class OrderRepositoryTest {
       }.withMessage("Legacy_subject_id must be convertable to type Long")
     }
   }
+
+  // TODO: Add the tests for this
+  @Nested
+  inner class ParseOrders {
+
+    @Test
+    fun `Parses a ResultsSet as a list of Orders`() {
+    }
+  }
+
+  // TODO: Add the tests for this
+  @Nested
+  inner class GetOrders
 }

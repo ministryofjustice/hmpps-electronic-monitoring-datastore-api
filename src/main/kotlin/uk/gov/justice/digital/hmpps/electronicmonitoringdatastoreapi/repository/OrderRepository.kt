@@ -148,21 +148,21 @@ class OrderRepository {
         queryString = builder.toString(),
       )
     }
+
+    fun parseOrders(resultSet: ResultSet): List<Order> {
+      var dtoOrders: List<AthenaOrderDTO> = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
+
+      var orders: List<Order> = dtoOrders.map { dto -> Order(dto) }
+      return getFakeOrders() // TODO: Early return, testing/demo early.
+      return orders
+
+      // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
+      // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
+      // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
+    }
   }
 
   private val athenaService = AthenaService()
-
-  fun parseOrders(resultSet: ResultSet): List<Order> {
-    var dtoOrders: List<AthenaOrderDTO> = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
-
-    var orders: List<Order> = dtoOrders.map { dto -> Order(dto) }
-    return getFakeOrders() // TODO: Early return, testing/demo early.
-    return orders
-
-    // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
-    // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
-    // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
-  }
 
   fun getOrders(criteria: SearchCriteria): AthenaQueryResponse<List<Order>> {
     val athenaQuery: AthenaQuery = OrderRepository.parseSearchCriteria(criteria)
