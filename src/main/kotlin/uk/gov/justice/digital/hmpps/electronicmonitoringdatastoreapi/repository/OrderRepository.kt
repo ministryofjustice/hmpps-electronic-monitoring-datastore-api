@@ -153,7 +153,7 @@ class OrderRepository {
       var dtoOrders: List<AthenaOrderDTO> = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
 
       var orders: List<Order> = dtoOrders.map { dto -> Order(dto) }
-      return getFakeOrders() // TODO: Early return, testing/demo early.
+//      return getFakeOrders() // TODO: Early return, testing/demo early.
       return orders
 
       // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!

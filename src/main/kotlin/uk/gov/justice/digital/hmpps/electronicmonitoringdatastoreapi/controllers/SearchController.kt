@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
@@ -90,24 +89,6 @@ class SearchController {
     @RequestBody searchCriteria: SearchCriteria,
   ): List<Order> = OrderRepository.getFakeOrders()
 
-  /*
-   * Plan: Hex. architecture: use my AthenaQueryResponse and AthenaQuery to send data ABOUT queries internally to my application
-   *
-   * So, what goes *in*: commands: so the query, and any command objects
-   * Repository vs service: service manages the CONNECTION - so will sit below the data layer
-   * => different 'repositories' implement the service
-   *
-   * => put a bunch into the repository layer
-   * OR, service -> orders repository -> generic repository ~ CLIENT
-   *
-   * refactor!
-   * 1) OrderService [holds and manages objects of the <Order> type
-   * 2) Queries AthenaService [generic]
-   *
-   * so for now: we just call it OrderRepository ; move AthenaService calls to there
-   * Also add a GenericQueryService -> Nah, this can just be the base athena service
-   */
-
   @PostMapping("/orders-temp")
   fun searchOrdersTemp(
     @RequestHeader("X-User-Token", required = true) userToken: String,
@@ -117,10 +98,6 @@ class SearchController {
 
     // 2: query repository
     val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
-
-    if (result.isErrored) {
-      throw AthenaClientException(result.errorMessage ?: "no error message sent")
-    }
 
     return ResponseEntity<List<Order>>(
       result.queryResponse,
