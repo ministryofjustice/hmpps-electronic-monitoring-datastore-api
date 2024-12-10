@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaOrderDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
@@ -152,30 +153,29 @@ class OrderRepository {
   private val athenaService = AthenaService()
 
   fun parseOrders(resultSet: ResultSet): List<Order> {
+    var dtoOrders: List<AthenaOrderDTO> = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
+
+    var orders: List<Order> = dtoOrders.map { dto -> Order(dto) }
     return getFakeOrders() // TODO: Early return, testing/demo early.
-    return AthenaHelper.mapTo<Order>(resultSet)
+    return orders
+
+    // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
+    // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
+    // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
   }
 
   fun getOrders(criteria: SearchCriteria): AthenaQueryResponse<List<Order>> {
     val athenaQuery: AthenaQuery = OrderRepository.parseSearchCriteria(criteria)
     val role = AthenaRole.DEV
 
-    return try {
-      val athenaResponse: ResultSet = athenaService.getQueryResult(role, athenaQuery.queryString)
-      val parsedResult: List<Order> = parseOrders(athenaResponse)
+    val athenaResponse: ResultSet = athenaService.getQueryResult(role, athenaQuery.queryString)
 
-      return AthenaQueryResponse<List<Order>>(
-        queryString = athenaQuery.queryString,
-        athenaRole = role.name,
-        queryResponse = parsedResult,
-      )
-    } catch (e: Exception) {
-      return AthenaQueryResponse(
-        queryString = athenaQuery.queryString,
-        athenaRole = role.name,
-        isErrored = true,
-        errorMessage = e.message.toString(),
-      )
-    }
+    val parsedOrders: List<Order> = parseOrders(athenaResponse)
+
+    return AthenaQueryResponse<List<Order>>(
+      queryString = athenaQuery.queryString,
+      athenaRole = role.name,
+      queryResponse = parsedOrders,
+    )
   }
 }

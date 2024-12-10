@@ -9,12 +9,32 @@ data class Order(
   val dateOfBirth: String,
   val orderStartDate: String,
   val orderEndDate: String,
-)
+) {
+  constructor(dto: AthenaOrderDTO) : this(
+    dataType = "am",
+    legacySubjectId = dto.legacySubjectId,
+    name = dto.fullName,
+    address = StringBuilder()
+      .append(dto.primaryAddressLine1)
+      .append(dto.primaryAddressLine2)
+      .append(dto.primaryAddressLine3)
+      .append(dto.primaryAddressPostCode)
+      .toString(),
+    alias = null,
+    dateOfBirth = dto.dateOfBirth,
+    orderStartDate = dto.orderStartDate,
+    orderEndDate = dto.orderEndDate,
+  )
+}
 
-data class MiniOrder(
-  val firstName: String,
-  val fullName: String,
-  val lastName: String,
-  val legacyOrderId: Long,
+data class AthenaOrderDTO(
   val legacySubjectId: Long,
+  val fullName: String,
+  val primaryAddressLine1: String,
+  val primaryAddressLine2: String,
+  val primaryAddressLine3: String,
+  val primaryAddressPostCode: String,
+  val dateOfBirth: String,
+  val orderStartDate: String,
+  val orderEndDate: String,
 )

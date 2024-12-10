@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MiniOrder
 
 class AthenaHelperTest {
 
