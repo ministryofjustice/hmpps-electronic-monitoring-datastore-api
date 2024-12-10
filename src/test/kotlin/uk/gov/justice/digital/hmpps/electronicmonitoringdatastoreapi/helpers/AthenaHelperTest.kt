@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers
 
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaOrderDTO
 
 class AthenaHelperTest {
 
@@ -234,43 +236,232 @@ class AthenaHelperTest {
     Assertions.assertThat(AthenaHelper.checkRequiredColumns(resultSet, fakeColumns)).isFalse()
   }
 
-  @Test
-  fun `Can map the ResultSet to an generic object`() {
-    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
+  @Nested
+  inner class MapTo {
 
-    val expected: List<MiniOrder> = listOf(
-      MiniOrder(
-        legacySubjectId = 1253587,
-        legacyOrderId = 1250042,
-        firstName = "ELLEN",
-        lastName = "RIPLY",
-        fullName = "ELLEN RIPLY",
-      ),
-      MiniOrder(
-        legacySubjectId = 1034415,
-        legacyOrderId = 1032792,
-        firstName = "JOHN",
-        lastName = "BROWNLIE",
-        fullName = "JOHN BROWNLIE",
-      ),
-    )
-
-    val result = AthenaHelper.mapTo<MiniOrder>(resultSet)
-
-    Assertions.assertThat(result).isEqualTo(expected)
+    @Test
+    fun `Can map to AthenaOrderDTO`() {
+      val resultSet: ResultSet = AthenaHelper.resultSetFromJson(
+        """{
+  "ResultSet": {
+    "Rows": [
+      {
+        "Data": [
+          {
+            "VarCharValue": "legacy_subject_id"
+          },
+          {
+            "VarCharValue": "full_name"
+          },
+          {
+            "VarCharValue": "primary_address_line_1"
+          },
+          {
+            "VarCharValue": "primary_address_line_2"
+          },
+          {
+            "VarCharValue": "primary_address_line_3"
+          },
+          {
+            "VarCharValue": "primary_address_post_code"
+          },
+          {
+            "VarCharValue": "order_start_date"
+          },
+          {
+            "VarCharValue": "order_end_date"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1253587"
+          },
+          {
+            "VarCharValue": "ELLEN RIPLY"
+          },
+          {
+            "VarCharValue": "310 Lightbowne Road, Moston"
+          },
+          {
+            "VarCharValue": "Moston"
+          },
+          {
+            "VarCharValue": "Manchester"
+          },
+          {
+            "VarCharValue": "M40 0FJ"
+          },
+          {
+            "VarCharValue": "2019-10-24"
+          },
+          {
+            "VarCharValue": "2020-03-24"
+          }
+        ]
+      }
+    ],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "legacy_subject_id",
+          "Label": "legacy_subject_id",
+          "Type": "bigint",
+          "Precision": "19",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "false"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "full_name",
+          "Label": "full_name",
+          "Type": "varchar",
+          "Precision": "2147483647",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "true"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_1",
+          "Label": "primary_address_line_1",
+          "Type": "varchar",
+          "Precision": "2147483647",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "true"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_2",
+          "Label": "primary_address_line_2",
+          "Type": "varchar",
+          "Precision": "2147483647",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "true"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_3",
+          "Label": "primary_address_line_3",
+          "Type": "varchar",
+          "Precision": "2147483647",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "true"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_post_code",
+          "Label": "primary_address_post_code",
+          "Type": "varchar",
+          "Precision": "2147483647",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "true"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_start_date",
+          "Label": "order_start_date",
+          "Type": "date",
+          "Precision": "0",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "false"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_end_date",
+          "Label": "order_end_date",
+          "Type": "date",
+          "Precision": "0",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "false"
+        }
+      ]
+    }
   }
+}""",
+      )
 
-  @Test
-  fun `Mapping fails if mapping to object with wrong set of fields`() {
-    val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
+      val expected: List<AthenaOrderDTO> = listOf(
+        AthenaOrderDTO(
+          legacySubjectId = 1253587,
+          fullName = "ELLEN RIPLY",
+          primaryAddressLine1 = "310 Lightbowne Road, Moston",
+          primaryAddressLine2 = "Moston",
+          primaryAddressLine3 = "Manchester",
+          primaryAddressPostCode = "M40 0FJ",
+          orderStartDate = "2019-10-24",
+          orderEndDate = "2020-03-24",
+        ),
+      )
 
-    data class FakeObject(
-      val firstField: String,
-      val secondField: Boolean?,
-      val thirdField: Long = 4455566,
-    )
+      val result = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
 
-    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
-      .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Can map the ResultSet to a generic object`() {
+      val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
+
+      val expected: List<MiniOrder> = listOf(
+        MiniOrder(
+          legacySubjectId = 1253587,
+          legacyOrderId = 1250042,
+          firstName = "ELLEN",
+          lastName = "RIPLY",
+          fullName = "ELLEN RIPLY",
+        ),
+        MiniOrder(
+          legacySubjectId = 1034415,
+          legacyOrderId = 1032792,
+          firstName = "JOHN",
+          lastName = "BROWNLIE",
+          fullName = "JOHN BROWNLIE",
+        ),
+      )
+
+      val result = AthenaHelper.mapTo<MiniOrder>(resultSet)
+
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Mapping fails if mapping to object with wrong set of fields`() {
+      val resultSet: ResultSet = AthenaHelper.resultSetFromJson(defaultResultSet)
+
+      data class FakeObject(
+        val firstField: String,
+        val secondField: Boolean?,
+        val thirdField: Long = 4455566,
+      )
+
+      Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
+        .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
+    }
   }
 }
