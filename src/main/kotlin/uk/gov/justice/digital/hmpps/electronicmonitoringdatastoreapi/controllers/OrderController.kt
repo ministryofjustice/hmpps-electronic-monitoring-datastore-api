@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 
 @RestController
 // @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH') and hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
@@ -104,6 +107,21 @@ class OrderController {
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
   ): ResponseEntity<Any> {
     val orderInfo: OrderInformation = OrderInformationRepository.getMockOrderInformation(orderId)
+    return ResponseEntity.ok(orderInfo)
+  }
+
+  @GetMapping("/getMockOrderSummary-temp/{orderId}")
+  fun getRealOrderSummary(
+    @PathVariable orderId: String,
+    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+  ): ResponseEntity<Any> {
+    var orderInfo: OrderInformation = OrderInformationRepository.getMockOrderInformation(orderId)
+
+    val repository = OrderRepository()
+    // get KeyOrderInfo from the DB
+    val keyInfo: AthenaQueryResponse<KeyOrderInformation> = repository.getKeyOrderInfo(orderId)
+    orderInfo.keyOrderInformation = keyInfo.queryResponse ?: orderInfo.keyOrderInformation
+
     return ResponseEntity.ok(orderInfo)
   }
 
