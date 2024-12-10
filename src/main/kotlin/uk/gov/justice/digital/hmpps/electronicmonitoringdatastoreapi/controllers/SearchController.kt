@@ -82,5 +82,7 @@ class SearchController {
   fun searchOrders(
     @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> = OrderRepository.getOrders()
+  ): List<Order> {
+    return OrderRepository.getOrders()
+  }
 }
