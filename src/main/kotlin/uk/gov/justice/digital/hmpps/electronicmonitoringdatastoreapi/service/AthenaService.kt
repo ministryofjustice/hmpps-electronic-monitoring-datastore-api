@@ -1,68 +1,96 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
-import software.amazon.awssdk.services.athena.model.ColumnInfo
 import software.amazon.awssdk.services.athena.model.GetQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.GetQueryExecutionResponse
 import software.amazon.awssdk.services.athena.model.GetQueryResultsRequest
+import software.amazon.awssdk.services.athena.model.GetQueryResultsResponse
 import software.amazon.awssdk.services.athena.model.QueryExecutionContext
 import software.amazon.awssdk.services.athena.model.QueryExecutionState
 import software.amazon.awssdk.services.athena.model.ResultConfiguration
-import software.amazon.awssdk.services.athena.model.Row
+import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientFactory
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 
 // We will instantiate as new for now
 class AthenaService {
-
-  private val clientFactory = AthenaClientFactory()
   private val stsService = AssumeRoleService()
+  private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
+  private val sleepLength: Long = 1000
+  private val databaseName: String = "test_database"
+  private val defaultRole: AthenaRole = AthenaRole.DEV
+//  const val CLIENT_EXECUTION_TIMEOUT = 1000 // TODO: Remove unused constant
 
-  object ExampleConstants {
-    const val CLIENT_EXECUTION_TIMEOUT = 1000
-    const val ATHENA_OUTPUT_BUCKET = "s3://emds-dev-athena-query-results-20240917144028307600000004" // change the Amazon S3 bucket name to match
+  companion object {
+    inline fun <reified T> mapTo(resultSet: ResultSet): List<T> {
+      val mapper = jacksonObjectMapper()
+        .registerKotlinModule()
+        .apply {
+          propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
+        }
 
-    // your environment
-    // Demonstrates how to query a table with a comma-separated value (CSV) table.
-    // For information, see
-    // https://docs.aws.amazon.com/athena/latest/ug/work-with-data.html
-    const val QUERY_EXAMPLE = "SELECT * FROM dummy_table_1 limit 10;" // change the Query statement to match
+      val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
 
-    // your environment
-    const val SLEEP_AMOUNT_IN_MS: Long = 1000
-    const val ATHENA_DEFAULT_DATABASE = "test_database" // change the database to match your database
+      val mappedRows: List<Map<String, String?>> = resultSet.rows().drop(1).map { row ->
+        row.data().mapIndexed { i, datum ->
+          columnNames[i] to datum.varCharValue()
+        }.toMap()
+      }
+
+      return mappedRows.map { row ->
+        mapper.convertValue(row, T::class.java)
+      }
+    }
   }
 
-  fun getQueryResult(role: AthenaRole, querystring: String = ExampleConstants.QUERY_EXAMPLE): String {
+  private fun startClient(role: AthenaRole): AthenaClient {
     val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
 
-    val athenaClient = AthenaClient.builder()
+    return AthenaClient.builder()
       .region(Region.EU_WEST_2)
       .credentialsProvider(modernisationPlatformCredentialsProvider)
       .build()
+  }
+
+  // Initialise a query, wait for completion, and return the ResultSet
+  fun getQueryResult(role: AthenaRole = defaultRole, querystring: String): ResultSet {
+    val athenaClient = startClient(role)
 
     val queryExecutionId = submitAthenaQuery(athenaClient, querystring)
+
+    // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)
 
-    val output: String = processResultRows(athenaClient, queryExecutionId)
+    val output: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+
     athenaClient.close()
     return output
   }
 
-  // Submits a sample query to Amazon Athena and returns the execution ID of the
-  // query.
-  fun submitAthenaQuery(athenaClient: AthenaClient, querystring: String): String {
-    try {
+  // Submits a query to Amazon Athena and returns the execution ID
+  @Throws(AthenaClientException::class)
+  fun startQuery(role: AthenaRole = defaultRole, querystring: String): String {
+    val athenaClient = startClient(role)
+    val queryId: String = submitAthenaQuery(athenaClient, querystring)
+    athenaClient.close()
+    return queryId
+  }
+
+  @Throws(AthenaClientException::class)
+  private fun submitAthenaQuery(athenaClient: AthenaClient, querystring: String): String {
+    return try {
       // The QueryExecutionContext allows us to set the database.
       val queryExecutionContext = QueryExecutionContext.builder()
-        .database(ExampleConstants.ATHENA_DEFAULT_DATABASE)
+        .database(databaseName)
         .build()
 
       // The result configuration specifies where the results of the query should go.
       val resultConfiguration = ResultConfiguration.builder()
-        .outputLocation(ExampleConstants.ATHENA_OUTPUT_BUCKET)
+        .outputLocation(outputBucket)
         .build()
 
       val startQueryExecutionRequest = StartQueryExecutionRequest.builder()
@@ -76,15 +104,15 @@ class AthenaService {
 
       return startQueryExecutionResponse.queryExecutionId()
     } catch (e: AthenaException) {
-      e.printStackTrace()
-      System.exit(1)
+      throw AthenaClientException("Error submitting query to Athena: ${e.message}")
+//      e.printStackTrace()
+//      System.exit(1)
     }
-    return ""
   }
 
   // Wait for an Amazon Athena query to complete, fail or to be cancelled.
   @Throws(InterruptedException::class)
-  fun waitForQueryToComplete(athenaClient: AthenaClient, queryExecutionId: String?) {
+  private fun waitForQueryToComplete(athenaClient: AthenaClient, queryExecutionId: String?) {
     val getQueryExecutionRequest = GetQueryExecutionRequest.builder()
       .queryExecutionId(queryExecutionId)
       .build()
@@ -104,47 +132,34 @@ class AthenaService {
         isQueryStillRunning = false
       } else {
         // Sleep an amount of time before retrying again.
-        Thread.sleep(ExampleConstants.SLEEP_AMOUNT_IN_MS)
+        Thread.sleep(sleepLength)
       }
       println("The current status is: $queryState")
     }
   }
 
-  // This code retrieves the results of a query
-  fun processResultRows(athenaClient: AthenaClient, queryExecutionId: String?): String {
-    val sb = StringBuilder()
+  // Retrieve the results of a query by execution ID (non-paged)
+  @Throws(AthenaClientException::class)
+  private fun retrieveResults(role: AthenaRole = defaultRole, queryExecutionId: String?): ResultSet {
+    val athenaClient = startClient(role)
+    val results: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    athenaClient.close()
+    return results
+  }
 
-    try {
-      // Max Results can be set but if its not set,
-      // it will choose the maximum page size.
+  @Throws(AthenaClientException::class)
+  private fun retrieveResults(athenaClient: AthenaClient, queryExecutionId: String?): ResultSet {
+    return try {
       val getQueryResultsRequest = GetQueryResultsRequest.builder()
         .queryExecutionId(queryExecutionId)
         .build()
-      val getQueryResultsResults = athenaClient
-        .getQueryResultsPaginator(getQueryResultsRequest)
-      for (result in getQueryResultsResults) {
-        val columnInfoList = result.resultSet().resultSetMetadata().columnInfo()
-        val results = result.resultSet().rows()
-        sb.append(processRow(results, columnInfoList))
-      }
+
+      val queryResults: GetQueryResultsResponse = athenaClient.getQueryResults(getQueryResultsRequest)
+      return queryResults.resultSet()
     } catch (e: AthenaException) {
-      e.printStackTrace()
-      System.exit(1)
+      throw AthenaClientException("Error submitting query to Athena: ${e.message}")
+      // e.printStackTrace()
+      throw e
     }
-
-    return sb.toString()
-  }
-
-  private fun processRow(row: List<Row>, columnInfoList: List<ColumnInfo>): String {
-    val sb = StringBuilder()
-
-    for (myRow in row) {
-      val allData = myRow.data()
-      for (data in allData) {
-        sb.append("The value of the column is " + data.varCharValue())
-      }
-    }
-
-    return sb.toString()
   }
 }
