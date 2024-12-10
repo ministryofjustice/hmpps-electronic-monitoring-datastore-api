@@ -39,17 +39,33 @@ class SearchController {
   }
 
   @GetMapping("/testEndpoint")
-  fun confirmAthenaAccess(): JSONObject {
+  fun confirmAthenaAccess(): ResponseEntity<ResultSet> {
     val athenaService = AthenaService()
-    val fakeQuery: String = "SELECT * FROM dummy_table_1 limit 10;"
-    val resultSet: ResultSet = athenaService.getQueryResult(AthenaRole.DEV, fakeQuery)
-    val stringResult: String = resultSet.toString()
+    val testQuery: String = """
+        SELECT 
+          legacy_subject_id, 
+          full_name, 
+          primary_address_line_1, 
+          primary_address_line_2, 
+          primary_address_line_3, 
+          primary_address_post_code, 
+          order_start_date, 
+          order_end_date 
+        FROM 
+          test_database.order_details
+        WHERE 
+    """.trimIndent()
+    val resultSet: ResultSet = athenaService.getQueryResult(AthenaRole.DEV, testQuery)
 
-//    val response: JSONObject = JSONObject()
-//    response.put("data", stringResult)
-    val response: JSONObject = JSONObject(resultSet)
+    return ResponseEntity<ResultSet>(
+      resultSet,
+      HttpStatus.OK,
+    )
 
-    return response
+//    val stringResult: String = resultSet.toString()
+//    val response: JSONObject = JSONObject(resultSet)
+//
+//    return response
   }
 
   @PostMapping("/custom-query")
