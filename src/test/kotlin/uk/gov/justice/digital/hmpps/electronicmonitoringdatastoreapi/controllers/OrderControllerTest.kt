@@ -1,12 +1,17 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import net.minidev.json.JSONObject
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 
 class OrderControllerTest {
+
+  private val objectMapper = ObjectMapper()
 
   @Nested
   inner class GetOrder {
@@ -67,54 +72,50 @@ class OrderControllerTest {
 
     private val sut: OrderController = OrderController()
 
-    // Kept the test simple as we only have mock data presently.
     @Test
     fun `Returns order summary if correct params supplied`() {
-      val orderId = "7654321" // mock-data value
+      val orderId = "7654321"
       val userToken = "real-token"
       val orderInfo = OrderInformationRepository.getOrderInformation(orderId)
-      val expected = JSONObject(
-        mapOf("data" to orderInfo),
-      )
+      val expectedResponse = ResponseEntity.ok(orderInfo)
 
-      val result: JSONObject = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result).isEqualTo(expected)
+      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
+      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
+      Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
     }
 
     @Test
     fun `Returns 'No summary available' if incorrect orderId`() {
       val orderId = "non-existent-order"
       val userToken = "real-token"
-      val expected = JSONObject(
-        mapOf("data" to "No summary available for order ID $orderId"),
-      )
+      val expectedResponse = ResponseEntity.notFound().build<Any>()
 
-      val result: JSONObject = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result).isEqualTo(expected)
+      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
+      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
+      // Checking for body on notFound as it should not contain a body
+      Assertions.assertThat(result.body).isNull()
     }
 
     @Test
-    fun `Returns 'Unauthorised request' if userToken is invalid`() {
+    fun `Returns 'Unauthorized request' if userToken is invalid`() {
       val orderId = "obviously-real-id"
       val userToken = "fake-token"
-      val expected = JSONObject(
-        mapOf("data" to "Unauthorised request with user token $userToken"),
-      )
+      val expectedResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(JSONObject(mapOf("error" to "Unauthorized request with user token $userToken")))
 
-      val result: JSONObject = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result).isEqualTo(expected)
+      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
+      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
+      Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
     }
 
     @Test
-    fun `Returns 'Unauthorised request' if userToken is not supplied`() {
+    fun `Returns 'Unauthorized request' if userToken is not supplied`() {
       val orderId = "obviously-real-id"
       val userToken = "no-token-supplied"
-      val expected = JSONObject(
-        mapOf("data" to "Unauthorised request with user token $userToken"),
-      )
+      val expectedResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(JSONObject(mapOf("error" to "Unauthorized request with user token $userToken")))
 
-      val result: JSONObject = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result).isEqualTo(expected)
+      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
+      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
+      Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
     }
   }
 

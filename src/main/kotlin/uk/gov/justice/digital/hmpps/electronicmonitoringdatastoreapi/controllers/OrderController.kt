@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
 import net.minidev.json.JSONObject
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -45,21 +46,55 @@ class OrderController {
 
     return response
   }
+//
+//  @GetMapping("/getOrderSummary/{orderId}")
+//  fun getOrderSummary(
+//    @PathVariable orderId: String,
+//    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+//  ): JSONObject {
+//    if (!checkValidUser(userToken)) {
+//      return JSONObject(mapOf("data" to "Unauthorised request with user token $userToken"))
+//    }
+//
+//    val orderInfo: OrderInformation? = OrderInformationRepository.getOrderInformation(orderId)
+//    return if (orderInfo != null) {
+//      JSONObject(mapOf("data" to orderInfo))
+//    } else {
+//      JSONObject(mapOf("data" to "No summary available for order ID $orderId"))
+//    }
+//  }
+//
+//  @GetMapping("/getMockOrderSummary/{orderId}")
+//  fun getMockOrderSummary(
+//    @PathVariable orderId: String,
+//    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+//  ): JSONObject {
+//    val orderInfo: OrderInformation? = OrderInformationRepository.getMockOrderInformation(orderId)
+//    return if (orderInfo != null) {
+//      JSONObject(mapOf("data" to orderInfo))
+//    } else {
+//      JSONObject(mapOf("data" to "No summary available for order ID $orderId"))
+//    }
+//  }
 
   @GetMapping("/getOrderSummary/{orderId}")
   fun getOrderSummary(
     @PathVariable orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-  ): JSONObject {
+  ): ResponseEntity<Any> {
     if (!checkValidUser(userToken)) {
-      return JSONObject(mapOf("data" to "Unauthorised request with user token $userToken"))
+      return ResponseEntity
+        .status(401)
+        .body(mapOf("error" to "Unauthorized request with user token $userToken"))
     }
 
     val orderInfo: OrderInformation? = OrderInformationRepository.getOrderInformation(orderId)
     return if (orderInfo != null) {
-      JSONObject(mapOf("data" to orderInfo))
+      ResponseEntity.ok(orderInfo)
     } else {
-      JSONObject(mapOf("data" to "No summary available for order ID $orderId"))
+      ResponseEntity
+        .notFound()
+        .build()
     }
   }
 
@@ -67,14 +102,17 @@ class OrderController {
   fun getMockOrderSummary(
     @PathVariable orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-  ): JSONObject {
-    val orderInfo: OrderInformation? = OrderInformationRepository.getMockOrderInformation(orderId)
+  ): ResponseEntity<Any> {
+    val orderInfo: OrderInformation? = OrderInformationRepository.getOrderInformation(orderId)
     return if (orderInfo != null) {
-      JSONObject(mapOf("data" to orderInfo))
+      ResponseEntity.ok(orderInfo)
     } else {
-      JSONObject(mapOf("data" to "No summary available for order ID $orderId"))
+      ResponseEntity
+        .notFound()
+        .build()
     }
   }
+
   fun checkValidUser(userToken: String): Boolean {
     val validTokenValue: String = "real-token"
 
