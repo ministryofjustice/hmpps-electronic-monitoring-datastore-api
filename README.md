@@ -47,6 +47,9 @@ To run trivy analysis on the built image locally, run:
 2. `brew install aquasecurity/trivy/trivy` to install trivy
 3. `trivy image <your image uid>` to scan.
 
+### Code coverage
+This project has Jacoco integrated, and this will run after each test run. The generated report can be found [here](build/reports/jacoco/test/html/index.html) and can be opened in your browser.
+
 ## Deployment
 > Force-push your code to branch `deploy-dev` to deploy it to dev.  
 > This cannot deploy past dev, but is otherwise the same as the main deployment pipeline.
