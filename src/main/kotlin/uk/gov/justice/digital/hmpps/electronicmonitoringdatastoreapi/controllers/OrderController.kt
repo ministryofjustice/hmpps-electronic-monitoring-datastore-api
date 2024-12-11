@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controller
 
 import net.minidev.json.JSONObject
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,7 +13,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 
 @RestController
 // @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH') and hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
@@ -49,80 +49,43 @@ class OrderController {
 
     return response
   }
-//
-//  @GetMapping("/getOrderSummary/{orderId}")
-//  fun getOrderSummary(
-//    @PathVariable orderId: String,
-//    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-//  ): JSONObject {
-//    if (!checkValidUser(userToken)) {
-//      return JSONObject(mapOf("data" to "Unauthorised request with user token $userToken"))
-//    }
-//
-//    val orderInfo: OrderInformation? = OrderInformationRepository.getOrderInformation(orderId)
-//    return if (orderInfo != null) {
-//      JSONObject(mapOf("data" to orderInfo))
-//    } else {
-//      JSONObject(mapOf("data" to "No summary available for order ID $orderId"))
-//    }
-//  }
-//
-//  @GetMapping("/getMockOrderSummary/{orderId}")
-//  fun getMockOrderSummary(
-//    @PathVariable orderId: String,
-//    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-//  ): JSONObject {
-//    val orderInfo: OrderInformation? = OrderInformationRepository.getMockOrderInformation(orderId)
-//    return if (orderInfo != null) {
-//      JSONObject(mapOf("data" to orderInfo))
-//    } else {
-//      JSONObject(mapOf("data" to "No summary available for order ID $orderId"))
-//    }
-//  }
-
-  @GetMapping("/getOrderSummary/{orderId}")
-  fun getOrderSummary(
-    @PathVariable orderId: String,
-    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-  ): ResponseEntity<Any> {
-    if (!checkValidUser(userToken)) {
-      return ResponseEntity
-        .status(401)
-        .body(mapOf("error" to "Unauthorized request with user token $userToken"))
-    }
-
-    val orderInfo: OrderInformation? = OrderInformationRepository.getOrderInformation(orderId)
-    return if (orderInfo != null) {
-      ResponseEntity.ok(orderInfo)
-    } else {
-      ResponseEntity
-        .notFound()
-        .build()
-    }
-  }
 
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     @PathVariable orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-  ): ResponseEntity<Any> {
-    val orderInfo: OrderInformation = OrderInformationRepository.getMockOrderInformation(orderId)
+  ): ResponseEntity<OrderInformation> {
+    val repository = OrderInformationRepository()
+    val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
     return ResponseEntity.ok(orderInfo)
   }
 
-  @GetMapping("/getMockOrderSummary-temp/{orderId}")
-  fun getRealOrderSummary(
+  @GetMapping("/getOrderSummary/{orderId}")
+  fun getOrderSummary(
     @PathVariable orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
-  ): ResponseEntity<Any> {
-    var orderInfo: OrderInformation = OrderInformationRepository.getMockOrderInformation(orderId)
+  ): ResponseEntity<OrderInformation> {
+    if (!checkValidUser(userToken)) {
+      throw AccessDeniedException("Your token is valid for this service, but your user is not allowed to access this resource")
+    }
 
-    val repository = OrderRepository()
-    // get KeyOrderInfo from the DB
-    val keyInfo: AthenaQueryResponse<KeyOrderInformation> = repository.getKeyOrderInfo(orderId)
-    orderInfo.keyOrderInformation = keyInfo.queryResponse ?: orderInfo.keyOrderInformation
+    // get fake generic object
+    val repository = OrderInformationRepository()
+    var fakeOrder: OrderInformation = repository.getMockOrderInformation(orderId)
 
-    return ResponseEntity.ok(orderInfo)
+    // get 'real' KeyOrderInfo from the DB
+    val keyInfo: AthenaQueryResponse<KeyOrderInformation> = repository.getKeyOrderInformation(orderId)
+    // val historyReport: AthenaQueryResponse<SubjectHistoryReport> = repository.getSubjectHistoryReport(orderId)
+    // val documentList: AthenaQueryResponse<DocumentList> = repository.getDocumentList(orderId)
+
+    // Put it together
+    val result = OrderInformation(
+      keyOrderInformation = keyInfo.queryResponse ?: fakeOrder.keyOrderInformation,
+      subjectHistoryReport = fakeOrder.subjectHistoryReport,
+      documents = fakeOrder.documents,
+    )
+
+    return ResponseEntity.ok(result)
   }
 
   fun checkValidUser(userToken: String): Boolean {

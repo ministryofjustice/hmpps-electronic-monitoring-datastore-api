@@ -2,11 +2,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaKeyOrderDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaOrderDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
@@ -151,25 +149,6 @@ class OrderRepository {
       )
     }
 
-    fun parseOrderId(orderId: String): AthenaQuery = AthenaQuery(
-      queryString = """
-          SELECT
-                legacy_subject_id
-              , legacy_order_id
-              , full_name
-              , alias
-              , date_of_birth
-              , primary_address_line_1
-              , primary_address_line_2
-              , primary_address_line_3
-              , primary_address_post_code
-              , order_start_date
-              , order_end_date
-          FROM test_database.order_details
-          WHERE legacy_subject_id = $orderId
-      """.trimIndent(),
-    )
-
     fun parseOrders(resultSet: ResultSet): List<Order> {
       var dtoOrders: List<AthenaOrderDTO> = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
 
@@ -180,13 +159,6 @@ class OrderRepository {
       // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
       // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
       // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
-    }
-
-    fun parseOrder(resultSet: ResultSet): KeyOrderInformation {
-      var dtoOrders: List<AthenaKeyOrderDTO> = AthenaHelper.mapTo<AthenaKeyOrderDTO>(resultSet)
-
-      var orders: List<KeyOrderInformation> = dtoOrders.map { dto -> KeyOrderInformation(dto) }
-      return orders[0]
     }
   }
 
@@ -204,21 +176,6 @@ class OrderRepository {
       queryString = athenaQuery.queryString,
       athenaRole = role.name,
       queryResponse = parsedOrders,
-    )
-  }
-
-  fun getKeyOrderInfo(orderId: String): AthenaQueryResponse<KeyOrderInformation> {
-    val athenaQuery: AthenaQuery = OrderRepository.parseOrderId(orderId)
-    val role = AthenaRole.DEV
-
-    val athenaResponse: ResultSet = athenaService.getQueryResult(role, athenaQuery.queryString)
-
-    val parsedOrder: KeyOrderInformation = parseOrder(athenaResponse)
-
-    return AthenaQueryResponse<KeyOrderInformation>(
-      queryString = athenaQuery.queryString,
-      athenaRole = role.name,
-      queryResponse = parsedOrder,
     )
   }
 }

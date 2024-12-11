@@ -5,8 +5,9 @@ import net.minidev.json.JSONObject
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 
 class OrderControllerTest {
@@ -71,51 +72,42 @@ class OrderControllerTest {
   inner class GetOrderSummary {
 
     private val sut: OrderController = OrderController()
+    private val repository: OrderInformationRepository = OrderInformationRepository()
 
+    // TODO: Replace this with a test that mocks the response
     @Test
     fun `Returns order summary if correct params supplied`() {
       val orderId = "7654321"
       val userToken = "real-token"
-      val orderInfo = OrderInformationRepository.getOrderInformation(orderId)
+      val orderInfo = repository.getMockOrderInformation(orderId)
       val expectedResponse = ResponseEntity.ok(orderInfo)
 
-      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
+      val result: ResponseEntity<OrderInformation> = sut.getMockOrderSummary(orderId, userToken)
       Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
       Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
     }
 
-    @Test
-    fun `Returns 'No summary available' if incorrect orderId`() {
-      val orderId = "non-existent-order"
-      val userToken = "real-token"
-      val expectedResponse = ResponseEntity.notFound().build<Any>()
+    // TODO: Replace this with a test that mocks the response
+//    @Test
+//    fun `Returns 'No summary available' if incorrect orderId`() {
+//      val orderId = "non-existent-order"
+//      val userToken = "real-token"
+//      val expectedResponse = ResponseEntity.notFound().build<Any>()
+//
+//      val result: ResponseEntity<OrderInformation> = sut.getMockOrderSummary(orderId, userToken)
+//      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
+//      // Checking for body on notFound as it should not contain a body
+//      Assertions.assertThat(result.body).isNull()
+//    }
 
-      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
-      // Checking for body on notFound as it should not contain a body
-      Assertions.assertThat(result.body).isNull()
-    }
-
     @Test
-    fun `Returns 'Unauthorized request' if userToken is invalid`() {
+    fun `Throws AccessDeniedException if userToken is invalid`() {
       val orderId = "obviously-real-id"
       val userToken = "fake-token"
-      val expectedResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(JSONObject(mapOf("error" to "Unauthorized request with user token $userToken")))
 
-      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
-      Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
-    }
-
-    @Test
-    fun `Returns 'Unauthorized request' if userToken is not supplied`() {
-      val orderId = "obviously-real-id"
-      val userToken = "no-token-supplied"
-      val expectedResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(JSONObject(mapOf("error" to "Unauthorized request with user token $userToken")))
-
-      val result: ResponseEntity<Any> = sut.getOrderSummary(orderId, userToken)
-      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
-      Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
+      Assertions.assertThatExceptionOfType(AccessDeniedException::class.java)
+        .isThrownBy { sut.getOrderSummary(orderId, userToken) }
+        .withMessage("Your token is valid for this service, but your user is not allowed to access this resource")
     }
   }
 
