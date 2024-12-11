@@ -23,6 +23,8 @@ dependencies {
 //  implementation("org.json:json:20230227")
   implementation("org.json:json:20240303")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+  implementation("org.jetbrains.exposed:exposed-core:0.57.0")
+//  implementation("org.jetbrains.exposed:exposed-jdbc:0.57.0")
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.1.0")
   testImplementation("org.wiremock:wiremock-standalone:3.10.0")
