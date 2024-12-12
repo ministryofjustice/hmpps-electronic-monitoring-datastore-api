@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
-import net.minidev.json.JSONObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
@@ -20,35 +19,35 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 @RequestMapping(value = ["/orders"], produces = ["application/json"])
 class OrderController {
 
-  @GetMapping("/{orderID}")
-  fun getOrder(
-    @PathVariable(
-      required = true,
-      name = "orderID",
-    ) orderId: String,
-    @RequestHeader(
-      required = false,
-      name = "User-Token",
-    ) userToken: String = "no-token-supplied",
-  ): JSONObject {
-    if (!checkValidUser(userToken)) {
-      return JSONObject(
-        mapOf("data" to "Unauthorised request with user token $userToken"),
-      )
-    }
-
-    if (orderId == "invalid-order") {
-      return JSONObject(
-        mapOf("data" to "No order with ID $orderId could be found"),
-      )
-    }
-
-    val response: JSONObject = JSONObject(
-      mapOf("data" to "This is the data for order $orderId"),
-    )
-
-    return response
-  }
+//  @GetMapping("/{orderID}")
+//  fun getOrder(
+//    @PathVariable(
+//      required = true,
+//      name = "orderID",
+//    ) orderId: String,
+//    @RequestHeader(
+//      required = false,
+//      name = "User-Token",
+//    ) userToken: String = "no-token-supplied",
+//  ): JSONObject {
+//    if (!checkValidUser(userToken)) {
+//      return JSONObject(
+//        mapOf("data" to "Unauthorised request with user token $userToken"),
+//      )
+//    }
+//
+//    if (orderId == "invalid-order") {
+//      return JSONObject(
+//        mapOf("data" to "No order with ID $orderId could be found"),
+//      )
+//    }
+//
+//    val response: JSONObject = JSONObject(
+//      mapOf("data" to "This is the data for order $orderId"),
+//    )
+//
+//    return response
+//  }
 
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
@@ -62,7 +61,9 @@ class OrderController {
 
   @GetMapping("/getOrderSummary/{orderId}")
   fun getOrderSummary(
-    @PathVariable orderId: String,
+    @PathVariable(
+      required = true,
+    ) orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
   ): ResponseEntity<OrderInformation> {
     if (!checkValidUser(userToken)) {
@@ -89,8 +90,8 @@ class OrderController {
   }
 
   fun checkValidUser(userToken: String): Boolean {
-    val validTokenValue: String = "real-token"
+    val invalidTokenValue: String = "invalid-token"
 
-    return userToken == validTokenValue
+    return userToken != invalidTokenValue
   }
 }
