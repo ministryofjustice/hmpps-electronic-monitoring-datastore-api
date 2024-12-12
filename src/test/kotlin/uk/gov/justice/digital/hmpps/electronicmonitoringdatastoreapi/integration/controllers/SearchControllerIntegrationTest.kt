@@ -61,10 +61,10 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
   }
 
   @Nested
-  @DisplayName("POST /search/orders")
+  @DisplayName("POST /search/orders-old")
   inner class SearchOrders {
 
-    val baseUri: String = "/search/orders"
+    val baseUri: String = "/search/orders-old"
 
     @Test
     fun `should fail when no body is sent`() {

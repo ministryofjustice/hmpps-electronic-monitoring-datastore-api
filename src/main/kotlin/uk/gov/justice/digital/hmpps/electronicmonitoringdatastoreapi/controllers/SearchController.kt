@@ -99,13 +99,13 @@ class SearchController {
     )
   }
 
-  @PostMapping("/orders")
+  @PostMapping("/orders-old")
   fun searchOrders(
     @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestBody searchCriteria: SearchCriteria,
   ): List<Order> = OrderRepository.getFakeOrders()
 
-  @PostMapping("/orders-temp")
+  @PostMapping("/orders")
   fun searchOrdersTemp(
     @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestBody searchCriteria: SearchCriteria,
