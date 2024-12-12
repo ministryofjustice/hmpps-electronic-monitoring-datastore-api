@@ -1,11 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
-import org.json.JSONObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -25,18 +23,18 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 @RequestMapping(value = ["/search"], produces = ["application/json"])
 class SearchController {
 
-  @GetMapping("/cases/{caseID}")
-  fun getCases(
-    @PathVariable(
-      required = true,
-      name = "caseID",
-    ) caseId: String,
-  ): JSONObject {
-    val response: JSONObject = JSONObject()
-    response.put("data", "You have successfully queried case $caseId")
-
-    return response
-  }
+//  @GetMapping("/cases/{caseID}")
+//  fun getCases(
+//    @PathVariable(
+//      required = true,
+//      name = "caseID",
+//    ) caseId: String,
+//  ): JSONObject {
+//    val response: JSONObject = JSONObject()
+//    response.put("data", "You have successfully queried case $caseId")
+//
+//    return response
+//  }
 
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(): ResponseEntity<ResultSet> {
@@ -100,13 +98,13 @@ class SearchController {
   }
 
   @PostMapping("/orders-old")
-  fun searchOrders(
+  fun searchOrdersFake(
     @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestBody searchCriteria: SearchCriteria,
   ): List<Order> = OrderRepository.getFakeOrders()
 
   @PostMapping("/orders")
-  fun searchOrdersTemp(
+  fun searchOrders(
     @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestBody searchCriteria: SearchCriteria,
   ): ResponseEntity<List<Order>> {

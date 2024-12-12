@@ -1,8 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.json.JSONObject
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
@@ -14,23 +12,23 @@ class SearchControllerTest {
 
   private val sut: SearchController = SearchController()
 
+//  @Nested
+//  inner class GetSearchResult {
+//
+//    @Test
+//    fun `Accepts caseId as parameter`() {
+//      val caseId = "obviously-fake-data"
+//      val expected = JSONObject(
+//        mapOf("data" to "You have successfully queried case obviously-fake-data"),
+//      )
+//
+//      val result: JSONObject = sut.getCases(caseId)
+//      Assertions.assertThat(result.toString()).isEqualTo(expected.toString())
+//    }
+//  }
+
   @Nested
-  inner class GetSearchResult {
-
-    @Test
-    fun `Accepts caseId as parameter`() {
-      val caseId = "obviously-fake-data"
-      val expected = JSONObject(
-        mapOf("data" to "You have successfully queried case obviously-fake-data"),
-      )
-
-      val result: JSONObject = sut.getCases(caseId)
-      Assertions.assertThat(result.toString()).isEqualTo(expected.toString())
-    }
-  }
-
-  @Nested
-  inner class SearchOrders {
+  inner class SearchOrdersFake {
 
     @Test
     fun `Returns a list of orders`() {
@@ -47,7 +45,7 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<Order> = sut.searchOrders(userToken, searchCriteria)
+      val result: List<Order> = sut.searchOrdersFake(userToken, searchCriteria)
 
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
