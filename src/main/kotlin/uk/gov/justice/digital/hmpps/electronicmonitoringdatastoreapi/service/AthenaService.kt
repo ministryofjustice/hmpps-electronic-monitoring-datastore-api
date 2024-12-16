@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -48,8 +50,16 @@ class AthenaService {
   }
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
+    val localDev: Boolean = true
+    if (localDev) {
+      // If running locally, get creds from local profile; populate this by running sts assume-role in the service pod
+      return AthenaClient.builder()
+        .region(Region.EU_WEST_2)
+        .credentialsProvider(ProfileCredentialsProvider.create("athena-dev"))
+        .build()
+    }
 
+    val modernisationPlatformCredentialsProvider: AwsCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)
       .credentialsProvider(modernisationPlatformCredentialsProvider)

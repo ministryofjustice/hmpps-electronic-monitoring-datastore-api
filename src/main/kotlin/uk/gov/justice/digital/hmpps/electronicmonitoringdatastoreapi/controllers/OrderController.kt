@@ -20,6 +20,16 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 @RequestMapping(value = ["/orders"], produces = ["application/json"])
 class OrderController {
 
+  @GetMapping("/jwt")
+  fun jwtTest(
+    @RequestHeader(
+      required = true,
+      name = "X-User-Token",
+    ) userToken: String,
+  ): ResponseEntity<JSONObject> = ResponseEntity.ok(
+    JSONObject().appendField("data", "Header value was: $userToken"),
+  )
+
   @GetMapping("/{orderID}")
   fun getOrder(
     @PathVariable(

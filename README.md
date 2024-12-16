@@ -59,6 +59,31 @@ This project has Jacoco integrated, and this will run after each test run. The g
 - `main` is deployed via [CircleCI](https://app.circleci.com/pipelines/github/ministryofjustice/hmpps-electronic-monitoring-datastore-api)
 - Kubernetes logs can be found on [Kibana](https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(columns:!(log,kubernetes.pod_id),filters:!(('state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.namespace_name.keyword,negate:!f,params:(query:tst-em-example-app-jkn-dev),type:phrase),query:(match_phrase:(kubernetes.namespace_name.keyword:tst-em-example-app-jkn-dev))),('state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.pod_name,negate:!f,params:(query:hmpps-electronic-monitoring-datastore-api),type:phrase),query:(match_phrase:(kubernetes.pod_name:hmpps-electronic-monitoring-datastore-api)))),index:'167701b0-f8c0-11ec-b95c-1d65c3682287',interval:auto,query:(language:kuery,query:''),sort:!()))
 
+## Accessing Athena
+This application gets its data from Athena, in the Modernisation Platform. The overall flow for this is as follows:
+- The app namespace in Cloud Platform Environments has an IRSA account defined.
+  - This IRSA account has permissions to assume the roles of accounts in the Modernisation Platform
+  - On the mod plat side, these accounts are configured to accept assume-role requests from this IRSA account
+- This service account is injected into the API app in the helm config
+- When the API needs to connect to Athena, it authenticates with AWS using the AWS Java SDK's `DefaultCredentialsProvider()` method, which lets the API use this service account.
+- The [AssumeRoleService](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/service/AssumeRoleService.kt) class uses these creds and from them generate an `StsAssumeRoleCredentialsProvider` for this role
+- This is passed to the [AthenaService](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/service/AthenaService.kt) which creates the Athena connection
+
+### Testing Athena Access  
+A Service Pod is provisioned in the cloud platform with the above IRSA role, which can be accessed via the kubernetes CLI.  
+This pod is periodically recreated so you must re-check the pod name before use.  
+To use this pod (while in the correct Kubernetes namespace)
+1. Get the name of the service pod with `kubectl get pods` - e.g. hmpps-em-datastore-dev-athena-service-pod-6d694cfd48-zqhtr
+2. Connect to the service pod with `kubectl exec --stdin --tty POD_NAME_HERE -- /bin/bash`
+3. Confirm you have the expected IAM role with `aws sts get-caller-identity`
+   - This should be of the form `arn:aws:sts::CLOUD-PLATFORM-ACCOUNT-NUMBER:assumed-role/cloud-platform-irsa-FAKESTRING-live/botocore-session-FAKEID`
+   - It should match the content of the Kubernetes secret for your environment: Obtain this with:  
+   `cloud-platform decode-secret -n hmpps-electronic-monitoring-datastore-dev -s hmpps-electronic-monitoring-datastore-dev-irsa-output`
+4. Get temporary credentials to assume the correct Mod Plat athena role by running:  
+   `aws sts assume-role --role-arn arn:aws:sts::MOD-PLATFORM-ACCOUNT-NUMBER:role/ROLENAME --role-session-name terminal-session`  
+   This should return an AccessKeyId, SecretAccessKey, and SessionToken you can use to run athena queries as per [Using temporary security credentials with the aws cli](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html#using-temp-creds-sdk-cli)
+5. These can be used in the environment variables to run the API within IntelliJ using local.yml
+
 ## Note on remaining TODOs and Examples from template app
 
 We have tried to provide some examples of best practice in the application - so there are lots of TODOs in the code

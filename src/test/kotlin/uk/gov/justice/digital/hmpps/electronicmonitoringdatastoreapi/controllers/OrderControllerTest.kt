@@ -15,6 +15,15 @@ class OrderControllerTest {
   private val objectMapper = ObjectMapper()
 
   @Nested
+  inner class JwtTest {
+    private val sut: OrderController = OrderController()
+
+    @Test
+    fun `Runs`() {
+    }
+  }
+
+  @Nested
   inner class GetOrder {
 
     private val sut: OrderController = OrderController()
