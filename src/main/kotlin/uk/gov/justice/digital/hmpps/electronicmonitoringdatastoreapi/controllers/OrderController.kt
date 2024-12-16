@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
@@ -17,37 +18,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 // @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH') and hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
 @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
 @RequestMapping(value = ["/orders"], produces = ["application/json"])
-class OrderController {
-
-//  @GetMapping("/{orderID}")
-//  fun getOrder(
-//    @PathVariable(
-//      required = true,
-//      name = "orderID",
-//    ) orderId: String,
-//    @RequestHeader(
-//      required = false,
-//      name = "User-Token",
-//    ) userToken: String = "no-token-supplied",
-//  ): JSONObject {
-//    if (!checkValidUser(userToken)) {
-//      return JSONObject(
-//        mapOf("data" to "Unauthorised request with user token $userToken"),
-//      )
-//    }
-//
-//    if (orderId == "invalid-order") {
-//      return JSONObject(
-//        mapOf("data" to "No order with ID $orderId could be found"),
-//      )
-//    }
-//
-//    val response: JSONObject = JSONObject(
-//      mapOf("data" to "This is the data for order $orderId"),
-//    )
-//
-//    return response
-//  }
+class OrderController(
+  @Autowired val repository: OrderInformationRepository,
+) {
 
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
@@ -57,6 +30,20 @@ class OrderController {
     val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
     return ResponseEntity.ok(orderInfo)
+  }
+
+  //  @PreAuthorize("hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
+  @GetMapping("/getOrderSummary/specials/{orderId}")
+  fun getSpecialsOrder(
+    @PathVariable(
+      required = true,
+    ) orderId: String,
+    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+  ): ResponseEntity<OrderInformation> {
+//    val repository = OrderInformationRepository()
+    val result = repository.getMockOrderInformation(orderId)
+
+    return ResponseEntity.ok(result)
   }
 
   @GetMapping("/getOrderSummary/{orderId}")
@@ -71,7 +58,7 @@ class OrderController {
     }
 
     // get fake generic object
-    val repository = OrderInformationRepository()
+//    val repository = OrderInformationRepository()
     var fakeOrder: OrderInformation = repository.getMockOrderInformation(orderId)
 
     // get 'real' KeyOrderInfo from the DB
