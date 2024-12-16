@@ -26,7 +26,10 @@ class OrderController(
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     @PathVariable orderId: String,
-    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+    @RequestHeader(
+      name = "X-User-Token",
+      required = true,
+    ) userToken: String,
   ): ResponseEntity<OrderInformation> {
     val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
@@ -40,7 +43,10 @@ class OrderController(
     @PathVariable(
       required = true,
     ) orderId: String,
-    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+    @RequestHeader(
+      name = "X-User-Token",
+      required = true,
+    ) userToken: String,
   ): ResponseEntity<OrderInformation> {
     // TODO: code to interact with the user role claims to go here
 
@@ -54,7 +60,10 @@ class OrderController(
     @PathVariable(
       required = true,
     ) orderId: String,
-    @RequestHeader(name = "X-User-Token", required = true) userToken: String,
+    @RequestHeader(
+      name = "X-User-Token",
+      required = true,
+    ) userToken: String,
   ): ResponseEntity<OrderInformation> {
     if (!checkValidUser(userToken)) {
       throw AccessDeniedException("Your token is valid for this service, but your user is not allowed to access this resource")
