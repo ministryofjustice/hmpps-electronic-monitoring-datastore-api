@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
@@ -46,46 +45,8 @@ class OrderControllerTest {
   }
 
   @Nested
-  inner class MockitoTest {
-
-    @Nested
-    inner class MockableObject {
-      fun call(param: String): String = "You called me with '$param'"
-    }
-
-    @Test
-    fun `Default behaviour works`() {
-      val myObj = MockableObject()
-      Assertions.assertThat(myObj.call("sheep")).isEqualTo("You called me with 'sheep'")
-    }
-
-    @Test
-    fun `Fails when mock is not set up`() {
-      val myObj: MockableObject = mock()
-      Assertions.assertThat(myObj.call("sheep")).isNull()
-    }
-
-    @Test
-    fun `Returns a different answer when mock is set up`() {
-      val myObj: MockableObject = mock()
-      val myParam: String = "sheep"
-      `when`(myObj.call(myParam)).thenReturn("piglets")
-      Assertions.assertThat(myObj.call(myParam)).isEqualTo("piglets")
-    }
-
-    @Test
-    fun `Works with arbitrary inputs`() {
-      val myObj: MockableObject = mock()
-      val myParam: String = "sheep"
-      `when`(myObj.call(anyString())).thenReturn("piglets")
-      Assertions.assertThat(myObj.call(myParam)).isEqualTo("piglets")
-    }
-  }
-
-  @Nested
   inner class GetOrderSummary {
 
-    // TODO: Replace this with a test that mocks the response
     @Test
     fun `Returns order summary if correct params supplied`() {
       val orderId = "7654321"
@@ -124,6 +85,7 @@ class OrderControllerTest {
     }
 
     // TODO: Replace this with a test that mocks the response
+    // TODO: For this to work, need to implement sensible responses from the service layer if order not found
 //    @Test
 //    fun `Returns 'No summary available' if incorrect orderId`() {
 //      val orderId = "non-existent-order"

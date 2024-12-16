@@ -22,6 +22,7 @@ class OrderController(
   @Autowired val repository: OrderInformationRepository,
 ) {
 
+//  TODO: Remove this mock endpoint
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     @PathVariable orderId: String,
@@ -32,7 +33,8 @@ class OrderController(
     return ResponseEntity.ok(orderInfo)
   }
 
-  //  @PreAuthorize("hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
+  // TODO: This is a temporary endpoint to validate code interacting with user claims
+  @PreAuthorize("hasAuthority('ROLE_EM_DATASTORE_RESTRICTED_RO')")
   @GetMapping("/getOrderSummary/specials/{orderId}")
   fun getSpecialsOrder(
     @PathVariable(
@@ -40,10 +42,11 @@ class OrderController(
     ) orderId: String,
     @RequestHeader(name = "X-User-Token", required = true) userToken: String,
   ): ResponseEntity<OrderInformation> {
-//    val repository = OrderInformationRepository()
-    val result = repository.getMockOrderInformation(orderId)
+    // TODO: code to interact with the user role claims to go here
 
-    return ResponseEntity.ok(result)
+    return ResponseEntity.ok(
+      repository.getMockOrderInformation(orderId),
+    )
   }
 
   @GetMapping("/getOrderSummary/{orderId}")
