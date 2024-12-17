@@ -1,5 +1,5 @@
 info.app:
-  name: HMPPS Electronic Monitoring Datastore Api
+  name: HMPPS Electronic Monitoring Datastore API
   version: 1.0
 
 spring:
@@ -7,33 +7,20 @@ spring:
     name: hmpps-electronic-monitoring-datastore-api
   codec:
     max-in-memory-size: 10MB
-
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
-  # TODO: This security section can be removed if your service doesn't call out to other services
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${hmpps-auth.url}/.well-known/jwks.json
-
+          issuer-uri:  ${services.hmpps-auth.url}issuer
+          jwk-set-uri:  ${services.hmpps-auth.url}/.well-known/jwks.json
       client:
         provider:
           hmpps-auth:
-            token-uri: ${hmpps-auth.url}/oauth/token
-
-        registration:
-          # example client registration for calling out to other services
-          # TODO: Remove / replace this registration
-          example-api:
-            provider: hmpps-auth
-            client-id: ${example-api.client.id}
-            client-secret: ${example-api.client.secret}
-            authorization-grant-type: client_credentials
-            scope: read
+            token-uri: ${services.hmpps-auth.url}/oauth/token
 
 server:
   port: 8080
@@ -66,3 +53,7 @@ management:
     info:
       cache:
         time-to-live: 2000ms
+
+services:
+  hmpps-auth:
+    url: ${HMPPS_AUTH_URL}

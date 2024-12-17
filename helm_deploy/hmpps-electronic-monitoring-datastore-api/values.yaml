@@ -2,6 +2,8 @@ generic-service:
   nameOverride: hmpps-electronic-monitoring-datastore-api
   productId: "HMPPS529" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
+  service-account-name: hmpps-electronic-monitoring-datastore
+
   replicaCount: 4
 
   image:
@@ -13,9 +15,6 @@ generic-service:
     enabled: true
     host: app-hostname.local # override per environment
     tlsSecretName: hmpps-electronic-monitoring-datastore-cert
-    # TODO: Do we need to change this secret name?
-    # Do we need to make this match the secret record we create in the namespace?
-    # This seems unlikely, as it looks like secrets and secret-names are per-environment
 
   # Environment variables to load into the deployment
   env:
@@ -23,6 +22,7 @@ generic-service:
     SERVER_PORT: "8080"
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
+    HMPPS_SQS_USEWEBTOKEN: true
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -32,9 +32,8 @@ generic-service:
   namespace_secrets:
     hmpps-electronic-monitoring-datastore-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      # TODO: Check that the appinsights_instrumentaitonKey exists in the NS
-      # Example client registration secrets
-      # TODO: add in appropriate client registration details - once these exist in the namespace
+      CLIENT_ID: "API_CLIENT_ID"
+      CLIENT_SECRET: "API_CLIENT_SECRET"
 
   allowlist:
     groups:
