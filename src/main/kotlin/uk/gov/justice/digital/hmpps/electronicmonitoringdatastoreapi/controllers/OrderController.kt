@@ -22,7 +22,6 @@ class OrderController(
   @Autowired val repository: OrderInformationRepository,
 ) {
 
-//  TODO: Remove this mock endpoint
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     @PathVariable orderId: String,
