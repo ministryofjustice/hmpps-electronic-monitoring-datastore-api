@@ -25,7 +25,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     fun `should return forbidden if no role`() {
       webTestClient.get()
         .uri("/example/time")
-        .headers(setAuthorisation())
+        .headers(setAuthorisation(roles = listOf()))
         .exchange()
         .expectStatus()
         .isForbidden

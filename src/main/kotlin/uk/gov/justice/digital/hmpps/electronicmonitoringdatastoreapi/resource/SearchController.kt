@@ -1,9 +1,10 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -41,9 +42,11 @@ class SearchController(
 //  }
 
   @GetMapping("/testEndpoint")
-  fun confirmAthenaAccess(): ResponseEntity<ResultSet> {
-    val athenaService = AthenaService()
-    val testQuery: String = """
+  fun confirmAthenaAccess(
+    authentication: Authentication,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
+  ): ResponseEntity<ResultSet> {
+    val queryString: String = """
         SELECT 
           legacy_subject_id, 
           full_name, 
@@ -57,7 +60,16 @@ class SearchController(
           test_database.order_details
         WHERE 
     """.trimIndent()
-    val resultSet: ResultSet = athenaService.getQueryResult(AthenaRole.DEV, testQuery)
+    val validatedRole: AthenaRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+
+    val athenaService = AthenaService()
+    val resultSet: ResultSet = athenaService.getQueryResult(validatedRole, queryString)
+
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "SEARCH_TEST",
+      mapOf("queryString" to queryString),
+    )
 
     return ResponseEntity<ResultSet>(
       resultSet,
@@ -72,10 +84,9 @@ class SearchController(
 
   @PostMapping("/custom-query")
   fun queryAthena(
+    authentication: Authentication,
+    @RequestBody(required = true) athenaQuery: AthenaQuery,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
-    @RequestBody(
-      required = true,
-    ) athenaQuery: AthenaQuery,
   ): AthenaQueryResponse<String> {
     val queryString: String = athenaQuery.queryString
     val validatedRole: AthenaRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
@@ -95,8 +106,9 @@ class SearchController(
     }
 
     auditService.createEvent(
+      authentication.principal.toString(),
       "SEARCH_WITH_CUSTOM_QUERY",
-      mapOf("queryString" to athenaQuery.queryString),
+      mapOf("queryString" to queryString),
     )
 
     return AthenaQueryResponse<String>(
@@ -109,13 +121,21 @@ class SearchController(
 
   @PostMapping("/orders-old")
   fun searchOrdersFake(
-    @RequestHeader("Authorization", required = true) authorization: String,
+    authentication: Authentication,
     @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> = OrderRepository.getFakeOrders()
+  ): List<Order> {
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "SEARCH_OLD_ORDERS",
+      mapOf("legacySubjectId" to searchCriteria.legacySubjectId, "searchType" to searchCriteria.searchType),
+    )
+
+    return OrderRepository.Companion.getFakeOrders()
+  }
 
   @PostMapping("/orders")
   fun searchOrders(
-    @RequestHeader("Authorization", required = true) authorization: String,
+    authentication: Authentication,
     @RequestBody searchCriteria: SearchCriteria,
   ): ResponseEntity<List<Order>> {
     val repository = OrderRepository()
@@ -124,8 +144,9 @@ class SearchController(
     val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
 
     auditService.createEvent(
+      authentication.principal.toString(),
       "SEARCH_ORDERS",
-      mapOf("legacySubjectId" to searchCriteria.legacySubjectId),
+      mapOf("legacySubjectId" to searchCriteria.legacySubjectId, "searchType" to searchCriteria.searchType),
     )
 
     return ResponseEntity<List<Order>>(
