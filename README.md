@@ -5,7 +5,91 @@
 [![Docker Repository on Quay](https://img.shields.io/badge/quay.io-repository-2496ED.svg?logo=docker)](https://quay.io/repository/hmpps/hmpps-electronic-monitoring-datastore-api)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-API to access the Electronic Monitoring datastore in the Modernisation Platform.
+## Contents
+- [About this project](#about-this-project)
+- [Get started](#get-started)
+    - [Using IntelliJ IDEA](#using-intellij-idea)
+- [Usage](#usage)
+    - [Running the application locally](#running-the-application-locally)
+        - [Calling endpoints](#calling-endpoints)
+            - [Generate a token for a HMPPS Auth client](#generate-a-token-for-a-hmpps-auth-client)
+        - [Running the application locally with the UI](#running-both-the-ui-and-the-api-locally)
+
+## About this project
+
+An API used by the [Electronic Monitoring datastore UI](https://github.com/ministryofjustice/hmpps-electronic-monitoring-datastore-ui),
+a service that allows users to interrogate the electronic monitoring datastore hosted in the HMPPS Modernisation Platform.
+
+It is built using [Spring Boot](https://spring.io/projects/spring-boot/) and [Kotlin](https://kotlinlang.org/)
+as well as the following technologies for its infrastructure:
+- [AWS](https://aws.amazon.com/) - Services utilise AWS features through Cloud Platform.
+- [CircleCI](https://circleci.com/developer) - Used for our build platform, responsible for executing workflows to
+  build, validate, test and deploy our project.
+- [Cloud Platform](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide) - Ministry of
+  Justice's (MOJ) cloud hosting platform built on top of AWS which offers numerous tools such as logging, monitoring and
+  alerting for our services.
+- [Docker](https://www.docker.com/) - The API is built into docker images which are deployed to our containers.
+- [Kubernetes](https://kubernetes.io/docs/home/) - Creates 'pods' to host our environment. Manages auto-scaling, load
+  balancing and networking to our application.
+
+## Get started
+
+### Using IntelliJ IDEA
+
+When using an IDE like [IntelliJ IDEA](https://www.jetbrains.com/idea/), getting started is very simple as it will
+handle installing the required Java SDK and [Gradle](https://gradle.org/) versions. The following are the steps for
+using IntelliJ but other IDEs will prove similar.
+
+1. Clone the repo with the following command;
+
+```bash
+git clone git@github.com:ministryofjustice/hmpps-electronic-monitoring-datastore-api.git
+```
+
+2. Launch IntelliJ and open the `hmpps-electronic-monitoring-datastore-api` project by navigating to the location 
+of the repository.
+
+Upon opening the project, IntelliJ will begin downloading and installing necessary dependencies which may take a few
+minutes.
+
+3. Enable pre-commit hooks for formatting and linting code with the following command;
+
+```bash
+./gradlew addKtlintFormatGitPreCommitHook addKtlintCheckGitPreCommitHook
+```
+
+## Usage
+
+### Running the application locally
+
+To run the application using IntelliJ:
+
+1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0`
+, which will just start a docker instance of the database and HMPPS Auth.
+
+3. Click the drop-down button for the `HmppsElectronicMonitoringDatastoreApi` run configuration file in the top 
+right corner, and select Edit Configurations. 
+    - For the 'Active Profiles' field, put 'local'
+    - You may also need to set the JDK to openjdk-23 or openjdk-21
+    - Apply these changes
+
+4. Click the run button.
+
+Or, to run the application using the command line:
+
+```bash
+SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+```
+
+Then visit [http://localhost:8080/health](http://localhost:8081/health).
+
+
+
+
+
+
+
+
 
 ## Running the application locally
 
