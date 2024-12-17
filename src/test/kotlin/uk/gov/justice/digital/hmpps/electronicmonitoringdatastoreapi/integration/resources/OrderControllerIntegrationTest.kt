@@ -1,11 +1,10 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class OrderControllerIntegrationTest : ControllerIntegrationBase() {
-
   @Nested
   @DisplayName("GET /orders/getOrderSummary/{orderId}")
   inner class GetOrderSummary {
@@ -14,30 +13,17 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderTest("$baseUri/234")
+      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
     }
 
     @Test
-    fun `should return 401 unauthorized if no role in authorization header`() {
-      noRoleInAuthHeaderTest("$baseUri/234")
+    fun `should return 403 forbidden if no role in authorization header`() {
+      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
     }
 
     @Test
-    fun `should return 401 unauthorized if wrong role in authorization header`() {
-      wrongRolesTest("$baseUri/234", listOf("ROLE_WRONG"))
-    }
-
-    @Test
-    fun `should return 403 Forbidden if X-User-Token does not match`() {
-      val uri = "$baseUri/234"
-
-      webTestClient.get()
-        .uri(uri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
-        .header("X-User-Token", "invalid-token")
-        .exchange()
-        .expectStatus()
-        .isForbidden
+    fun `should return 403 forbidden if wrong role in authorization header`() {
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_WRONG"))
     }
 
 //     TODO: fix this test - need to mock Athena
@@ -47,8 +33,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 //
 //      webTestClient.get()
 //        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
-//        .header("X-User-Token", "any-other-string-is-valid")
+//        .headers(setAuthorisation())
 //        .exchange()
 //        .expectStatus()
 //        .isOk
@@ -58,32 +43,36 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("GET /orders/getOrderSummary/specials/{orderId}")
   inner class GetSpecialsOrder {
-
     val baseUri: String = "/orders/getOrderSummary/specials"
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderTest("$baseUri/234")
+      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
     }
 
     @Test
-    fun `should return 401 unauthorized if no role in authorization header`() {
-      noRoleInAuthHeaderTest("$baseUri/234")
+    fun `should return 403 forbidden if no role in authorization header`() {
+      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
+    }
+
+    @Test
+    fun `should return 403 Forbidden if unknown role is present`() {
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ELECTRONIC_MONITORING_UNKNOWN_ROLE"))
     }
 
     @Test
     fun `should return 403 Forbidden if no specials role is present`() {
-      wrongRolesTest("$baseUri/234", listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))
     }
 
     // Note: the @Preauthorize on the method is taken in *PREFERENCE* to the preauthorization on the controller
     @Test
     fun `should return 403 Forbidden if no search role is present`() {
-      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
     }
 
     @Test
-    fun `should return 200 OK only if both roles are present`() {
+    fun `should return 200 OK if all correct roles are present`() {
       val uri = "$baseUri/234"
 
       webTestClient.get()
@@ -96,7 +85,26 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
             ),
           ),
         )
-        .header("X-User-Token", "any-other-string-is-valid")
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
+
+    @Test
+    fun `should return 200 OK if other roles are also present`() {
+      val uri = "$baseUri/234"
+
+      webTestClient.get()
+        .uri(uri)
+        .headers(
+          setAuthorisation(
+            roles = listOf(
+              "ROLE_EM_DATASTORE_RESTRICTED_RO",
+              "ELECTRONIC_MONITORING_DATASTORE_API_SEARCH",
+              "ELECTRONIC_MONITORING_UNKNOWN_ROLE",
+            ),
+          ),
+        )
         .exchange()
         .expectStatus()
         .isOk

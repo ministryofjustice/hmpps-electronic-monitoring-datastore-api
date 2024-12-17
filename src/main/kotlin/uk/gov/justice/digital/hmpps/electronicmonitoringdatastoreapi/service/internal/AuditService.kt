@@ -19,6 +19,7 @@ class AuditService(
   private val auditQueueUrl by lazy { auditQueue.queueUrl }
 
   fun createEvent(
+    principal: String,
     what: String,
     detail: Map<String, String?>,
   ) {
@@ -30,7 +31,7 @@ class AuditService(
             HmppsAuditEvent(
               what = what,
               details = objectMapper.writeValueAsString(detail),
-              who = "Unknown",
+              who = principal,
             ),
           ),
         )
