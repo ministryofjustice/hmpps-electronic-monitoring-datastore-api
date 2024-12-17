@@ -1,19 +1,35 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resources
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import org.springframework.boot.test.autoconfigure.json.JsonTest
+import org.springframework.security.core.Authentication
+import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
+@ActiveProfiles("test")
+@JsonTest
 class SearchControllerTest {
-  private val auditService: AuditService = mock()
+  private lateinit var auditService: AuditService
+  private lateinit var controller: SearchController
+  private lateinit var authentication: Authentication
 
-  private val sut: SearchController = SearchController(auditService)
+  @BeforeEach
+  fun setup() {
+    auditService = mock()
+    controller = SearchController(auditService)
+    authentication = mock(Authentication::class.java)
+    `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
+  }
 
 //  @Nested
 //  inner class GetSearchResult {
@@ -36,7 +52,6 @@ class SearchControllerTest {
     @Test
     fun `Returns a list of orders`() {
       // Arrange: Create search criteria
-      val userToken = "fake-token"
       val searchCriteria = SearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
@@ -48,7 +63,7 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<Order> = sut.searchOrdersFake(userToken, searchCriteria)
+      val result: List<Order> = controller.searchOrdersFake(authentication, searchCriteria)
 
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
@@ -71,7 +86,7 @@ class SearchControllerTest {
         athenaRole = "fake",
       )
 
-      val result: AthenaQueryResponse<String> = sut.queryAthena(queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = controller.queryAthena(authentication, queryObject, queryRole)
 
       assertThat(result).isInstanceOf(AthenaQueryResponse::class.java)
     }
@@ -88,7 +103,7 @@ class SearchControllerTest {
         athenaRole = "fake",
       )
 
-      val result: AthenaQueryResponse<String> = sut.queryAthena(queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = controller.queryAthena(authentication, queryObject, queryRole)
 
       assertThat(result).isNotNull // Ensure the result is not empty
       assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)

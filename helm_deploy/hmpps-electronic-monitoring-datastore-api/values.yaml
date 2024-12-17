@@ -2,8 +2,6 @@ generic-service:
   nameOverride: hmpps-electronic-monitoring-datastore-api
   productId: "HMPPS529" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
-  service-account-name: hmpps-electronic-monitoring-datastore
-
   replicaCount: 4
 
   image:
