@@ -4,61 +4,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
-class SearchControllerIntegrationTest : IntegrationTestBase() {
-
-//  @Nested
-//  @DisplayName("GET /search/cases")
-//  inner class GetCases {
-//
-//    val baseUri: String = "/search/cases"
-//
-//    @Test
-//    fun `should return unauthorized if no token`() {
-//      webTestClient.get()
-//        .uri(baseUri)
-//        .exchange()
-//        .expectStatus()
-//        .isUnauthorized
-//    }
-//
-//    @Test
-//    fun `should return forbidden if no role`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation())
-//        .exchange()
-//        .expectStatus()
-//        .isForbidden
-//    }
-//
-//    @Test
-//    fun `should return forbidden if wrong role`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
-//        .exchange()
-//        .expectStatus()
-//        .isForbidden
-//    }
-//
-//    @Test
-//    fun `should return OK`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
-//        .exchange()
-//        .expectStatus()
-//        .isOk
-//    }
-//  }
+class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
   @Nested
   @DisplayName("POST /search/orders-old")
@@ -144,6 +91,21 @@ class SearchControllerIntegrationTest : IntegrationTestBase() {
   inner class QueryAthena {
 
     val baseUri: String = "/search/custom-query"
+
+    @Test
+    fun `should return 401 unauthorized if no authorization header`() {
+      noAuthHeaderTest("$baseUri", true)
+    }
+
+    @Test
+    fun `should return 401 unauthorized if no role in authorization header`() {
+      noRoleInAuthHeaderTest("$baseUri", true)
+    }
+
+    @Test
+    fun `should return 401 unauthorized if wrong role in authorization header`() {
+      wrongRolesTest("$baseUri", listOf("ROLE_WRONG"), true)
+    }
 
     @Test
     fun `should fail when no body is sent`() {

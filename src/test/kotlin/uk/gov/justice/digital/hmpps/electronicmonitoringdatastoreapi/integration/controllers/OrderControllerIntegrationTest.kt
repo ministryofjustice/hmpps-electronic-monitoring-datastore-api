@@ -3,61 +3,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integratio
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
-class OrderControllerIntegrationTest : IntegrationTestBase() {
-
-//  @Nested
-//  @DisplayName("GET /orders")
-//  inner class GetOrder {
-//
-//    val baseUri: String = "/orders"
-//
-//    @Test
-//    fun `should return unauthorized if no token`() {
-//      webTestClient.get()
-//        .uri(baseUri)
-//        .exchange()
-//        .expectStatus()
-//        .isUnauthorized
-//    }
-//
-//    @Test
-//    fun `should return forbidden if no role`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation())
-//        .exchange()
-//        .expectStatus()
-//        .isForbidden
-//    }
-//
-//    @Test
-//    fun `should return forbidden if wrong role`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
-//        .exchange()
-//        .expectStatus()
-//        .isForbidden
-//    }
-//
-//    @Test
-//    fun `should return OK`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
-//        .exchange()
-//        .expectStatus()
-//        .isOk
-//    }
-//  }
+class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 
   @Nested
   @DisplayName("GET /orders/getOrderSummary/{orderId}")
@@ -67,37 +14,17 @@ class OrderControllerIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      val uri = "$baseUri/234"
-
-      webTestClient.get()
-        .uri(uri)
-        .exchange()
-        .expectStatus()
-        .isUnauthorized
+      noAuthHeaderTest("$baseUri/234")
     }
 
     @Test
     fun `should return 401 unauthorized if no role in authorization header`() {
-      val uri = "$baseUri/234"
-
-      webTestClient.get()
-        .uri(uri)
-        .headers(setAuthorisation())
-        .exchange()
-        .expectStatus()
-        .isUnauthorized
+      noRoleInAuthHeaderTest("$baseUri/234")
     }
 
     @Test
     fun `should return 401 unauthorized if wrong role in authorization header`() {
-      val uri = "$baseUri/234"
-
-      webTestClient.get()
-        .uri(uri)
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
-        .exchange()
-        .expectStatus()
-        .isUnauthorized
+      wrongRolesTest("$baseUri/234", listOf("ROLE_WRONG"))
     }
 
     @Test
@@ -126,5 +53,53 @@ class OrderControllerIntegrationTest : IntegrationTestBase() {
 //        .expectStatus()
 //        .isOk
 //    }
+  }
+
+  @Nested
+  @DisplayName("GET /orders/getOrderSummary/specials/{orderId}")
+  inner class GetSpecialsOrder {
+
+    val baseUri: String = "/orders/getOrderSummary/specials"
+
+    @Test
+    fun `should return 401 unauthorized if no authorization header`() {
+      noAuthHeaderTest("$baseUri/234")
+    }
+
+    @Test
+    fun `should return 401 unauthorized if no role in authorization header`() {
+      noRoleInAuthHeaderTest("$baseUri/234")
+    }
+
+    @Test
+    fun `should return 403 Forbidden if no specials role is present`() {
+      wrongRolesTest("$baseUri/234", listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))
+    }
+
+    // Note: the @Preauthorize on the method is taken in *PREFERENCE* to the preauthorization on the controller
+    @Test
+    fun `should return 403 Forbidden if no search role is present`() {
+      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
+    }
+
+    @Test
+    fun `should return 200 OK only if both roles are present`() {
+      val uri = "$baseUri/234"
+
+      webTestClient.get()
+        .uri(uri)
+        .headers(
+          setAuthorisation(
+            roles = listOf(
+              "ROLE_EM_DATASTORE_RESTRICTED_RO",
+              "ELECTRONIC_MONITORING_DATASTORE_API_SEARCH",
+            ),
+          ),
+        )
+        .header("X-User-Token", "any-other-string-is-valid")
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
   }
 }

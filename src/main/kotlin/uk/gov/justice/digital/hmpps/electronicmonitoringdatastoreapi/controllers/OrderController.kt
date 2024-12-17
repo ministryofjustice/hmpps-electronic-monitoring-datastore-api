@@ -36,7 +36,7 @@ class OrderController(
   }
 
   // TODO: This is a temporary endpoint to validate code interacting with user claims
-  @PreAuthorize("hasAuthority('ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  @PreAuthorize("hasRole('ROLE_EM_DATASTORE_RESTRICTED_RO') and hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
   @GetMapping("/getOrderSummary/specials/{orderId}")
   fun getSpecialsOrder(
     @PathVariable(
@@ -48,6 +48,11 @@ class OrderController(
     ) userToken: String,
   ): ResponseEntity<OrderInformation> {
     // TODO: code to interact with the user role claims to go here
+    if (!checkValidUser(userToken)) {
+      throw AccessDeniedException("Your token is valid for this service, but your user is not allowed to access this resource")
+    }
+
+    return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
 
     return ResponseEntity.ok(
       repository.getMockOrderInformation(orderId),
