@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import org.springframework.stereotype.Service
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -17,6 +19,7 @@ import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 
 // We will instantiate as new for now
+@Service
 class AthenaService {
   private val stsService = AssumeRoleService()
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
@@ -48,6 +51,15 @@ class AthenaService {
   }
 
   private fun startClient(role: AthenaRole): AthenaClient {
+
+    if(@Environment == local) {
+      return AthenaClient.builder()
+        .region(Region.EU_WEST_2)
+        .credentialsProvider(
+          DefaultCredentialsProvider.builder().build())
+        .build()
+    }
+
     val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
 
     return AthenaClient.builder()
