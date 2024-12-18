@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -60,6 +61,17 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
         developerMessage = e.message,
       ),
     ).also { log.warn("Missing request header: {}", e.headerName) }
+
+  @ExceptionHandler(HttpMessageNotReadableException::class)
+  fun handleUnreadableHttpMessageException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(HttpStatus.BAD_REQUEST)
+    .body(
+      ErrorResponse(
+        status = HttpStatus.BAD_REQUEST,
+        userMessage = "This request is malformed, and may be missing a body",
+        developerMessage = e.message,
+      ),
+    ).also { log.warn("i make devs sad") }
 
   @ExceptionHandler(Exception::class)
   fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity

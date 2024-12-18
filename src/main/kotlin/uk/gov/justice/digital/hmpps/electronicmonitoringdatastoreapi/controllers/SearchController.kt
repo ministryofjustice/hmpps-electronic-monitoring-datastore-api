@@ -68,9 +68,10 @@ class SearchController {
 
   @PostMapping("/custom-query")
   fun queryAthena(
-    @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
-    @RequestBody athenaQuery: AthenaQuery,
+    @RequestBody(
+      required = true,
+    ) athenaQuery: AthenaQuery,
   ): AthenaQueryResponse<String> {
     val queryString: String = athenaQuery.queryString
     val validatedRole: AthenaRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
@@ -102,10 +103,7 @@ class SearchController {
   fun searchOrdersFake(
     @RequestHeader("Authorization", required = true) authorization: String,
     @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> {
-
-    return OrderRepository.getFakeOrders()
-  }
+  ): List<Order> = OrderRepository.getFakeOrders()
 
   @PostMapping("/orders")
   fun searchOrders(
