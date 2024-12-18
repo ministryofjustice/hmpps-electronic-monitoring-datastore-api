@@ -106,7 +106,7 @@ class SearchController {
 
   @PostMapping("/orders")
   fun searchOrders(
-    @RequestHeader("X-User-Token", required = true) userToken: String,
+    @RequestHeader("Authorization", required = true) authorization: String,
     @RequestBody searchCriteria: SearchCriteria,
   ): ResponseEntity<List<Order>> {
     val repository = OrderRepository()
