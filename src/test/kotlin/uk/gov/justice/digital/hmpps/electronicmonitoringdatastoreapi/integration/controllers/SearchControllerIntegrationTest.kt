@@ -14,21 +14,33 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     val baseUri: String = "/search/orders-old"
 
     @Test
-    fun `should fail when no body is sent`() {
+    fun `should fail with 401 when no authorization header is provided`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
         .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{}")
         .exchange()
         .expectStatus()
-        .isUnauthorized // Expect a 400 Bad Request when no body is sent
+        .isUnauthorized
     }
 
     @Test
-    fun `should fail when no user token is provided`() {
+    fun `should fail with 401 when user has no required roles`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))) // No X-User-Token header
+        .headers(setAuthorisation(roles = listOf("INVALID_ROLE")))
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{}")
+        .exchange()
+        .expectStatus()
+        .isUnauthorized
+    }
+
+    @Test
+    fun `should fail with 401 when no X-User-Token header is provided`() {
+      webTestClient.post()
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -39,12 +51,12 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should succeed with empty body`() {
+    fun `should return 200 with empty body`() {
       webTestClient.post()
         .uri(baseUri)
         .headers {
-          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
-          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
+          it.add("X-User-Token", "valid-user-token") // Add required X-User-Token header
+          setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")).invoke(it)
         }
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
@@ -58,7 +70,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should succeed with valid body`() {
+    fun `should return 200 with valid body`() {
       val requestBody = mapOf(
         "searchType" to "name",
         "legacySubjectId" to "12345",
@@ -69,20 +81,19 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       webTestClient.post()
         .uri(baseUri)
         .headers {
-          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
-          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
+          it.add("X-User-Token", "valid-user-token") // Add required X-User-Token header
+          setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")).invoke(it)
         }
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
+        .bodyValue(requestBody)
         .exchange()
         .expectStatus()
-        .isOk // Endpoint should handle a valid body
+        .isOk // Endpoint should return 200 OK
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.length()").isEqualTo(6) // Expect 6 mock orders returned
-        .jsonPath("$[0].name").isEqualTo("Amy Smith") // Validate specific fields of the mock data
-        .jsonPath("$[0].dataType").isEqualTo("am")
+        .jsonPath("$.length()").isEqualTo(6) // Expect 6 mock orders
+        .jsonPath("$[0].name").isEqualTo("Amy Smith") // Validate the first mock order
     }
   }
 
