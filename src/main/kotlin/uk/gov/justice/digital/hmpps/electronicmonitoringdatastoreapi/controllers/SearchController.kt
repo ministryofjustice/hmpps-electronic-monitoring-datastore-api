@@ -19,7 +19,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 @RestController
-@PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/search"], produces = ["application/json"])
 class SearchController {
 
@@ -100,9 +100,12 @@ class SearchController {
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
   @PostMapping("/orders-old")
   fun searchOrdersFake(
-    @RequestHeader("X-User-Token", required = true) userToken: String,
+    @RequestHeader("Authorization", required = true) authorization: String,
     @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> = OrderRepository.getFakeOrders()
+  ): List<Order> {
+
+    return OrderRepository.getFakeOrders()
+  }
 
   @PostMapping("/orders")
   fun searchOrders(

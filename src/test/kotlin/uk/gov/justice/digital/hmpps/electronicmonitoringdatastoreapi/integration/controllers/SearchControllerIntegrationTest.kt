@@ -35,19 +35,15 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .expectStatus()
         .isUnauthorized
     }
-
     @Test
-    fun `should fail with 401 when no X-User-Token header is provided`() {
+    fun `should fail with 401 when no Authorization header is provided`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
         .expectStatus()
-        .isUnauthorized // Expect 401 Unauthorized because X-User-Token is missing
-        .expectBody()
-        .jsonPath("$.userMessage").isEqualTo("Missing required header 'X-User-Token'")
+        .isUnauthorized
     }
 
     @Test
@@ -55,7 +51,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       webTestClient.post()
         .uri(baseUri)
         .headers {
-          it.add("X-User-Token", "valid-user-token") // Add required X-User-Token header
+          it.add("Authorization", "Bearer valid-user-token") // Add required Bearer token
           setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")).invoke(it)
         }
         .contentType(MediaType.APPLICATION_JSON)
