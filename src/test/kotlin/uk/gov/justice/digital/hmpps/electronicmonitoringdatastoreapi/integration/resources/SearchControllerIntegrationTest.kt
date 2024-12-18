@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -17,35 +17,30 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should fail when no body is sent`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()
-        .isUnauthorized // Expect a 400 Bad Request when no body is sent
+        .is5xxServerError
     }
 
     @Test
     fun `should fail when no user token is provided`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))) // No X-User-Token header
+        .headers(setAuthorisationWithoutUsername())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
         .expectStatus()
-        .isUnauthorized // Expect 401 Unauthorized because X-User-Token is missing
-        .expectBody()
-        .jsonPath("$.userMessage").isEqualTo("Missing required header 'X-User-Token'")
+        .isUnauthorized
     }
 
     @Test
     fun `should succeed with empty body`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers {
-          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
-          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
-        }
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -68,10 +63,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
       webTestClient.post()
         .uri(baseUri)
-        .headers {
-          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
-          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
-        }
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody) // Sending a valid body
         .exchange()
@@ -94,52 +86,35 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderTest("$baseUri", true)
+      noAuthHeaderRespondsWithUnauthorizedTest(baseUri, true)
     }
 
     @Test
-    fun `should return 401 unauthorized if no role in authorization header`() {
-      noRoleInAuthHeaderTest("$baseUri", true)
+    fun `should return 403 forbidden if no role in authorization header`() {
+      noRoleInAuthHeaderRespondsWithForbiddenTest(baseUri, true)
     }
 
     @Test
-    fun `should return 401 unauthorized if wrong role in authorization header`() {
-      wrongRolesTest("$baseUri", listOf("ROLE_WRONG"), true)
+    fun `should return 403 forbidden if wrong role in authorization header`() {
+      wrongRolesRespondsWithForbiddenTest(baseUri, listOf("ROLE_WRONG"), true)
     }
 
     @Test
     fun `should fail when no body is sent`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()
-        .isUnauthorized // Expect a 400 Bad Request when no body is sent
+        .is5xxServerError
     }
 
     @Test
-    fun `should fail when no user token is provided`() {
+    fun `should fail when request body is empty`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))) // No X-User-Token header
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue("{}")
-        .exchange()
-        .expectStatus()
-        .isUnauthorized // Expect 401 Unauthorized because X-User-Token is missing
-        .expectBody()
-        .jsonPath("$.userMessage").isEqualTo("Missing required header 'X-User-Token'")
-    }
-
-    @Test
-    fun `should fail with empty body with 500 error`() {
-      webTestClient.post()
-        .uri(baseUri)
-        .headers {
-          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
-          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
-        }
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -158,10 +133,8 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
       webTestClient.post()
         .uri(baseUri)
-        .headers {
-          it.add("X-User-Token", "valid-user-token") // Add the required X-User-Token header
-          setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")).invoke(it)
-        }
+        .headers(setAuthorisation())
+        .header("X-Role", "FAKE_ATHENA_ROLE")
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody) // Sending a valid body
         .exchange()
