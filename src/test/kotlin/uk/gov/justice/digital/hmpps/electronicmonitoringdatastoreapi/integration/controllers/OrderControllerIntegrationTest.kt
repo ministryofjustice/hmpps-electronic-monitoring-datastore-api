@@ -33,7 +33,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 
       webTestClient.get()
         .uri(uri)
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
         .header("X-User-Token", "invalid-token")
         .exchange()
         .expectStatus()
@@ -47,7 +47,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 //
 //      webTestClient.get()
 //        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+//        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
 //        .header("X-User-Token", "any-other-string-is-valid")
 //        .exchange()
 //        .expectStatus()
@@ -72,14 +72,14 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should return 403 Forbidden if no specials role is present`() {
-      wrongRolesTest("$baseUri/234", listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH"))
+    fun `should return 403 Forbidden if ONLY specials role is present`() {
+      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
     }
 
     // Note: the @Preauthorize on the method is taken in *PREFERENCE* to the preauthorization on the controller
     @Test
-    fun `should return 403 Forbidden if no search role is present`() {
-      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
+    fun `should return 403 Forbidden if ONLY general role is present`() {
+      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_GENERAL_RO"))
     }
 
     @Test
@@ -92,7 +92,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
           setAuthorisation(
             roles = listOf(
               "ROLE_EM_DATASTORE_RESTRICTED_RO",
-              "ELECTRONIC_MONITORING_DATASTORE_API_SEARCH",
+              "ROLE_EM_DATASTORE_GENERAL_RO",
             ),
           ),
         )

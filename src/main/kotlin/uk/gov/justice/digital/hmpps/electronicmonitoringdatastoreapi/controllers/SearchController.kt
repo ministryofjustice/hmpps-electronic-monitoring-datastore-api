@@ -98,7 +98,6 @@ class SearchController {
     )
   }
 
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
   @PostMapping("/orders-old")
   fun searchOrdersFake(
     @RequestHeader("Authorization", required = true) authorization: String,
