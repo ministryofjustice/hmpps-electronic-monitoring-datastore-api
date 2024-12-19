@@ -1,12 +1,12 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
-import net.minidev.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
@@ -52,45 +52,18 @@ class OrderController(
       required = false,
       name = "User-Token",
     ) userToken: String = "no-token-supplied",
-  ): JSONObject {
-    auditService.createEvent("GET_ORDER", "order<$orderId> requested by user-token<$userToken>")
+  ): ResponseEntity<OrderInformation> {
+    return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
 
-    // if (!checkValidUser(userToken)) {
-    //   auditService.createEvent("GET_ORDER", "request for order<$orderId> blocked for user-token<$userToken>")
-
-    //   return JSONObject(
-    //     mapOf("data" to "Unauthorised request with user token $userToken"),
-    //   )
-    // }
-
-    if (orderId == "invalid-order") {
-      auditService.createEvent("GET_ORDER", "order<$orderId> could not be found for user-token<$userToken>")
-
-      return JSONObject(
-        mapOf("data" to "No order with ID $orderId could be found"),
-        )
-      }
-      
-      val response: JSONObject = JSONObject(
-        mapOf("data" to "This is the data for order $orderId"),
-        throw AccessDeniedException("Your token is valid for this service, but your user is not allowed to access this resource")
-      }
-      
-      auditService.createEvent(
-        "GET_SPECIALS_ORDER_SUMMARY",
-        mapOf("orderId" to orderId),
-      )
-      // auditService.createEvent(
-      //   authentication.principal.toString(),
-      //   "GET_SPECIALS_ORDER_SUMMARY",
-      //   mapOf("orderId" to orderId),
-      // )
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "GET_SPECIALS_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
 
     return ResponseEntity.ok(
       repository.getMockOrderInformation(orderId),
     )
-
-    return response
   }
 
   @GetMapping("/getOrderSummary/{orderId}")

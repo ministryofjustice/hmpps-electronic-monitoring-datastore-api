@@ -24,7 +24,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class OrderControllerTest {
   private val repository: OrderInformationRepository = mock()
   private val auditService: AuditService = mock()
-  private val controller = OrderController(repository, auditService)
+  private val controller = OrderController(auditService, repository)
   private lateinit var authentication: Authentication
 
   @BeforeEach
@@ -87,7 +87,6 @@ class OrderControllerTest {
   @Nested
   inner class GetOrderSummary {
 
-
     @Test
     fun `Returns order summary if correct params supplied`() {
       val orderId = "7654321"
@@ -117,7 +116,7 @@ class OrderControllerTest {
           ),
         )
 
-      val result: ResponseEntity<OrderInformation> = controller.getOrderSummary(authentication, orderId)
+      val result: ResponseEntity<OrderInformation> = controller.getOrderSummary(authentication, orderId, "fake-auth-header-string")
 
       Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
       Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)

@@ -49,7 +49,7 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<Order> = controller.searchOrdersFake(authentication, searchCriteria)
+      val result: List<Order> = controller.searchOrdersFake("fake-auth-header-string", authentication, searchCriteria)
 
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
