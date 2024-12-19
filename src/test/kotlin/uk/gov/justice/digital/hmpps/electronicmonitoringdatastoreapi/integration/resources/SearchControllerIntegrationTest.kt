@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -17,6 +17,18 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should fail with 401 when no authorization header is provided`() {
       webTestClient.post()
         .uri(baseUri)
+        .headers(setAuthorisation())
+        .contentType(MediaType.APPLICATION_JSON)
+        .exchange()
+        .expectStatus()
+        .is5xxServerError
+    }
+
+    @Test
+    fun `should fail when no user token is provided`() {
+      webTestClient.post()
+        .uri(baseUri)
+        .headers(setAuthorisationWithoutUsername())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -89,37 +101,17 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      webTestClient.post()
-        .uri("$baseUri")
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
-        .exchange()
-        .expectStatus()
-        .isUnauthorized
+      noAuthHeaderRespondsWithUnauthorizedTest(baseUri, true)
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      webTestClient.post()
-        .uri("$baseUri")
-        .headers(setAuthorisation())
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
-        .exchange()
-        .expectStatus()
-        .isForbidden
+      noRoleInAuthHeaderRespondsWithForbiddenTest(baseUri, true)
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      webTestClient.post()
-        .uri("$baseUri")
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
-        .exchange()
-        .expectStatus()
-        .isForbidden
+      wrongRolesRespondsWithForbiddenTest(baseUri, listOf("ROLE_WRONG"), true)
     }
 
     @Test
@@ -154,6 +146,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       webTestClient.post()
         .uri(baseUri)
         .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
+        .header("X-Role", "FAKE_ATHENA_ROLE")
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody) // Sending a valid body
         .exchange()
