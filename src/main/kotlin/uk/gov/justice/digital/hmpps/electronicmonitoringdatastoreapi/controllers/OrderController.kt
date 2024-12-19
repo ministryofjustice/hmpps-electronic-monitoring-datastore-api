@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
+import net.minidev.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -12,11 +13,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/orders"], produces = ["application/json"])
 class OrderController(
+  @Autowired val auditService: AuditService,
   @Autowired val repository: OrderInformationRepository,
 ) {
 
@@ -25,7 +28,6 @@ class OrderController(
     @PathVariable orderId: String,
     @RequestHeader("Authorization", required = true) authorization: String,
   ): ResponseEntity<OrderInformation> {
-    val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
     return ResponseEntity.ok(orderInfo)
   }
@@ -37,11 +39,34 @@ class OrderController(
     @PathVariable(
       required = true,
     ) orderId: String,
-    @RequestHeader("Authorization", required = true) authorization: String,
-  ): ResponseEntity<OrderInformation> {
-    // TODO: code to interact with the user role claims to go here
+    @RequestHeader(
+      required = false,
+      name = "User-Token",
+    ) userToken: String = "no-token-supplied",
+  ): JSONObject {
+    auditService.createEvent("GET_ORDER", "order<$orderId> requested by user-token<$userToken>")
 
-    return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
+    if (!checkValidUser(userToken)) {
+      auditService.createEvent("GET_ORDER", "request for order<$orderId> blocked for user-token<$userToken>")
+
+      return JSONObject(
+        mapOf("data" to "Unauthorised request with user token $userToken"),
+      )
+    }
+
+    if (orderId == "invalid-order") {
+      auditService.createEvent("GET_ORDER", "order<$orderId> could not be found for user-token<$userToken>")
+
+      return JSONObject(
+        mapOf("data" to "No order with ID $orderId could be found"),
+      )
+    }
+
+    val response: JSONObject = JSONObject(
+      mapOf("data" to "This is the data for order $orderId"),
+    )
+
+    return response
   }
 
   @GetMapping("/getOrderSummary/{orderId}")
@@ -54,7 +79,6 @@ class OrderController(
     // TODO: Real role validation stuff will go here
 
     // get fake generic object
-//    val repository = OrderInformationRepository()
     var fakeOrder: OrderInformation = repository.getMockOrderInformation(orderId)
 
     // get 'real' KeyOrderInfo from the DB
@@ -70,5 +94,12 @@ class OrderController(
     )
 
     return ResponseEntity.ok(result)
+  }
+
+  fun checkValidUser(userToken: String): Boolean {
+    val validTokenValue: String = "real-token"
+
+    return userToken == validTokenValue
+
   }
 }

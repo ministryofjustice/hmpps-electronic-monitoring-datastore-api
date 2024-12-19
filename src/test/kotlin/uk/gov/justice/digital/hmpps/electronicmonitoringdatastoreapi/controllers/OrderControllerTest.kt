@@ -15,9 +15,12 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @ActiveProfiles("test")
+
 class OrderControllerTest {
+  private val auditService: AuditService = mock()
 
   private val objectMapper = ObjectMapper()
   private lateinit var repository: OrderInformationRepository
@@ -26,25 +29,63 @@ class OrderControllerTest {
   @BeforeEach
   fun setup() {
     repository = mock()
-    sut = OrderController(repository)
+    sut = OrderController(auditService, repository)
   }
 
   @Nested
-  inner class GetSpecialsOrder {
+  inner class GetOrder {
+
     @Test
-    fun `is callable with required parameters and correctly uses mocked service`() {
-      val orderID: String = "1ab"
-      val expectedResult: OrderInformation = OrderInformationRepository().getMockOrderInformation("DIFFERENT ID")
-      `when`(repository.getMockOrderInformation(orderID)).thenReturn(expectedResult)
+    fun `Returns data if correct params supplied`() {
+      val orderId = "obviously-real-id"
+      val userToken = "real-token"
+      val expected = JSONObject(
+        mapOf("data" to "This is the data for order obviously-real-id"),
+      )
 
-      val result = sut.getSpecialsOrder(orderID, "fake-auth-header")
+      val result: JSONObject = sut.getOrder(orderId, userToken)
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
 
-      Assertions.assertThat(result.body).isEqualTo(expectedResult)
+    @Test
+    fun `Returns 'Order not found' if incorrect orderId`() {
+      val orderId = "invalid-order"
+      val userToken = "real-token"
+      val expected = JSONObject(
+        mapOf("data" to "No order with ID invalid-order could be found"),
+      )
+
+      val result: JSONObject = sut.getOrder(orderId, userToken)
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `returns 'Unauthorised request' if userToken is invalid`() {
+      val orderId = "obviously-real-id"
+      val userToken = "nonsense-token"
+      val expected = JSONObject(
+        mapOf("data" to "Unauthorised request with user token nonsense-token"),
+      )
+
+      val result: JSONObject = sut.getOrder(orderId, userToken)
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `returns 'Unauthorised request' if userToken is not supplied`() {
+      val orderId = "obviously-real-id"
+      val expected = JSONObject(
+        mapOf("data" to "Unauthorised request with user token no-token-supplied"),
+      )
+
+      val result: JSONObject = sut.getOrder(orderId)
+      Assertions.assertThat(result).isEqualTo(expected)
     }
   }
 
   @Nested
   inner class GetOrderSummary {
+
 
     @Test
     fun `Returns order summary if correct params supplied`() {
@@ -96,5 +137,30 @@ class OrderControllerTest {
 //      // Checking for body on notFound as it should not contain a body
 //      Assertions.assertThat(result.body).isNull()
 //    }
+  }
+
+  @Nested
+  inner class CheckValidUser {
+
+
+    @Test
+    fun `Returns true if token is valid`() {
+      val expected: Boolean = true
+      val userToken: String = "real-token"
+
+      val result = sut.checkValidUser(userToken)
+
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `Returns false if token is invalid`() {
+      val expected: Boolean = false
+      val userToken: String = "invalid-token"
+
+      val result = sut.checkValidUser(userToken)
+
+      Assertions.assertThat(result).isEqualTo(expected)
+    }
   }
 }

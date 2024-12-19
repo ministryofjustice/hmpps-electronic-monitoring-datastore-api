@@ -1,11 +1,10 @@
-version: "3"
 services:
   hmpps-electronic-monitoring-datastore-api:
     build:
       context: .
+    container_name: hmpps-electronic-monitoring-datastore-api
     networks:
       - hmpps
-    container_name: hmpps-electronic-monitoring-datastore-api
     ports:
       - "8080:8080"
     healthcheck:
@@ -13,15 +12,13 @@ services:
     environment:
       - SERVER_PORT=8080
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
-      # TODO: Remove this URL and replace with outgoing service URLs
-      - EXAMPLE_URL=http://hmpps-electronic-monitoring-datastore-api:8080
       - SPRING_PROFILES_ACTIVE=dev
 
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
+    container_name: hmpps-auth
     networks:
       - hmpps
-    container_name: hmpps-auth
     ports:
       - "9090:8080"
     healthcheck:
@@ -30,6 +27,32 @@ services:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+
+  local-stack-aws:
+    image: localstack/localstack:3.0
+    container_name: local-stack-aws
+    networks:
+      - hmpps
+    ports:
+      - "4566:4566"
+    healthcheck:
+      test: 'curl localhost:4566/_localstack/init | grep -q ''"READY": true'''
+      interval: 60s
+      timeout: 2s
+      retries: 10
+    environment:
+      - SERVICES=sns,sqs
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_EXECUTION_ENV=True
+      - DEFAULT_REGION=eu-west-2
+    volumes:
+      - "./localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 networks:
   hmpps:

@@ -10,17 +10,20 @@ configurations {
 
 dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.1.0")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.1.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
   implementation("software.amazon.awssdk:athena:2.29.29")
   implementation("software.amazon.awssdk:sts:2.29.29")
-//  implementation("org.json:json:20230227")
   implementation("org.json:json:20240303")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
   implementation("software.amazon.awssdk:athena:2.29.29")
   implementation("software.amazon.awssdk:sts:2.29.29")
-//  implementation("org.json:json:20230227")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.2.0") {
+    exclude("org.springframework.security", "spring-security-config")
+    exclude("org.springframework.security", "spring-security-core")
+    exclude("org.springframework.security", "spring-security-crypto")
+    exclude("org.springframework.security", "spring-security-web")
+  }
   implementation("org.json:json:20240303")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 

@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,24 +18,15 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Searc
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/search"], produces = ["application/json"])
-class SearchController {
+class SearchController(
+  @Autowired val auditService: AuditService,
+) {
 
-//  @GetMapping("/cases/{caseID}")
-//  fun getCases(
-//    @PathVariable(
-//      required = true,
-//      name = "caseID",
-//    ) caseId: String,
-//  ): JSONObject {
-//    val response: JSONObject = JSONObject()
-//    response.put("data", "You have successfully queried case $caseId")
-//
-//    return response
-//  }
 
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(): ResponseEntity<ResultSet> {
