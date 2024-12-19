@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 // TODO: This is an example and should renamed / replaced
 @RestController
 // Role here is specific to the UI.
-@PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/example"], produces = ["application/json"])
 class ExampleResource(
   private val exampleApiService: ExampleApiService,

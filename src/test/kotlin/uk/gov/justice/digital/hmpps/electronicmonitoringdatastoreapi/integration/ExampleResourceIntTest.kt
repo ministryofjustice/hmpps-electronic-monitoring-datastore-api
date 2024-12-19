@@ -45,7 +45,7 @@ class ExampleResourceIntTest : IntegrationTestBase() {
     fun `should return OK`() {
       webTestClient.get()
         .uri("/example/time")
-        .headers(setAuthorisation(roles = listOf("ELECTRONIC_MONITORING_DATASTORE_API_SEARCH")))
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO", "ROLE_EM_DATASTORE_RESTRICTED_RO")))
         .exchange()
         .expectStatus()
         .isOk

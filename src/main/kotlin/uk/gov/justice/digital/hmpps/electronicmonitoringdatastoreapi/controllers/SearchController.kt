@@ -19,7 +19,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 @RestController
-@PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/search"], produces = ["application/json"])
 class SearchController {
 
@@ -68,9 +68,10 @@ class SearchController {
 
   @PostMapping("/custom-query")
   fun queryAthena(
-    @RequestHeader("X-User-Token", required = true) userToken: String,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
-    @RequestBody athenaQuery: AthenaQuery,
+    @RequestBody(
+      required = true,
+    ) athenaQuery: AthenaQuery,
   ): AthenaQueryResponse<String> {
     val queryString: String = athenaQuery.queryString
     val validatedRole: AthenaRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
@@ -99,13 +100,13 @@ class SearchController {
 
   @PostMapping("/orders-old")
   fun searchOrdersFake(
-    @RequestHeader("X-User-Token", required = true) userToken: String,
+    @RequestHeader("Authorization", required = true) authorization: String,
     @RequestBody searchCriteria: SearchCriteria,
   ): List<Order> = OrderRepository.getFakeOrders()
 
   @PostMapping("/orders")
   fun searchOrders(
-    @RequestHeader("X-User-Token", required = true) userToken: String,
+    @RequestHeader("Authorization", required = true) authorization: String,
     @RequestBody searchCriteria: SearchCriteria,
   ): ResponseEntity<List<Order>> {
     val repository = OrderRepository()

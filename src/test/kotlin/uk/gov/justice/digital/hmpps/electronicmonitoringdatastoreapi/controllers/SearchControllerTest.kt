@@ -59,7 +59,6 @@ class SearchControllerTest {
     @Test
     fun `Returns response object of the correct type`() {
       val queryString = "fake query string"
-      val userToken = "fake-token"
       val queryRole = "fake-role"
       val queryObject = AthenaQuery(queryString = queryString)
 
@@ -69,7 +68,7 @@ class SearchControllerTest {
         athenaRole = "fake",
       )
 
-      val result: AthenaQueryResponse<String> = sut.queryAthena(userToken, queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = sut.queryAthena(queryRole, queryObject)
 
       assertThat(result).isInstanceOf(AthenaQueryResponse::class.java)
     }
@@ -77,7 +76,6 @@ class SearchControllerTest {
     @Test
     fun `Returns error response`() {
       val queryString = "fake query string"
-      val userToken = "fake-token"
       val queryRole = "fake-role"
       val queryObject = AthenaQuery(queryString = queryString)
 
@@ -87,7 +85,7 @@ class SearchControllerTest {
         athenaRole = "fake",
       )
 
-      val result: AthenaQueryResponse<String> = sut.queryAthena(userToken, queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = sut.queryAthena(queryRole, queryObject)
 
       assertThat(result).isNotNull // Ensure the result is not empty
       assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)

@@ -15,8 +15,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 
 @RestController
-// @PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH') and hasAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
-@PreAuthorize("hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/orders"], produces = ["application/json"])
 class OrderController(
   @Autowired val repository: OrderInformationRepository,
@@ -25,10 +24,7 @@ class OrderController(
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     @PathVariable orderId: String,
-    @RequestHeader(
-      name = "X-User-Token",
-      required = true,
-    ) userToken: String,
+    @RequestHeader("Authorization", required = true) authorization: String,
   ): ResponseEntity<OrderInformation> {
     val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
@@ -36,7 +32,7 @@ class OrderController(
   }
 
   // TODO: This is a temporary endpoint to validate code interacting with user claims
-  @PreAuthorize("hasRole('ROLE_EM_DATASTORE_RESTRICTED_RO') and hasRole('ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+  @PreAuthorize("hasRole('ROLE_EM_DATASTORE_RESTRICTED_RO') and hasRole('ROLE_EM_DATASTORE_GENERAL_RO')")
   @GetMapping("/getOrderSummary/specials/{orderId}")
   fun getSpecialsOrder(
     @PathVariable(
@@ -53,10 +49,6 @@ class OrderController(
     }
 
     return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
-
-    return ResponseEntity.ok(
-      repository.getMockOrderInformation(orderId),
-    )
   }
 
   @GetMapping("/getOrderSummary/{orderId}")
