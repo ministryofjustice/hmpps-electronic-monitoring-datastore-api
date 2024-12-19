@@ -31,7 +31,7 @@ class ControllerIntegrationBase : IntegrationTestBase() {
       .headers(setAuthorisation())
       .exchange()
       .expectStatus()
-      .isUnauthorized
+      .isForbidden
   }
 
   fun wrongRolesTest(uri: String, roles: List<String>, post: Boolean = false) {
@@ -47,6 +47,6 @@ class ControllerIntegrationBase : IntegrationTestBase() {
       .headers(setAuthorisation(roles = roles))
       .exchange()
       .expectStatus()
-      .isUnauthorized
+      .isForbidden
   }
 }

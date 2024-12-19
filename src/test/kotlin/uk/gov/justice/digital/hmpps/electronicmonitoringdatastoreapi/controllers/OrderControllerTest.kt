@@ -10,7 +10,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.AccessDeniedException
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
@@ -38,7 +37,7 @@ class OrderControllerTest {
       val expectedResult: OrderInformation = OrderInformationRepository().getMockOrderInformation("DIFFERENT ID")
       `when`(repository.getMockOrderInformation(orderID)).thenReturn(expectedResult)
 
-      val result = sut.getSpecialsOrder(orderID, "fakeytoken")
+      val result = sut.getSpecialsOrder(orderID, "fake-auth-header")
 
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
     }
@@ -50,7 +49,7 @@ class OrderControllerTest {
     @Test
     fun `Returns order summary if correct params supplied`() {
       val orderId = "7654321"
-      val userToken = "real-token"
+      val authorizationHeader = "real-token"
       val fakeOrder = OrderInformationRepository().getMockOrderInformation("this is fake info")
 
       val expectedServiceResult = OrderInformationRepository()
@@ -76,7 +75,7 @@ class OrderControllerTest {
           ),
         )
 
-      val result: ResponseEntity<OrderInformation> = sut.getOrderSummary(orderId, userToken)
+      val result: ResponseEntity<OrderInformation> = sut.getOrderSummary(orderId, authorizationHeader)
 
       Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
       Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
@@ -97,33 +96,5 @@ class OrderControllerTest {
 //      // Checking for body on notFound as it should not contain a body
 //      Assertions.assertThat(result.body).isNull()
 //    }
-
-    @Test
-    fun `Throws AccessDeniedException if userToken is invalid`() {
-      val orderId = "obviously-real-id"
-      val userToken = "invalid-token"
-
-      Assertions.assertThatExceptionOfType(AccessDeniedException::class.java)
-        .isThrownBy { sut.getOrderSummary(orderId, userToken) }
-        .withMessage("Your token is valid for this service, but your user is not allowed to access this resource")
-    }
-  }
-
-  @Nested
-  inner class CheckValidUser {
-
-    @Test
-    fun `Returns true if token is valid`() {
-      val userToken = "real-token"
-      val result = sut.checkValidUser(userToken)
-      Assertions.assertThat(result).isTrue
-    }
-
-    @Test
-    fun `Returns false if token is invalid`() {
-      val userToken = "invalid-token"
-      val result = sut.checkValidUser(userToken)
-      Assertions.assertThat(result).isFalse
-    }
   }
 }
