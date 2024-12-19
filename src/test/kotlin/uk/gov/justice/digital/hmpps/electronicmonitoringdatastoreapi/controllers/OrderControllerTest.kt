@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -22,8 +21,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class OrderControllerTest {
   private val auditService: AuditService = mock()
 
-  private val objectMapper = ObjectMapper()
   private lateinit var repository: OrderInformationRepository
+  private val auditService: AuditService = mock()
   private lateinit var sut: OrderController
 
   @BeforeEach

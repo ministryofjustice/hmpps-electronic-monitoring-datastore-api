@@ -21,6 +21,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class OrderController(
   @Autowired val auditService: AuditService,
   @Autowired val repository: OrderInformationRepository,
+  @Autowired val auditService: AuditService,
 ) {
 
   @GetMapping("/getMockOrderSummary/{orderId}")
@@ -29,6 +30,12 @@ class OrderController(
     @RequestHeader("Authorization", required = true) authorization: String,
   ): ResponseEntity<OrderInformation> {
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
+
+    auditService.createEvent(
+      "GET_MOCK_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
+
     return ResponseEntity.ok(orderInfo)
   }
 
@@ -59,11 +66,22 @@ class OrderController(
 
       return JSONObject(
         mapOf("data" to "No order with ID $orderId could be found"),
+        )
+      }
+      
+      val response: JSONObject = JSONObject(
+        mapOf("data" to "This is the data for order $orderId"),
+        throw AccessDeniedException("Your token is valid for this service, but your user is not allowed to access this resource")
+      }
+      
+      auditService.createEvent(
+        "GET_SPECIALS_ORDER_SUMMARY",
+        mapOf("orderId" to orderId),
       )
-    }
 
-    val response: JSONObject = JSONObject(
-      mapOf("data" to "This is the data for order $orderId"),
+
+    return ResponseEntity.ok(
+      repository.getMockOrderInformation(orderId),
     )
 
     return response
@@ -91,6 +109,11 @@ class OrderController(
       keyOrderInformation = keyInfo.queryResponse ?: fakeOrder.keyOrderInformation,
       subjectHistoryReport = fakeOrder.subjectHistoryReport,
       documents = fakeOrder.documents,
+    )
+
+    auditService.createEvent(
+      "GET_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
     )
 
     return ResponseEntity.ok(result)

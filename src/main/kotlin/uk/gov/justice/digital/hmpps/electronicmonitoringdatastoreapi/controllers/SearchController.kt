@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.beans.factory.annotation.Autowired
@@ -82,6 +83,11 @@ class SearchController(
       )
     }
 
+    auditService.createEvent(
+      "SEARCH_WITH_CUSTOM_QUERY",
+      mapOf("queryString" to athenaQuery.queryString),
+    )
+
     return AthenaQueryResponse<String>(
       queryString = queryString,
       athenaRole = validatedRole.name,
@@ -105,6 +111,11 @@ class SearchController(
 
     // 2: query repository
     val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
+
+    auditService.createEvent(
+      "SEARCH_ORDERS",
+      mapOf("legacySubjectId" to searchCriteria.legacySubjectId),
+    )
 
     return ResponseEntity<List<Order>>(
       result.queryResponse,
