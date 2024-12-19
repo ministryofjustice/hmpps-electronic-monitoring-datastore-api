@@ -40,10 +40,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should return 200 with empty body`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers {
-          it.add("Authorization", "Bearer valid-user-token") // Add required Bearer token
-          setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")).invoke(it)
-        }
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -66,10 +63,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
       webTestClient.post()
         .uri(baseUri)
-        .headers {
-          it.add("X-User-Token", "valid-user-token") // Add required X-User-Token header
-          setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")).invoke(it)
-        }
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody)
         .exchange()
