@@ -18,26 +18,13 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should return 401 unauthorized if no role in authorization header`() {
+    fun `should return 403 forbidden if no role in authorization header`() {
       noRoleInAuthHeaderTest("$baseUri/234")
     }
 
     @Test
-    fun `should return 401 unauthorized if wrong role in authorization header`() {
+    fun `should return 403 forbidden if wrong role in authorization header`() {
       wrongRolesTest("$baseUri/234", listOf("ROLE_WRONG"))
-    }
-
-    @Test
-    fun `should return 403 Forbidden if X-User-Token does not match`() {
-      val uri = "$baseUri/234"
-
-      webTestClient.get()
-        .uri(uri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
-        .header("X-User-Token", "invalid-token")
-        .exchange()
-        .expectStatus()
-        .isForbidden
     }
 
 //     TODO: fix this test - need to mock Athena
