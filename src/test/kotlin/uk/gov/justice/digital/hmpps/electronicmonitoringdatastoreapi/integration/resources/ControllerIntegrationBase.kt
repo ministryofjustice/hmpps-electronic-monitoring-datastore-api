@@ -1,9 +1,9 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
 class ControllerIntegrationBase : IntegrationTestBase() {
-  fun noAuthHeaderTest(uri: String, post: Boolean = false) {
+  fun noAuthHeaderRespondsWithUnauthorizedTest(uri: String, post: Boolean = false) {
     val testObject =
       if (post) {
         webTestClient.post()
@@ -18,7 +18,7 @@ class ControllerIntegrationBase : IntegrationTestBase() {
       .isUnauthorized
   }
 
-  fun noRoleInAuthHeaderTest(uri: String, post: Boolean = false) {
+  fun noRoleInAuthHeaderRespondsWithForbiddenTest(uri: String, post: Boolean = false) {
     val testObject =
       if (post) {
         webTestClient.post()
@@ -28,13 +28,13 @@ class ControllerIntegrationBase : IntegrationTestBase() {
 
     testObject
       .uri(uri)
-      .headers(setAuthorisation())
+      .headers(setAuthorisation(roles = emptyList<String>()))
       .exchange()
       .expectStatus()
       .isForbidden
   }
 
-  fun wrongRolesTest(uri: String, roles: List<String>, post: Boolean = false) {
+  fun wrongRolesRespondsWithForbiddenTest(uri: String, roles: List<String>, post: Boolean = false) {
     val testObject =
       if (post) {
         webTestClient.post()
