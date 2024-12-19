@@ -24,10 +24,7 @@ class OrderController(
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     @PathVariable orderId: String,
-    @RequestHeader(
-      name = "X-User-Token",
-      required = true,
-    ) userToken: String,
+    @RequestHeader("Authorization", required = true) authorization: String,
   ): ResponseEntity<OrderInformation> {
     val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
@@ -52,10 +49,6 @@ class OrderController(
     }
 
     return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
-
-    return ResponseEntity.ok(
-      repository.getMockOrderInformation(orderId),
-    )
   }
 
   @GetMapping("/getOrderSummary/{orderId}")

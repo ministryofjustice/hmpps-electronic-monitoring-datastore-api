@@ -71,7 +71,7 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
         userMessage = "This request is malformed, and may be missing a body",
         developerMessage = e.message,
       ),
-    ).also { log.warn("i make devs sad") }
+    ).also { log.warn("Message not readable exception: {}", e.message) }
 
   @ExceptionHandler(Exception::class)
   fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
