@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-data class SearchCriteria(
+data class OrderSearchCriteria(
   val searchType: String? = null,
   val legacySubjectId: String? = null,
   val firstName: String? = null,

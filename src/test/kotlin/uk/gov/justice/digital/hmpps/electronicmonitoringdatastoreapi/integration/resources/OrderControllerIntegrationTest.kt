@@ -1,11 +1,10 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class OrderControllerIntegrationTest : ControllerIntegrationBase() {
-
   @Nested
   @DisplayName("GET /orders/getOrderSummary/{orderId}")
   inner class GetOrderSummary {
@@ -14,17 +13,17 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderTest("$baseUri/234")
+      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderTest("$baseUri/234")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesTest("$baseUri/234", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_WRONG"))
     }
 
 //     TODO: fix this test - need to mock Athena
@@ -34,8 +33,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
 //
 //      webTestClient.get()
 //        .uri(uri)
-//        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
-//        .header("X-User-Token", "any-other-string-is-valid")
+//        .headers(setAuthorisation())
 //        .exchange()
 //        .expectStatus()
 //        .isOk
@@ -45,28 +43,51 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("GET /orders/getOrderSummary/specials/{orderId}")
   inner class GetSpecialsOrder {
-
     val baseUri: String = "/orders/getOrderSummary/specials"
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderTest("$baseUri/234")
+      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
     }
 
     @Test
-    fun `should return 401 unauthorized if no role in authorization header`() {
-      noRoleInAuthHeaderTest("$baseUri/234")
+    fun `should return 403 forbidden if no role in authorization header`() {
+      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
     }
 
     @Test
-    fun `should return 403 Forbidden if ONLY specials role is present`() {
-      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
+    fun `should return 403 Forbidden if unknown role is present`() {
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_UNKNOWN"))
+    }
+
+    @Test
+    fun `should return 403 Forbidden if no specials role is present`() {
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_GENERAL_RO"))
     }
 
     // Note: the @Preauthorize on the method is taken in *PREFERENCE* to the preauthorization on the controller
     @Test
-    fun `should return 403 Forbidden if ONLY general role is present`() {
-      wrongRolesTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_GENERAL_RO"))
+    fun `should return 403 Forbidden if no search role is present`() {
+      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_EM_DATASTORE_RESTRICTED_RO"))
+    }
+
+    @Test
+    fun `should return 200 OK if all correct roles are present`() {
+      val uri = "$baseUri/234"
+
+      webTestClient.get()
+        .uri(uri)
+        .headers(
+          setAuthorisation(
+            roles = listOf(
+              "ROLE_EM_DATASTORE_RESTRICTED_RO",
+              "ROLE_EM_DATASTORE_GENERAL_RO",
+            ),
+          ),
+        )
+        .exchange()
+        .expectStatus()
+        .isOk
     }
 
     @Test
@@ -80,10 +101,10 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
             roles = listOf(
               "ROLE_EM_DATASTORE_RESTRICTED_RO",
               "ROLE_EM_DATASTORE_GENERAL_RO",
+              "ROLE_EM_UNKNOWN_ROLE",
             ),
           ),
         )
-        .header("X-User-Token", "any-other-string-is-valid")
         .exchange()
         .expectStatus()
         .isOk

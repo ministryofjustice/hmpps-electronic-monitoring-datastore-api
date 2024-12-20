@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderDTO
 
 data class KeyOrderInformation(
   val specials: String,
@@ -31,25 +31,6 @@ data class KeyOrderInformation(
     orderEndDate = dto.orderEndDate,
   )
 }
-
-data class AthenaKeyOrderDTO(
-  val legacySubjectId: String,
-  val legacyOrderId: String,
-  @JsonProperty("full_name")
-  val name: String,
-  val alias: String?,
-  val dateOfBirth: String,
-  @JsonProperty("primary_address_line_1")
-  val address1: String,
-  @JsonProperty("primary_address_line_2")
-  val address2: String,
-  @JsonProperty("primary_address_line_3")
-  val address3: String,
-  @JsonProperty("primary_address_post_code")
-  val postcode: String,
-  val orderStartDate: String,
-  val orderEndDate: String,
-)
 
 // legacy_subject_id
 //              , legacy_order_id

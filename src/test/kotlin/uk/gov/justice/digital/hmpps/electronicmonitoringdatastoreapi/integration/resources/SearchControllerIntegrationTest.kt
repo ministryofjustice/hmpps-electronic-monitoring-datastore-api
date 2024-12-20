@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -28,7 +28,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should fail with 403 when user has no required roles`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("INVALID_ROLE")))
+        .headers(setAuthorisation(roles = listOf()))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -40,12 +40,12 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should return 200 with empty body`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
         .expectStatus()
-        .isOk // Endpoint should handle an empty body
+        .isOk
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
@@ -63,12 +63,12 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody)
         .exchange()
         .expectStatus()
-        .isOk // Endpoint should return 200 OK
+        .isOk
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
@@ -90,9 +90,9 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
       webTestClient.post()
-        .uri("$baseUri")
+        .uri(baseUri)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
+        .bodyValue(requestBody)
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -101,10 +101,10 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
       webTestClient.post()
-        .uri("$baseUri")
-        .headers(setAuthorisation())
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf()))
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
+        .bodyValue(requestBody)
         .exchange()
         .expectStatus()
         .isForbidden
@@ -113,10 +113,10 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
       webTestClient.post()
-        .uri("$baseUri")
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf("ROLE_PROBATION")))
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
+        .bodyValue(requestBody)
         .exchange()
         .expectStatus()
         .isForbidden
@@ -126,18 +126,18 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should fail when no body is sent`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus()
-        .isBadRequest // Expect a 400 Bad Request when no body is sent
+        .isBadRequest
     }
 
     @Test
     fun `should fail with empty body with 400 error`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -153,7 +153,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     fun `should return a 200 ok AthenaQueryResponse which is errored with valid body`() {
       webTestClient.post()
         .uri(baseUri)
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_GENERAL_RO")))
+        .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody) // Sending a valid body
         .exchange()

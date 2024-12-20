@@ -2,18 +2,18 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaOrderDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 class OrderRepository {
   companion object {
-    fun getFakeOrders(): List<Order> = listOf(
-      Order(
+    fun getFakeOrders(): List<OrderSearchResult> = listOf(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 1000000,
         name = "Amy Smith",
@@ -23,7 +23,7 @@ class OrderRepository {
         orderStartDate = "08-02-2019",
         orderEndDate = "08-02-2020",
       ),
-      Order(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 2000000,
         name = "Bill Smith",
@@ -33,7 +33,7 @@ class OrderRepository {
         orderStartDate = "03-11-2020",
         orderEndDate = "03-11-2021",
       ),
-      Order(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 3000000,
         name = "Claire Smith",
@@ -43,7 +43,7 @@ class OrderRepository {
         orderStartDate = "05-08-2001",
         orderEndDate = "05-08-2002",
       ),
-      Order(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 8000000,
         name = "Daniel Smith",
@@ -53,7 +53,7 @@ class OrderRepository {
         orderStartDate = "18-02-2012",
         orderEndDate = "18-02-2014",
       ),
-      Order(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 30000,
         name = "Emma Smith",
@@ -63,7 +63,7 @@ class OrderRepository {
         orderStartDate = "24-01-2017",
         orderEndDate = "24-01-2020",
       ),
-      Order(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 4000000,
         name = "Fred Smith",
@@ -75,7 +75,7 @@ class OrderRepository {
       ),
     )
 
-    fun validateSearchCriteria(criteria: SearchCriteria): SearchCriteria {
+    fun validateSearchCriteria(criteria: OrderSearchCriteria): OrderSearchCriteria {
       if (criteria.legacySubjectId == null &&
         criteria.firstName == null &&
         criteria.lastName == null &&
@@ -100,7 +100,7 @@ class OrderRepository {
       return criteria
     }
 
-    fun parseSearchCriteria(criteria: SearchCriteria): AthenaQuery {
+    fun parseSearchCriteria(criteria: OrderSearchCriteria): AthenaQuery {
       validateSearchCriteria(criteria)
       var existingCriteria: Boolean = false
 
@@ -149,12 +149,12 @@ class OrderRepository {
       )
     }
 
-    fun parseOrders(resultSet: ResultSet): List<Order> {
-      var dtoOrders: List<AthenaOrderDTO> = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
+    fun parseOrders(resultSet: ResultSet): List<OrderSearchResult> {
+      var dtoOrders: List<AthenaOrderSearchResultDTO> = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
 
-      var orders: List<Order> = dtoOrders.map { dto -> Order(dto) }
+      var orderSearchResults: List<OrderSearchResult> = dtoOrders.map { dto -> OrderSearchResult(dto) }
 //      return getFakeOrders() // TODO: Early return, testing/demo early.
-      return orders
+      return orderSearchResults
 
       // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
       // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
@@ -164,18 +164,18 @@ class OrderRepository {
 
   private val athenaService = AthenaService()
 
-  fun getOrders(criteria: SearchCriteria): AthenaQueryResponse<List<Order>> {
+  fun getOrders(criteria: OrderSearchCriteria): AthenaQueryResponse<List<OrderSearchResult>> {
     val athenaQuery: AthenaQuery = OrderRepository.parseSearchCriteria(criteria)
     val role = AthenaRole.DEV
 
     val athenaResponse: ResultSet = athenaService.getQueryResult(role, athenaQuery.queryString)
 
-    val parsedOrders: List<Order> = parseOrders(athenaResponse)
+    val parsedOrderSearchResults: List<OrderSearchResult> = parseOrders(athenaResponse)
 
-    return AthenaQueryResponse<List<Order>>(
+    return AthenaQueryResponse<List<OrderSearchResult>>(
       queryString = athenaQuery.queryString,
       athenaRole = role.name,
-      queryResponse = parsedOrders,
+      queryResponse = parsedOrderSearchResults,
     )
   }
 }

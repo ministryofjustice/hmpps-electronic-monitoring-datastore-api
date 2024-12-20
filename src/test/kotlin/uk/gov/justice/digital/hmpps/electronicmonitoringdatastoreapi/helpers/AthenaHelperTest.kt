@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaOrderDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 
 class AthenaHelperTest {
 
@@ -406,8 +406,8 @@ class AthenaHelperTest {
 }""",
       )
 
-      val expected: List<AthenaOrderDTO> = listOf(
-        AthenaOrderDTO(
+      val expected: List<AthenaOrderSearchResultDTO> = listOf(
+        AthenaOrderSearchResultDTO(
           legacySubjectId = 1253587,
           fullName = "ELLEN RIPLY",
           primaryAddressLine1 = "310 Lightbowne Road, Moston",
@@ -419,7 +419,7 @@ class AthenaHelperTest {
         ),
       )
 
-      val result = AthenaHelper.mapTo<AthenaOrderDTO>(resultSet)
+      val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }

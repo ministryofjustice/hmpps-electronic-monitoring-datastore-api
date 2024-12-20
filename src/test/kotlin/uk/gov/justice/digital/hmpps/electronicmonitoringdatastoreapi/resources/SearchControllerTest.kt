@@ -1,16 +1,35 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resources
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import org.springframework.boot.test.autoconfigure.json.JsonTest
+import org.springframework.security.core.Authentication
+import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
+@ActiveProfiles("test")
+@JsonTest
 class SearchControllerTest {
+  private lateinit var auditService: AuditService
+  private lateinit var controller: SearchController
+  private lateinit var authentication: Authentication
 
-  private val sut: SearchController = SearchController()
+  @BeforeEach
+  fun setup() {
+    auditService = mock()
+    controller = SearchController(auditService)
+    authentication = mock(Authentication::class.java)
+    `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
+  }
 
 //  @Nested
 //  inner class GetSearchResult {
@@ -33,8 +52,7 @@ class SearchControllerTest {
     @Test
     fun `Returns a list of orders`() {
       // Arrange: Create search criteria
-      val userToken = "fake-token"
-      val searchCriteria = SearchCriteria(
+      val orderSearchCriteria = OrderSearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
         firstName = "Amy",
@@ -45,11 +63,11 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<Order> = sut.searchOrdersFake(userToken, searchCriteria)
+      val result: List<OrderSearchResult> = controller.searchOrdersFake(authentication, orderSearchCriteria)
 
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
-      assertThat(result).allMatch { it is Order } // Ensure all elements are of type Order
+      assertThat(result).allMatch { it is OrderSearchResult } // Ensure all elements are of type Order
     }
   }
 
@@ -68,7 +86,7 @@ class SearchControllerTest {
         athenaRole = "fake",
       )
 
-      val result: AthenaQueryResponse<String> = sut.queryAthena(queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = controller.queryAthena(authentication, queryObject, queryRole)
 
       assertThat(result).isInstanceOf(AthenaQueryResponse::class.java)
     }
@@ -85,7 +103,7 @@ class SearchControllerTest {
         athenaRole = "fake",
       )
 
-      val result: AthenaQueryResponse<String> = sut.queryAthena(queryRole, queryObject)
+      val result: AthenaQueryResponse<String> = controller.queryAthena(authentication, queryObject, queryRole)
 
       assertThat(result).isNotNull // Ensure the result is not empty
       assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)

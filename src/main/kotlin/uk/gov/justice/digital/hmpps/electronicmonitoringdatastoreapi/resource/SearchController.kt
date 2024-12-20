@@ -1,8 +1,11 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.controllers
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -10,18 +13,21 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-@RequestMapping(value = ["/search"], produces = ["application/json"])
-class SearchController {
+@RequestMapping(value = ["/search"], produces = [MediaType.APPLICATION_JSON_VALUE])
+class SearchController(
+  @Autowired val auditService: AuditService,
+) {
 
 //  @GetMapping("/cases/{caseID}")
 //  fun getCases(
@@ -37,9 +43,11 @@ class SearchController {
 //  }
 
   @GetMapping("/testEndpoint")
-  fun confirmAthenaAccess(): ResponseEntity<ResultSet> {
-    val athenaService = AthenaService()
-    val testQuery: String = """
+  fun confirmAthenaAccess(
+    authentication: Authentication,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
+  ): ResponseEntity<ResultSet> {
+    val queryString: String = """
         SELECT 
           legacy_subject_id, 
           full_name, 
@@ -53,7 +61,16 @@ class SearchController {
           test_database.order_details
         WHERE 
     """.trimIndent()
-    val resultSet: ResultSet = athenaService.getQueryResult(AthenaRole.DEV, testQuery)
+    val validatedRole: AthenaRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+
+    val athenaService = AthenaService()
+    val resultSet: ResultSet = athenaService.getQueryResult(validatedRole, queryString)
+
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "SEARCH_TEST",
+      mapOf("queryString" to queryString),
+    )
 
     return ResponseEntity<ResultSet>(
       resultSet,
@@ -68,10 +85,9 @@ class SearchController {
 
   @PostMapping("/custom-query")
   fun queryAthena(
+    authentication: Authentication,
+    @RequestBody(required = true) athenaQuery: AthenaQuery,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
-    @RequestBody(
-      required = true,
-    ) athenaQuery: AthenaQuery,
   ): AthenaQueryResponse<String> {
     val queryString: String = athenaQuery.queryString
     val validatedRole: AthenaRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
@@ -90,6 +106,12 @@ class SearchController {
       )
     }
 
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "SEARCH_WITH_CUSTOM_QUERY",
+      mapOf("queryString" to queryString),
+    )
+
     return AthenaQueryResponse<String>(
       queryString = queryString,
       athenaRole = validatedRole.name,
@@ -100,21 +122,35 @@ class SearchController {
 
   @PostMapping("/orders-old")
   fun searchOrdersFake(
-    @RequestHeader("Authorization", required = true) authorization: String,
-    @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> = OrderRepository.getFakeOrders()
+    authentication: Authentication,
+    @RequestBody orderSearchCriteria: OrderSearchCriteria,
+  ): List<OrderSearchResult> {
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "SEARCH_OLD_ORDERS",
+      mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
+    )
+
+    return OrderRepository.Companion.getFakeOrders()
+  }
 
   @PostMapping("/orders")
   fun searchOrders(
-    @RequestHeader("Authorization", required = true) authorization: String,
-    @RequestBody searchCriteria: SearchCriteria,
-  ): ResponseEntity<List<Order>> {
+    authentication: Authentication,
+    @RequestBody orderSearchCriteria: OrderSearchCriteria,
+  ): ResponseEntity<List<OrderSearchResult>> {
     val repository = OrderRepository()
 
     // 2: query repository
-    val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
+    val result: AthenaQueryResponse<List<OrderSearchResult>> = repository.getOrders(orderSearchCriteria)
 
-    return ResponseEntity<List<Order>>(
+    auditService.createEvent(
+      authentication.principal.toString(),
+      "SEARCH_ORDERS",
+      mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
+    )
+
+    return ResponseEntity<List<OrderSearchResult>>(
       result.queryResponse,
       HttpStatus.OK,
     )

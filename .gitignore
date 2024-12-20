@@ -69,6 +69,9 @@ dps-gradle-spring-boot-suppressions.xml
 .editorconfig
 sonar-project.properties
 
+# localstack
+localstack
+
 #Helm
 **/Chart.lock
 
