@@ -9,10 +9,10 @@ import org.mockito.Mockito.`when`
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -52,7 +52,7 @@ class SearchControllerTest {
     @Test
     fun `Returns a list of orders`() {
       // Arrange: Create search criteria
-      val searchCriteria = SearchCriteria(
+      val orderSearchCriteria = OrderSearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
         firstName = "Amy",
@@ -63,11 +63,11 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<Order> = controller.searchOrdersFake(authentication, searchCriteria)
+      val result: List<OrderSearchResult> = controller.searchOrdersFake(authentication, orderSearchCriteria)
 
       // Assert: Verify the result is a list of Order objects
       assertThat(result).isNotEmpty // Ensure the result is not empty
-      assertThat(result).allMatch { it is Order } // Ensure all elements are of type Order
+      assertThat(result).allMatch { it is OrderSearchResult } // Ensure all elements are of type Order
     }
   }
 

@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 
-data class Order(
+data class OrderSearchResult(
   val dataType: String,
   val legacySubjectId: Long,
   val name: String,
@@ -12,7 +12,7 @@ data class Order(
   val orderStartDate: String,
   val orderEndDate: String,
 ) {
-  constructor(dto: AthenaOrderDTO) : this(
+  constructor(dto: AthenaOrderSearchResultDTO) : this(
     dataType = "am",
     legacySubjectId = dto.legacySubjectId,
     name = dto.fullName,
@@ -28,17 +28,3 @@ data class Order(
     orderEndDate = dto.orderEndDate,
   )
 }
-
-data class AthenaOrderDTO(
-  val legacySubjectId: Long,
-  val fullName: String,
-  @JsonProperty("primary_address_line_1")
-  val primaryAddressLine1: String,
-  @JsonProperty("primary_address_line_2")
-  val primaryAddressLine2: String,
-  @JsonProperty("primary_address_line_3")
-  val primaryAddressLine3: String,
-  val primaryAddressPostCode: String,
-  val orderStartDate: String,
-  val orderEndDate: String,
-)

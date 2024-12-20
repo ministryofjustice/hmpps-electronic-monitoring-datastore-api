@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
@@ -123,12 +123,12 @@ class SearchController(
   @PostMapping("/orders-old")
   fun searchOrdersFake(
     authentication: Authentication,
-    @RequestBody searchCriteria: SearchCriteria,
-  ): List<Order> {
+    @RequestBody orderSearchCriteria: OrderSearchCriteria,
+  ): List<OrderSearchResult> {
     auditService.createEvent(
       authentication.principal.toString(),
       "SEARCH_OLD_ORDERS",
-      mapOf("legacySubjectId" to searchCriteria.legacySubjectId, "searchType" to searchCriteria.searchType),
+      mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
     )
 
     return OrderRepository.Companion.getFakeOrders()
@@ -137,20 +137,20 @@ class SearchController(
   @PostMapping("/orders")
   fun searchOrders(
     authentication: Authentication,
-    @RequestBody searchCriteria: SearchCriteria,
-  ): ResponseEntity<List<Order>> {
+    @RequestBody orderSearchCriteria: OrderSearchCriteria,
+  ): ResponseEntity<List<OrderSearchResult>> {
     val repository = OrderRepository()
 
     // 2: query repository
-    val result: AthenaQueryResponse<List<Order>> = repository.getOrders(searchCriteria)
+    val result: AthenaQueryResponse<List<OrderSearchResult>> = repository.getOrders(orderSearchCriteria)
 
     auditService.createEvent(
       authentication.principal.toString(),
       "SEARCH_ORDERS",
-      mapOf("legacySubjectId" to searchCriteria.legacySubjectId, "searchType" to searchCriteria.searchType),
+      mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
     )
 
-    return ResponseEntity<List<Order>>(
+    return ResponseEntity<List<OrderSearchResult>>(
       result.queryResponse,
       HttpStatus.OK,
     )

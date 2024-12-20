@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
 data class AthenaQueryResponse<T>(
   val queryString: String,

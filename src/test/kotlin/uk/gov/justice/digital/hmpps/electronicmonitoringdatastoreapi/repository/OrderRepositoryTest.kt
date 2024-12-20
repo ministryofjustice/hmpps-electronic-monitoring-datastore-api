@@ -3,9 +3,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 class OrderRepositoryTest {
 
@@ -19,10 +19,10 @@ class OrderRepositoryTest {
 
   @Test
   fun `GetFakeOrders() returns List of Orders`() {
-    val result: List<Order> = OrderRepository.getFakeOrders()
+    val result: List<OrderSearchResult> = OrderRepository.getFakeOrders()
 
     Assertions.assertThat(result).contains(
-      Order(
+      OrderSearchResult(
         dataType = "am",
         legacySubjectId = 3000000,
         name = "Claire Smith",
@@ -55,7 +55,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `returns valid SQL if only legacySubjectId is populated`() {
-      val criteria = SearchCriteria(
+      val criteria = OrderSearchCriteria(
         legacySubjectId = "111222333",
       )
 
@@ -72,7 +72,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `returns valid SQL if only firstName is populated`() {
-      val criteria = SearchCriteria(
+      val criteria = OrderSearchCriteria(
         firstName = "Steeevooooo",
       )
 
@@ -89,7 +89,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `returns valid SQL if only LastName is populated`() {
-      val criteria = SearchCriteria(
+      val criteria = OrderSearchCriteria(
         lastName = "Jobs",
       )
 
@@ -106,7 +106,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `returns valid SQL if only alias is populated`() {
-      val criteria = SearchCriteria(
+      val criteria = OrderSearchCriteria(
         alias = "The Big Apple",
       )
 
@@ -123,7 +123,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `returns valid SQL if legacySubjectId and alias are populated`() {
-      val criteria = SearchCriteria(
+      val criteria = OrderSearchCriteria(
         legacySubjectId = "4",
         alias = "The Big Apple",
       )
@@ -142,7 +142,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `Throws error if search criteria are null`() {
-      val criteria = SearchCriteria()
+      val criteria = OrderSearchCriteria()
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
         OrderRepository.parseSearchCriteria(criteria)
@@ -151,7 +151,7 @@ class OrderRepositoryTest {
 
     @Test
     fun `Throws error if legacySubjectId cannot be parsed as a Long`() {
-      val criteria = SearchCriteria(
+      val criteria = OrderSearchCriteria(
         legacySubjectId = "fake-not a number",
       )
 
