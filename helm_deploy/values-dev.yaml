@@ -10,17 +10,18 @@ generic-service:
     host: electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk
 
   env:
-    SENTRY_ENV: dev
+    # SENTRY_ENV: dev              # <== COMMENTED OUT to investigate failing build 20/12/2024
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
 
-  namespace_secrets:
-    hmpps-auth:
-      CLIENT_ID: "client-id"
-      CLIENT_SECRET: "client-secret"
-    other-services:
-      APPINSIGHTS_INSTRUMENTATIONKEY: "azure-app-insights"
-      SENTRY_DSN: "sentry"
+  #                                  <== COMMENTED OUT to investigate failing build 20/12/2024
+  # namespace_secrets:
+  #   hmpps-auth:
+  #     CLIENT_ID: "client-id"
+  #     CLIENT_SECRET: "client-secret"
+  #   other-services:
+  #     APPINSIGHTS_INSTRUMENTATIONKEY: "azure-app-insights"
+  #     SENTRY_DSN: "sentry"
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts

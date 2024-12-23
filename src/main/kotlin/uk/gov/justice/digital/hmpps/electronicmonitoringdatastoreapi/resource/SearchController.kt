@@ -23,7 +23,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO', 'ROLE_ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
 @RequestMapping(value = ["/search"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class SearchController(
   @Autowired val auditService: AuditService,
@@ -66,11 +66,12 @@ class SearchController(
     val athenaService = AthenaService()
     val resultSet: ResultSet = athenaService.getQueryResult(validatedRole, queryString)
 
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "SEARCH_TEST",
-      mapOf("queryString" to queryString),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "SEARCH_TEST",
+    //   mapOf("queryString" to queryString),
+    // )
 
     return ResponseEntity<ResultSet>(
       resultSet,
@@ -106,11 +107,12 @@ class SearchController(
       )
     }
 
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "SEARCH_WITH_CUSTOM_QUERY",
-      mapOf("queryString" to queryString),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "SEARCH_WITH_CUSTOM_QUERY",
+    //   mapOf("queryString" to queryString),
+    // )
 
     return AthenaQueryResponse<String>(
       queryString = queryString,
@@ -125,11 +127,12 @@ class SearchController(
     authentication: Authentication,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
   ): List<OrderSearchResult> {
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "SEARCH_OLD_ORDERS",
-      mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "SEARCH_OLD_ORDERS",
+    //   mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
+    // )
 
     return OrderRepository.Companion.getFakeOrders()
   }
@@ -144,11 +147,12 @@ class SearchController(
     // 2: query repository
     val result: AthenaQueryResponse<List<OrderSearchResult>> = repository.getOrders(orderSearchCriteria)
 
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "SEARCH_ORDERS",
-      mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "SEARCH_ORDERS",
+    //   mapOf("legacySubjectId" to orderSearchCriteria.legacySubjectId, "searchType" to orderSearchCriteria.searchType),
+    // )
 
     return ResponseEntity<List<OrderSearchResult>>(
       result.queryResponse,

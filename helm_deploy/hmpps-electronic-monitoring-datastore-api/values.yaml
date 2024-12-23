@@ -20,7 +20,7 @@ generic-service:
     SERVER_PORT: "8080"
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
-    HMPPS_SQS_USEWEBTOKEN: true
+    # HMPPS_SQS_USEWEBTOKEN: true                               # <== COMMENTED OUT to investigate failing build 20/12/2024
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -30,8 +30,8 @@ generic-service:
   namespace_secrets:
     hmpps-electronic-monitoring-datastore-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      CLIENT_ID: "API_CLIENT_ID"
-      CLIENT_SECRET: "API_CLIENT_SECRET"
+      # CLIENT_ID: "API_CLIENT_ID"                              # <== COMMENTED OUT to investigate failing build 20/12/2024
+      # CLIENT_SECRET: "API_CLIENT_SECRET"                      # <== COMMENTED OUT to investigate failing build 20/12/2024
 
   allowlist:
     groups:

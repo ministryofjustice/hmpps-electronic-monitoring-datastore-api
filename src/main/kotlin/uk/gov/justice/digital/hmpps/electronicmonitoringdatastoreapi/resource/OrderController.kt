@@ -31,11 +31,12 @@ class OrderController(
     val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
 
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "GET_MOCK_ORDER_SUMMARY",
-      mapOf("orderId" to orderId),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "GET_MOCK_ORDER_SUMMARY",
+    //   mapOf("orderId" to orderId),
+    // )
 
     return ResponseEntity.ok(orderInfo)
   }
@@ -51,11 +52,12 @@ class OrderController(
 
     return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
 
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "GET_SPECIALS_ORDER_SUMMARY",
-      mapOf("orderId" to orderId),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "GET_SPECIALS_ORDER_SUMMARY",
+    //   mapOf("orderId" to orderId),
+    // )
 
     return ResponseEntity.ok(
       repository.getMockOrderInformation(orderId),
@@ -85,11 +87,12 @@ class OrderController(
       documents = fakeOrder.documents,
     )
 
-    auditService.createEvent(
-      authentication.principal.toString(),
-      "GET_ORDER_SUMMARY",
-      mapOf("orderId" to orderId),
-    )
+    // TODO: Re-enable audit once Cloud Platform in place
+    // auditService.createEvent(
+    //   authentication.principal.toString(),
+    //   "GET_ORDER_SUMMARY",
+    //   mapOf("orderId" to orderId),
+    // )
 
     return ResponseEntity.ok(result)
   }
