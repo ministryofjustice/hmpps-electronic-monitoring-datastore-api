@@ -15,7 +15,7 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
   implementation("software.amazon.awssdk:athena:2.29.29")
   implementation("software.amazon.awssdk:sts:2.29.29")
-  implementation("org.json:json:20240303")
+  implementation("org.json:json:20250107")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.1.0")
