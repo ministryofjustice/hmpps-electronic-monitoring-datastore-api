@@ -13,7 +13,7 @@ enum class AthenaRole(val iamRole: String) {
   ;
 
   companion object {
-    inline fun fromString(name: String): AthenaRole? = enumValues<AthenaRole>().find { it.name == name }
+    fun fromString(name: String): AthenaRole? = enumValues<AthenaRole>().find { it.name == name }
   }
 }
 

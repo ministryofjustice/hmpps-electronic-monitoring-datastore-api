@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
+import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
+@Service
 class OrderRepository {
   companion object {
     fun getFakeOrders(): List<OrderSearchResult> = listOf(
@@ -75,80 +76,6 @@ class OrderRepository {
       ),
     )
 
-    fun validateSearchCriteria(criteria: OrderSearchCriteria): OrderSearchCriteria {
-      if (criteria.legacySubjectId == null &&
-        criteria.firstName == null &&
-        criteria.lastName == null &&
-        criteria.alias == null &&
-        criteria.dobDay == null &&
-        criteria.dobMonth == null &&
-        criteria.dobYear == null
-      ) {
-        throw IllegalArgumentException("At least one search criteria must be populated")
-      }
-
-      if (criteria.legacySubjectId != null) {
-        try {
-          (criteria.legacySubjectId ?: "").toLong()
-        } catch (e: Exception) {
-          throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
-        }
-      }
-
-      // TODO: Handle Date of Birth, once it's in the data...
-
-      return criteria
-    }
-
-    fun parseSearchCriteria(criteria: OrderSearchCriteria): AthenaQuery {
-      validateSearchCriteria(criteria)
-      var existingCriteria: Boolean = false
-
-      val builder: StringBuilder = StringBuilder()
-      builder.append(
-        """
-        SELECT 
-          legacy_subject_id, 
-          full_name, 
-          primary_address_line_1, 
-          primary_address_line_2, 
-          primary_address_line_3, 
-          primary_address_post_code, 
-          order_start_date, 
-          order_end_date 
-        FROM 
-          test_database.order_details
-        WHERE 
-        """.trimIndent(),
-      )
-
-      if (criteria.legacySubjectId != null) {
-        builder.append("legacy_subject_id = ${criteria.legacySubjectId}")
-        existingCriteria = true
-      }
-
-      if (!criteria.firstName.isNullOrBlank()) {
-        builder.append("${if (existingCriteria) " OR" else ""} upper(first_name) = upper('${criteria.firstName}')")
-        existingCriteria = true
-      }
-
-      if (!criteria.lastName.isNullOrBlank()) {
-        builder.append("${if (existingCriteria) " OR" else ""} upper(last_name) = upper('${criteria.lastName}')")
-        existingCriteria = true
-      }
-
-      if (!criteria.alias.isNullOrBlank()) {
-        builder.append("${if (existingCriteria) " OR" else ""} upper(alias) = upper('${criteria.alias}')")
-        existingCriteria = true
-      }
-
-      builder.toString()
-
-      return AthenaQuery(
-        queryString = builder.toString(),
-      )
-    }
-
     fun parseOrders(resultSet: ResultSet): List<OrderSearchResult> {
       var dtoOrders: List<AthenaOrderSearchResultDTO> = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
 
@@ -164,16 +91,14 @@ class OrderRepository {
 
   private val athenaService = AthenaService()
 
-  fun getOrders(criteria: OrderSearchCriteria): AthenaQueryResponse<List<OrderSearchResult>> {
-    val athenaQuery: AthenaQuery = OrderRepository.parseSearchCriteria(criteria)
-    val role = AthenaRole.DEV
-
-    val athenaResponse: ResultSet = athenaService.getQueryResult(role, athenaQuery.queryString)
+  fun searchOrders(athenaQuery: AthenaQuery, role: AthenaRole): AthenaQueryResponse<List<OrderSearchResult>> {
+    val queryString = athenaQuery.queryString
+    val athenaResponse: ResultSet = athenaService.getQueryResult(role, queryString)
 
     val parsedOrderSearchResults: List<OrderSearchResult> = parseOrders(athenaResponse)
 
     return AthenaQueryResponse<List<OrderSearchResult>>(
-      queryString = athenaQuery.queryString,
+      queryString = queryString,
       athenaRole = role.name,
       queryResponse = parsedOrderSearchResults,
     )
