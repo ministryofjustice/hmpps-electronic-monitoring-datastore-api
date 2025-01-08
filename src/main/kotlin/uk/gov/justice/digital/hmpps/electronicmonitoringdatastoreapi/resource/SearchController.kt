@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -35,7 +37,12 @@ class SearchController(
   ): ResponseEntity<Boolean> {
     val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val isAvailable = orderService.checkAvailability(validatedRole)
+    var isAvailable: Boolean
+    try {
+      isAvailable = orderService.checkAvailability(validatedRole)
+    } catch (ex: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
+    }
 
     auditService?.createEvent(
       authentication.principal.toString(),
@@ -57,17 +64,43 @@ class SearchController(
     val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
     val query = athenaQuery.queryString
-    val result = orderService.runAdhocQuery(query, validatedRole)
+    var result: AthenaQueryResponse<String>
+    try {
+      val queryResponse = orderService.query(athenaQuery, validatedRole)
 
-    auditService?.createEvent(
-      authentication.principal.toString(),
-      "SEARCH_WITH_CUSTOM_QUERY",
-      mapOf(
-        "query" to query,
-        "isErrored" to result.isErrored.toString(),
-        "error" to result.errorMessage,
-      ),
-    )
+      result = AthenaQueryResponse<String>(
+        queryString = query,
+        athenaRole = validatedRole.name,
+        isErrored = false,
+        queryResponse = queryResponse,
+      )
+
+      auditService?.createEvent(
+        authentication.name,
+        "SEARCH_WITH_CUSTOM_QUERY",
+        mapOf(
+          "query" to query,
+          "isErrored" to "false",
+        ),
+      )
+    } catch (ex: Exception) {
+      auditService?.createEvent(
+        authentication.name,
+        "SEARCH_WITH_CUSTOM_QUERY",
+        mapOf(
+          "query" to query,
+          "isErrored" to "true",
+          "error" to ex.localizedMessage,
+        ),
+      )
+
+      result = AthenaQueryResponse<String>(
+        queryString = query,
+        athenaRole = validatedRole.name,
+        isErrored = true,
+        errorMessage = ex.localizedMessage,
+      )
+    }
 
     return ResponseEntity.ok(result)
   }
@@ -80,10 +113,15 @@ class SearchController(
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val results = orderService.search(orderSearchCriteria, validatedRole, true)
+    val results: List<OrderSearchResult>
+    try {
+      results = orderService.search(orderSearchCriteria, validatedRole, true)
+    } catch (ex: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
+    }
 
     auditService?.createEvent(
-      authentication.principal.toString(),
+      authentication.name,
       "SEARCH_FAKE_ORDERS",
       mapOf(
         "legacySubjectId" to orderSearchCriteria.legacySubjectId,
@@ -103,10 +141,15 @@ class SearchController(
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val results = orderService.search(orderSearchCriteria, validatedRole)
+    val results: List<OrderSearchResult>
+    try {
+      results = orderService.search(orderSearchCriteria, validatedRole)
+    } catch (ex: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
+    }
 
     auditService?.createEvent(
-      authentication.principal.toString(),
+      authentication.name,
       "SEARCH_ORDERS",
       mapOf(
         "legacySubjectId" to orderSearchCriteria.legacySubjectId,

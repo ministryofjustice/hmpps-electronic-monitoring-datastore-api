@@ -32,7 +32,7 @@ class SearchControllerTest {
     auditService = mock(AuditService::class.java)
     controller = SearchController(orderService, auditService)
     authentication = mock(Authentication::class.java)
-    `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
+    `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
   }
 
   @Nested
@@ -43,18 +43,17 @@ class SearchControllerTest {
       val queryString = "fake query string"
       val queryRole = "fake-role"
       val queryObject = AthenaQuery(queryString = queryString)
+      val queryResponse = "fake query response"
 
-      val expectedResult = AthenaQueryResponse<String>(
-        queryString = queryString,
-        isErrored = false,
-        athenaRole = "fake",
-      )
-
-      `when`(orderService.runAdhocQuery(queryString, AthenaRole.DEV)).thenReturn(expectedResult)
+      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
 
       val result = controller.queryAthena(authentication, queryObject, queryRole)
 
       assertThat(result.body).isInstanceOf(AthenaQueryResponse::class.java)
+      assertThat(result.body?.isErrored).isFalse
+      assertThat(result.body?.queryString).isEqualTo(queryString)
+      assertThat(result.body?.queryResponse).isEqualTo(queryResponse)
+      assertThat(result.body?.errorMessage).isNullOrEmpty()
     }
 
     @Test
@@ -62,20 +61,16 @@ class SearchControllerTest {
       val queryString = "fake query string"
       val queryRole = "fake-role"
       val queryObject = AthenaQuery(queryString = queryString)
+      val errorMessage = "fake error message"
 
-      val expectedResult = AthenaQueryResponse<String>(
-        queryString = queryString,
-        isErrored = true,
-        athenaRole = "fake",
-      )
-
-      `when`(orderService.runAdhocQuery(queryString, AthenaRole.DEV)).thenReturn(expectedResult)
+      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
 
       val result = controller.queryAthena(authentication, queryObject, queryRole)
 
-      assertThat(result.body).isNotNull // Ensure the result is not empty
-      assertThat(result.body?.isErrored).isEqualTo(expectedResult.isErrored)
-      assertThat(result.body?.queryString).isEqualTo(expectedResult.queryString) // Ensure all elements are of type Order
+      assertThat(result.body).isInstanceOf(AthenaQueryResponse::class.java)
+      assertThat(result.body?.isErrored).isTrue
+      assertThat(result.body?.queryString).isEqualTo(queryString)
+      assertThat(result.body?.errorMessage).isEqualTo(errorMessage)
     }
   }
 

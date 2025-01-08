@@ -1,12 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.stereotype.Service
-import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
@@ -75,32 +73,23 @@ class OrderRepository {
         orderEndDate = "01-05-2022",
       ),
     )
-
-    fun parseOrders(resultSet: ResultSet): List<OrderSearchResult> {
-      var dtoOrders: List<AthenaOrderSearchResultDTO> = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
-
-      var orderSearchResults: List<OrderSearchResult> = dtoOrders.map { dto -> OrderSearchResult(dto) }
-//      return getFakeOrders() // TODO: Early return, testing/demo early.
-      return orderSearchResults
-
-      // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
-      // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
-      // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
-    }
   }
 
-  private val athenaService = AthenaService()
+  fun searchOrders(athenaQuery: AthenaQuery, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+    val athenaClient = AthenaService()
+    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
 
-  fun searchOrders(athenaQuery: AthenaQuery, role: AthenaRole): AthenaQueryResponse<List<OrderSearchResult>> {
-    val queryString = athenaQuery.queryString
-    val athenaResponse: ResultSet = athenaService.getQueryResult(role, queryString)
+    val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
 
-    val parsedOrderSearchResults: List<OrderSearchResult> = parseOrders(athenaResponse)
+    return result
+  }
 
-    return AthenaQueryResponse<List<OrderSearchResult>>(
-      queryString = queryString,
-      athenaRole = role.name,
-      queryResponse = parsedOrderSearchResults,
-    )
+  fun runQuery(athenaQuery: AthenaQuery, role: AthenaRole): String {
+    val athenaService = AthenaService()
+    val athenaResponse = athenaService.getQueryResult(role, athenaQuery.queryString)
+
+    val result = athenaResponse.toString()
+
+    return result
   }
 }

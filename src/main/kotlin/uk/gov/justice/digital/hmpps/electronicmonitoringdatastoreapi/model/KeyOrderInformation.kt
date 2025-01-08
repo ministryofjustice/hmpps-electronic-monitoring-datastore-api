@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 
 data class KeyOrderInformation(
   val specials: String,
@@ -16,7 +16,7 @@ data class KeyOrderInformation(
   val orderStartDate: String,
   val orderEndDate: String,
 ) {
-  constructor(dto: AthenaKeyOrderDTO) : this (
+  constructor(dto: AthenaKeyOrderInformationDTO) : this (
     specials = "no",
     legacySubjectId = dto.legacySubjectId,
     legacyOrderId = dto.legacyOrderId,

@@ -16,14 +16,14 @@ class OrderServiceTest {
 
     val baseQuery: String = """
         SELECT 
-          legacy_subject_id, 
-          full_name, 
-          primary_address_line_1, 
-          primary_address_line_2, 
-          primary_address_line_3, 
-          primary_address_post_code, 
-          order_start_date, 
-          order_end_date 
+          legacy_subject_id
+          , full_name
+          , primary_address_line_1
+          , primary_address_line_2
+          , primary_address_line_3
+          , primary_address_post_code
+          , order_start_date
+          , order_end_date 
         FROM 
           test_database.order_details
         WHERE 
@@ -41,7 +41,7 @@ class OrderServiceTest {
         """.trimIndent(),
       )
 
-      val result: AthenaQuery = OrderService.parseSearchCriteria(criteria)
+      val result: AthenaQuery = OrderService.searchKeyOrderInformationQuery(criteria)
 
       Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     }
@@ -58,7 +58,7 @@ class OrderServiceTest {
         """.trimIndent(),
       )
 
-      val result: AthenaQuery = OrderService.parseSearchCriteria(criteria)
+      val result: AthenaQuery = OrderService.searchKeyOrderInformationQuery(criteria)
 
       Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     }
@@ -75,7 +75,7 @@ class OrderServiceTest {
         """.trimIndent(),
       )
 
-      val result: AthenaQuery = OrderService.parseSearchCriteria(criteria)
+      val result: AthenaQuery = OrderService.searchKeyOrderInformationQuery(criteria)
 
       Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     }
@@ -92,7 +92,7 @@ class OrderServiceTest {
         """.trimIndent(),
       )
 
-      val result: AthenaQuery = OrderService.parseSearchCriteria(criteria)
+      val result: AthenaQuery = OrderService.searchKeyOrderInformationQuery(criteria)
 
       Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     }
@@ -111,7 +111,7 @@ class OrderServiceTest {
         """.trimIndent(),
       )
 
-      val result: AthenaQuery = OrderService.parseSearchCriteria(criteria)
+      val result: AthenaQuery = OrderService.searchKeyOrderInformationQuery(criteria)
 
       Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     }
@@ -121,7 +121,7 @@ class OrderServiceTest {
       val criteria = OrderSearchCriteria()
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-        OrderService.parseSearchCriteria(criteria)
+        OrderService.searchKeyOrderInformationQuery(criteria)
       }.withMessage("At least one search criteria must be populated")
     }
 
@@ -132,7 +132,7 @@ class OrderServiceTest {
       )
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-        OrderService.parseSearchCriteria(criteria)
+        OrderService.searchKeyOrderInformationQuery(criteria)
       }.withMessage("Legacy_subject_id must be convertable to type Long")
     }
   }

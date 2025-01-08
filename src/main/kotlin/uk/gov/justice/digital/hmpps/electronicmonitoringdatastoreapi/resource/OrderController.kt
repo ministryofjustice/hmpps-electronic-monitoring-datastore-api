@@ -1,44 +1,55 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
+import org.springframework.web.server.ResponseStatusException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class OrderController(
-  @Autowired val repository: OrderInformationRepository,
-  @Autowired val auditService: AuditService,
+  @Autowired val orderService: OrderService,
+
+  // TODO: Re-enable audit as @autowired once Cloud Platform in place
+  val auditService: AuditService? = null,
 ) {
 
   @GetMapping("/getMockOrderSummary/{orderId}")
   fun getMockOrderSummary(
     authentication: Authentication,
     @PathVariable orderId: String,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val repository = OrderInformationRepository()
-    val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
+    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    // TODO: Re-enable audit once Cloud Platform in place
-    // auditService.createEvent(
-    //   authentication.principal.toString(),
-    //   "GET_MOCK_ORDER_SUMMARY",
-    //   mapOf("orderId" to orderId),
-    // )
+    val result: OrderInformation
+    try {
+      result = orderService.getOrderInformation(orderId, validatedRole, true)
+    } catch (ex: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
+    }
 
-    return ResponseEntity.ok(orderInfo)
+    auditService?.createEvent(
+      authentication.name,
+      "GET_MOCK_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
   }
 
   // TODO: This is a temporary endpoint to validate code interacting with user claims
@@ -47,52 +58,46 @@ class OrderController(
   fun getSpecialsOrder(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    // TODO: code to interact with the user role claims to go here
+    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    return ResponseEntity.ok(repository.getMockOrderInformation(orderId))
+    val result: OrderInformation
+    try {
+      result = orderService.getOrderInformation(orderId, validatedRole, true)
+    } catch (ex: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
+    }
 
-    // TODO: Re-enable audit once Cloud Platform in place
-    // auditService.createEvent(
-    //   authentication.principal.toString(),
-    //   "GET_SPECIALS_ORDER_SUMMARY",
-    //   mapOf("orderId" to orderId),
-    // )
-
-    return ResponseEntity.ok(
-      repository.getMockOrderInformation(orderId),
+    auditService?.createEvent(
+      authentication.name,
+      "GET_SPECIALS_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
     )
+
+    return ResponseEntity.ok(result)
   }
 
   @GetMapping("/getOrderSummary/{orderId}")
   fun getOrderSummary(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    // TODO: Real role validation stuff will go here
+    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    // get fake generic object
-    // val repository = OrderInformationRepository()
-    var fakeOrder: OrderInformation = repository.getMockOrderInformation(orderId)
+    val result: OrderInformation
+    try {
+      result = orderService.getOrderInformation(orderId, validatedRole)
+    } catch (ex: Exception) {
+      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
+    }
 
-    // get 'real' KeyOrderInfo from the DB
-    val keyInfo: AthenaQueryResponse<KeyOrderInformation> = repository.getKeyOrderInformation(orderId)
-    // val historyReport: AthenaQueryResponse<SubjectHistoryReport> = repository.getSubjectHistoryReport(orderId)
-    // val documentList: AthenaQueryResponse<DocumentList> = repository.getDocumentList(orderId)
-
-    // Put it together
-    val result = OrderInformation(
-      keyOrderInformation = keyInfo.queryResponse ?: fakeOrder.keyOrderInformation,
-      subjectHistoryReport = fakeOrder.subjectHistoryReport,
-      documents = fakeOrder.documents,
+    auditService?.createEvent(
+      authentication.name,
+      "GET_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
     )
-
-    // TODO: Re-enable audit once Cloud Platform in place
-    // auditService.createEvent(
-    //   authentication.principal.toString(),
-    //   "GET_ORDER_SUMMARY",
-    //   mapOf("orderId" to orderId),
-    // )
 
     return ResponseEntity.ok(result)
   }

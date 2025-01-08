@@ -17,23 +17,25 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @ActiveProfiles("test")
 @JsonTest
 class OrderControllerTest {
-  private lateinit var orderInformationRepository: OrderInformationRepository
+  private lateinit var orderService: OrderService
   private lateinit var auditService: AuditService
   private lateinit var controller: OrderController
   private lateinit var authentication: Authentication
 
   @BeforeEach
   fun setup() {
-    orderInformationRepository = mock()
-    auditService = mock()
-    controller = OrderController(orderInformationRepository, auditService)
+    orderService = mock(OrderService::class.java)
+    auditService = mock(AuditService::class.java)
+    controller = OrderController(orderService, auditService)
     authentication = mock(Authentication::class.java)
-    `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
+    `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
   }
 
   @Nested
@@ -41,9 +43,9 @@ class OrderControllerTest {
     @Test
     fun `is callable with required parameters and correctly uses mocked service`() {
       val orderID = "1ab"
-      val expectedResult: OrderInformation = OrderInformationRepository().getMockOrderInformation("DIFFERENT ID")
+      val expectedResult: OrderInformation = OrderInformationRepository.getFakeOrderInformation("DIFFERENT ID")
 
-      `when`(orderInformationRepository.getMockOrderInformation(orderID)).thenReturn(expectedResult)
+      `when`(orderService.getOrderInformation(orderID, AthenaRole.DEV, true)).thenReturn(expectedResult)
 
       val result = controller.getSpecialsOrder(authentication, orderID)
 
@@ -57,38 +59,31 @@ class OrderControllerTest {
     @Test
     fun `Returns order summary if correct params supplied`() {
       val orderId = "7654321"
-      val fakeOrder = OrderInformationRepository().getMockOrderInformation("this is fake info")
+      val fakeOrder = OrderInformationRepository.getFakeOrderInformation("this is fake info")
 
-      val expectedServiceResult = OrderInformationRepository()
-        .getMockOrderInformation("this is the real info")
-        .keyOrderInformation
+      val expectedServiceResult = OrderInformationRepository
+        .getFakeOrderInformation("this is the real info")
 
       val expectedResponse = ResponseEntity.ok(
         OrderInformation(
-          keyOrderInformation = expectedServiceResult,
+          keyOrderInformation = expectedServiceResult.keyOrderInformation,
           subjectHistoryReport = fakeOrder.subjectHistoryReport,
           documents = fakeOrder.documents,
         ),
       )
 
       `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
-      `when`(orderInformationRepository.getMockOrderInformation(orderId))
+      `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV, true))
         .thenReturn(fakeOrder)
-      `when`(orderInformationRepository.getKeyOrderInformation(orderId))
-        .thenReturn(
-          AthenaQueryResponse<KeyOrderInformation>(
-            queryString = "fake string",
-            athenaRole = "fake role",
-            queryResponse = expectedServiceResult,
-          ),
-        )
+      `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV))
+        .thenReturn(expectedServiceResult)
 
       val result: ResponseEntity<OrderInformation> = controller.getOrderSummary(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
       Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
-      Mockito.verify(orderInformationRepository, times(1)).getMockOrderInformation(orderId)
-      Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(orderId)
+      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV, true)
+      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV)
     }
 
     // TODO: Replace this with a test that mocks the response
