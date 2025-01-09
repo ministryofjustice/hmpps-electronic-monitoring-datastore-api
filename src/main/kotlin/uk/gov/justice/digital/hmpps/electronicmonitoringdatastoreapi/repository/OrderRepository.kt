@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
@@ -9,7 +10,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 @Service
-class OrderRepository {
+class OrderRepository(
+  @Autowired val athenaClient: AthenaService
+) {
   companion object {
     fun getFakeOrders(): List<OrderSearchResult> = listOf(
       OrderSearchResult(
@@ -76,7 +79,6 @@ class OrderRepository {
   }
 
   fun searchOrders(athenaQuery: AthenaQuery, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
-    val athenaClient = AthenaService()
     val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
 
     val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
@@ -85,8 +87,7 @@ class OrderRepository {
   }
 
   fun runQuery(athenaQuery: AthenaQuery, role: AthenaRole): String {
-    val athenaService = AthenaService()
-    val athenaResponse = athenaService.getQueryResult(role, athenaQuery.queryString)
+    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
 
     val result = athenaResponse.toString()
 

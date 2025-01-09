@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
@@ -13,7 +14,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 @Service
-class OrderInformationRepository {
+class OrderInformationRepository(
+  @Autowired val athenaClient: AthenaService
+) {
   companion object {
     fun getFakeOrderInformation(orderId: String): OrderInformation {
       return OrderInformation(
@@ -63,7 +66,6 @@ class OrderInformationRepository {
   }
 
   fun getKeyOrderInformation(athenaQuery: AthenaQuery, role: AthenaRole): AthenaKeyOrderInformationDTO {
-    val athenaClient = AthenaService()
     val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
 
     val result = AthenaHelper.mapTo<AthenaKeyOrderInformationDTO>(athenaResponse)

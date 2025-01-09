@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
+import org.springframework.stereotype.Component
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -15,6 +16,7 @@ import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 
 // We will instantiate as new for now
+@Component
 class AthenaService {
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
