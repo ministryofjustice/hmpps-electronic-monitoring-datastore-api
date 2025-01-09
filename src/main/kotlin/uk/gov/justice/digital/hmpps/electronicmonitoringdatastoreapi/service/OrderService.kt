@@ -17,18 +17,18 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepositoryInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepositoryInterface
 import kotlin.String
 
 @Service
 class OrderService(
-  @Autowired val orderRepository: OrderRepository,
+  @Autowired val orderRepository: OrderRepositoryInterface,
   @Autowired val orderInformationRepository: OrderInformationRepositoryInterface,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
-    val results = orderRepository.listLegacyIds(role)
-    val result = results.isNotEmpty()
+    orderRepository.listLegacyIds(role)
 
-    return result
+    return true
   }
 
   fun query(athenaQuery: AthenaQuery, role: AthenaRole): String {
@@ -38,10 +38,6 @@ class OrderService(
   }
 
   fun search(criteria: OrderSearchCriteria, role: AthenaRole, fakeResponse: Boolean? = true): List<OrderSearchResult> {
-    if (fakeResponse == true) {
-      return OrderRepository.getFakeOrders()
-    }
-
     val orders = orderRepository.searchOrders(criteria, role)
 
     val parsedOrderSearchResults = parseOrderSearchResults(orders)

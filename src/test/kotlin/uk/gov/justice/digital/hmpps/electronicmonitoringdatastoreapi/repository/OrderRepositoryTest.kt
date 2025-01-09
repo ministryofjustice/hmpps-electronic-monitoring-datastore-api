@@ -15,24 +15,6 @@ class OrderRepositoryTest {
     Assertions.assertThat(sut).isNotNull()
   }
 
-  @Test
-  fun `GetFakeOrders() returns List of Orders`() {
-    val result: List<OrderSearchResult> = OrderRepository.getFakeOrders()
-
-    Assertions.assertThat(result).contains(
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 3000000,
-        name = "Claire Smith",
-        address = "First line of address",
-        alias = null,
-        dateOfBirth = "09-04-1962",
-        orderStartDate = "05-08-2001",
-        orderEndDate = "05-08-2002",
-      ),
-    )
-  }
-
   // TODO: Add the tests for this
   @Nested
   inner class ParseOrders {

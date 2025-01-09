@@ -4,9 +4,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("test")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
-
   @Nested
   @DisplayName("POST /search/orders-old")
   inner class SearchOrdersFake {
@@ -80,7 +81,6 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("POST /search/custom-query")
   inner class QueryAthena {
-
     val baseUri: String = "/search/custom-query"
 
     val requestBody = mapOf(
