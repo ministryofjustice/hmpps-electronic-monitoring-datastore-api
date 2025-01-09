@@ -38,7 +38,7 @@ class OrderController(
 
     val result: OrderInformation
     try {
-      result = orderService.getOrderInformation(orderId, validatedRole, true)
+      result = orderService.getOrderInformation(orderId, validatedRole)
     } catch (ex: Exception) {
       throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
     }
@@ -64,7 +64,7 @@ class OrderController(
 
     val result: OrderInformation
     try {
-      result = orderService.getOrderInformation(orderId, validatedRole, true)
+      result = orderService.getOrderInformation(orderId, validatedRole)
     } catch (ex: Exception) {
       throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
     }

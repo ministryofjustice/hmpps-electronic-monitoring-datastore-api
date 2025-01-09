@@ -3,7 +3,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integratio
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("test")
 class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("GET /orders/getOrderSummary/{orderId}")

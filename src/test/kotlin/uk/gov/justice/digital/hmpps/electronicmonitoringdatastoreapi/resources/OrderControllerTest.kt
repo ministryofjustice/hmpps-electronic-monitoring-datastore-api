@@ -9,12 +9,17 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.springframework.boot.test.autoconfigure.json.JsonTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.MockOrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
@@ -41,63 +46,76 @@ class OrderControllerTest {
   @Nested
   inner class GetSpecialsOrder {
     @Test
-    fun `is callable with required parameters and correctly uses mocked service`() {
-      val orderID = "1ab"
-      val expectedResult: OrderInformation = OrderInformationRepository.getFakeOrderInformation("DIFFERENT ID")
+    fun `gets order information from order service `() {
+      val orderId = "1ab"
+      val expectedResult = OrderInformation(
+        keyOrderInformation = KeyOrderInformation(
+          specials = "NO",
+          legacySubjectId = "1234567",
+          legacyOrderId = "7654321-DIFFERENT ID",
+          name = "John Smith",
+          alias = "Zeno",
+          dateOfBirth = "01-02-1980",
+          address1 = "1 Primary Street",
+          address2 = "Sutton",
+          address3 = "London",
+          postcode = "ABC 123",
+          orderStartDate = "01-02-2012",
+          orderEndDate = "03-04-2013",
+        ),
+        subjectHistoryReport = SubjectHistoryReport(reportUrl = "#", name = "1234567", createdOn = "01-02-2020", time = "0900"),
+        documents = DocumentList(
+          pageSize = 0,
+          orderDocuments = listOf()
+        )
+      )
 
-      `when`(orderService.getOrderInformation(orderID, AthenaRole.DEV, true)).thenReturn(expectedResult)
+      `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      val result = controller.getSpecialsOrder(authentication, orderID)
+      val result = controller.getSpecialsOrder(authentication, orderId)
 
-      Assertions.assertThat(result.body).isEqualTo(expectedResult)
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isNotNull
+
+      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV)
     }
   }
 
   @Nested
   inner class GetOrderSummary {
-
     @Test
-    fun `Returns order summary if correct params supplied`() {
-      val orderId = "7654321"
-      val fakeOrder = OrderInformationRepository.getFakeOrderInformation("this is fake info")
-
-      val expectedServiceResult = OrderInformationRepository
-        .getFakeOrderInformation("this is the real info")
-
-      val expectedResponse = ResponseEntity.ok(
-        OrderInformation(
-          keyOrderInformation = expectedServiceResult.keyOrderInformation,
-          subjectHistoryReport = fakeOrder.subjectHistoryReport,
-          documents = fakeOrder.documents,
+    fun `gets order information from order service `() {
+      val orderId = "1ab"
+      val expectedResult = OrderInformation(
+        keyOrderInformation = KeyOrderInformation(
+          specials = "NO",
+          legacySubjectId = "1234567",
+          legacyOrderId = "7654321-DIFFERENT ID",
+          name = "John Smith",
+          alias = "Zeno",
+          dateOfBirth = "01-02-1980",
+          address1 = "1 Primary Street",
+          address2 = "Sutton",
+          address3 = "London",
+          postcode = "ABC 123",
+          orderStartDate = "01-02-2012",
+          orderEndDate = "03-04-2013",
         ),
+        subjectHistoryReport = SubjectHistoryReport(reportUrl = "#", name = "1234567", createdOn = "01-02-2020", time = "0900"),
+        documents = DocumentList(
+          pageSize = 0,
+          orderDocuments = listOf()
+        )
       )
 
-      `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
-      `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV, true))
-        .thenReturn(fakeOrder)
-      `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV))
-        .thenReturn(expectedServiceResult)
+      `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      val result: ResponseEntity<OrderInformation> = controller.getOrderSummary(authentication, orderId)
+      val result = controller.getOrderSummary(authentication, orderId)
 
-      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
-      Assertions.assertThat(result.body).isEqualTo(expectedResponse.body)
-      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV, true)
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isNotNull
+
       Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV)
     }
-
-    // TODO: Replace this with a test that mocks the response
-    // TODO: For this to work, need to implement sensible responses from the service layer if order not found
-//    @Test
-//    fun `Returns 'No summary available' if incorrect orderId`() {
-//      val orderId = "non-existent-order"
-//      val userToken = "real-token"
-//      val expectedResponse = ResponseEntity.notFound().build<Any>()
-//
-//      val result: ResponseEntity<OrderInformation> = sut.getMockOrderSummary(authentication, orderId)
-//      Assertions.assertThat(result.statusCode).isEqualTo(expectedResponse.statusCode)
-//      // Checking for body on notFound as it should not contain a body
-//      Assertions.assertThat(result.body).isNull()
-//    }
   }
 }

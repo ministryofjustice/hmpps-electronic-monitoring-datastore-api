@@ -2,21 +2,27 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepositoryInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import kotlin.String
 
 @Service
 class OrderService(
-  @Autowired private val orderRepository: OrderRepository,
-  @Autowired val orderInformationRepository: OrderInformationRepository,
+  @Autowired val orderRepository: OrderRepository,
+  @Autowired val orderInformationRepository: OrderInformationRepositoryInterface,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
     val athenaQuery = listKeyOrderInformationQuery()
@@ -46,24 +52,24 @@ class OrderService(
     return parsedOrderSearchResults
   }
 
-  fun getOrderInformation(orderId: String, role: AthenaRole, fakeResponse: Boolean? = true): OrderInformation {
-    val fakeOrder = OrderInformationRepository.getFakeOrderInformation(orderId)
-    if (fakeResponse == true) {
-      return fakeOrder
-    }
-
+  fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
     val keyOrderInformationQuery = getKeyOrderInformationQuery(orderId)
-    val keyInfo = orderInformationRepository.getKeyOrderInformation(keyOrderInformationQuery, role)
-    val parsedOrderKeyInformation = parseKeyOrderInformation(keyInfo)
+    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(keyOrderInformationQuery, role)
+    val parsedKeyOrderInformation = parseKeyOrderInformation(keyOrderInformation)
 
-    // val historyReport = repository.getSubjectHistoryReport(orderId, role)
-    // val documentList = repository.getDocumentList(orderId, role)
+    val subjectHistoryReportQuery = getSubjectHistoryReportQuery(orderId)
+    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(subjectHistoryReportQuery, role)
+    val parsedSubjectHistoryReport = parseSubjectHistoryReport(subjectHistoryReport)
+
+    val documentListQuery = getDocumentListQuery(orderId)
+    val documentList = orderInformationRepository.getDocumentList(documentListQuery, role)
+    val parsedDocumentList = parseDocumentList(documentList)
 
     // Put it together
     return OrderInformation(
-      keyOrderInformation = parsedOrderKeyInformation,
-      subjectHistoryReport = fakeOrder.subjectHistoryReport,
-      documents = fakeOrder.documents,
+      keyOrderInformation = parsedKeyOrderInformation,
+      subjectHistoryReport = parsedSubjectHistoryReport,
+      documents = parsedDocumentList,
     )
   }
 
@@ -164,6 +170,20 @@ class OrderService(
       """.trimIndent(),
     )
 
+    fun getSubjectHistoryReportQuery(orderId: String): AthenaQuery = AthenaQuery(
+      queryString = """
+        SELECT
+           $orderId as legacy_order_id
+      """.trimIndent(),
+    )
+
+    fun getDocumentListQuery(orderId: String): AthenaQuery = AthenaQuery(
+      queryString = """
+        SELECT
+           $orderId as legacy_order_id
+      """.trimIndent(),
+    )
+
     fun listKeyOrderInformationQuery(): AthenaQuery = AthenaQuery(
       queryString = """
         SELECT 
@@ -174,8 +194,8 @@ class OrderService(
     )
   }
 
-  private fun parseOrderSearchResults(dtoOrders: List<AthenaOrderSearchResultDTO>): List<OrderSearchResult> {
-    var orderSearchResults = dtoOrders.map { dtoOrder -> OrderSearchResult(dtoOrder) }
+  private fun parseOrderSearchResults(athenaOrderSearchResultList: List<AthenaOrderSearchResultDTO>): List<OrderSearchResult> {
+    var orderSearchResults = athenaOrderSearchResultList.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
 
     // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
     // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
@@ -183,9 +203,37 @@ class OrderService(
     return orderSearchResults
   }
 
-  private fun parseKeyOrderInformation(dtoOrder: AthenaKeyOrderInformationDTO): KeyOrderInformation {
-    var order = KeyOrderInformation(dtoOrder)
+  private fun parseKeyOrderInformation(athenaKeyOrderInformation: AthenaKeyOrderInformationDTO): KeyOrderInformation {
+    var keyOrderInformation = KeyOrderInformation(athenaKeyOrderInformation)
 
-    return order
+    return keyOrderInformation
+  }
+
+  private fun parseSubjectHistoryReport(athenaSubjectHistoryReport: AthenaSubjectHistoryReportDTO): SubjectHistoryReport {
+    var subjectHistoryReport = SubjectHistoryReport(
+      name = athenaSubjectHistoryReport.name,
+      reportUrl = athenaSubjectHistoryReport.reportUrl,
+      createdOn = athenaSubjectHistoryReport.createdOn,
+      time = athenaSubjectHistoryReport.time,
+    )
+
+    return subjectHistoryReport
+  }
+
+  private fun parseDocumentList(athenaDocumentList: AthenaDocumentListDTO): DocumentList {
+    var documentList = DocumentList(
+      pageSize = athenaDocumentList.pageSize,
+      orderDocuments = athenaDocumentList.orderDocuments.map {
+        document -> Document(
+          name = document.name,
+          url = document.url,
+          notes = document.notes,
+          createdOn = document.createdOn,
+          time = document.time,
+        )
+      }
+    )
+
+    return documentList
   }
 }
