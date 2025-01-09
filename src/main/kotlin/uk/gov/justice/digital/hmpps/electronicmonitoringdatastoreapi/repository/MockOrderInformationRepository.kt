@@ -58,15 +58,15 @@ class MockOrderInformationRepository: OrderInformationRepositoryInterface {
     )
   }
 
-  override fun getKeyOrderInformation(athenaQuery: AthenaQuery, role: AthenaRole): AthenaKeyOrderInformationDTO {
-    return getFakeKeyOrderInformationDTO(athenaQuery.orderId)
+  override fun getKeyOrderInformation(orderId: String, role: AthenaRole): AthenaKeyOrderInformationDTO {
+    return getFakeKeyOrderInformationDTO(orderId)
   }
 
-  override fun getSubjectHistoryReport(athenaQuery: AthenaQuery, role: AthenaRole): AthenaSubjectHistoryReportDTO {
+  override fun getSubjectHistoryReport(orderId: String, role: AthenaRole): AthenaSubjectHistoryReportDTO {
     return getFakeSubjectHistoryReportDTO()
   }
 
-  override fun getDocumentList(athenaQuery: AthenaQuery, role: AthenaRole): AthenaDocumentListDTO {
+  override fun getDocumentList(orderId: String, role: AthenaRole): AthenaDocumentListDTO {
     return getFakeDocumentListDTO()
   }
 }

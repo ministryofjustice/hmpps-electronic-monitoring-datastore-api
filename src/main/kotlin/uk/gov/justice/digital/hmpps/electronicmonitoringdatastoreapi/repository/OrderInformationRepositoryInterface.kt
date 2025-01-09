@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 
 interface OrderInformationRepositoryInterface {
-  fun getKeyOrderInformation(athenaQuery: AthenaQuery, role: AthenaRole): AthenaKeyOrderInformationDTO
-  fun getSubjectHistoryReport(query: AthenaQuery, role: AthenaRole): AthenaSubjectHistoryReportDTO
-  fun getDocumentList(query: AthenaQuery, role: AthenaRole): AthenaDocumentListDTO
+  fun getKeyOrderInformation(orderId: String, role: AthenaRole): AthenaKeyOrderInformationDTO
+  fun getSubjectHistoryReport(orderId: String, role: AthenaRole): AthenaSubjectHistoryReportDTO
+  fun getDocumentList(orderId: String, role: AthenaRole): AthenaDocumentListDTO
 }

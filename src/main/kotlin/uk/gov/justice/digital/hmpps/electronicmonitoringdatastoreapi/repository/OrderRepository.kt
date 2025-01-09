@@ -3,6 +3,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SearchKeyOrderInformationQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -78,10 +81,27 @@ class OrderRepository(
     )
   }
 
-  fun searchOrders(athenaQuery: AthenaQuery, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
-    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
+  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+    val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder()
+      .withLegacySubjectId(criteria.legacySubjectId)
+      .withFirstName(criteria.firstName)
+      .withLastName(criteria.lastName)
+      .withAlias(criteria.alias)
+      .build()
+
+    val athenaResponse = athenaClient.getQueryResult(role, searchKeyOrderInformationQuery.queryString)
 
     val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
+
+    return result
+  }
+
+  fun listLegacyIds(role: AthenaRole): String {
+    val athenaQuery = ListKeyOrderInformationQueryBuilder().build()
+
+    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
+
+    val result = athenaResponse.toString()
 
     return result
   }
