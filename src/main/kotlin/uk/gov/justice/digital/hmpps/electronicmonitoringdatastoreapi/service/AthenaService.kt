@@ -1,7 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -18,37 +16,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.Athe
 
 // We will instantiate as new for now
 class AthenaService {
-  private val stsService = AssumeRoleService()
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
   private val databaseName: String = "test_database"
   private val defaultRole: AthenaRole = AthenaRole.DEV
-//  const val CLIENT_EXECUTION_TIMEOUT = 1000 // TODO: Remove unused constant
-
-  companion object {
-    inline fun <reified T> mapTo(resultSet: ResultSet): List<T> {
-      val mapper = jacksonObjectMapper()
-        .registerKotlinModule()
-        .apply {
-          propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
-        }
-
-      val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
-
-      val mappedRows: List<Map<String, String?>> = resultSet.rows().drop(1).map { row ->
-        row.data().mapIndexed { i, datum ->
-          columnNames[i] to datum.varCharValue()
-        }.toMap()
-      }
-
-      return mappedRows.map { row ->
-        mapper.convertValue(row, T::class.java)
-      }
-    }
-  }
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
+    val modernisationPlatformCredentialsProvider = AssumeRoleService.getModernisationPlatformCredentialsProvider(role)
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)

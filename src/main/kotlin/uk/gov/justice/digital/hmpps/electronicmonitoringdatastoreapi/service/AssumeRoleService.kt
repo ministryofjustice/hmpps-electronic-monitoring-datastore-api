@@ -18,40 +18,41 @@ enum class AthenaRole(val iamRole: String) {
 }
 
 class AssumeRoleService {
-  fun getModernisationPlatformRole(): Credentials {
-    val modernisationPlatformRole: String = "arn:aws:iam::800964199911:role/cmt_read_emds_data_dev" // TODO: Move this to config!
-    val sessionId: String = "DataStoreApiSession" // args[1]
+  companion object {
+    const val SESSION_ID: String = "DataStoreApiSession"
     val region: Region = Region.EU_WEST_2
+    
+    fun getModernisationPlatformRole(role: AthenaRole): Credentials {
+      val stsClient = StsClient.builder()
+        .credentialsProvider(DefaultCredentialsProvider.builder().build())
+        .region(region)
+        .build()
 
-    val stsClient: StsClient = StsClient.builder()
-      .credentialsProvider(DefaultCredentialsProvider.builder().build())
-      .region(region)
-      .build()
+      val assumeRoleRequest = AssumeRoleRequest.builder()
+        .roleArn(role.iamRole)
+        .roleSessionName(SESSION_ID)
+        .build()
 
-    val assumeRoleRequest = AssumeRoleRequest.builder()
-      .roleArn(modernisationPlatformRole)
-      .roleSessionName(sessionId)
-      .build()
+      val assumeRoleResponse = stsClient.assumeRole(assumeRoleRequest)
+      val credentials = assumeRoleResponse.credentials()
 
-    val assumeRoleResponse = stsClient.assumeRole(assumeRoleRequest)
+      return credentials
+    }
 
-    return assumeRoleResponse.credentials()
-  }
+    fun getModernisationPlatformCredentialsProvider(role: AthenaRole): StsAssumeRoleCredentialsProvider {
+      val stsClient = StsClient.builder()
+        .credentialsProvider(DefaultCredentialsProvider.builder().build())
+        .region(region)
+        .build()
 
-  fun getModernisationPlatformCredentialsProvider(role: AthenaRole): StsAssumeRoleCredentialsProvider {
-    val sessionId: String = "DataStoreApiSession" // args[1]
-    val region: Region = Region.EU_WEST_2
+      val credentialsProvider =  StsAssumeRoleCredentialsProvider.builder()
+        .stsClient(stsClient)
+        .refreshRequest { builder ->
+          builder.roleArn(role.iamRole).roleSessionName(SESSION_ID)
+        }
+        .build()
 
-    val stsClient: StsClient = StsClient.builder()
-      .credentialsProvider(DefaultCredentialsProvider.builder().build())
-      .region(region)
-      .build()
-
-    return StsAssumeRoleCredentialsProvider.builder()
-      .stsClient(stsClient)
-      .refreshRequest { builder ->
-        builder.roleArn(role.iamRole).roleSessionName(sessionId)
-      }
-      .build()
+      return credentialsProvider
+    }
   }
 }
