@@ -29,23 +29,22 @@ class SearchController(
   @Autowired val auditService: AuditService,
 ) {
 
-
   @GetMapping("/confirmConnection")
-    fun confirmConnection(
-      authentication: Authentication,
-    ): ResponseEntity<Map<String, String>> {
-      // TODO: Re-enable audit once Cloud Platform in place
+  fun confirmConnection(
+    authentication: Authentication,
+  ): ResponseEntity<Map<String, String>> {
+    // TODO: Re-enable audit once Cloud Platform in place
 //       auditService.createEvent(
 //         authentication.principal.toString(),
 //         "CONFIRM_CONNECTION",
 //         mapOf("confirmConnection" to "true"),
 //       )
 
-      return ResponseEntity(
-        mapOf("message" to "Connection successful"),
-        HttpStatus.OK,
-      )
-    }
+    return ResponseEntity(
+      mapOf("message" to "Connection successful"),
+      HttpStatus.OK,
+    )
+  }
 
 //  @GetMapping("/cases/{caseID}")
 //  fun getCases(

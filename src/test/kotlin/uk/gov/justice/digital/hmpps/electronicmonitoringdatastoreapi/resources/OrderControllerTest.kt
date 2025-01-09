@@ -17,11 +17,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @ActiveProfiles("test")
 @JsonTest
 class OrderControllerTest {
+  private lateinit var athenaService: AthenaService
   private lateinit var orderInformationRepository: OrderInformationRepository
   private lateinit var auditService: AuditService
   private lateinit var controller: OrderController
@@ -29,6 +31,7 @@ class OrderControllerTest {
 
   @BeforeEach
   fun setup() {
+    athenaService = mock()
     orderInformationRepository = mock()
     auditService = mock()
     controller = OrderController(orderInformationRepository, auditService)
@@ -41,7 +44,7 @@ class OrderControllerTest {
     @Test
     fun `is callable with required parameters and correctly uses mocked service`() {
       val orderID = "1ab"
-      val expectedResult: OrderInformation = OrderInformationRepository().getMockOrderInformation("DIFFERENT ID")
+      val expectedResult: OrderInformation = OrderInformationRepository(athenaService).getMockOrderInformation("DIFFERENT ID")
 
       `when`(orderInformationRepository.getMockOrderInformation(orderID)).thenReturn(expectedResult)
 
@@ -57,9 +60,9 @@ class OrderControllerTest {
     @Test
     fun `Returns order summary if correct params supplied`() {
       val orderId = "7654321"
-      val fakeOrder = OrderInformationRepository().getMockOrderInformation("this is fake info")
+      val fakeOrder = OrderInformationRepository(athenaService).getMockOrderInformation("this is fake info")
 
-      val expectedServiceResult = OrderInformationRepository()
+      val expectedServiceResult = OrderInformationRepository(athenaService)
         .getMockOrderInformation("this is the real info")
         .keyOrderInformation
 

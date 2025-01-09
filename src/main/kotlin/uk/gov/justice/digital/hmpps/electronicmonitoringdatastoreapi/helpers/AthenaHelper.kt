@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.json.JSONObject
+import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.athena.model.ColumnInfo
 import software.amazon.awssdk.services.athena.model.ColumnNullable
 import software.amazon.awssdk.services.athena.model.Datum
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.athena.model.Row
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
+@Service
 class AthenaHelper {
   companion object {
     fun resultSetFromJson(string: String): ResultSet = resultSetFromJson(JSONObject(string))
@@ -83,7 +85,7 @@ class AthenaHelper {
       return allPresent
     }
 
-    inline fun <reified T> mapTo(resultSet: ResultSet): List<T> {
+    inline fun <reified T> mapToStatic(resultSet: ResultSet): List<T> {
       val mapper = jacksonObjectMapper()
         .registerKotlinModule()
         .apply {
@@ -102,5 +104,7 @@ class AthenaHelper {
         mapper.convertValue(row, T::class.java)
       }
     }
+
+    inline fun <reified T> mapTo(resultSet: ResultSet): List<T> = Companion.mapToStatic<T>(resultSet)
   }
 }
