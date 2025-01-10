@@ -10,17 +10,12 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.MockOrderInformationRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
@@ -46,7 +41,7 @@ class OrderControllerTest {
   @Nested
   inner class GetSpecialsOrder {
     @Test
-    fun `gets order information from order service `() {
+    fun `gets specials order information from order service `() {
       val orderId = "1ab"
       val expectedResult = OrderInformation(
         keyOrderInformation = KeyOrderInformation(
@@ -84,7 +79,7 @@ class OrderControllerTest {
   @Nested
   inner class GetOrderSummary {
     @Test
-    fun `gets order information from order service `() {
+    fun `gets order information from order service`() {
       val orderId = "1ab"
       val expectedResult = OrderInformation(
         keyOrderInformation = KeyOrderInformation(

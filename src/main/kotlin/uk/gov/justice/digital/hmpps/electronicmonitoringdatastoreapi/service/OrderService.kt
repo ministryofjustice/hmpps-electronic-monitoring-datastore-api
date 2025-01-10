@@ -26,7 +26,11 @@ class OrderService(
   @Autowired val orderInformationRepository: OrderInformationRepositoryInterface,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
-    orderRepository.listLegacyIds(role)
+    try {
+      orderRepository.listLegacyIds(role)
+    } catch (_: Exception) {
+      return false
+    }
 
     return true
   }
@@ -37,7 +41,7 @@ class OrderService(
     return result
   }
 
-  fun search(criteria: OrderSearchCriteria, role: AthenaRole, fakeResponse: Boolean? = true): List<OrderSearchResult> {
+  fun search(criteria: OrderSearchCriteria, role: AthenaRole): List<OrderSearchResult> {
     val orders = orderRepository.searchOrders(criteria, role)
 
     val parsedOrderSearchResults = parseOrderSearchResults(orders)

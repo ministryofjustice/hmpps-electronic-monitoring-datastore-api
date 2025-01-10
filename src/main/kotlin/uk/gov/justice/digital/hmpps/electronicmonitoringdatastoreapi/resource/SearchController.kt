@@ -105,34 +105,6 @@ class SearchController(
     return ResponseEntity.ok(result)
   }
 
-  @PostMapping("/orders-old")
-  fun searchOrdersFake(
-    authentication: Authentication,
-    @RequestBody orderSearchCriteria: OrderSearchCriteria,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
-  ): ResponseEntity<List<OrderSearchResult>> {
-    val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
-
-    val results: List<OrderSearchResult>
-    try {
-      results = orderService.search(orderSearchCriteria, validatedRole, true)
-    } catch (ex: Exception) {
-      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
-    }
-
-    auditService?.createEvent(
-      authentication.name,
-      "SEARCH_FAKE_ORDERS",
-      mapOf(
-        "legacySubjectId" to orderSearchCriteria.legacySubjectId,
-        "searchType" to orderSearchCriteria.searchType,
-        "rows" to results.count().toString(),
-      ),
-    )
-
-    return ResponseEntity.ok(results)
-  }
-
   @PostMapping("/orders")
   fun searchOrders(
     authentication: Authentication,

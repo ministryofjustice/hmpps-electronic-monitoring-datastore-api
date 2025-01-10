@@ -9,10 +9,10 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("POST /search/orders-old")
+  @DisplayName("POST /search/orders")
   inner class SearchOrdersFake {
 
-    val baseUri: String = "/search/orders-old"
+    val baseUri: String = "/search/orders"
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
@@ -86,6 +86,9 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     val requestBody = mapOf(
       "queryString" to "fake-test-querystring",
     )
+    val failingRequestBody = mapOf(
+      "queryString" to "THROW ERROR",
+    )
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
@@ -155,14 +158,14 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .uri(baseUri)
         .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
+        .bodyValue(failingRequestBody) // Sending a valid body
         .exchange()
         .expectStatus()
         .isOk // Endpoint should handle a valid body
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.queryString").isEqualTo("fake-test-querystring")
+        .jsonPath("$.queryString").isEqualTo("THROW ERROR")
         .jsonPath("$.isErrored").isEqualTo("true")
         .jsonPath("$.athenaRole").isNotEmpty
     }

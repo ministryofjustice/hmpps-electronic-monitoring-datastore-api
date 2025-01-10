@@ -80,6 +80,10 @@ class MockOrderRepository: OrderRepositoryInterface {
   }
 
   override fun runQuery(athenaQuery: AthenaQuery, role: AthenaRole): String {
+    if (athenaQuery.queryString == "THROW ERROR") {
+      throw IllegalArgumentException(athenaQuery.queryString)
+    }
+
     return """
       result: 
         ${athenaQuery.queryString} 
