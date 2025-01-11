@@ -16,8 +16,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 @Service
 @Profile("!test")
 class OrderInformationRepository(
-  @Autowired val athenaClient: AthenaService
-): OrderInformationRepositoryInterface {
+  @Autowired val athenaClient: AthenaService,
+) : OrderInformationRepositoryInterface {
   override fun getKeyOrderInformation(orderId: String, role: AthenaRole): AthenaKeyOrderInformationDTO {
     val keyOrderInformationQuery = KeyOrderInformationQueryBuilder()
       .withLegacySubjectId(orderId)

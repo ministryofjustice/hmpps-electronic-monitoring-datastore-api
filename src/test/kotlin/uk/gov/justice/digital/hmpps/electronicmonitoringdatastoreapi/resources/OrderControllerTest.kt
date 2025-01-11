@@ -61,8 +61,8 @@ class OrderControllerTest {
         subjectHistoryReport = SubjectHistoryReport(reportUrl = "#", name = "1234567", createdOn = "01-02-2020", time = "0900"),
         documents = DocumentList(
           pageSize = 0,
-          orderDocuments = listOf()
-        )
+          orderDocuments = listOf(),
+        ),
       )
 
       `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
@@ -99,8 +99,8 @@ class OrderControllerTest {
         subjectHistoryReport = SubjectHistoryReport(reportUrl = "#", name = "1234567", createdOn = "01-02-2020", time = "0900"),
         documents = DocumentList(
           pageSize = 0,
-          orderDocuments = listOf()
-        )
+          orderDocuments = listOf(),
+        ),
       )
 
       `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV)).thenReturn(expectedResult)

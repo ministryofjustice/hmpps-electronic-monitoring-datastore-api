@@ -7,7 +7,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SearchKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
@@ -16,8 +15,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 @Service
 @Profile("!test")
 class OrderRepository(
-  @Autowired val athenaClient: AthenaService
-): OrderRepositoryInterface {
+  @Autowired val athenaClient: AthenaService,
+) : OrderRepositoryInterface {
   override fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
     val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder()
       .withLegacySubjectId(criteria.legacySubjectId)

@@ -11,7 +11,7 @@ class SubjectHistoryReportQueryBuilder {
   }
 
   fun build(): AthenaQuery = AthenaQuery(
-      """
+    """
         SELECT
            $legacySubjectId as legacy_order_id
     """.trimIndent(),

@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
@@ -16,7 +15,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepositoryInterface
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepositoryInterface
 import kotlin.String
 
@@ -96,15 +94,15 @@ class OrderService(
   private fun parseDocumentList(athenaDocumentList: AthenaDocumentListDTO): DocumentList {
     var documentList = DocumentList(
       pageSize = athenaDocumentList.pageSize,
-      orderDocuments = athenaDocumentList.orderDocuments.map {
-        document -> Document(
+      orderDocuments = athenaDocumentList.orderDocuments.map { document ->
+        Document(
           name = document.name,
           url = document.url,
           notes = document.notes,
           createdOn = document.createdOn,
           time = document.time,
         )
-      }
+      },
     )
 
     return documentList

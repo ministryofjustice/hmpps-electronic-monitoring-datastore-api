@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
-import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
 class ControllerIntegrationBase : IntegrationTestBase() {

@@ -24,7 +24,7 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var firstName: String? = null
     private set(value) {
-      whereClause.put("first_name", "upper('${value}')")
+      whereClause.put("first_name", "upper('$value')")
       field = value
     }
 
@@ -35,7 +35,7 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var lastName: String? = null
     private set(value) {
-      whereClause.put("last_name", "upper('${value}')")
+      whereClause.put("last_name", "upper('$value')")
       field = value
     }
 
@@ -46,7 +46,7 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var alias: String? = null
     private set(value) {
-      whereClause.put("alias", "upper('${value}')")
+      whereClause.put("alias", "upper('$value')")
       field = value
     }
 
@@ -88,7 +88,6 @@ class SearchKeyOrderInformationQueryBuilder {
       field = value
     }
 
-
   fun build(): AthenaQuery {
     if (whereClause.isEmpty()) {
       throw IllegalArgumentException("At least one search criteria must be populated")
@@ -109,7 +108,7 @@ class SearchKeyOrderInformationQueryBuilder {
           FROM
             test_database.order_details
           WHERE 
-        """.trimIndent(),
+      """.trimIndent(),
     )
 
     builder.append(whereClause.entries.joinToString(separator = " OR "))

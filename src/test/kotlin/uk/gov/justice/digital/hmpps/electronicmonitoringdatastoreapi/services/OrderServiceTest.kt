@@ -49,6 +49,7 @@ class OrderServiceTest {
 
       Mockito.verify(orderRepository, times(1)).listLegacyIds(AthenaRole.DEV)
     }
+
     @Test
     fun `confirms AWS athena is available if successful`() {
       `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
@@ -73,7 +74,7 @@ class OrderServiceTest {
   @Nested
   inner class Query {
     val athenaQuery = AthenaQuery(
-      queryString = "fake query"
+      queryString = "fake query",
     )
 
     @Test
@@ -98,7 +99,7 @@ class OrderServiceTest {
   @Nested
   inner class Search {
     val orderSearchCriteria = OrderSearchCriteria(
-      legacySubjectId = "fake-id"
+      legacySubjectId = "fake-id",
     )
 
     @Test
@@ -134,9 +135,9 @@ class OrderServiceTest {
               primaryAddressLine3 = "",
               primaryAddressPostCode = "",
               orderStartDate = "",
-              orderEndDate = ""
-            )
-          )
+              orderEndDate = "",
+            ),
+          ),
         )
 
       var result = service.search(orderSearchCriteria, AthenaRole.DEV)
@@ -174,7 +175,7 @@ class OrderServiceTest {
 
     val blankDocumentList = AthenaDocumentListDTO(
       pageSize = 200,
-      orderDocuments = listOf()
+      orderDocuments = listOf(),
     )
 
     @BeforeEach
@@ -227,5 +228,4 @@ class OrderServiceTest {
       Assertions.assertThat(result.documents.orderDocuments).isEmpty()
     }
   }
-
 }

@@ -4,11 +4,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 class ListKeyOrderInformationQueryBuilder {
   fun build(): AthenaQuery = AthenaQuery(
-      queryString = """
+    queryString = """
         SELECT 
           legacy_subject_id
         FROM 
           test_database.order_details
-      """.trimIndent(),
+    """.trimIndent(),
   )
 }

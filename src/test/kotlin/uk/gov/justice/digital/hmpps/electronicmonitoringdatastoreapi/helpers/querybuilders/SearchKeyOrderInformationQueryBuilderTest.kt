@@ -20,7 +20,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
         FROM 
           test_database.order_details
         WHERE 
-    """.trimIndent()
+  """.trimIndent()
 
   @Test
   fun `returns valid SQL if only legacySubjectId is populated`() {
@@ -29,7 +29,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
     val expectedSQL = replaceWhitespace(
       baseQuery + """
             legacy_subject_id=$legacySubjectId
-        """.trimIndent(),
+      """.trimIndent(),
     )
 
     val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
@@ -45,8 +45,8 @@ class SearchKeyOrderInformationQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            first_name=upper('${firstName}')
-        """.trimIndent(),
+            first_name=upper('$firstName')
+      """.trimIndent(),
     )
 
     val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
@@ -62,8 +62,8 @@ class SearchKeyOrderInformationQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            last_name=upper('${lastName}')
-        """.trimIndent(),
+            last_name=upper('$lastName')
+      """.trimIndent(),
     )
 
     val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
@@ -79,8 +79,8 @@ class SearchKeyOrderInformationQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            alias=upper('${alias}')
-        """.trimIndent(),
+            alias=upper('$alias')
+      """.trimIndent(),
     )
 
     val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
@@ -97,9 +97,9 @@ class SearchKeyOrderInformationQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            legacy_subject_id=${legacySubjectId}
-            OR alias=upper('${alias}')
-        """.trimIndent(),
+            legacy_subject_id=$legacySubjectId
+            OR alias=upper('$alias')
+      """.trimIndent(),
     )
 
     val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()

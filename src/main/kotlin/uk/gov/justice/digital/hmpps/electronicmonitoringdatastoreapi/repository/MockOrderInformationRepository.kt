@@ -4,41 +4,34 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.DocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 
 @Service
 @Profile("test")
-class MockOrderInformationRepository: OrderInformationRepositoryInterface {
+class MockOrderInformationRepository : OrderInformationRepositoryInterface {
   companion object {
-    fun getFakeKeyOrderInformationDTO(orderId: String): AthenaKeyOrderInformationDTO {
-      return AthenaKeyOrderInformationDTO(
-        legacySubjectId = "1234567",
-        legacyOrderId = "7654321-$orderId",
-        name = "John Smith",
-        alias = "Zeno",
-        dateOfBirth = "01-02-1980",
-        address1 = "1 Primary Street",
-        address2 = "Sutton",
-        address3 = "London",
-        postcode = "ABC 123",
-        orderStartDate = "01-02-2012",
-        orderEndDate = "03-04-2013",
-      )
-    }
+    fun getFakeKeyOrderInformationDTO(orderId: String): AthenaKeyOrderInformationDTO = AthenaKeyOrderInformationDTO(
+      legacySubjectId = "1234567",
+      legacyOrderId = "7654321-$orderId",
+      name = "John Smith",
+      alias = "Zeno",
+      dateOfBirth = "01-02-1980",
+      address1 = "1 Primary Street",
+      address2 = "Sutton",
+      address3 = "London",
+      postcode = "ABC 123",
+      orderStartDate = "01-02-2012",
+      orderEndDate = "03-04-2013",
+    )
 
-    fun getFakeSubjectHistoryReportDTO(): AthenaSubjectHistoryReportDTO {
-      return AthenaSubjectHistoryReportDTO(reportUrl = "#", name = "1234567", createdOn = "01-02-2020", time = "0900")
-    }
+    fun getFakeSubjectHistoryReportDTO(): AthenaSubjectHistoryReportDTO = AthenaSubjectHistoryReportDTO(reportUrl = "#", name = "1234567", createdOn = "01-02-2020", time = "0900")
 
-    fun getFakeDocumentListDTO(): AthenaDocumentListDTO {
-      return AthenaDocumentListDTO(
-        pageSize = 14,
-        orderDocuments = generateFakeDocumentDTOs(),
-      )
-    }
+    fun getFakeDocumentListDTO(): AthenaDocumentListDTO = AthenaDocumentListDTO(
+      pageSize = 14,
+      orderDocuments = generateFakeDocumentDTOs(),
+    )
 
     fun generateFakeDocumentDTOs(): List<DocumentDTO> = listOf(
       DocumentDTO(name = "Document 1", url = "#", createdOn = "01-02-2020", time = "0100", notes = "Order 1 documents xxxxxx xxxxxxx NAME HDC New.msg application/octet-stream NAME - TOLD TO IGNORE AS SUBJECT STILL IN CUSTODY ABCD 12 345678 xx-xxxxxx"),
@@ -58,15 +51,9 @@ class MockOrderInformationRepository: OrderInformationRepositoryInterface {
     )
   }
 
-  override fun getKeyOrderInformation(orderId: String, role: AthenaRole): AthenaKeyOrderInformationDTO {
-    return getFakeKeyOrderInformationDTO(orderId)
-  }
+  override fun getKeyOrderInformation(orderId: String, role: AthenaRole): AthenaKeyOrderInformationDTO = getFakeKeyOrderInformationDTO(orderId)
 
-  override fun getSubjectHistoryReport(orderId: String, role: AthenaRole): AthenaSubjectHistoryReportDTO {
-    return getFakeSubjectHistoryReportDTO()
-  }
+  override fun getSubjectHistoryReport(orderId: String, role: AthenaRole): AthenaSubjectHistoryReportDTO = getFakeSubjectHistoryReportDTO()
 
-  override fun getDocumentList(orderId: String, role: AthenaRole): AthenaDocumentListDTO {
-    return getFakeDocumentListDTO()
-  }
+  override fun getDocumentList(orderId: String, role: AthenaRole): AthenaDocumentListDTO = getFakeDocumentListDTO()
 }

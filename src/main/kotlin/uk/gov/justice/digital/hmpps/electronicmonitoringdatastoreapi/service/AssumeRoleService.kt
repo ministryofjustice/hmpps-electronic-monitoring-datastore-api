@@ -21,7 +21,7 @@ class AssumeRoleService {
   companion object {
     const val SESSION_ID: String = "DataStoreApiSession"
     val region: Region = Region.EU_WEST_2
-    
+
     fun getModernisationPlatformRole(role: AthenaRole): Credentials {
       val stsClient = StsClient.builder()
         .credentialsProvider(DefaultCredentialsProvider.builder().build())
@@ -45,7 +45,7 @@ class AssumeRoleService {
         .region(region)
         .build()
 
-      val credentialsProvider =  StsAssumeRoleCredentialsProvider.builder()
+      val credentialsProvider = StsAssumeRoleCredentialsProvider.builder()
         .stsClient(stsClient)
         .refreshRequest { builder ->
           builder.roleArn(role.iamRole).roleSessionName(SESSION_ID)
