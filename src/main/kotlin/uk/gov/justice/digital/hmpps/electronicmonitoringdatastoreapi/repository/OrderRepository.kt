@@ -150,7 +150,7 @@ class OrderRepository {
     }
 
     fun parseOrders(resultSet: ResultSet): List<OrderSearchResult> {
-      var dtoOrders: List<AthenaOrderSearchResultDTO> = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
+      var dtoOrders: List<AthenaOrderSearchResultDTO> = AthenaHelper.mapToStatic<AthenaOrderSearchResultDTO>(resultSet)
 
       var orderSearchResults: List<OrderSearchResult> = dtoOrders.map { dto -> OrderSearchResult(dto) }
 //      return getFakeOrders() // TODO: Early return, testing/demo early.

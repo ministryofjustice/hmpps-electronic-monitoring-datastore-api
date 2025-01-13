@@ -15,7 +15,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 
 @Service
-class OrderInformationRepository {
+class OrderInformationRepository(
+  private val athenaService: AthenaService,
+  private val athenaHelper: AthenaHelper = AthenaHelper(),
+) {
+
   companion object {
     private val fakeOrders = listOf(
       OrderInformation(
@@ -46,6 +50,7 @@ class OrderInformationRepository {
       ),
 
     )
+
     private fun generateFakeDocuments(): List<Document> = listOf(
       Document(name = "Document 1", url = "#", createdOn = "01-02-2020", time = "0100", notes = "Order 1 documents xxxxxx xxxxxxx NAME HDC New.msg application/octet-stream NAME - TOLD TO IGNORE AS SUBJECT STILL IN CUSTODY ABCD 12 345678 xx-xxxxxx"),
       Document(name = "Document 2", url = "#", createdOn = "21-09-2017", time = "0200", notes = "Order 2 documents xxxxxx xxxxxxx NAME HDC New.msg application/octet-stream NAME - TOLD TO IGNORE AS SUBJECT STILL IN CUSTODY ABCD 12 345678 xx-xxxxxx"),
@@ -81,16 +86,13 @@ class OrderInformationRepository {
           WHERE legacy_subject_id = $orderId
       """.trimIndent(),
     )
-
-    fun parseKeyOrderResponse(resultSet: ResultSet): KeyOrderInformation {
-      var dtoOrders: List<AthenaKeyOrderDTO> = AthenaHelper.mapTo<AthenaKeyOrderDTO>(resultSet)
-
-      var orders: List<KeyOrderInformation> = dtoOrders.map { dto -> KeyOrderInformation(dto) }
-      return orders[0]
-    }
   }
 
-  private val athenaService = AthenaService()
+  fun parseKeyOrderResponse(resultSet: ResultSet): KeyOrderInformation {
+    var dtoOrders: List<AthenaKeyOrderDTO> = AthenaHelper.mapToStatic<AthenaKeyOrderDTO>(resultSet)
+    var orders: List<KeyOrderInformation> = dtoOrders.map { dto -> KeyOrderInformation(dto) }
+    return orders[0]
+  }
 
   fun getKeyOrderInformation(orderId: String): AthenaQueryResponse<KeyOrderInformation> {
     val athenaQuery: AthenaQuery = getKeyOrderQuery(orderId)
@@ -111,9 +113,9 @@ class OrderInformationRepository {
   // TODO: remove this "mock" test once plumbing is complete
   fun getMockOrderInformation(orderId: String): OrderInformation {
     // Always return the first order in the list but modify the legacyOrderId
-    return fakeOrders.first().apply {
+    return fakeOrders.first().copy().apply {
       keyOrderInformation = keyOrderInformation.copy(
-        legacyOrderId = "${keyOrderInformation.legacyOrderId}-$orderId",
+        legacyOrderId = "$orderId",
       )
     }
   }

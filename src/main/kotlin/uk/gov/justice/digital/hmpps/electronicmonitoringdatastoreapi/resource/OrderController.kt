@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -9,18 +8,20 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class OrderController(
-  @Autowired val repository: OrderInformationRepository,
-  @Autowired val auditService: AuditService,
+  val repository: OrderInformationRepository = OrderInformationRepository(AthenaService(), AthenaHelper()),
+  val auditService: AuditService,
 ) {
 
   @GetMapping("/getMockOrderSummary/{orderId}")
@@ -28,7 +29,7 @@ class OrderController(
     authentication: Authentication,
     @PathVariable orderId: String,
   ): ResponseEntity<OrderInformation> {
-    val repository = OrderInformationRepository()
+//    val repository = OrderInformationRepository()
     val orderInfo: OrderInformation = repository.getMockOrderInformation(orderId)
 
     // TODO: Re-enable audit once Cloud Platform in place

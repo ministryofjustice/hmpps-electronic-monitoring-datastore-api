@@ -419,7 +419,7 @@ class AthenaHelperTest {
         ),
       )
 
-      val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
+      val result = AthenaHelper.mapToStatic<AthenaOrderSearchResultDTO>(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }
@@ -445,7 +445,7 @@ class AthenaHelperTest {
         ),
       )
 
-      val result = AthenaHelper.mapTo<MiniOrder>(resultSet)
+      val result = AthenaHelper.mapToStatic<MiniOrder>(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }
@@ -461,7 +461,7 @@ class AthenaHelperTest {
       )
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
-        .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
+        .isThrownBy { AthenaHelper.mapToStatic<FakeObject>(resultSet) }
     }
   }
 }
