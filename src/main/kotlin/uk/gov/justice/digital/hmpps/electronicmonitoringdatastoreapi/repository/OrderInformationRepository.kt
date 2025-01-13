@@ -23,7 +23,7 @@ class OrderInformationRepository(
       .withLegacySubjectId(orderId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(role, keyOrderInformationQuery.queryString)
+    val athenaResponse = athenaClient.getQueryResult(role, keyOrderInformationQuery)
 
     val result = AthenaHelper.mapTo<AthenaKeyOrderInformationDTO>(athenaResponse)
 
@@ -35,7 +35,7 @@ class OrderInformationRepository(
       .withLegacySubjectId(orderId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(role, subjectHistoryReportQuery.queryString)
+    val athenaResponse = athenaClient.getQueryResult(role, subjectHistoryReportQuery)
 
     val result = AthenaHelper.mapTo<AthenaSubjectHistoryReportDTO>(athenaResponse)
 
@@ -47,7 +47,7 @@ class OrderInformationRepository(
       .withLegacySubjectId(orderId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(role, documentListQuery.queryString)
+    val athenaResponse = athenaClient.getQueryResult(role, documentListQuery)
 
     val result = AthenaHelper.mapTo<AthenaDocumentListDTO>(athenaResponse)
 

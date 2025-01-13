@@ -73,9 +73,7 @@ class OrderServiceTest {
 
   @Nested
   inner class Query {
-    val athenaQuery = AthenaQuery(
-      queryString = "fake query",
-    )
+    val athenaQuery = AthenaQuery<String>("fake query")
 
     @Test
     fun `passes query to order repository`() {

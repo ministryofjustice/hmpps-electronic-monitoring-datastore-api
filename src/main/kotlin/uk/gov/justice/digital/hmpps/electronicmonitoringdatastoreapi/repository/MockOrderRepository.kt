@@ -75,7 +75,7 @@ class MockOrderRepository : OrderRepositoryInterface {
 
   override fun listLegacyIds(role: AthenaRole): List<String> = listOf("1234567")
 
-  override fun runQuery(athenaQuery: AthenaQuery, role: AthenaRole): String {
+  override fun runQuery(athenaQuery: AthenaQuery<*>, role: AthenaRole): String {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException(athenaQuery.queryString)
     }

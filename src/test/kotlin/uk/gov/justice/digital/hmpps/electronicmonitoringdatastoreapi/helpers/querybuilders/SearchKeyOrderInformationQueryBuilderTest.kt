@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 class SearchKeyOrderInformationQueryBuilderTest {
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
@@ -32,7 +31,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
       .build()
 
@@ -49,7 +48,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder()
       .withFirstName(firstName)
       .build()
 
@@ -66,7 +65,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder()
       .withLastName(lastName)
       .build()
 
@@ -83,7 +82,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder()
       .withAlias(alias)
       .build()
 
@@ -102,7 +101,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result: AthenaQuery = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
       .withAlias(alias)
       .build()

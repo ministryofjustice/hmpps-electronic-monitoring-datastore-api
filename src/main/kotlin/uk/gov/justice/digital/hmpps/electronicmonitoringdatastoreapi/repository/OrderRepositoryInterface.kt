@@ -8,5 +8,5 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ath
 interface OrderRepositoryInterface {
   fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO>
   fun listLegacyIds(role: AthenaRole): List<String>
-  fun runQuery(athenaQuery: AthenaQuery, role: AthenaRole): String
+  fun runQuery(athenaQuery: AthenaQuery<*>, role: AthenaRole): String
 }

@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 class SearchKeyOrderInformationQueryBuilder {
@@ -88,7 +89,7 @@ class SearchKeyOrderInformationQueryBuilder {
       field = value
     }
 
-  fun build(): AthenaQuery {
+  fun build(): AthenaQuery<AthenaKeyOrderInformationDTO> {
     if (whereClause.isEmpty()) {
       throw IllegalArgumentException("At least one search criteria must be populated")
     }
@@ -113,8 +114,6 @@ class SearchKeyOrderInformationQueryBuilder {
 
     builder.append(whereClause.entries.joinToString(separator = " OR "))
 
-    return AthenaQuery(
-      queryString = builder.toString(),
-    )
+    return AthenaQuery(builder.toString())
   }
 }

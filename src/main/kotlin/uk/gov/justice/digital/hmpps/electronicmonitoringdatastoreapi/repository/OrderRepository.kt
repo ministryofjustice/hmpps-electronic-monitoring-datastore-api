@@ -25,7 +25,7 @@ class OrderRepository(
       .withAlias(criteria.alias)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(role, searchKeyOrderInformationQuery.queryString)
+    val athenaResponse = athenaClient.getQueryResult(role, searchKeyOrderInformationQuery)
 
     val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
 
@@ -35,15 +35,15 @@ class OrderRepository(
   override fun listLegacyIds(role: AthenaRole): List<String> {
     val athenaQuery = ListKeyOrderInformationQueryBuilder().build()
 
-    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
+    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery)
 
     val result = AthenaHelper.mapTo<String>(athenaResponse)
 
     return result
   }
 
-  override fun runQuery(athenaQuery: AthenaQuery, role: AthenaRole): String {
-    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery.queryString)
+  override fun runQuery(athenaQuery: AthenaQuery<*>, role: AthenaRole): String {
+    val athenaResponse = athenaClient.getQueryResult(role, athenaQuery)
 
     val result = athenaResponse.toString()
 

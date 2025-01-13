@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 // We will instantiate as new for now
 @Component
@@ -33,10 +34,10 @@ class AthenaService {
   }
 
   // Initialise a query, wait for completion, and return the ResultSet
-  fun getQueryResult(role: AthenaRole = defaultRole, querystring: String): ResultSet {
+  fun getQueryResult(role: AthenaRole = defaultRole, athenaQuery: AthenaQuery<*>): ResultSet {
     val athenaClient = startClient(role)
 
-    val queryExecutionId = submitAthenaQuery(athenaClient, querystring)
+    val queryExecutionId = submitAthenaQuery(athenaClient, athenaQuery.queryString)
 
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)

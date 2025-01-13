@@ -42,7 +42,7 @@ class SearchControllerTest {
     fun `query orders from order service`() {
       val queryString = "fake query string"
       val queryRole = "fake-role"
-      val queryObject = AthenaQuery(queryString = queryString)
+      val queryObject = AthenaQuery<String>(queryString)
       val queryResponse = "fake query response"
 
       `when`(orderService.query(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
@@ -60,7 +60,7 @@ class SearchControllerTest {
     fun `returns error response when orders service errors`() {
       val queryString = "fake query string"
       val queryRole = "fake-role"
-      val queryObject = AthenaQuery(queryString = queryString)
+      val queryObject = AthenaQuery<String>(queryString)
       val errorMessage = "fake error message"
 
       `when`(orderService.query(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))

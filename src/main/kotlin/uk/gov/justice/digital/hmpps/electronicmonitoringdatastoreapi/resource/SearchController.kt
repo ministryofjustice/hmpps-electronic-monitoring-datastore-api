@@ -58,18 +58,17 @@ class SearchController(
   @PostMapping("/custom-query")
   fun queryAthena(
     authentication: Authentication,
-    @RequestBody(required = true) athenaQuery: AthenaQuery,
+    @RequestBody(required = true) athenaQuery: AthenaQuery<String>,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<AthenaQueryResponse<String>> {
     val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val query = athenaQuery.queryString
     var result: AthenaQueryResponse<String>
     try {
       val queryResponse = orderService.query(athenaQuery, validatedRole)
 
       result = AthenaQueryResponse<String>(
-        queryString = query,
+        queryString = athenaQuery.queryString,
         athenaRole = validatedRole.name,
         isErrored = false,
         queryResponse = queryResponse,
@@ -79,7 +78,7 @@ class SearchController(
         authentication.name,
         "SEARCH_WITH_CUSTOM_QUERY",
         mapOf(
-          "query" to query,
+          "query" to athenaQuery.queryString,
           "isErrored" to "false",
         ),
       )
@@ -88,14 +87,14 @@ class SearchController(
         authentication.name,
         "SEARCH_WITH_CUSTOM_QUERY",
         mapOf(
-          "query" to query,
+          "query" to athenaQuery.queryString,
           "isErrored" to "true",
           "error" to ex.localizedMessage,
         ),
       )
 
       result = AthenaQueryResponse<String>(
-        queryString = query,
+        queryString = athenaQuery.queryString,
         athenaRole = validatedRole.name,
         isErrored = true,
         errorMessage = ex.localizedMessage,

@@ -33,7 +33,7 @@ class OrderService(
     return true
   }
 
-  fun query(athenaQuery: AthenaQuery, role: AthenaRole): String {
+  fun query(athenaQuery: AthenaQuery<*>, role: AthenaRole): String {
     val result = orderRepository.runQuery(athenaQuery, role)
 
     return result
