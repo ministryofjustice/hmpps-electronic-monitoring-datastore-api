@@ -8,17 +8,17 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 
 class OrderServiceTest {
@@ -73,7 +73,7 @@ class OrderServiceTest {
 
   @Nested
   inner class Query {
-    val athenaQuery = AthenaQuery<String>("fake query")
+    val athenaQuery = AthenaStringQuery("fake query")
 
     @Test
     fun `passes query to order repository`() {

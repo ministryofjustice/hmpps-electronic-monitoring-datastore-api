@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationQuery
 
 class KeyOrderInformationQueryBuilder {
   var legacySubjectId: String? = null
@@ -11,7 +10,7 @@ class KeyOrderInformationQueryBuilder {
     return this
   }
 
-  fun build(): AthenaQuery<AthenaKeyOrderInformationDTO> = AthenaQuery(
+  fun build(): AthenaKeyOrderInformationQuery = AthenaKeyOrderInformationQuery(
     """
       SELECT
             legacy_subject_id

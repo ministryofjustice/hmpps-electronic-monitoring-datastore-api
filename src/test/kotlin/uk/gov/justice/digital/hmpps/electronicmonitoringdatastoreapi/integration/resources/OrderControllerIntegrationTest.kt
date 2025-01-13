@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.ActiveProfiles
 
-@ActiveProfiles("test")
+@ActiveProfiles("integration")
 class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("GET /orders/getOrderSummary/{orderId}")

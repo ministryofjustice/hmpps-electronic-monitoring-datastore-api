@@ -1,15 +1,18 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
 class SearchKeyOrderInformationQueryBuilder {
   private var whereClause = mutableMapOf<String, String>()
 
   var legacySubjectId: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       try {
-        value!!.toLong()
+        value.toLong()
       } catch (_: Exception) {
         throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
       }
@@ -25,6 +28,10 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var firstName: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       whereClause.put("first_name", "upper('$value')")
       field = value
     }
@@ -36,6 +43,10 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var lastName: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       whereClause.put("last_name", "upper('$value')")
       field = value
     }
@@ -47,6 +58,10 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var alias: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       whereClause.put("alias", "upper('$value')")
       field = value
     }
@@ -58,8 +73,12 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var dobDay: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       try {
-        value!!.toLong()
+        value.toLong()
       } catch (_: Exception) {
         throw IllegalArgumentException("date_of_birth_day must be convertable to type Long")
       }
@@ -69,8 +88,12 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var dobMonth: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       try {
-        value!!.toLong()
+        value.toLong()
       } catch (_: Exception) {
         throw IllegalArgumentException("date_of_birth_month must be convertable to type Long")
       }
@@ -80,8 +103,12 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var dobYear: String? = null
     private set(value) {
+      if (value == null) {
+        return
+      }
+
       try {
-        value!!.toLong()
+        value.toLong()
       } catch (_: Exception) {
         throw IllegalArgumentException("date_of_birth_year must be convertable to type Long")
       }
@@ -89,7 +116,7 @@ class SearchKeyOrderInformationQueryBuilder {
       field = value
     }
 
-  fun build(): AthenaQuery<AthenaKeyOrderInformationDTO> {
+  fun build(): AthenaOrderSearchQuery {
     if (whereClause.isEmpty()) {
       throw IllegalArgumentException("At least one search criteria must be populated")
     }
@@ -114,6 +141,6 @@ class SearchKeyOrderInformationQueryBuilder {
 
     builder.append(whereClause.entries.joinToString(separator = " OR "))
 
-    return AthenaQuery(builder.toString())
+    return AthenaOrderSearchQuery(builder.toString())
   }
 }

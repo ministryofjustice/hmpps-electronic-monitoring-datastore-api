@@ -1,10 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
 class ListKeyOrderInformationQueryBuilder {
-  fun build(): AthenaQuery<AthenaOrderSearchResultDTO> = AthenaQuery(
+  fun build(): AthenaOrderSearchQuery = AthenaOrderSearchQuery(
     """
         SELECT 
           legacy_subject_id

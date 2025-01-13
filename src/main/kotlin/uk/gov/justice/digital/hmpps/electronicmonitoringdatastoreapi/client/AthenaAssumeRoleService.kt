@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
@@ -7,17 +7,7 @@ import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
 import software.amazon.awssdk.services.sts.model.AssumeRoleRequest
 import software.amazon.awssdk.services.sts.model.Credentials
 
-enum class AthenaRole(val iamRole: String) {
-  DEV("arn:aws:iam::800964199911:role/cmt_read_emds_data_dev"),
-  TEST("arn:aws:iam::396913731313:role/cmt_read_emds_data_test"),
-  ;
-
-  companion object {
-    fun fromString(name: String): AthenaRole? = enumValues<AthenaRole>().find { it.name == name }
-  }
-}
-
-class AssumeRoleService {
+class AthenaAssumeRoleService {
   companion object {
     const val SESSION_ID: String = "DataStoreApiSession"
     val region: Region = Region.EU_WEST_2

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -58,7 +58,7 @@ class SearchController(
   @PostMapping("/custom-query")
   fun queryAthena(
     authentication: Authentication,
-    @RequestBody(required = true) athenaQuery: AthenaQuery<String>,
+    @RequestBody(required = true) athenaQuery: AthenaStringQuery,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<AthenaQueryResponse<String>> {
     val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
@@ -112,12 +112,7 @@ class SearchController(
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val results: List<OrderSearchResult>
-    try {
-      results = orderService.search(orderSearchCriteria, validatedRole)
-    } catch (ex: Exception) {
-      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
-    }
+    val results = orderService.search(orderSearchCriteria, validatedRole)
 
     auditService?.createEvent(
       authentication.name,

@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportQuery
 
 class SubjectHistoryReportQueryBuilder {
   var legacySubjectId: String? = null
@@ -11,7 +10,7 @@ class SubjectHistoryReportQueryBuilder {
     return this
   }
 
-  fun build(): AthenaQuery<AthenaSubjectHistoryReportDTO> = AthenaQuery(
+  fun build(): AthenaSubjectHistoryReportQuery = AthenaSubjectHistoryReportQuery(
     """
         SELECT
            $legacySubjectId as legacy_order_id

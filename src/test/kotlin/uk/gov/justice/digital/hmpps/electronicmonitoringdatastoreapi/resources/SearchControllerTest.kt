@@ -9,12 +9,12 @@ import org.mockito.Mockito.`when`
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -42,7 +42,7 @@ class SearchControllerTest {
     fun `query orders from order service`() {
       val queryString = "fake query string"
       val queryRole = "fake-role"
-      val queryObject = AthenaQuery<String>(queryString)
+      val queryObject = AthenaStringQuery(queryString)
       val queryResponse = "fake query response"
 
       `when`(orderService.query(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
@@ -60,7 +60,7 @@ class SearchControllerTest {
     fun `returns error response when orders service errors`() {
       val queryString = "fake query string"
       val queryRole = "fake-role"
-      val queryObject = AthenaQuery<String>(queryString)
+      val queryObject = AthenaStringQuery(queryString)
       val errorMessage = "fake error message"
 
       `when`(orderService.query(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))

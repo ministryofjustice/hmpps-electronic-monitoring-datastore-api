@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -11,9 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -35,12 +33,7 @@ class OrderController(
   ): ResponseEntity<OrderInformation> {
     val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val result: OrderInformation
-    try {
-      result = orderService.getOrderInformation(orderId, validatedRole)
-    } catch (ex: Exception) {
-      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
-    }
+    val result = orderService.getOrderInformation(orderId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,
@@ -61,12 +54,7 @@ class OrderController(
   ): ResponseEntity<OrderInformation> {
     val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val result: OrderInformation
-    try {
-      result = orderService.getOrderInformation(orderId, validatedRole)
-    } catch (ex: Exception) {
-      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
-    }
+    val result = orderService.getOrderInformation(orderId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,
@@ -85,12 +73,7 @@ class OrderController(
   ): ResponseEntity<OrderInformation> {
     val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val result: OrderInformation
-    try {
-      result = orderService.getOrderInformation(orderId, validatedRole)
-    } catch (ex: Exception) {
-      throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
-    }
+    val result = orderService.getOrderInformation(orderId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,

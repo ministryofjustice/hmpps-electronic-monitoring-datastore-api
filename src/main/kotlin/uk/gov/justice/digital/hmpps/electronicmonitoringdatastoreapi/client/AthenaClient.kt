@@ -1,5 +1,6 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
@@ -18,14 +19,15 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 // We will instantiate as new for now
 @Component
-class AthenaService {
+@Profile("!integration")
+class AthenaClient : AthenaClientInterface {
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
   private val databaseName: String = "test_database"
   private val defaultRole: AthenaRole = AthenaRole.DEV
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val modernisationPlatformCredentialsProvider = AssumeRoleService.getModernisationPlatformCredentialsProvider(role)
+    val modernisationPlatformCredentialsProvider = AthenaAssumeRoleService.Companion.getModernisationPlatformCredentialsProvider(role)
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)
@@ -34,8 +36,8 @@ class AthenaService {
   }
 
   // Initialise a query, wait for completion, and return the ResultSet
-  fun getQueryResult(role: AthenaRole = defaultRole, athenaQuery: AthenaQuery<*>): ResultSet {
-    val athenaClient = startClient(role)
+  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
+    val athenaClient = startClient(role ?: defaultRole)
 
     val queryExecutionId = submitAthenaQuery(athenaClient, athenaQuery.queryString)
 

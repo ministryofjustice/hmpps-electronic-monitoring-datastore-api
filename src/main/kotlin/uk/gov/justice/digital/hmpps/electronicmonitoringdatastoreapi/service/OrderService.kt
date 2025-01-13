@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
@@ -12,16 +13,16 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Subje
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepositoryInterface
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepositoryInterface
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import kotlin.String
 
 @Service
 class OrderService(
-  @Autowired val orderRepository: OrderRepositoryInterface,
-  @Autowired val orderInformationRepository: OrderInformationRepositoryInterface,
+  @Autowired val orderRepository: OrderRepository,
+  @Autowired val orderInformationRepository: OrderInformationRepository,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
     try {
@@ -33,7 +34,7 @@ class OrderService(
     return true
   }
 
-  fun query(athenaQuery: AthenaQuery<*>, role: AthenaRole): String {
+  fun query(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
     val result = orderRepository.runQuery(athenaQuery, role)
 
     return result

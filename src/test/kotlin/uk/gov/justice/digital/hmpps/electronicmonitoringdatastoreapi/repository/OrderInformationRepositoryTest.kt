@@ -8,27 +8,27 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
 import java.util.UUID
 
 class OrderInformationRepositoryTest {
-  private lateinit var athenaService: AthenaService
+  private lateinit var athenaClient: AthenaClient
   private lateinit var repository: OrderInformationRepository
 
   @BeforeEach
   fun setup() {
-    athenaService = mock(AthenaService::class.java)
-    repository = OrderInformationRepository(athenaService)
+    athenaClient = mock(AthenaClient::class.java)
+    repository = OrderInformationRepository(athenaClient)
   }
 
   @Test
   fun `OrderInformationRepository can be instantiated`() {
-    val sut = OrderInformationRepository(Mockito.mock(AthenaService::class.java))
+    val sut = OrderInformationRepository(Mockito.mock(AthenaClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 
@@ -155,18 +155,18 @@ class OrderInformationRepositoryTest {
     fun `getKeyOrderInformation passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet())
 
-      `when`(athenaService.getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())).thenReturn(resultSet)
+      `when`(athenaClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
       repository.getKeyOrderInformation("123", AthenaRole.DEV)
 
-      Mockito.verify(athenaService).getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())
+      Mockito.verify(athenaClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
 
     @Test
     fun `getKeyOrderInformation returns an AthenaKeyOrderInformationDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet())
 
-      `when`(athenaService.getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())).thenReturn(resultSet)
+      `when`(athenaClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
       val result = repository.getKeyOrderInformation("123", AthenaRole.DEV)
 
@@ -180,7 +180,7 @@ class OrderInformationRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet(orderId, fullName))
 
-      `when`(athenaService.getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())).thenReturn(resultSet)
+      `when`(athenaClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
       val result = repository.getKeyOrderInformation(orderId, AthenaRole.DEV)
 
@@ -197,18 +197,18 @@ class OrderInformationRepositoryTest {
     fun `getSubjectHistoryReport passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
 
-      `when`(athenaService.getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())).thenReturn(resultSet)
+      `when`(athenaClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
       repository.getSubjectHistoryReport("123", AthenaRole.DEV)
 
-      Mockito.verify(athenaService).getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())
+      Mockito.verify(athenaClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
 
     @Test
     fun `getSubjectHistoryReport returns an AthenaSubjectHistoryReportDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
 
-      `when`(athenaService.getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())).thenReturn(resultSet)
+      `when`(athenaClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
       val result = repository.getSubjectHistoryReport("123", AthenaRole.DEV)
 
@@ -222,7 +222,7 @@ class OrderInformationRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet(fullName))
 
-      `when`(athenaService.getQueryResult(any<AthenaRole>(), any<AthenaQuery<*>>())).thenReturn(resultSet)
+      `when`(athenaClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
       val result = repository.getSubjectHistoryReport(orderId, AthenaRole.DEV)
 

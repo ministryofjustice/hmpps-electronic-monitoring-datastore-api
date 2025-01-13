@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListQuery
 
 class DocumentListQueryBuilder {
   var legacySubjectId: String? = null
@@ -11,10 +10,10 @@ class DocumentListQueryBuilder {
     return this
   }
 
-  fun build(): AthenaQuery<AthenaDocumentListDTO> = AthenaQuery(
+  fun build(): AthenaDocumentListQuery = AthenaDocumentListQuery(
     """
-        SELECT
-           $legacySubjectId as legacy_order_id
+      SELECT
+         $legacySubjectId as legacy_order_id
     """.trimIndent(),
   )
 }

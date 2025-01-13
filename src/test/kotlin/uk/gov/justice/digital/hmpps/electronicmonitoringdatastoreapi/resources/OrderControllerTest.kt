@@ -12,12 +12,12 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 

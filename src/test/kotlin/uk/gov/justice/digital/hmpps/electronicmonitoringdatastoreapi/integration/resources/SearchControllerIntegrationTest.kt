@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 
-@ActiveProfiles("test")
+@ActiveProfiles("integration")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("POST /search/orders")
@@ -38,7 +38,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should return 200 with empty body`() {
+    fun `should fail with 400 BAD REQUEST if empty body`() {
       webTestClient.post()
         .uri(baseUri)
         .headers(setAuthorisation())
@@ -46,11 +46,11 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .bodyValue("{}")
         .exchange()
         .expectStatus()
-        .isOk
+        .isBadRequest
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.length()").isEqualTo(6) // Expect 6 mock orders returned
+        .jsonPath("$.userMessage").isEqualTo("This request is malformed, and may be missing a body")
     }
 
     @Test
