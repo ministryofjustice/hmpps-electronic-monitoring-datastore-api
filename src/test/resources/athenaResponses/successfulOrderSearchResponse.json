@@ -1,0 +1,191 @@
+{
+  "ResultSet": {
+    "Rows": [
+      {
+        "Data": [
+          { "VarCharValue": "legacy_subject_id" },
+          { "VarCharValue": "full_name" },
+          { "VarCharValue": "primary_address_line_1" },
+          { "VarCharValue": "primary_address_line_2" },
+          { "VarCharValue": "primary_address_line_3" },
+          { "VarCharValue": "primary_address_post_code" },
+          { "VarCharValue": "order_start_date" },
+          { "VarCharValue": "order_end_date" }
+        ]
+      },
+      {
+        "Data": [
+          { "VarCharValue": "1000000" },
+          { "VarCharValue": "Amy Smith" },
+          { "VarCharValue": "address line 1" },
+          { "VarCharValue": "address line 2" },
+          { "VarCharValue": "" },
+          { "VarCharValue": "postcode" },
+          { "VarCharValue": "01/01/1970" },
+          { "VarCharValue": "01/01/1970" }
+        ]
+      },
+      {
+        "Data": [
+          { "VarCharValue": "2000000" },
+          { "VarCharValue": "Bill Smith" },
+          { "VarCharValue": "address line 1" },
+          { "VarCharValue": "address line 2" },
+          { "VarCharValue": "" },
+          { "VarCharValue": "postcode" },
+          { "VarCharValue": "01/01/1970" },
+          { "VarCharValue": "01/01/1970" }
+        ]
+      },
+      {
+        "Data": [
+          { "VarCharValue": "3000000" },
+          { "VarCharValue": "Claire Smith" },
+          { "VarCharValue": "address line 1" },
+          { "VarCharValue": "address line 2" },
+          { "VarCharValue": "" },
+          { "VarCharValue": "postcode" },
+          { "VarCharValue": "01/01/1970" },
+          { "VarCharValue": "01/01/1970" }
+        ]
+      },
+      {
+        "Data": [
+          { "VarCharValue": "8000000" },
+          { "VarCharValue": "Daniel Smith" },
+          { "VarCharValue": "address line 1" },
+          { "VarCharValue": "address line 2" },
+          { "VarCharValue": "" },
+          { "VarCharValue": "postcode" },
+          { "VarCharValue": "01/01/1970" },
+          { "VarCharValue": "01/01/1970" }
+        ]
+      },
+      {
+        "Data": [
+          { "VarCharValue": "30000" },
+          { "VarCharValue": "Emma Smith" },
+          { "VarCharValue": "address line 1" },
+          { "VarCharValue": "address line 2" },
+          { "VarCharValue": "" },
+          { "VarCharValue": "postcode" },
+          { "VarCharValue": "01/01/1970" },
+          { "VarCharValue": "01/01/1970" }
+        ]
+      },
+      {
+        "Data": [
+          { "VarCharValue": "4000000" },
+          { "VarCharValue": "Fred Smith" },
+          { "VarCharValue": "address line 1" },
+          { "VarCharValue": "address line 2" },
+          { "VarCharValue": "" },
+          { "VarCharValue": "postcode" },
+          { "VarCharValue": "01/01/1970" },
+          { "VarCharValue": "01/01/1970" }
+        ]
+      }
+    ],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "legacy_subject_id",
+          "Label": "legacy_subject_id",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "full_name",
+          "Label": "full_name",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_1",
+          "Label": "primary_address_line_1",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_2",
+          "Label": "primary_address_line_2",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_line_3",
+          "Label": "primary_address_line_3",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "primary_address_post_code",
+          "Label": "primary_address_post_code",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_start_date",
+          "Label": "order_start_date",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "order_end_date",
+          "Label": "order_end_date",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        }
+      ]
+    }
+  },
+  "UpdateCount": 0
+}

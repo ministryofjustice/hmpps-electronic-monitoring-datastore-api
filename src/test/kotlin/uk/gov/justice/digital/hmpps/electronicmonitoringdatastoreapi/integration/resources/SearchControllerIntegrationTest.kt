@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockAthenaClient
 
 @ActiveProfiles("integration")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
@@ -55,6 +56,8 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 200 with valid body`() {
+      MockAthenaClient.addResponseFile("successfulOrderSearchResponse")
+
       val requestBody = mapOf(
         "searchType" to "name",
         "legacySubjectId" to "12345",
