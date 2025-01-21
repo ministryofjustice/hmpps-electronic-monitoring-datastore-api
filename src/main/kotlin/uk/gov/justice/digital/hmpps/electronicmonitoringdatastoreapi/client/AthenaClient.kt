@@ -1,7 +1,7 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Component
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -15,40 +15,19 @@ import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 // We will instantiate as new for now
-class AthenaService {
-  private val stsService = AssumeRoleService()
+@Component
+@Profile("!integration")
+class AthenaClient : AthenaClientInterface {
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
   private val databaseName: String = "test_database"
   private val defaultRole: AthenaRole = AthenaRole.DEV
-//  const val CLIENT_EXECUTION_TIMEOUT = 1000 // TODO: Remove unused constant
-
-  companion object {
-    inline fun <reified T> mapTo(resultSet: ResultSet): List<T> {
-      val mapper = jacksonObjectMapper()
-        .registerKotlinModule()
-        .apply {
-          propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
-        }
-
-      val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
-
-      val mappedRows: List<Map<String, String?>> = resultSet.rows().drop(1).map { row ->
-        row.data().mapIndexed { i, datum ->
-          columnNames[i] to datum.varCharValue()
-        }.toMap()
-      }
-
-      return mappedRows.map { row ->
-        mapper.convertValue(row, T::class.java)
-      }
-    }
-  }
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val modernisationPlatformCredentialsProvider = stsService.getModernisationPlatformCredentialsProvider(role)
+    val modernisationPlatformCredentialsProvider = AthenaAssumeRoleService.Companion.getModernisationPlatformCredentialsProvider(role)
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)
@@ -57,10 +36,10 @@ class AthenaService {
   }
 
   // Initialise a query, wait for completion, and return the ResultSet
-  fun getQueryResult(role: AthenaRole = defaultRole, querystring: String): ResultSet {
-    val athenaClient = startClient(role)
+  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
+    val athenaClient = startClient(role ?: defaultRole)
 
-    val queryExecutionId = submitAthenaQuery(athenaClient, querystring)
+    val queryExecutionId = submitAthenaQuery(athenaClient, athenaQuery.queryString)
 
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)

@@ -15,7 +15,10 @@ import kotlin.reflect.full.memberProperties
 
 class AthenaHelper {
   companion object {
-    fun resultSetFromJson(string: String): ResultSet = resultSetFromJson(JSONObject(string))
+    fun resultSetFromJson(string: String): ResultSet {
+      val parsedJson = JSONObject(string)
+      return resultSetFromJson(parsedJson)
+    }
 
     fun resultSetFromJson(jsonData: JSONObject): ResultSet {
       val rows: List<Row> = jsonData
@@ -87,7 +90,7 @@ class AthenaHelper {
       val mapper = jacksonObjectMapper()
         .registerKotlinModule()
         .apply {
-          propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
+          propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
         }
 
       val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }

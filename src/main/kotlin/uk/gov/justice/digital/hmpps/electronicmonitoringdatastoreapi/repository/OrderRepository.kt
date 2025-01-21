@@ -1,181 +1,50 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
-import software.amazon.awssdk.services.athena.model.ResultSet
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientInterface
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SearchKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 
-class OrderRepository {
-  companion object {
-    fun getFakeOrders(): List<OrderSearchResult> = listOf(
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 1000000,
-        name = "Amy Smith",
-        address = "First line of address",
-        alias = null,
-        dateOfBirth = "01-01-1970",
-        orderStartDate = "08-02-2019",
-        orderEndDate = "08-02-2020",
-      ),
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 2000000,
-        name = "Bill Smith",
-        address = "First line of address",
-        alias = "Plato",
-        dateOfBirth = "01-02-1971",
-        orderStartDate = "03-11-2020",
-        orderEndDate = "03-11-2021",
-      ),
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 3000000,
-        name = "Claire Smith",
-        address = "First line of address",
-        alias = null,
-        dateOfBirth = "09-04-1962",
-        orderStartDate = "05-08-2001",
-        orderEndDate = "05-08-2002",
-      ),
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 8000000,
-        name = "Daniel Smith",
-        address = "First line of address",
-        alias = "Aristotle",
-        dateOfBirth = "12-11-1978",
-        orderStartDate = "18-02-2012",
-        orderEndDate = "18-02-2014",
-      ),
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 30000,
-        name = "Emma Smith",
-        address = "First line of address",
-        alias = "Socrates",
-        dateOfBirth = "03-03-2001",
-        orderStartDate = "24-01-2017",
-        orderEndDate = "24-01-2020",
-      ),
-      OrderSearchResult(
-        dataType = "am",
-        legacySubjectId = 4000000,
-        name = "Fred Smith",
-        address = "First line of address",
-        alias = null,
-        dateOfBirth = "08-10-1980",
-        orderStartDate = "01-05-2021",
-        orderEndDate = "01-05-2022",
-      ),
-    )
+@Service
+class OrderRepository(
+  @Autowired val athenaClient: AthenaClientInterface,
+) {
+  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+    val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder()
+      .withLegacySubjectId(criteria.legacySubjectId)
+      .withFirstName(criteria.firstName)
+      .withLastName(criteria.lastName)
+      .withAlias(criteria.alias)
+      .build()
 
-    fun validateSearchCriteria(criteria: OrderSearchCriteria): OrderSearchCriteria {
-      if (criteria.legacySubjectId == null &&
-        criteria.firstName == null &&
-        criteria.lastName == null &&
-        criteria.alias == null &&
-        criteria.dobDay == null &&
-        criteria.dobMonth == null &&
-        criteria.dobYear == null
-      ) {
-        throw IllegalArgumentException("At least one search criteria must be populated")
-      }
+    val athenaResponse = athenaClient.getQueryResult(searchKeyOrderInformationQuery, role)
 
-      if (criteria.legacySubjectId != null) {
-        try {
-          (criteria.legacySubjectId ?: "").toLong()
-        } catch (e: Exception) {
-          throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
-        }
-      }
+    val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
 
-      // TODO: Handle Date of Birth, once it's in the data...
-
-      return criteria
-    }
-
-    fun parseSearchCriteria(criteria: OrderSearchCriteria): AthenaQuery {
-      validateSearchCriteria(criteria)
-      var existingCriteria: Boolean = false
-
-      val builder: StringBuilder = StringBuilder()
-      builder.append(
-        """
-        SELECT 
-          legacy_subject_id, 
-          full_name, 
-          primary_address_line_1, 
-          primary_address_line_2, 
-          primary_address_line_3, 
-          primary_address_post_code, 
-          order_start_date, 
-          order_end_date 
-        FROM 
-          test_database.order_details
-        WHERE 
-        """.trimIndent(),
-      )
-
-      if (criteria.legacySubjectId != null) {
-        builder.append("legacy_subject_id = ${criteria.legacySubjectId}")
-        existingCriteria = true
-      }
-
-      if (!criteria.firstName.isNullOrBlank()) {
-        builder.append("${if (existingCriteria) " OR" else ""} upper(first_name) = upper('${criteria.firstName}')")
-        existingCriteria = true
-      }
-
-      if (!criteria.lastName.isNullOrBlank()) {
-        builder.append("${if (existingCriteria) " OR" else ""} upper(last_name) = upper('${criteria.lastName}')")
-        existingCriteria = true
-      }
-
-      if (!criteria.alias.isNullOrBlank()) {
-        builder.append("${if (existingCriteria) " OR" else ""} upper(alias) = upper('${criteria.alias}')")
-        existingCriteria = true
-      }
-
-      builder.toString()
-
-      return AthenaQuery(
-        queryString = builder.toString(),
-      )
-    }
-
-    fun parseOrders(resultSet: ResultSet): List<OrderSearchResult> {
-      var dtoOrders: List<AthenaOrderSearchResultDTO> = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
-
-      var orderSearchResults: List<OrderSearchResult> = dtoOrders.map { dto -> OrderSearchResult(dto) }
-//      return getFakeOrders() // TODO: Early return, testing/demo early.
-      return orderSearchResults
-
-      // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
-      // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
-      // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
-    }
+    return result
   }
 
-  private val athenaService = AthenaService()
+  fun listLegacyIds(role: AthenaRole): List<String> {
+    val athenaQuery = ListKeyOrderInformationQueryBuilder().build()
 
-  fun getOrders(criteria: OrderSearchCriteria): AthenaQueryResponse<List<OrderSearchResult>> {
-    val athenaQuery: AthenaQuery = OrderRepository.parseSearchCriteria(criteria)
-    val role = AthenaRole.DEV
+    val athenaResponse = athenaClient.getQueryResult(athenaQuery, role)
 
-    val athenaResponse: ResultSet = athenaService.getQueryResult(role, athenaQuery.queryString)
+    val result = AthenaHelper.mapTo<String>(athenaResponse)
 
-    val parsedOrderSearchResults: List<OrderSearchResult> = parseOrders(athenaResponse)
+    return result
+  }
 
-    return AthenaQueryResponse<List<OrderSearchResult>>(
-      queryString = athenaQuery.queryString,
-      athenaRole = role.name,
-      queryResponse = parsedOrderSearchResults,
-    )
+  fun runQuery(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
+    val athenaResponse = athenaClient.getQueryResult(athenaQuery, role)
+
+    val result = athenaResponse.toString()
+
+    return result
   }
 }

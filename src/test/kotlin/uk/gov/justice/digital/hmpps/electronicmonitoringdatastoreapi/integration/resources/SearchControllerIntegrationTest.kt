@@ -4,14 +4,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockAthenaClient
 
+@ActiveProfiles("integration")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
-
   @Nested
-  @DisplayName("POST /search/orders-old")
+  @DisplayName("POST /search/orders")
   inner class SearchOrdersFake {
 
-    val baseUri: String = "/search/orders-old"
+    val baseUri: String = "/search/orders"
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
@@ -37,7 +39,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should return 200 with empty body`() {
+    fun `should fail with 400 BAD REQUEST if empty body`() {
       webTestClient.post()
         .uri(baseUri)
         .headers(setAuthorisation())
@@ -45,15 +47,17 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .bodyValue("{}")
         .exchange()
         .expectStatus()
-        .isOk
+        .isBadRequest
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.length()").isEqualTo(6) // Expect 6 mock orders returned
+        .jsonPath("$.userMessage").isEqualTo("This request is malformed, and may be missing a body")
     }
 
     @Test
     fun `should return 200 with valid body`() {
+      MockAthenaClient.addResponseFile("successfulOrderSearchResponse")
+
       val requestBody = mapOf(
         "searchType" to "name",
         "legacySubjectId" to "12345",
@@ -80,11 +84,13 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("POST /search/custom-query")
   inner class QueryAthena {
-
     val baseUri: String = "/search/custom-query"
 
     val requestBody = mapOf(
       "queryString" to "fake-test-querystring",
+    )
+    val failingRequestBody = mapOf(
+      "queryString" to "THROW ERROR",
     )
 
     @Test
@@ -155,14 +161,14 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .uri(baseUri)
         .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody) // Sending a valid body
+        .bodyValue(failingRequestBody) // Sending a valid body
         .exchange()
         .expectStatus()
         .isOk // Endpoint should handle a valid body
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.queryString").isEqualTo("fake-test-querystring")
+        .jsonPath("$.queryString").isEqualTo("THROW ERROR")
         .jsonPath("$.isErrored").isEqualTo("true")
         .jsonPath("$.athenaRole").isNotEmpty
     }

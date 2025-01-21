@@ -62,12 +62,12 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
       ),
     ).also { log.warn("Missing request header: {}", e.headerName) }
 
-  @ExceptionHandler(HttpMessageNotReadableException::class)
-  fun handleUnreadableHttpMessageException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(IllegalArgumentException::class, HttpMessageNotReadableException::class)
+  fun handleIllegalArgumentException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(BAD_REQUEST)
     .body(
       ErrorResponse(
-        status = HttpStatus.BAD_REQUEST,
+        status = BAD_REQUEST,
         userMessage = "This request is malformed, and may be missing a body",
         developerMessage = e.message,
       ),
@@ -100,4 +100,4 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
   }
 }
 
-class AthenaClientException constructor(message: String) : Exception(message)
+class AthenaClientException(message: String) : Exception(message)

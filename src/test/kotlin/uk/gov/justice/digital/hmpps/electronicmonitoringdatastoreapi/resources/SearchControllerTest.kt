@@ -9,48 +9,76 @@ import org.mockito.Mockito.`when`
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @ActiveProfiles("test")
 @JsonTest
 class SearchControllerTest {
+  private lateinit var orderService: OrderService
   private lateinit var auditService: AuditService
   private lateinit var controller: SearchController
   private lateinit var authentication: Authentication
 
   @BeforeEach
   fun setup() {
-    auditService = mock()
-    controller = SearchController(auditService)
+    orderService = mock(OrderService::class.java)
+    auditService = mock(AuditService::class.java)
+    controller = SearchController(orderService, auditService)
     authentication = mock(Authentication::class.java)
-    `when`(authentication.principal).thenReturn("MOCK_AUTH_USER")
+    `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
   }
 
-//  @Nested
-//  inner class GetSearchResult {
-//
-//    @Test
-//    fun `Accepts caseId as parameter`() {
-//      val caseId = "obviously-fake-data"
-//      val expected = JSONObject(
-//        mapOf("data" to "You have successfully queried case obviously-fake-data"),
-//      )
-//
-//      val result: JSONObject = sut.getCases(caseId)
-//      Assertions.assertThat(result.toString()).isEqualTo(expected.toString())
-//    }
-//  }
-
   @Nested
-  inner class SearchOrdersFake {
+  inner class QueryAthena {
 
     @Test
-    fun `Returns a list of orders`() {
+    fun `query orders from order service`() {
+      val queryString = "fake query string"
+      val queryRole = "fake-role"
+      val queryObject = AthenaStringQuery(queryString)
+      val queryResponse = "fake query response"
+
+      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
+
+      val result = controller.queryAthena(authentication, queryObject, queryRole)
+
+      assertThat(result.body).isInstanceOf(AthenaQueryResponse::class.java)
+      assertThat(result.body?.isErrored).isFalse
+      assertThat(result.body?.queryString).isEqualTo(queryString)
+      assertThat(result.body?.queryResponse).isEqualTo(queryResponse)
+      assertThat(result.body?.errorMessage).isNullOrEmpty()
+    }
+
+    @Test
+    fun `returns error response when orders service errors`() {
+      val queryString = "fake query string"
+      val queryRole = "fake-role"
+      val queryObject = AthenaStringQuery(queryString)
+      val errorMessage = "fake error message"
+
+      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
+
+      val result = controller.queryAthena(authentication, queryObject, queryRole)
+
+      assertThat(result.body).isInstanceOf(AthenaQueryResponse::class.java)
+      assertThat(result.body?.isErrored).isTrue
+      assertThat(result.body?.queryString).isEqualTo(queryString)
+      assertThat(result.body?.errorMessage).isEqualTo(errorMessage)
+    }
+  }
+
+  @Nested
+  inner class SearchOrders {
+
+    @Test
+    fun `find list of orders from order service`() {
       // Arrange: Create search criteria
       val orderSearchCriteria = OrderSearchCriteria(
         searchType = "name",
@@ -63,51 +91,25 @@ class SearchControllerTest {
         dobYear = "1970",
       )
 
-      val result: List<OrderSearchResult> = controller.searchOrdersFake(authentication, orderSearchCriteria)
-
-      // Assert: Verify the result is a list of Order objects
-      assertThat(result).isNotEmpty // Ensure the result is not empty
-      assertThat(result).allMatch { it is OrderSearchResult } // Ensure all elements are of type Order
-    }
-  }
-
-  @Nested
-  inner class QueryAthena {
-
-    @Test
-    fun `Returns response object of the correct type`() {
-      val queryString = "fake query string"
-      val queryRole = "fake-role"
-      val queryObject = AthenaQuery(queryString = queryString)
-
-      val expectedResult = AthenaQueryResponse<String>(
-        queryString = queryString,
-        isErrored = false,
-        athenaRole = "fake",
+      val expectedResult = listOf(
+        OrderSearchResult(
+          dataType = "am",
+          legacySubjectId = 12345,
+          name = "Amy Smith",
+          address = "First line of address",
+          alias = null,
+          dateOfBirth = "01-01-1970",
+          orderStartDate = "08-02-2019",
+          orderEndDate = "08-02-2020",
+        ),
       )
 
-      val result: AthenaQueryResponse<String> = controller.queryAthena(authentication, queryObject, queryRole)
+      `when`(orderService.search(orderSearchCriteria, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      assertThat(result).isInstanceOf(AthenaQueryResponse::class.java)
-    }
+      val result = controller.searchOrders(authentication, orderSearchCriteria)
 
-    @Test
-    fun `Returns error response`() {
-      val queryString = "fake query string"
-      val queryRole = "fake-role"
-      val queryObject = AthenaQuery(queryString = queryString)
-
-      val expectedResult = AthenaQueryResponse<String>(
-        queryString = queryString,
-        isErrored = true,
-        athenaRole = "fake",
-      )
-
-      val result: AthenaQueryResponse<String> = controller.queryAthena(authentication, queryObject, queryRole)
-
-      assertThat(result).isNotNull // Ensure the result is not empty
-      assertThat(result.isErrored).isEqualTo(expectedResult.isErrored)
-      assertThat(result.queryString).isEqualTo(expectedResult.queryString) // Ensure all elements are of type Order
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(expectedResult)
     }
   }
 }

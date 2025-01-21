@@ -1,10 +1,21 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockAthenaClient
 
+@ActiveProfiles("integration")
 class OrderControllerIntegrationTest : ControllerIntegrationBase() {
+  @BeforeEach
+  fun setup() {
+    MockAthenaClient.addResponseFile("successfulKeyOrderInformationResponse")
+    MockAthenaClient.addResponseFile("successfulSubjectHistoryReportResponse")
+    MockAthenaClient.addResponseFile("successfulDocumentListResponse")
+  }
+
   @Nested
   @DisplayName("GET /orders/getOrderSummary/{orderId}")
   inner class GetOrderSummary {
@@ -26,18 +37,17 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
       wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_WRONG"))
     }
 
-//     TODO: fix this test - need to mock Athena
-//    @Test
-//    fun `should return OK with valid auth header, role and X-User-Token`() {
-//      val uri = "$baseUri/234"
-//
-//      webTestClient.get()
-//        .uri(uri)
-//        .headers(setAuthorisation())
-//        .exchange()
-//        .expectStatus()
-//        .isOk
-//    }
+    @Test
+    fun `should return OK with valid auth header, role`() {
+      val uri = "$baseUri/234"
+
+      webTestClient.get()
+        .uri(uri)
+        .headers(setAuthorisation())
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
   }
 
   @Nested
