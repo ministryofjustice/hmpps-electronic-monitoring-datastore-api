@@ -3,15 +3,15 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integratio
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import java.io.File
 
 @Component
 @Profile("integration")
-class MockAthenaClient : AthenaClientInterface {
+class MockEmDatastoreClient : EmDatastoreClientInterface {
   companion object {
     var responses: MutableList<String> = mutableListOf<String>()
 

@@ -21,14 +21,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 // We will instantiate as new for now
 @Component
 @Profile("!integration")
-class AthenaClient : AthenaClientInterface {
+class EmDatastoreClient : EmDatastoreClientInterface {
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
   private val databaseName: String = "test_database"
   private val defaultRole: AthenaRole = AthenaRole.DEV
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val credentialsProvider: AwsCredentialsProvider = AthenaAssumeRoleService.Companion.getRole(role)
+    val credentialsProvider: AwsCredentialsProvider = EmDatastoreRoleProvider.Companion.getRole(role)
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)
