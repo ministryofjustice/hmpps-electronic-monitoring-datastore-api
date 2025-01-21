@@ -10,10 +10,14 @@
 - [Get started](#get-started)
     - [Using IntelliJ IDEA](#using-intellij-idea)
 - [Usage](#usage)
-    - [Running the application locally](#running-the-application-locally)
-        - [Calling endpoints](#calling-endpoints)
-            - [Generate a token for a HMPPS Auth client](#generate-a-token-for-a-hmpps-auth-client)
-        - [Running the application locally with the UI](#running-both-the-ui-and-the-api-locally)
+    - [Running the application locally from the CLI](#running-the-application-locally-from-the-cli)
+    - [Running with Docker](#running-with-docker)
+    - [Running the application locally using Intellij](#running-the-application-locally-using-intellij)
+- [Querying Athena](#querying-athena)
+  - [Overview](#overview)
+  - [Acquiring local credentials](#acquiring-local-credentials)
+  - [Querying with the AWS CLI](#querying-athena-via-the-cli)
+  - [Querying Athena with the local EM API](#querying-athena-with-the-local-em-api)
 
 ## About this project
 
@@ -60,15 +64,18 @@ minutes.
 
 ## Usage
 
+### Connecting the local API to athena
+- Acquire short-term credentials as per [Acquiring local credentials](#acquiring-local-credentials)
+- Set the API to use these credentials as per [Querying Athena with the local EM API](#querying-athena-with-the-local-em-api)  
+
+**Without these steps the local API will not talk to Athena**
+
 ### Running the application locally from the CLI
 
 The application comes with a `dev` spring profile that includes default settings for running locally. This is not
 necessary when deploying to kubernetes as these values are included in the helm configuration templates -
 e.g. `values-dev.yaml`.
 
-### Checking the app has started successfully:
-If using docker, your app is probably exposed at `localhost:8080`.  
-Call http://localhost:8080/health with a browser to get app health info.
 
 ### Running with Docker
 There is also a `docker-compose.yml` that can be used to run a local instance of the template in docker and also an
@@ -100,6 +107,63 @@ SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 ```
 
 Then visit [http://localhost:8080/health](http://localhost:8081/health).
+
+### Checking the app has started successfully:
+If using docker, your app is probably exposed at `localhost:8080`.  
+Call http://localhost:8080/health with a browser to get app health info.
+
+
+## Querying Athena
+### Overview
+The process by which the API queries Athena is:
+1. API acquires a role from the Cloud Platform cluster it is deployed in (e.g. dev is deployed in [hmpps-electronic-monitoring-datastore-dev](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-datastore-dev))
+2. The [AthenaClient](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaClient.kt) requests a `CredentialsProvider` from the [AthenaAssumeRoleService](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaAssumeRoleService.kt)
+3. The AthenaAssumeRoleService makes an `StsClient.assumeRole()` call using the local Cloud Platform role, and gives the `CredentialsProvider` this returns to the `AthenaClient`
+4. The AthenaClient builds an AWS.AthenaClient with these credentials that has access to the appropriate data in the Athena datastore.
+
+For debugging it's useful to be able to run these queries ourselves. To do this you will need:
+- To be a member of [our GitHub team](https://github.com/orgs/ministryofjustice/teams/hmpps-electronic-monitoring)
+- To configure KubeCtl to let you connect to the CLoud Platform Kubernetes cluster - [follow this guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html)
+- The [cloud platform CLI](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html)
+
+### Acquiring local credentials
+1. Set the kubectl context to the dev environment: `kubectl config set-context --current --namespace=hmpps-electronic-monitoring-datastore-dev`
+2. Get details for the service pod that you can use to query AWS: `kubectl get pods`. One should have a name indicating it's a service account similar to `hmpps-em-datastore-dev-athena-service-pod-#Z###ZZZ##-Z####`.
+3. Ssh into this service pod: `kubectl exec --stdin --tty YOUR_SERVICE_POD_NAME_FROM_THE_PREV_STEP -- /bin/bash`
+   > Confirm you've signed in correctly by running `aws sts get-caller-identity` - this should return a response with an ARN matching the pattern `arn:aws:sts::############:assumed-role/cloud-platform-irsa-abc123xyz-live/botocore-session-##########` 
+4. Confirm the Role ARN you require from [here](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaRole.kt)
+5. Assume this role ([AWS docs](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sts/assume-role.html)): `aws sts assume-role --role-arn YOUR_ATHENA_ROLE_ARN --role-session-name cli-session`
+   > This will return AWS credentials including  a SessionToken, which will last around an hour
+6. Open your local AWS credentials file: `nano ~/.aws/credentials`Add a section to your local .aws credentials file:
+   > It should look like the following:  
+   > ```[default]
+   > region=eu-west-2
+   > aws_access_key_id=SECRET_CHARACTER_STRING
+   > aws_secret_access_key=LONGER_SECRET_CHARACTER_STRING
+   > ```
+7. Add a new section to this file - inputting the values without quotes:
+   ```
+   [athena-dev]
+   aws_access_key_id=DATA_FROM_ASSUME_ROLE
+   aws_secret_access_key=DATA_FROM_ASSUME_ROLE
+   aws_session_token=DATA_FROM_ASSUME_ROLE
+   region=eu-west-2
+   ```
+   
+_You now have Athena credentials_ - they will last for 1 hour.
+
+### Querying Athena via the CLI
+- Once you have set up your role, use this profile in your aws requests by passing the flag `--profile athena-dev` with each request  
+- Confirm you have access by running `aws athena list-work-groups --profile athena-dev` . This will open VIM with the results - typing `:q` will exit.
+- The CLI docs are [here](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/athena/index.html)
+- You can now run SQL queries that match what the API would run.
+
+### Querying Athena with the local EM API
+To use these creds in the API, use [explicit temporary credentials](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-explicit). Specifically:
+1. Put the credentials gained above into the `StaticCredentialsProvicer` in the `AthenaClient.startClient()` method
+2. Set `useLocalCredentials` to `true` in this same file.  
+Now the API will pick up these (direct) Athena credentials instead of running AssumeRole, which would only work in the Kubernetes cluster environment.
+
 
 ## Vulnerability analysis
 

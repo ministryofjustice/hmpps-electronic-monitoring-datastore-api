@@ -2,6 +2,10 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
+import software.amazon.awssdk.auth.credentials.AnonymousCredentialsProvider
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
+import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -27,11 +31,25 @@ class AthenaClient : AthenaClientInterface {
   private val defaultRole: AthenaRole = AthenaRole.DEV
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val modernisationPlatformCredentialsProvider = AthenaAssumeRoleService.Companion.getModernisationPlatformCredentialsProvider(role)
+    val useLocalCredentials: Boolean = false
+    var credentialsProvider: AwsCredentialsProvider = AnonymousCredentialsProvider.create()
+
+    if (useLocalCredentials) {
+      credentialsProvider = StaticCredentialsProvider
+        .create(
+          AwsSessionCredentials.create(
+            "access_key_id",
+            "secret_key_id",
+            "session_token",
+          ),
+        )
+    } else {
+      val credentialsProvider = AthenaAssumeRoleService.Companion.getModernisationPlatformCredentialsProvider(role)
+    }
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)
-      .credentialsProvider(modernisationPlatformCredentialsProvider)
+      .credentialsProvider(credentialsProvider)
       .build()
   }
 
