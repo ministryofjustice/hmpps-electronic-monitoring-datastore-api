@@ -4,8 +4,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.auth.credentials.AnonymousCredentialsProvider
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
-import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
@@ -31,18 +30,11 @@ class AthenaClient : AthenaClientInterface {
   private val defaultRole: AthenaRole = AthenaRole.DEV
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val useLocalCredentials: Boolean = false
     var credentialsProvider: AwsCredentialsProvider = AnonymousCredentialsProvider.create()
 
+    val useLocalCredentials: Boolean = System.getenv("FLAG_USE_LOCAL_CREDS").toBoolean()
     if (useLocalCredentials) {
-      credentialsProvider = StaticCredentialsProvider
-        .create(
-          AwsSessionCredentials.create(
-            "access_key_id",
-            "secret_key_id",
-            "session_token",
-          ),
-        )
+      credentialsProvider = EnvironmentVariableCredentialsProvider.create()
     } else {
       val credentialsProvider = AthenaAssumeRoleService.Companion.getModernisationPlatformCredentialsProvider(role)
     }

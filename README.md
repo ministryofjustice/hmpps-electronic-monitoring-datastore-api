@@ -159,11 +159,15 @@ _You now have Athena credentials_ - they will last for 1 hour.
 - You can now run SQL queries that match what the API would run.
 
 ### Querying Athena with the local EM API
-To use these creds in the API, use [explicit temporary credentials](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#credentials-explicit). Specifically:
-1. Put the credentials gained above into the `StaticCredentialsProvicer` in the `AthenaClient.startClient()` method
-2. Set `useLocalCredentials` to `true` in this same file.  
-Now the API will pick up these (direct) Athena credentials instead of running AssumeRole, which would only work in the Kubernetes cluster environment.
+1. Edit your Spring Boot configuration file to include the following environment variables you retrieved in [acquiring local credentials](#acquiring-local-credentials):
+   - `AWS_ACCESS_KEY_ID` = value you retrieved (no quotes)
+   - `AWS_SECRET_ACCESS_KEY` = value you retrieved (no quotes)
+   - `AWS_SESSION_TOKEN` = value you retrieved (no quotes)
+   - `FLAG_USE_LOCAL_CREDS` = `true`
+2. The [AthenaClient](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaClient.kt).`startClient()` method will now use these values to create the athena connection at runtime.
+3. To disable this, just set `FLAG_USE_LOCAL_CREDS` to `false`
 
+This should pick up the values you set in your environment variables as per the [AWS Java SDK docs](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html).
 
 ## Vulnerability analysis
 
