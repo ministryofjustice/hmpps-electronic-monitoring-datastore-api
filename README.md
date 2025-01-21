@@ -164,7 +164,7 @@ _You now have Athena credentials_ - they will last for 1 hour.
    - `AWS_SECRET_ACCESS_KEY` = value you retrieved (no quotes)
    - `AWS_SESSION_TOKEN` = value you retrieved (no quotes)
    - `FLAG_USE_LOCAL_CREDS` = `true`
-2. The [AthenaClient](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaClient.kt).`startClient()` method will now use these values to create the athena connection at runtime.
+2. The [AthenaAssumeRoleService](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaAssumeRoleService.kt)`.getRole()` method will now use these values to create the athena connection at runtime.
 3. To disable this, just set `FLAG_USE_LOCAL_CREDS` to `false`
 
 This should pick up the values you set in your environment variables as per the [AWS Java SDK docs](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html).
