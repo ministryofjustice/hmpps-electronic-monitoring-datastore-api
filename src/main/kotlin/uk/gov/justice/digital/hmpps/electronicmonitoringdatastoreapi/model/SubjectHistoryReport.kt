@@ -5,4 +5,8 @@ data class SubjectHistoryReport(
   val name: String,
   val createdOn: String,
   val time: String,
-)
+) {
+  companion object {
+    fun createEmpty(): SubjectHistoryReport = SubjectHistoryReport("", "", "", "")
+  }
+}

@@ -141,6 +141,7 @@ class SearchController(
 
     val results = orderService.search(orderSearchCriteria, validatedRole)
 
+//    TODO: Error-handling for the audit service
     auditService?.createEvent(
       authentication.name,
       "SEARCH_ORDERS",

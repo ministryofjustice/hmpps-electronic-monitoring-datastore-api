@@ -52,17 +52,19 @@ class OrderService(
     val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(orderId, role)
     val parsedKeyOrderInformation = parseKeyOrderInformation(keyOrderInformation)
 
-    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(orderId, role)
-    val parsedSubjectHistoryReport = parseSubjectHistoryReport(subjectHistoryReport)
+    val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()
+//    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(orderId, role)
+//    val parsedSubjectHistoryReport = parseSubjectHistoryReport(subjectHistoryReport)
 
-    val documentList = orderInformationRepository.getDocumentList(orderId, role)
-    val parsedDocumentList = parseDocumentList(documentList)
+    val emptyDocumentList: DocumentList = DocumentList.createEmpty()
+//    val documentList = orderInformationRepository.getDocumentList(orderId, role)
+//    val parsedDocumentList = parseDocumentList(documentList)
 
     // Put it together
     return OrderInformation(
       keyOrderInformation = parsedKeyOrderInformation,
-      subjectHistoryReport = parsedSubjectHistoryReport,
-      documents = parsedDocumentList,
+      subjectHistoryReport = emptyHistoryReport,
+      documents = emptyDocumentList,
     )
   }
 
