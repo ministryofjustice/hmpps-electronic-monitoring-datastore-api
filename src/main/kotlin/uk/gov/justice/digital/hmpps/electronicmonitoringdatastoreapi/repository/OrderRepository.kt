@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
@@ -23,7 +24,7 @@ class OrderRepository(
       .withAlias(criteria.alias)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(searchKeyOrderInformationQuery, role)
+    val athenaResponse: ResultSet = athenaClient.getQueryResult(searchKeyOrderInformationQuery, role)
 
     val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
 
@@ -33,11 +34,15 @@ class OrderRepository(
   fun listLegacyIds(role: AthenaRole): List<String> {
     val athenaQuery = ListKeyOrderInformationQueryBuilder().build()
 
-    val athenaResponse = athenaClient.getQueryResult(athenaQuery, role)
+    val athenaResponse: ResultSet = athenaClient.getQueryResult(athenaQuery, role)
 
-    val result = AthenaHelper.mapTo<String>(athenaResponse)
+    data class SubjectId(
+      val legacySubjectId: String,
+    )
 
-    return result
+    val result = AthenaHelper.mapTo<SubjectId>(athenaResponse)
+
+    return result.map { it.legacySubjectId }
   }
 
   fun runQuery(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
