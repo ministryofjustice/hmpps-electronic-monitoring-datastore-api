@@ -30,6 +30,33 @@ class SearchController(
   // TODO: Re-enable audit as @autowired once Cloud Platform in place
   val auditService: AuditService? = null,
 ) {
+  @GetMapping("/confirmConnection")
+  fun confirmConnection(
+    authentication: Authentication,
+  ): ResponseEntity<Map<String, String>> {
+    try {
+//     TODO: Re-enable audit once Cloud Platform in place
+//       auditService.createEvent(
+//         authentication.principal.toString(),
+//         "CONFIRM_CONNECTION",
+//         mapOf("confirmConnection" to "true"),
+//       )
+
+      val athenaAccess: Boolean = confirmAthenaAccess(authentication).body
+      val message: String = if (athenaAccess) "Connection successful" else "API Connection successful, but no access to Athena"
+
+      return ResponseEntity(
+        mapOf("message" to message),
+        HttpStatus.OK,
+      )
+    } catch (e: Exception) {
+      return ResponseEntity(
+        mapOf("message" to "Error determining Athena access - potentially a logging/audit issue."),
+        HttpStatus.OK,
+      )
+    }
+  }
+
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(
     authentication: Authentication,
