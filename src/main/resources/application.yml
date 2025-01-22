@@ -57,3 +57,5 @@ management:
 services:
   hmpps-auth:
     url: ${HMPPS_AUTH_URL}
+  athena:
+    database: historic_api_mart
