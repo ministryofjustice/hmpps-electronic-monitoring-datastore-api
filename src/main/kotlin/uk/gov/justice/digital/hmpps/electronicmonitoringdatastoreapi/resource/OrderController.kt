@@ -85,7 +85,7 @@ class OrderController(
     return ResponseEntity.ok(result)
   }
 
-  @GetMapping("/getOrderdetails/{orderId}")
+  @GetMapping("/getOrderDetails/{orderId}")
   fun getOrderDetails(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
@@ -93,8 +93,7 @@ class OrderController(
   ): ResponseEntity<OrderDetails> {
     val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
 
-    val result = OrderDetails.createEmpty()
-//    val result = orderService.getOrderDetails(orderId, validatedRole)
+    val result = orderService.getOrderDetails(orderId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,

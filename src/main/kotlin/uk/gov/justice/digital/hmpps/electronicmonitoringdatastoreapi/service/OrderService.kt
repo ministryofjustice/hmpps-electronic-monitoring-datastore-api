@@ -6,12 +6,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
@@ -68,6 +70,14 @@ class OrderService(
     )
   }
 
+  fun getOrderDetails(orderId: String, role: AthenaRole): OrderDetails {
+    val orderDetails: AthenaOrderDetailsDTO = AthenaOrderDetailsDTO("")
+//    val orderDetails: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
+    val parsedOrderDetails = parseOrderDetails(orderDetails)
+
+    return parsedOrderDetails
+  }
+
   private fun parseOrderSearchResults(athenaOrderSearchResultList: List<AthenaOrderSearchResultDTO>): List<OrderSearchResult> {
     var orderSearchResults = athenaOrderSearchResultList.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
 
@@ -81,6 +91,12 @@ class OrderService(
     var keyOrderInformation = KeyOrderInformation(athenaKeyOrderInformation)
 
     return keyOrderInformation
+  }
+
+  private fun parseOrderDetails(athenaOrderDetails: AthenaOrderDetailsDTO): OrderDetails {
+    val orderDetails = OrderDetails(athenaOrderDetails)
+
+    return orderDetails
   }
 
   private fun parseSubjectHistoryReport(athenaSubjectHistoryReport: AthenaSubjectHistoryReportDTO): SubjectHistoryReport {
