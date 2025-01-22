@@ -117,9 +117,9 @@ Call http://localhost:8080/health with a browser to get app health info.
 ### Overview
 The process by which the API queries Athena is:
 1. API acquires a role from the Cloud Platform cluster it is deployed in (e.g. dev is deployed in [hmpps-electronic-monitoring-datastore-dev](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-datastore-dev))
-2. The [AthenaClient](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaClient.kt) requests a `CredentialsProvider` from the [AthenaAssumeRoleService](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaAssumeRoleService.kt)
-3. The AthenaAssumeRoleService makes an `StsClient.assumeRole()` call using the local Cloud Platform role, and gives the `CredentialsProvider` this returns to the `AthenaClient`
-4. The AthenaClient builds an AWS.AthenaClient with these credentials that has access to the appropriate data in the Athena datastore.
+2. The [EmDatastoreClient](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/EmDatastoreClient.kt) requests a `CredentialsProvider` from the [EmDatastoreRoleProvider](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/EmDatastoreRoleProvider.kt)
+3. The EmDatastoreRoleProvider makes an `StsClient.assumeRole()` call using the local Cloud Platform role, and gives the `CredentialsProvider` this returns to the `EmDatastoreClient`
+4. The EmDatastoreClient builds an AWS.AthenaClient with these credentials that has access to the appropriate data in the Athena datastore.
 
 For debugging it's useful to be able to run these queries ourselves. To do this you will need:
 - To be a member of [our GitHub team](https://github.com/orgs/ministryofjustice/teams/hmpps-electronic-monitoring)
@@ -164,7 +164,7 @@ _You now have Athena credentials_ - they will last for 1 hour.
    - `AWS_SECRET_ACCESS_KEY` = value you retrieved (no quotes)
    - `AWS_SESSION_TOKEN` = value you retrieved (no quotes)
    - `FLAG_USE_LOCAL_CREDS` = `true`
-2. The [AthenaAssumeRoleService](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaAssumeRoleService.kt)`.getRole()` method will now use these values to create the athena connection at runtime.
+2. The [EmDatastoreRoleProvider](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/EmDatastoreRoleProvider.kt)`.getRole()` method will now use these values to create the athena connection at runtime.
 3. To disable this, just set `FLAG_USE_LOCAL_CREDS` to `false`
 
 This should pick up the values you set in your environment variables as per the [AWS Java SDK docs](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html).
