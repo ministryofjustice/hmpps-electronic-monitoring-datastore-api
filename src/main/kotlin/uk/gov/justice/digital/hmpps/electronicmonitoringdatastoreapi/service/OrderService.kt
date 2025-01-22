@@ -3,18 +3,16 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import kotlin.String
@@ -43,14 +41,14 @@ class OrderService(
   fun search(criteria: OrderSearchCriteria, role: AthenaRole): List<OrderSearchResult> {
     val orders = orderRepository.searchOrders(criteria, role)
 
-    val parsedOrderSearchResults = parseOrderSearchResults(orders)
+    val parsedOrderSearchResults = orders.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
 
     return parsedOrderSearchResults
   }
 
   fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
     val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(orderId, role)
-    val parsedKeyOrderInformation = parseKeyOrderInformation(keyOrderInformation)
+    val parsedKeyOrderInformation = KeyOrderInformation(keyOrderInformation)
 
     val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()
 //    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(orderId, role)
@@ -68,46 +66,21 @@ class OrderService(
     )
   }
 
-  private fun parseOrderSearchResults(athenaOrderSearchResultList: List<AthenaOrderSearchResultDTO>): List<OrderSearchResult> {
-    var orderSearchResults = athenaOrderSearchResultList.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
+  fun getMonitoringEvents(orderId: String, role: AthenaRole): MonitoringEventList {
+    val result = orderInformationRepository.getMonitoringEventsList(orderId, role)
 
-    // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
-    // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
-    // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
-    return orderSearchResults
+    return MonitoringEventList(result)
   }
 
-  private fun parseKeyOrderInformation(athenaKeyOrderInformation: AthenaKeyOrderInformationDTO): KeyOrderInformation {
-    var keyOrderInformation = KeyOrderInformation(athenaKeyOrderInformation)
+  fun getIncidentEvents(orderId: String, role: AthenaRole): IncidentEventList {
+    val result = orderInformationRepository.getIncidentEventsList(orderId, role)
 
-    return keyOrderInformation
+    return IncidentEventList(result)
   }
 
-  private fun parseSubjectHistoryReport(athenaSubjectHistoryReport: AthenaSubjectHistoryReportDTO): SubjectHistoryReport {
-    var subjectHistoryReport = SubjectHistoryReport(
-      name = athenaSubjectHistoryReport.name,
-      reportUrl = athenaSubjectHistoryReport.reportUrl,
-      createdOn = athenaSubjectHistoryReport.createdOn,
-      time = athenaSubjectHistoryReport.time,
-    )
+  fun getContactEvents(orderId: String, role: AthenaRole): ContactEventList {
+    val result = orderInformationRepository.getContactEventsList(orderId, role)
 
-    return subjectHistoryReport
-  }
-
-  private fun parseDocumentList(athenaDocumentList: AthenaDocumentListDTO): DocumentList {
-    var documentList = DocumentList(
-      pageSize = athenaDocumentList.pageSize,
-      orderDocuments = athenaDocumentList.orderDocuments.map { document ->
-        Document(
-          name = document.name,
-          url = document.url,
-          notes = document.notes,
-          createdOn = document.createdOn,
-          time = document.time,
-        )
-      },
-    )
-
-    return documentList
+    return ContactEventList(result)
   }
 }

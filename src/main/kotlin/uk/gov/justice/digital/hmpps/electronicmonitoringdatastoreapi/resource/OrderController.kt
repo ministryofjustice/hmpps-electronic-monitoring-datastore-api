@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
@@ -75,6 +79,78 @@ class OrderController(
     auditService?.createEvent(
       authentication.name,
       "GET_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @GetMapping("/{orderId}")
+  fun getOrder(
+    authentication: Authentication,
+    @PathVariable(required = true) orderId: String,
+  ): ResponseEntity<OrderInformation> {
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+
+    val result = orderService.getOrderInformation(orderId, validatedRole)
+
+    auditService?.createEvent(
+      authentication.name,
+      "GET_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @GetMapping("/{orderId}/monitoring-events")
+  fun getMonitoringEvents(
+    authentication: Authentication,
+    @PathVariable(required = true) orderId: String,
+  ): ResponseEntity<MonitoringEventList> {
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+
+    val result = orderService.getMonitoringEvents(orderId, validatedRole)
+
+    auditService?.createEvent(
+      authentication.name,
+      "GET_MONITORING_EVENTS",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @GetMapping("/{orderId}/incident-events")
+  fun getViolationAlerts(
+    authentication: Authentication,
+    @PathVariable(required = true) orderId: String,
+  ): ResponseEntity<IncidentEventList> {
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+
+    val result = orderService.getIncidentEvents(orderId, validatedRole)
+
+    auditService?.createEvent(
+      authentication.name,
+      "GET_VIOLATION_ALERTS",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @GetMapping("/{orderId}/contact-events")
+  fun getContactEvents(
+    authentication: Authentication,
+    @PathVariable(required = true) orderId: String,
+  ): ResponseEntity<ContactEventList> {
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+
+    val result = orderService.getContactEvents(orderId, validatedRole)
+
+    auditService?.createEvent(
+      authentication.name,
+      "GET_CONTACT_EVENTS",
       mapOf("orderId" to orderId),
     )
 
