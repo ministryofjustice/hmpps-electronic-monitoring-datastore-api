@@ -11,7 +11,7 @@ import kotlin.io.readText
 
 @Component
 @Profile("mocking")
-class MockEMDatastoreClient : AthenaClientInterface {
+class MockEMDatastoreClient : EmDatastoreClientInterface {
   private companion object {
     private const val MOCKS_RESOURCE_PATH = "./src/main/resources/mockAthenaResponses"
 

@@ -23,3 +23,15 @@ data class AthenaOrderSearchQuery(
 data class AthenaSubjectHistoryReportQuery(
   override val queryString: String,
 ) : AthenaQuery(queryString)
+
+data class AthenaMonitoringEventsListQuery(
+  override val queryString: String,
+) : AthenaQuery(queryString)
+
+data class AthenaIncidentEventsListQuery(
+  override val queryString: String,
+) : AthenaQuery(queryString)
+
+data class AthenaContactEventsListQuery(
+  override val queryString: String,
+) : AthenaQuery(queryString)

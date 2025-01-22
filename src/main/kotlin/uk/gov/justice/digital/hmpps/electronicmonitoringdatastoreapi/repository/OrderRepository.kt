@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
@@ -15,9 +16,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 @Service
 class OrderRepository(
   @Autowired val athenaClient: EmDatastoreClientInterface,
+  @Value("\${services.athena.database}")
+  var athenaDatabase: String = "unknown_database",
 ) {
   fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
-    val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder()
+    val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)
@@ -32,7 +35,7 @@ class OrderRepository(
   }
 
   fun listLegacyIds(role: AthenaRole): List<String> {
-    val athenaQuery = ListKeyOrderInformationQueryBuilder().build()
+    val athenaQuery = ListKeyOrderInformationQueryBuilder(athenaDatabase).build()
 
     val athenaResponse: ResultSet = athenaClient.getQueryResult(athenaQuery, role)
 
