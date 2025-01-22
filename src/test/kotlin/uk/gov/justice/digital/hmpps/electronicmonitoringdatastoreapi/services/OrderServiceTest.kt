@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -193,6 +194,7 @@ class OrderServiceTest {
       Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(orderId, AthenaRole.DEV)
     }
 
+    @Disabled("SubjectHistoryReport will no longer be used")
     @Test
     fun `calls getSubjectHistoryReport from order information repository`() {
       service.getOrderInformation(orderId, AthenaRole.DEV)
@@ -200,6 +202,7 @@ class OrderServiceTest {
       Mockito.verify(orderInformationRepository, times(1)).getSubjectHistoryReport(orderId, AthenaRole.DEV)
     }
 
+    @Disabled("We are not currently returning documents")
     @Test
     fun `calls getDocumentList from order information repository`() {
       service.getOrderInformation(orderId, AthenaRole.DEV)
@@ -221,8 +224,8 @@ class OrderServiceTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(orderId)
       Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
-      Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("TEST")
-      Assertions.assertThat(result.documents.pageSize).isEqualTo(200)
+      Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
+      Assertions.assertThat(result.documents.pageSize).isEqualTo(1)
       Assertions.assertThat(result.documents.orderDocuments).isEmpty()
     }
   }
