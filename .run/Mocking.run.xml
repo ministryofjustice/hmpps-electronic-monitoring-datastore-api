@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Default" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="local" />
+  <configuration default="false" name="Mocking" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="mocking" />
     <module name="hmpps-electronic-monitoring-datastore-api.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.HmppsElectronicMonitoringDatastoreApi" />
     <method v="2">
