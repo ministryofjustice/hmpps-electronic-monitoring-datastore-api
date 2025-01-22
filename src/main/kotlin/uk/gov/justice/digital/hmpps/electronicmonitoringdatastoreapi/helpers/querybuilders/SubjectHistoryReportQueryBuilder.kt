@@ -2,7 +2,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportQuery
 
-class SubjectHistoryReportQueryBuilder {
+class SubjectHistoryReportQueryBuilder(
+  var databaseName: String? = null,
+) {
   var legacySubjectId: String? = null
 
   fun withLegacySubjectId(subjectId: String): SubjectHistoryReportQueryBuilder {
