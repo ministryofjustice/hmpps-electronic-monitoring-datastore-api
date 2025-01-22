@@ -128,21 +128,21 @@ For debugging it's useful to be able to run these queries ourselves. To do this 
 
 ### Acquiring local credentials
 1. Configure KubeCtl to let you connect to the Cloud Platform Kubernetes cluster - [follow this guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html)
-1. Set the kubectl context to the dev environment: `kubectl config set-context --current --namespace=hmpps-electronic-monitoring-datastore-dev`
-2. Get details for the service pod that you can use to query AWS: `kubectl get pods`. One should have a name indicating it's a service account similar to `hmpps-em-datastore-dev-athena-service-pod-#Z###ZZZ##-Z####`.
-3. Ssh into this service pod: `kubectl exec --stdin --tty YOUR_SERVICE_POD_NAME_FROM_THE_PREV_STEP -- /bin/bash`
+2. Set the kubectl context to the dev environment: `kubectl config set-context --current --namespace=hmpps-electronic-monitoring-datastore-dev`
+3. Get details for the service pod that you can use to query AWS: `kubectl get pods`. One should have a name indicating it's a service account similar to `hmpps-em-datastore-dev-athena-service-pod-#Z###ZZZ##-Z####`.
+4. Ssh into this service pod: `kubectl exec --stdin --tty YOUR_SERVICE_POD_NAME_FROM_THE_PREV_STEP -- /bin/bash`
    > Confirm you've signed in correctly by running `aws sts get-caller-identity` - this should return a response with an ARN matching the pattern `arn:aws:sts::############:assumed-role/cloud-platform-irsa-abc123xyz-live/botocore-session-##########` 
-4. Confirm the Role ARN you require from [here](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaRole.kt)
-5. Assume this role ([AWS docs](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sts/assume-role.html)): `aws sts assume-role --role-arn YOUR_ATHENA_ROLE_ARN --role-session-name cli-session`
+5. Confirm the Role ARN you require from [here](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaRole.kt)
+6. Assume this role ([AWS docs](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sts/assume-role.html)): `aws sts assume-role --role-arn YOUR_ATHENA_ROLE_ARN --role-session-name cli-session`
    > This will return AWS credentials including  a SessionToken, which will last around an hour
-6. Open your local AWS credentials file: `nano ~/.aws/credentials`Add a section to your local .aws credentials file:
+7. Open your local AWS credentials file: `nano ~/.aws/credentials`Add a section to your local .aws credentials file:
    > It should look like the following:  
    > ```[default]
    > region=eu-west-2
    > aws_access_key_id=SECRET_CHARACTER_STRING
    > aws_secret_access_key=LONGER_SECRET_CHARACTER_STRING
    > ```
-7. Add a new section to this file - inputting the values without quotes:
+8. Add a new section to this file - inputting the values without quotes:
    ```
    [athena-dev]
    aws_access_key_id=DATA_FROM_ASSUME_ROLE
