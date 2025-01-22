@@ -127,6 +127,7 @@ For debugging it's useful to be able to run these queries ourselves. To do this 
 - The [cloud platform CLI](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html)
 
 ### Acquiring local credentials
+1. Configure KubeCtl to let you connect to the Cloud Platform Kubernetes cluster - [follow this guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html)
 1. Set the kubectl context to the dev environment: `kubectl config set-context --current --namespace=hmpps-electronic-monitoring-datastore-dev`
 2. Get details for the service pod that you can use to query AWS: `kubectl get pods`. One should have a name indicating it's a service account similar to `hmpps-em-datastore-dev-athena-service-pod-#Z###ZZZ##-Z####`.
 3. Ssh into this service pod: `kubectl exec --stdin --tty YOUR_SERVICE_POD_NAME_FROM_THE_PREV_STEP -- /bin/bash`
