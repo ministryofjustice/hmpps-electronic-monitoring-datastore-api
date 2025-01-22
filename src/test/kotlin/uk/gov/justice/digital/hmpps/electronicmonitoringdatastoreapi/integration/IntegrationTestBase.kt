@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockAthenaClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockEmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
@@ -20,7 +20,7 @@ abstract class IntegrationTestBase {
 
   @AfterEach
   fun teardown() {
-    MockAthenaClient.reset()
+    MockEmDatastoreClient.reset()
   }
 
   @Autowired

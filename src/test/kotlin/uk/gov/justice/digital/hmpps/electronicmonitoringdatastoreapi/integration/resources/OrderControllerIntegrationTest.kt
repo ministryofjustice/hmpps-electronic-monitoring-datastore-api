@@ -5,15 +5,15 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockAthenaClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockEmDatastoreClient
 
 @ActiveProfiles("integration")
 class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   @BeforeEach
   fun setup() {
-    MockAthenaClient.addResponseFile("successfulKeyOrderInformationResponse")
-    MockAthenaClient.addResponseFile("successfulSubjectHistoryReportResponse")
-    MockAthenaClient.addResponseFile("successfulDocumentListResponse")
+    MockEmDatastoreClient.addResponseFile("successfulKeyOrderInformationResponse")
+    MockEmDatastoreClient.addResponseFile("successfulSubjectHistoryReportResponse")
+    MockEmDatastoreClient.addResponseFile("successfulDocumentListResponse")
   }
 
   @Nested
