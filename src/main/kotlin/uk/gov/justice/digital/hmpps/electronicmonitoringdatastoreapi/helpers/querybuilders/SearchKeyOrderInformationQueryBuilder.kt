@@ -2,7 +2,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
-class SearchKeyOrderInformationQueryBuilder {
+class SearchKeyOrderInformationQueryBuilder(
+  var databaseName: String? = null,
+) {
   private var whereClause = mutableMapOf<String, String>()
 
   var legacySubjectId: String? = null
@@ -28,7 +30,7 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var firstName: String? = null
     private set(value) {
-      if (value == null) {
+      if (value == null || value.trim().isEmpty()) {
         return
       }
 
@@ -43,7 +45,7 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var lastName: String? = null
     private set(value) {
-      if (value == null) {
+      if (value == null || value.trim().isEmpty()) {
         return
       }
 
@@ -58,7 +60,7 @@ class SearchKeyOrderInformationQueryBuilder {
 
   var alias: String? = null
     private set(value) {
-      if (value == null) {
+      if (value == null || value.trim().isEmpty()) {
         return
       }
 
@@ -124,18 +126,18 @@ class SearchKeyOrderInformationQueryBuilder {
     val builder: StringBuilder = StringBuilder()
     builder.append(
       """
-          SELECT
-            legacy_subject_id
-            , full_name
-            , primary_address_line_1
-            , primary_address_line_2
-            , primary_address_line_3
-            , primary_address_post_code
-            , order_start_date
-            , order_end_date
-          FROM
-            test_database.order_details
-          WHERE 
+        SELECT
+          legacy_subject_id
+          , full_name
+          , primary_address_line_1
+          , primary_address_line_2
+          , primary_address_line_3
+          , primary_address_post_code
+          , order_start_date
+          , order_end_date
+        FROM
+          $databaseName.order_details
+        WHERE 
       """.trimIndent(),
     )
 

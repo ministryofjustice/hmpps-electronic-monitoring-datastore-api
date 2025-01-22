@@ -31,7 +31,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder("test_database")
       .withLegacySubjectId(legacySubjectId)
       .build()
 
@@ -48,7 +48,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder("test_database")
       .withFirstName(firstName)
       .build()
 
@@ -65,7 +65,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder("test_database")
       .withLastName(lastName)
       .build()
 
@@ -82,7 +82,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder("test_database")
       .withAlias(alias)
       .build()
 
@@ -101,7 +101,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder()
+    val result = SearchKeyOrderInformationQueryBuilder("test_database")
       .withLegacySubjectId(legacySubjectId)
       .withAlias(alias)
       .build()

@@ -2,7 +2,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationQuery
 
-class KeyOrderInformationQueryBuilder {
+class KeyOrderInformationQueryBuilder(
+  var databaseName: String? = null,
+) {
   var legacySubjectId: String? = null
 
   fun withLegacySubjectId(subjectId: String): KeyOrderInformationQueryBuilder {
@@ -25,7 +27,7 @@ class KeyOrderInformationQueryBuilder {
           , order_start_date
           , order_end_date
       FROM 
-        test_database.order_details
+        $databaseName.order_details
       WHERE
         legacy_subject_id = $legacySubjectId
     """.trimIndent(),
