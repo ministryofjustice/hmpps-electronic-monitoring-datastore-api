@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
@@ -71,19 +70,7 @@ class OrderController(
   fun getOrderSummary(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = orderService.getOrderInformation(orderId, validatedRole)
-
-    auditService?.createEvent(
-      authentication.name,
-      "GET_ORDER_SUMMARY",
-      mapOf("orderId" to orderId),
-    )
-
-    return ResponseEntity.ok(result)
-  }
+  ): ResponseEntity<OrderInformation> = getOrder(authentication, orderId)
 
   @GetMapping("/{orderId}")
   fun getOrder(

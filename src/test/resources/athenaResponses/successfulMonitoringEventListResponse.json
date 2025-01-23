@@ -1,0 +1,212 @@
+{
+  "ResultSet": {
+    "Rows": [
+      {
+        "Data": [
+          {
+            "VarCharValue": "legacy_subject_id"
+          },
+          {
+            "VarCharValue": "legacy_order_id"
+          },
+          {
+            "VarCharValue": "event_type"
+          },
+          {
+            "VarCharValue": "event_date"
+          },
+          {
+            "VarCharValue": "event_time"
+          },
+          {
+            "VarCharValue": "event_second"
+          },
+          {
+            "VarCharValue": "process_date"
+          },
+          {
+            "VarCharValue": "process_time"
+          },
+          {
+            "VarCharValue": "process_second"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1401253"
+          },
+          {
+            "VarCharValue": "1391815"
+          },
+          {
+            "VarCharValue": "Status Check"
+          },
+          {
+            "VarCharValue": "2023-03-03"
+          },
+          {
+            "VarCharValue": "08:49:00"
+          },
+          {
+            "VarCharValue": "47"
+          },
+          {
+            "VarCharValue": "2023-03-03"
+          },
+          {
+            "VarCharValue": "08:50:00"
+          },
+          {
+            "VarCharValue": "10"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1401253"
+          },
+          {
+            "VarCharValue": "1391815"
+          },
+          {
+            "VarCharValue": "Status Check"
+          },
+          {
+            "VarCharValue": "2023-03-03"
+          },
+          {
+            "VarCharValue": "15:49:00"
+          },
+          {
+            "VarCharValue": "50"
+          },
+          {
+            "VarCharValue": "2023-03-03"
+          },
+          {
+            "VarCharValue": "15:49:00"
+          },
+          {
+            "VarCharValue": "59"
+          }
+        ]
+      }
+    ],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_subject_id",
+          "Name": "legacy_subject_id",
+          "Nullable": "UNKNOWN",
+          "Precision": 19,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "bigint"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_order_id",
+          "Name": "legacy_order_id",
+          "Nullable": "UNKNOWN",
+          "Precision": 19,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "bigint"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "event_type",
+          "Name": "event_type",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "event_date",
+          "Name": "event_date",
+          "Nullable": "UNKNOWN",
+          "Precision": 0,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "date"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "event_time",
+          "Name": "event_time",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "event_second",
+          "Name": "event_second",
+          "Nullable": "UNKNOWN",
+          "Precision": 19,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "bigint"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "process_date",
+          "Name": "process_date",
+          "Nullable": "UNKNOWN",
+          "Precision": 0,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "date"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "process_time",
+          "Name": "process_time",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "process_second",
+          "Name": "process_second",
+          "Nullable": "UNKNOWN",
+          "Precision": 19,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "bigint"
+        }
+      ]
+    }
+  },
+  "UpdateCount": 0
+}
