@@ -11,6 +11,7 @@ import org.mockito.kotlin.any
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -324,6 +325,88 @@ class OrderInformationRepositoryTest {
       Assertions.assertThat(result.events.first().legacySubjectId).isEqualTo(987)
       Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(987)
       Assertions.assertThat(result.events.first().eventType).isEqualTo("TEST_EVENT")
+    }
+  }
+
+  @Nested
+  inner class GetIncidentEventsList {
+    fun incidentEventData(id: String) = """
+      {
+        "Data": [
+          ${varCharValueColumn(id)},
+          ${varCharValueColumn(id)},
+          ${varCharValueColumn("TEST_ALERT")},
+          ${varCharValueColumn("2001-01-01")},
+          ${varCharValueColumn("01:01:01")}
+        ]
+      }
+    """.trimIndent()
+
+    fun incidentEventsResultSet(firstId: String = "987123") = """
+      {
+        "ResultSet": {
+          "Rows": [
+            {
+              "Data": [
+                ${varCharValueColumn("legacy_subject_id")},
+                ${varCharValueColumn("legacy_order_id")},
+                ${varCharValueColumn("violation_alert_type")},
+                ${varCharValueColumn("violation_alert_date")},
+                ${varCharValueColumn("violation_alert_time")}
+              ]
+            },
+            ${incidentEventData(firstId)},
+            ${incidentEventData("123456789")}
+          ],
+          "ResultSetMetadata": {
+            "ColumnInfo": [
+              ${metaDataRow("legacy_subject_id")},
+              ${metaDataRow("legacy_order_id")},
+              ${metaDataRow("violation_alert_type")},
+              ${metaDataRow("violation_alert_date")},
+              ${metaDataRow("violation_alert_time")}
+            ]
+          }
+        },
+        "UpdateCount": 0
+      }
+    """.trimIndent()
+
+    @Test
+    fun `getIncidentEventsList passes correct query to getQueryResult`() {
+      val resultSet = AthenaHelper.resultSetFromJson(incidentEventsResultSet())
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      repository.getIncidentEventsList("123", AthenaRole.DEV)
+
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+    }
+
+    @Test
+    fun `getIncidentEventsList returns an AthenaIncidentEventListDTO`() {
+      val resultSet = AthenaHelper.resultSetFromJson(incidentEventsResultSet())
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      val result = repository.getIncidentEventsList("123", AthenaRole.DEV)
+
+      Assertions.assertThat(result).isInstanceOf(AthenaIncidentEventListDTO::class.java)
+    }
+
+    @Test
+    fun `getIncidentEventsList returns all the results from getQueryResult`() {
+      val resultSet = AthenaHelper.resultSetFromJson(incidentEventsResultSet("987"))
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      val result = repository.getIncidentEventsList("987", AthenaRole.DEV)
+
+      Assertions.assertThat(result).isNotNull
+      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.events.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.events.first().violationAlertType).isEqualTo("TEST_ALERT")
     }
   }
 }
