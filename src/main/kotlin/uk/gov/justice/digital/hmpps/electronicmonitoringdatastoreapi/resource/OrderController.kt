@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
@@ -93,9 +92,8 @@ class OrderController(
   fun getOrderDetails(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderDetails> {
-    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderService.getOrderDetails(orderId, validatedRole)
 

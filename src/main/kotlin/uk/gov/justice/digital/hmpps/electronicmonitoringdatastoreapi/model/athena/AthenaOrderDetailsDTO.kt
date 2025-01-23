@@ -25,7 +25,7 @@ data class AthenaOrderDetailsDTO(
   val mappa: String? = "",
   val technicalBail: String? = "",
   val manualRisk: String? = "",
-  val offenceRisk: Boolean, //  TODO: Check type
+  val offenceRisk: Boolean,
   val postCodeRisk: String? = "",
   val falseLimbRisk: String? = "",
   val migratedRisk: String? = "",
