@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
@@ -75,6 +77,26 @@ class OrderController(
     auditService?.createEvent(
       authentication.name,
       "GET_ORDER_SUMMARY",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @GetMapping("/getOrderdetails/{orderId}")
+  fun getOrderDetails(
+    authentication: Authentication,
+    @PathVariable(required = true) orderId: String,
+    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
+  ): ResponseEntity<OrderDetails> {
+    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+
+    val result = OrderDetails.createEmpty()
+//    val result = orderService.getOrderDetails(orderId, validatedRole)
+
+    auditService?.createEvent(
+      authentication.name,
+      "GET_ORDER_DETAILS",
       mapOf("orderId" to orderId),
     )
 
