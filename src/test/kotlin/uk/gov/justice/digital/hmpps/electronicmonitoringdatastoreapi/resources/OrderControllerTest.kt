@@ -15,8 +15,10 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
@@ -116,9 +118,44 @@ class OrderControllerTest {
       val result = controller.getOrderSummary(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isNotNull
+      Assertions.assertThat(result.body).isInstanceOf(OrderInformation::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-
       Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV)
     }
+  }
+
+  @Nested
+  inner class GetOrderDetails {
+    @Test
+    fun `Returns the appropriate object type`() {
+      val orderId = "1ab"
+      val expectedResult: AthenaOrderDetailsDTO = AthenaOrderDetailsDTO("")
+
+//      `when`(orderService.getOrderDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+
+      val result = controller.getOrderDetails(authentication, orderId)
+
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isNotNull
+      Assertions.assertThat(result.body).isInstanceOf(OrderDetails::class.java)
+
+//      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV)
+    }
+
+//    @Test
+//    fun `gets order details from order service`() {
+//      val orderId = "1ab"
+//      val expectedResult: AthenaOrderDetailsDTO = AthenaOrderDetailsDTO("")
+//
+//      `when`(orderService.getOrderDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+//
+//      val result = controller.getOrderDetails(authentication, orderId)
+//
+//      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+//      Assertions.assertThat(result.body).isNotNull
+//
+//      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.DEV)
+//    }
   }
 }
