@@ -113,7 +113,7 @@ class OrderInformationRepositoryTest {
     """.trimIndent()
 
     @Test
-    fun `getKeyOrderInformation passes correct query to getQueryResult`() {
+    fun `getKeyOrderInformation calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet())
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)

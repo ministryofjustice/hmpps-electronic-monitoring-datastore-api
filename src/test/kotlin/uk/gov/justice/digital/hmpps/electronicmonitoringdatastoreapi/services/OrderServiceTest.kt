@@ -21,6 +21,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
@@ -28,19 +29,20 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ord
 class OrderServiceTest {
   private lateinit var orderRepository: OrderRepository
   private lateinit var orderInformationRepository: OrderInformationRepository
+  private lateinit var orderDetailsRepository: OrderDetailsRepository
   private lateinit var service: OrderService
 
   @BeforeEach
   fun setup() {
     orderRepository = mock(OrderRepository::class.java)
     orderInformationRepository = mock(OrderInformationRepository::class.java)
-    service = OrderService(orderRepository, orderInformationRepository)
+    orderDetailsRepository = mock(OrderDetailsRepository::class.java)
+    service = OrderService(orderRepository, orderInformationRepository, orderDetailsRepository)
   }
 
   @Test
   fun `OrderService can be instantiated`() {
-    val sut = OrderService(mock(OrderRepository::class.java), mock(OrderInformationRepository::class.java))
-    Assertions.assertThat(sut).isNotNull()
+    Assertions.assertThat(service).isNotNull()
   }
 
   @Nested
@@ -242,15 +244,14 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-/*      `when`(orderInformationRepository.getOrderDetails(orderId, AthenaRole.DEV))
-        .thenReturn(blankKeyOrderInformation)*/
+      `when`(orderDetailsRepository.getOrderDetails(orderId, AthenaRole.DEV))
+        .thenReturn(blankOrderDetails)
     }
 
-    @Disabled("TBC")
     @Test
     fun `calls getOrderDetails from order details repository`() {
       service.getOrderDetails(orderId, AthenaRole.DEV)
-//      Mockito.verify(orderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.DEV)
+      Mockito.verify(orderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.DEV)
     }
 
     @Test

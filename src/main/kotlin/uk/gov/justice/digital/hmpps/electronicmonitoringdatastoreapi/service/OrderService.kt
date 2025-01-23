@@ -15,6 +15,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import kotlin.String
@@ -23,6 +25,7 @@ import kotlin.String
 class OrderService(
   @Autowired val orderRepository: OrderRepository,
   @Autowired val orderInformationRepository: OrderInformationRepository,
+  @Autowired val orderDetailsRepository: OrderDetailsRepository,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
     try {
@@ -68,11 +71,8 @@ class OrderService(
   }
 
   fun getOrderDetails(orderId: String, role: AthenaRole): OrderDetails {
-    val orderDetails: AthenaOrderDetailsDTO = AthenaOrderDetailsDTO("")
-//    val orderDetails: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
-    val parsedOrderDetails = parseOrderDetails(orderDetails)
-
-    return parsedOrderDetails
+    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
+    return OrderDetails(orderDetailsDTO)
   }
 
   private fun parseOrderSearchResults(athenaOrderSearchResultList: List<AthenaOrderSearchResultDTO>): List<OrderSearchResult> {
@@ -88,12 +88,6 @@ class OrderService(
     var keyOrderInformation = KeyOrderInformation(athenaKeyOrderInformation)
 
     return keyOrderInformation
-  }
-
-  private fun parseOrderDetails(athenaOrderDetails: AthenaOrderDetailsDTO): OrderDetails {
-    val orderDetails = OrderDetails(athenaOrderDetails)
-
-    return orderDetails
   }
 
   private fun parseSubjectHistoryReport(athenaSubjectHistoryReport: AthenaSubjectHistoryReportDTO): SubjectHistoryReport {

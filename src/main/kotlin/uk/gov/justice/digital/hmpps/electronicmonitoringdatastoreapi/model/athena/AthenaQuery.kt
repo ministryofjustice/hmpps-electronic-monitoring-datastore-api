@@ -24,6 +24,10 @@ data class AthenaSubjectHistoryReportQuery(
   override val queryString: String,
 ) : AthenaQuery(queryString)
 
+data class AthenaOrderDetailsQuery(
+  override val queryString: String,
+) : AthenaQuery(queryString)
+
 data class AthenaMonitoringEventsListQuery(
   override val queryString: String,
 ) : AthenaQuery(queryString)
@@ -37,5 +41,5 @@ data class AthenaContactEventsListQuery(
 ) : AthenaQuery(queryString)
 
 data class AthenaServicesQuery(
-  override val queryString: String,
+    override val queryString: String,
 ) : AthenaQuery(queryString)
