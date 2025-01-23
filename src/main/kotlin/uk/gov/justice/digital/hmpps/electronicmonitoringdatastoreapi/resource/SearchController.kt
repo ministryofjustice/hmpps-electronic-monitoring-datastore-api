@@ -135,9 +135,8 @@ class SearchController(
   fun searchOrders(
     authentication: Authentication,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<List<OrderSearchResult>> {
-    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val results = orderService.search(orderSearchCriteria, validatedRole)
 

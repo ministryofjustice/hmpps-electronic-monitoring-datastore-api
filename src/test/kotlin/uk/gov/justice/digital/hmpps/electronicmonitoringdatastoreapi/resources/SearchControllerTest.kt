@@ -32,13 +32,14 @@ class SearchControllerTest {
 
   @BeforeEach
   fun setup() {
+    authentication = mock(Authentication::class.java)
+    `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = mock(OrderService::class.java)
     roleService = mock(AthenaRoleService::class.java)
     `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.DEV)
+    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
     auditService = mock(AuditService::class.java)
     controller = SearchController(orderService, roleService, auditService)
-    authentication = mock(Authentication::class.java)
-    `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
   }
 
   @Nested

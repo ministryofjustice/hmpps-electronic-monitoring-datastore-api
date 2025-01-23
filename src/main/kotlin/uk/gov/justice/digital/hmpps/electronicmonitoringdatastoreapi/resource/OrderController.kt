@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
@@ -30,9 +29,8 @@ class OrderController(
   fun getMockOrderSummary(
     authentication: Authentication,
     @PathVariable orderId: String,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderService.getOrderInformation(orderId, validatedRole)
 
@@ -51,9 +49,8 @@ class OrderController(
   fun getSpecialsOrder(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderService.getOrderInformation(orderId, validatedRole)
 
@@ -70,9 +67,8 @@ class OrderController(
   fun getOrderSummary(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderService.getOrderInformation(orderId, validatedRole)
 

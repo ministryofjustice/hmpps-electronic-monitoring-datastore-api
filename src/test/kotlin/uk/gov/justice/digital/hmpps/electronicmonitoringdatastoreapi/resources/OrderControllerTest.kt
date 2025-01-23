@@ -8,7 +8,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -34,13 +33,13 @@ class OrderControllerTest {
 
   @BeforeEach
   fun setup() {
-    orderService = mock(OrderService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.DEV)
-    auditService = mock(AuditService::class.java)
-    controller = OrderController(orderService, roleService, auditService)
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
+    orderService = mock(OrderService::class.java)
+    roleService = mock(AthenaRoleService::class.java)
+    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
+    auditService = mock(AuditService::class.java)
+    controller = OrderController(orderService, roleService, auditService)
   }
 
   @Nested
