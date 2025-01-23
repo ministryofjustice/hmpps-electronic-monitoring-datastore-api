@@ -4,4 +4,3 @@ data class AthenaMonitoringEventListDTO(
   val pageSize: Int,
   val events: List<AthenaMonitoringEventDTO>,
 )
-
