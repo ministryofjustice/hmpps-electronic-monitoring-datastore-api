@@ -61,11 +61,11 @@ class SearchControllerTest {
     }
 
     @Test
-    fun `Returns true when GENERAL role found from authentication object`() {
-      val expectedRole = AthenaRole.GENERAL
+    fun `Returns true when ROLE_EM_DATASTORE_GENERAL_RO role found from authentication object`() {
+      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.GENERAL)).thenReturn(true)
+      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.confirmAthenaAccess(authentication)
@@ -75,11 +75,11 @@ class SearchControllerTest {
     }
 
     @Test
-    fun `Returns true when SPECIALS role found from authentication object`() {
-      val expectedRole = AthenaRole.SPECIALS
+    fun `Returns true when ROLE_EM_DATASTORE_RESTRICTED_RO role found from authentication object`() {
+      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.SPECIALS)).thenReturn(true)
+      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.confirmAthenaAccess(authentication)
