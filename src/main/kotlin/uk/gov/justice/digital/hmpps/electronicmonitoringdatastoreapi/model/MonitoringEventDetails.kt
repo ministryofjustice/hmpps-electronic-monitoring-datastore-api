@@ -5,4 +5,3 @@ import java.time.LocalDateTime
 data class MonitoringEventDetails(
   val processedDateTime: LocalDateTime,
 ) : EventDetails()
-
