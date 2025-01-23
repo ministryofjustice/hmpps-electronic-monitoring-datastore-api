@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -26,6 +26,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @RequestMapping(value = ["/search"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class SearchController(
   @Autowired val orderService: OrderService,
+  val athenaRoleService: AthenaRoleService,
 
   // TODO: Re-enable audit as @autowired once Cloud Platform in place
   val auditService: AuditService? = null,
@@ -60,9 +61,8 @@ class SearchController(
   @GetMapping("/testEndpoint")
   fun confirmAthenaAccess(
     authentication: Authentication,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<Boolean> {
-    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     var isAvailable: Boolean
     try {
@@ -88,7 +88,7 @@ class SearchController(
     @RequestBody(required = true) athenaQuery: AthenaStringQuery,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<AthenaQueryResponse<String>> {
-    val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
 
     var result: AthenaQueryResponse<String>
     try {
@@ -135,9 +135,8 @@ class SearchController(
   fun searchOrders(
     authentication: Authentication,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
-    @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<List<OrderSearchResult>> {
-    val validatedRole = AthenaRole.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val results = orderService.search(orderSearchCriteria, validatedRole)
 
