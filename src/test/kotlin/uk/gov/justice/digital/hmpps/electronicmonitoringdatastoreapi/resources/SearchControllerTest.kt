@@ -44,19 +44,61 @@ class SearchControllerTest {
   @Nested
   inner class ConfirmAthenaAccess {
     @Test
-    fun `calls OrderService checkAvailability`() {
+    fun `calls AthenaRoleService for role and OrderService for checkAvailability`() {
       val expectedRole = AthenaRole.NONE
 
-      `when`(roleService.fromString(any<String>())).thenReturn(expectedRole)
+      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
       `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
+      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
+
+      controller.confirmAthenaAccess(authentication)
+
+      Mockito.verify(roleService, Mockito.times(1))
+        .getRoleFromAuthentication(authentication)
+      Mockito.verify(orderService, Mockito.times(1))
+        .checkAvailability(expectedRole)
+    }
+
+    @Test
+    fun `Returns true when GENERAL role found from authentication object`() {
+      val expectedRole = AthenaRole.GENERAL
+
+      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
+      `when`(orderService.checkAvailability(AthenaRole.GENERAL)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.confirmAthenaAccess(authentication)
 
-      Mockito.verify(orderService, Mockito.times(1))
-        .checkAvailability(expectedRole)
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(true)
+    }
+
+    @Test
+    fun `Returns true when SPECIALS role found from authentication object`() {
+      val expectedRole = AthenaRole.SPECIALS
+
+      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
+      `when`(orderService.checkAvailability(AthenaRole.SPECIALS)).thenReturn(true)
+      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
+
+      val result = controller.confirmAthenaAccess(authentication)
+
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(true)
+    }
+
+    @Test
+    fun `Returns false when NONE role found from authentication object`() {
+      val expectedRole = AthenaRole.NONE
+
+      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
+      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(false)
+      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
+
+      val result = controller.confirmAthenaAccess(authentication)
+
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(false)
     }
   }
 

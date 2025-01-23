@@ -10,6 +10,6 @@ class AthenaRoleService {
 
   fun getRoleFromAuthentication(authentication: Authentication): AthenaRole {
     val name: String = "fakefakefake"
-    return fromString(name)
+    return enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.DEV
   }
 }

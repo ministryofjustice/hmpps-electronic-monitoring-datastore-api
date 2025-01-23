@@ -62,7 +62,7 @@ class SearchController(
   fun confirmAthenaAccess(
     authentication: Authentication,
   ): ResponseEntity<Boolean> {
-    val validatedRole = athenaRoleService.fromString("fake")
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     var isAvailable: Boolean
     try {
