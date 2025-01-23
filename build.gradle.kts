@@ -9,6 +9,7 @@ configurations {
 }
 
 dependencies {
+  implementation("org.apache.commons:commons-lang3:3.17.0")
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.1.0")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.2.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
