@@ -11,6 +11,7 @@ import org.mockito.kotlin.any
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventListDTO
@@ -407,6 +408,106 @@ class OrderInformationRepositoryTest {
       Assertions.assertThat(result.events.first().legacySubjectId).isEqualTo(987)
       Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(987)
       Assertions.assertThat(result.events.first().violationAlertType).isEqualTo("TEST_ALERT")
+    }
+  }
+
+  @Nested
+  inner class GetContactEventsList {
+    fun contactEventData(id: String) = """
+      {
+        "Data": [
+          ${varCharValueColumn(id)},
+          ${varCharValueColumn(id)},
+          ${varCharValueColumn("TEST_CONTACT")},
+          ${varCharValueColumn("No reason")},
+          ${varCharValueColumn("PHONE_CALL")},
+          ${varCharValueColumn("usr_001")},
+          ${varCharValueColumn("Bob the Builder")},
+          ${varCharValueColumn("2001-01-01")},
+          ${varCharValueColumn("01:01:01")},
+          ${varCharValueColumn("2002-02-02")},
+          ${varCharValueColumn("02:02:02")}
+        ]
+      }
+    """.trimIndent()
+
+    fun contactEventsResultSet(firstId: String = "987123") = """
+      {
+        "ResultSet": {
+          "Rows": [
+            {
+              "Data": [
+                ${varCharValueColumn("legacy_subject_id")},
+                ${varCharValueColumn("legacy_order_id")},
+                ${varCharValueColumn("contact_type")},
+                ${varCharValueColumn("reason")},
+                ${varCharValueColumn("channel")},
+                ${varCharValueColumn("user_id")},
+                ${varCharValueColumn("user_name")},
+                ${varCharValueColumn("contact_date")},
+                ${varCharValueColumn("contact_time")},
+                ${varCharValueColumn("modified_date")},
+                ${varCharValueColumn("modified_time")}
+              ]
+            },
+            ${contactEventData(firstId)},
+            ${contactEventData("123456789")}
+          ],
+          "ResultSetMetadata": {
+            "ColumnInfo": [
+              ${metaDataRow("legacy_subject_id")},
+              ${metaDataRow("legacy_order_id")},
+              ${metaDataRow("contact_type")},
+              ${metaDataRow("reason")},
+              ${metaDataRow("channel")},
+              ${metaDataRow("user_id")},
+              ${metaDataRow("user_name")},
+              ${metaDataRow("contact_date")},
+              ${metaDataRow("contact_time")},
+              ${metaDataRow("modified_date")},
+              ${metaDataRow("modified_time")}
+            ]
+          }
+        },
+        "UpdateCount": 0
+      }
+    """.trimIndent()
+
+    @Test
+    fun `getContactEventsList passes correct query to getQueryResult`() {
+      val resultSet = AthenaHelper.resultSetFromJson(contactEventsResultSet())
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      repository.getContactEventsList("123", AthenaRole.DEV)
+
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+    }
+
+    @Test
+    fun `getContactEventsList returns an AthenaContactEventListDTO`() {
+      val resultSet = AthenaHelper.resultSetFromJson(contactEventsResultSet())
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      val result = repository.getContactEventsList("123", AthenaRole.DEV)
+
+      Assertions.assertThat(result).isInstanceOf(AthenaContactEventListDTO::class.java)
+    }
+
+    @Test
+    fun `getContactEventsList returns all the results from getQueryResult`() {
+      val resultSet = AthenaHelper.resultSetFromJson(contactEventsResultSet("987"))
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      val result = repository.getContactEventsList("987", AthenaRole.DEV)
+
+      Assertions.assertThat(result).isNotNull
+      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.events.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.events.first().contactType).isEqualTo("TEST_CONTACT")
     }
   }
 }
