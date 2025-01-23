@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -20,6 +20,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class OrderController(
   @Autowired val orderService: OrderService,
+  val athenaRoleService: AthenaRoleService,
 
   // TODO: Re-enable audit as @autowired once Cloud Platform in place
   val auditService: AuditService? = null,
@@ -31,7 +32,7 @@ class OrderController(
     @PathVariable orderId: String,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
 
     val result = orderService.getOrderInformation(orderId, validatedRole)
 
@@ -52,7 +53,7 @@ class OrderController(
     @PathVariable(required = true) orderId: String,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
 
     val result = orderService.getOrderInformation(orderId, validatedRole)
 
@@ -71,7 +72,7 @@ class OrderController(
     @PathVariable(required = true) orderId: String,
     @RequestHeader("X-Role", required = false) unvalidatedRole: String = "unset",
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = AthenaRole.Companion.fromString(unvalidatedRole) ?: AthenaRole.DEV
+    val validatedRole = athenaRoleService.fromString(unvalidatedRole)
 
     val result = orderService.getOrderInformation(orderId, validatedRole)
 

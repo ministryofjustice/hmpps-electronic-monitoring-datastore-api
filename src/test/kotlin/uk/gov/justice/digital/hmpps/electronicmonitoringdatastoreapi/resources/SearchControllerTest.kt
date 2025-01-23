@@ -4,8 +4,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
@@ -15,6 +17,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -22,6 +25,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @JsonTest
 class SearchControllerTest {
   private lateinit var orderService: OrderService
+  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: SearchController
   private lateinit var authentication: Authentication
@@ -29,10 +33,31 @@ class SearchControllerTest {
   @BeforeEach
   fun setup() {
     orderService = mock(OrderService::class.java)
+    roleService = mock(AthenaRoleService::class.java)
+    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.DEV)
     auditService = mock(AuditService::class.java)
-    controller = SearchController(orderService, auditService)
+    controller = SearchController(orderService, roleService, auditService)
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
+  }
+
+  @Nested
+  inner class ConfirmAthenaAccess {
+    @Test
+    fun `calls OrderService checkAvailability`() {
+      val expectedRole = AthenaRole.NONE
+
+      `when`(roleService.fromString(any<String>())).thenReturn(expectedRole)
+      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
+      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
+
+      val result = controller.confirmAthenaAccess(authentication)
+
+      Mockito.verify(orderService, Mockito.times(1))
+        .checkAvailability(expectedRole)
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(true)
+    }
   }
 
   @Nested

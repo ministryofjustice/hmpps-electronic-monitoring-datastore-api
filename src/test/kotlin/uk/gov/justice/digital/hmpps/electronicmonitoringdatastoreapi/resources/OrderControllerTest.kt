@@ -8,6 +8,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
@@ -18,6 +19,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOr
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -25,6 +27,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @JsonTest
 class OrderControllerTest {
   private lateinit var orderService: OrderService
+  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: OrderController
   private lateinit var authentication: Authentication
@@ -32,8 +35,10 @@ class OrderControllerTest {
   @BeforeEach
   fun setup() {
     orderService = mock(OrderService::class.java)
+    roleService = mock(AthenaRoleService::class.java)
+    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.DEV)
     auditService = mock(AuditService::class.java)
-    controller = OrderController(orderService, auditService)
+    controller = OrderController(orderService, roleService, auditService)
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
   }
