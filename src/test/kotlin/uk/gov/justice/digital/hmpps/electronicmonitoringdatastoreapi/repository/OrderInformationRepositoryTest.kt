@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import java.util.UUID
@@ -53,104 +54,65 @@ class OrderInformationRepositoryTest {
     }
   """.trimIndent()
 
-  fun keyOrderInformationData(subjectId: String, orderId: String, fullName: String) = """
-    {
-      "Data": [
-        ${varCharValueColumn(subjectId)},
-        ${varCharValueColumn(orderId)},
-        ${varCharValueColumn(fullName)},
-        ${varCharValueColumn("01/01/1970")},
-        ${varCharValueColumn("address line 1")},
-        ${varCharValueColumn("address line 2")},
-        ${varCharValueColumn("")},
-        ${varCharValueColumn("postcode")},
-        ${varCharValueColumn("01/01/1970")},
-        ${varCharValueColumn("01/01/1970")}
-      ]
-    }
-  """.trimIndent()
-
-  fun subjectHistoryReportData(fullName: String) = """
-    {
-      "Data": [
-        ${varCharValueColumn("http://example.com/report")},
-        ${varCharValueColumn(fullName)},
-        ${varCharValueColumn("01/01/2010")},
-        ${varCharValueColumn("01:01:01.000")}
-      ]
-    }
-  """.trimIndent()
-
-  fun keyOrderInformationResultSet(firstOrderId: String? = "1253587", firstFullName: String? = "ELLEN RIPLEY") = """
-    {
-      "ResultSet": {
-        "Rows": [
-          {
-            "Data": [
-              ${varCharValueColumn("legacy_subject_id")},
-              ${varCharValueColumn("legacy_order_id")},
-              ${varCharValueColumn("full_name")},
-              ${varCharValueColumn("date_of_birth")},
-              ${varCharValueColumn("primary_address_line_1")},
-              ${varCharValueColumn("primary_address_line_2")},
-              ${varCharValueColumn("primary_address_line_3")},
-              ${varCharValueColumn("primary_address_post_code")},
-              ${varCharValueColumn("order_start_date")},
-              ${varCharValueColumn("order_end_date")}
-            ]
-          },
-          ${keyOrderInformationData(firstOrderId!!, firstOrderId, firstFullName!!)},
-          ${keyOrderInformationData("1034415", "1032792", "JOHN BROWNLIE")}
-        ],
-        "ResultSetMetadata": {
-          "ColumnInfo": [
-            """ + metaDataRow("legacy_subject_id") + """,
-            """ + metaDataRow("legacy_order_id") + """,
-            """ + metaDataRow("full_name") + """,
-            """ + metaDataRow("date_of_birth") + """,
-            """ + metaDataRow("primary_address_line_1") + """,
-            """ + metaDataRow("primary_address_line_2") + """,
-            """ + metaDataRow("primary_address_line_3") + """,
-            """ + metaDataRow("primary_address_post_code") + """,
-            """ + metaDataRow("order_start_date") + """,
-            """ + metaDataRow("order_end_date") + """
-          ]
-        }
-      },
-      "UpdateCount": 0
-    }
-  """.trimIndent()
-
-  fun subjectHistoryReportResultSet(firstFullName: String? = "ELLEN RIPLEY") = """
-    {
-      "ResultSet": {
-        "Rows": [
-          {
-            "Data": [
-              ${varCharValueColumn("report_url")},
-              ${varCharValueColumn("name")},
-              ${varCharValueColumn("created_on")},
-              ${varCharValueColumn("time")}
-            ]
-          },
-          ${subjectHistoryReportData(firstFullName!!)},
-          ${subjectHistoryReportData("JOHN BROWNLIE")}
-        ],
-        "ResultSetMetadata": {
-          "ColumnInfo": [
-            """ + metaDataRow("report_url") + """,
-            """ + metaDataRow("name") + """,
-            """ + metaDataRow("created_on") + """,
-            """ + metaDataRow("time") + """
-          ]
-        }
-      },
-      "UpdateCount": 0
-    }
-  """.trimIndent()
-
   @Nested
   inner class GetKeyOrderInformation {
+    fun keyOrderInformationData(subjectId: String, orderId: String, fullName: String) = """
+      {
+        "Data": [
+          ${varCharValueColumn(subjectId)},
+          ${varCharValueColumn(orderId)},
+          ${varCharValueColumn(fullName)},
+          ${varCharValueColumn("01/01/1970")},
+          ${varCharValueColumn("address line 1")},
+          ${varCharValueColumn("address line 2")},
+          ${varCharValueColumn("")},
+          ${varCharValueColumn("postcode")},
+          ${varCharValueColumn("01/01/1970")},
+          ${varCharValueColumn("01/01/1970")}
+        ]
+      }
+    """.trimIndent()
+
+    fun keyOrderInformationResultSet(firstOrderId: String? = "1253587", firstFullName: String? = "ELLEN RIPLEY") = """
+      {
+        "ResultSet": {
+          "Rows": [
+            {
+              "Data": [
+                ${varCharValueColumn("legacy_subject_id")},
+                ${varCharValueColumn("legacy_order_id")},
+                ${varCharValueColumn("full_name")},
+                ${varCharValueColumn("date_of_birth")},
+                ${varCharValueColumn("primary_address_line_1")},
+                ${varCharValueColumn("primary_address_line_2")},
+                ${varCharValueColumn("primary_address_line_3")},
+                ${varCharValueColumn("primary_address_post_code")},
+                ${varCharValueColumn("order_start_date")},
+                ${varCharValueColumn("order_end_date")}
+              ]
+            },
+            ${keyOrderInformationData(firstOrderId!!, firstOrderId, firstFullName!!)},
+            ${keyOrderInformationData("1034415", "1032792", "JOHN BROWNLIE")}
+          ],
+          "ResultSetMetadata": {
+            "ColumnInfo": [
+              """ + metaDataRow("legacy_subject_id") + """,
+              """ + metaDataRow("legacy_order_id") + """,
+              """ + metaDataRow("full_name") + """,
+              """ + metaDataRow("date_of_birth") + """,
+              """ + metaDataRow("primary_address_line_1") + """,
+              """ + metaDataRow("primary_address_line_2") + """,
+              """ + metaDataRow("primary_address_line_3") + """,
+              """ + metaDataRow("primary_address_post_code") + """,
+              """ + metaDataRow("order_start_date") + """,
+              """ + metaDataRow("order_end_date") + """
+            ]
+          }
+        },
+        "UpdateCount": 0
+      }
+    """.trimIndent()
+
     @Test
     fun `getKeyOrderInformation passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet())
@@ -193,6 +155,46 @@ class OrderInformationRepositoryTest {
 
   @Nested
   inner class GetSubjectHistoryReport {
+
+    fun subjectHistoryReportData(fullName: String) = """
+      {
+        "Data": [
+          ${varCharValueColumn("http://example.com/report")},
+          ${varCharValueColumn(fullName)},
+          ${varCharValueColumn("01/01/2010")},
+          ${varCharValueColumn("01:01:01.000")}
+        ]
+      }
+    """.trimIndent()
+
+    fun subjectHistoryReportResultSet(firstFullName: String? = "ELLEN RIPLEY") = """
+      {
+        "ResultSet": {
+          "Rows": [
+            {
+              "Data": [
+                ${varCharValueColumn("report_url")},
+                ${varCharValueColumn("name")},
+                ${varCharValueColumn("created_on")},
+                ${varCharValueColumn("time")}
+              ]
+            },
+            ${subjectHistoryReportData(firstFullName!!)},
+            ${subjectHistoryReportData("JOHN BROWNLIE")}
+          ],
+          "ResultSetMetadata": {
+            "ColumnInfo": [
+              """ + metaDataRow("report_url") + """,
+              """ + metaDataRow("name") + """,
+              """ + metaDataRow("created_on") + """,
+              """ + metaDataRow("time") + """
+            ]
+          }
+        },
+        "UpdateCount": 0
+      }
+    """.trimIndent()
+
     @Test
     fun `getSubjectHistoryReport passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
@@ -228,6 +230,100 @@ class OrderInformationRepositoryTest {
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.name).isEqualTo(fullName)
+    }
+  }
+
+  @Nested
+  inner class GetMonitoringEventsList {
+    fun monitoringEventData(id: String) = """
+      {
+        "Data": [
+          ${varCharValueColumn(id)},
+          ${varCharValueColumn(id)},
+          ${varCharValueColumn("TEST_EVENT")},
+          ${varCharValueColumn("2001-01-01")},
+          ${varCharValueColumn("01:01:01")},
+          ${varCharValueColumn("1")},
+          ${varCharValueColumn("2002-02-02")},
+          ${varCharValueColumn("02:02:02")},
+          ${varCharValueColumn("2")}
+        ]
+      }
+    """.trimIndent()
+
+    fun monitoringEventsResultSet(firstId: String = "987123") = """
+      {
+        "ResultSet": {
+          "Rows": [
+            {
+              "Data": [
+                ${varCharValueColumn("legacy_subject_id")},
+                ${varCharValueColumn("legacy_order_id")},
+                ${varCharValueColumn("event_type")},
+                ${varCharValueColumn("event_date")},
+                ${varCharValueColumn("event_time")},
+                ${varCharValueColumn("event_second")},
+                ${varCharValueColumn("process_date")},
+                ${varCharValueColumn("process_time")},
+                ${varCharValueColumn("process_second")}
+              ]
+            },
+            ${monitoringEventData(firstId)},
+            ${monitoringEventData("123456789")}
+          ],
+          "ResultSetMetadata": {
+            "ColumnInfo": [
+              ${metaDataRow("legacy_subject_id")},
+              ${metaDataRow("legacy_order_id")},
+              ${metaDataRow("event_type")},
+              ${metaDataRow("event_date")},
+              ${metaDataRow("event_time")},
+              ${metaDataRow("event_second")},
+              ${metaDataRow("process_date")},
+              ${metaDataRow("process_time")},
+              ${metaDataRow("process_second")}
+            ]
+          }
+        },
+        "UpdateCount": 0
+      }
+    """.trimIndent()
+
+    @Test
+    fun `getMonitoringEventsList passes correct query to getQueryResult`() {
+      val resultSet = AthenaHelper.resultSetFromJson(monitoringEventsResultSet())
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      repository.getMonitoringEventsList("123", AthenaRole.DEV)
+
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+    }
+
+    @Test
+    fun `getMonitoringEventsList returns an AthenaMonitoringEventListDTO`() {
+      val resultSet = AthenaHelper.resultSetFromJson(monitoringEventsResultSet())
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      val result = repository.getMonitoringEventsList("123", AthenaRole.DEV)
+
+      Assertions.assertThat(result).isInstanceOf(AthenaMonitoringEventListDTO::class.java)
+    }
+
+    @Test
+    fun `getMonitoringEventsList returns all the results from getQueryResult`() {
+      val resultSet = AthenaHelper.resultSetFromJson(monitoringEventsResultSet("987"))
+
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+
+      val result = repository.getMonitoringEventsList("987", AthenaRole.DEV)
+
+      Assertions.assertThat(result).isNotNull
+      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.events.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.events.first().eventType).isEqualTo("TEST_EVENT")
     }
   }
 }
