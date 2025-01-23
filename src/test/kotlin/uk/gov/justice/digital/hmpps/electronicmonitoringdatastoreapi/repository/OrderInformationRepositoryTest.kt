@@ -14,6 +14,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.varCharValueColumn
 import java.util.UUID
 
 class OrderInformationRepositoryTest {
@@ -31,27 +33,6 @@ class OrderInformationRepositoryTest {
     val sut = OrderInformationRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
-
-  fun metaDataRow(label: String) = """
-    {
-      "CatalogName": "hive",
-      "SchemaName": "",
-      "TableName": "",
-      "Name": "$label",
-      "Label": "$label",
-      "Type": "varchar",
-      "Precision": 2147483647,
-      "Scale": 0,
-      "Nullable": "UNKNOWN",
-      "CaseSensitive": true
-    }
-  """.trimIndent()
-
-  fun varCharValueColumn(value: String) = """
-    {
-      "VarCharValue": "$value"
-    }
-  """.trimIndent()
 
   fun keyOrderInformationData(subjectId: String, orderId: String, fullName: String) = """
     {
