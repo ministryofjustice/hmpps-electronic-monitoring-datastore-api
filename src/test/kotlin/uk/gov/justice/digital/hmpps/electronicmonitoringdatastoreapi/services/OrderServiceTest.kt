@@ -240,6 +240,8 @@ class OrderServiceTest {
 
     val blankOrderDetails = AthenaOrderDetailsDTO(
       legacySubjectId = "",
+      legacyOrderId = "",
+      offenceRisk = true,
     )
 
     @BeforeEach

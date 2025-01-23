@@ -17,7 +17,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ord
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO', 'ROLE_ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class OrderController(
   @Autowired val orderService: OrderService,
