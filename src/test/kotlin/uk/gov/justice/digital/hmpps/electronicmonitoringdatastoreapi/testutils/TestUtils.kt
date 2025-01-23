@@ -5,6 +5,7 @@ fun varCharValueColumn(value: String) = """
       "VarCharValue": "$value"
     }
 """.trimIndent()
+
 fun metaDataRow(label: String, type: String = "varchar"): String = when (type) {
   "varchar" -> {
     """{
