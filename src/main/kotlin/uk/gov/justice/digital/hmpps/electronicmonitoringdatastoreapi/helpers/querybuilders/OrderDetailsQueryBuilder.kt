@@ -1,11 +1,23 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
+import org.apache.commons.lang3.StringUtils.isAlphanumeric
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsQuery
 
-class OrderDetailsQueryBuilder {
+class OrderDetailsQueryBuilder(
+  private val databaseName: String? = "test_database",
+) {
   var legacySubjectId: String? = null
 
   fun withLegacySubjectId(subjectId: String): OrderDetailsQueryBuilder {
+    if (!isAlphanumeric(subjectId)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
+
+    // TODO: Consider using PreparedStatement and a library to avoid manual SQL assembly
+    // val testQuery: String = "SELECT * FROM ?.my_table WHERE user_id = ?"
+    // val connection: Connection = null
+    // val statement: PreparedStatement = connection.prepareStatement(testQuery)
+
     legacySubjectId = subjectId
     return this
   }
@@ -47,9 +59,9 @@ class OrderDetailsQueryBuilder {
         , responsible_organisation
         , responsible_organisation_details_region
       FROM 
-        test_database.order_details
+        $databaseName.order_details
       WHERE
-        legacy_subject_id = $legacySubjectId
+        legacy_subject_id=$legacySubjectId
     """.trimIndent(),
   )
 }
