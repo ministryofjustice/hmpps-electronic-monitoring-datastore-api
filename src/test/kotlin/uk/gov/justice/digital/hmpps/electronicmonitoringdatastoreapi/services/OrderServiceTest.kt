@@ -10,11 +10,13 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
@@ -227,6 +229,44 @@ class OrderServiceTest {
       Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
       Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
       Assertions.assertThat(result.documents).isEmpty()
+    }
+  }
+
+  @Nested
+  inner class GetOrderDetails {
+    val orderId = "fake-id"
+
+    val blankOrderDetails = AthenaOrderDetailsDTO(
+      legacySubjectId = "",
+    )
+
+    @BeforeEach
+    fun setup() {
+/*      `when`(orderInformationRepository.getOrderDetails(orderId, AthenaRole.DEV))
+        .thenReturn(blankKeyOrderInformation)*/
+    }
+
+    @Disabled("TBC")
+    @Test
+    fun `calls getOrderDetails from order details repository`() {
+      service.getOrderDetails(orderId, AthenaRole.DEV)
+//      Mockito.verify(orderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.DEV)
+    }
+
+    @Test
+    fun `returns OrderDetails`() {
+      val result = service.getOrderDetails(orderId, AthenaRole.DEV)
+
+      Assertions.assertThat(result).isInstanceOf(OrderDetails::class.java)
+    }
+
+    @Test
+    fun `returns correct details of the order`() {
+      val result = service.getOrderDetails(orderId, AthenaRole.DEV)
+
+      Assertions.assertThat(result).isNotNull
+      Assertions.assertThat(result.legacySubjectId).isEqualTo("")
+      Assertions.assertThat(result.specials).isEqualTo("no")
     }
   }
 }
