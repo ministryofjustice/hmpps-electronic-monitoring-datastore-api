@@ -20,7 +20,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 // We will instantiate as new for now
 @Component
-@Profile("!integration")
+@Profile("dev", "test", "production")
 class EmDatastoreClient : EmDatastoreClientInterface {
   private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
