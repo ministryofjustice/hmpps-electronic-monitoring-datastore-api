@@ -10,7 +10,7 @@ services:
     url: http://localhost:9090/auth
     # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
   athena:
-    database: historic_api_mart_mock
+    database: test_database
 
 CLIENT_ID: hmpps-electronic-monitoring-datastore-api
 CLIENT_SECRET: clientsecret
