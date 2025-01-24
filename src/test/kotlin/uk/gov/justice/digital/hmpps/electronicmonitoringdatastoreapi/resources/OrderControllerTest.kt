@@ -66,7 +66,7 @@ class OrderControllerTest {
           reportUrl = "#",
           name = "1234567",
           createdOn = "01-02-2020",
-          time = "0900"
+          time = "0900",
         ),
         documents = DocumentList(
           pageSize = 0,
@@ -109,7 +109,7 @@ class OrderControllerTest {
           reportUrl = "#",
           name = "1234567",
           createdOn = "01-02-2020",
-          time = "0900"
+          time = "0900",
         ),
         documents = DocumentList(
           pageSize = 0,
