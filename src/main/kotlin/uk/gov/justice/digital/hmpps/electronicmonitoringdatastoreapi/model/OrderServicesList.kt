@@ -4,10 +4,10 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 data class OrderServicesList(
   val pageSize: Int,
-  val events: List<OrderService>,
+  val services: List<OrderService>,
 ) {
   constructor(dto: AthenaServicesListDTO) : this (
     pageSize = dto.pageSize,
-    events = dto.services.map { service -> OrderService(service) },
+    services = dto.services.map { service -> OrderService(service) },
   )
 }
