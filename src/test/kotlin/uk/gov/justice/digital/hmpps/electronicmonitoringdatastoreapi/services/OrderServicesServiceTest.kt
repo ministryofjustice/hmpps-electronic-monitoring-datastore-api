@@ -85,9 +85,9 @@ class OrderServicesServiceTest {
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.pageSize).isEqualTo(200)
-      Assertions.assertThat(result.events.size).isEqualTo(1)
-      Assertions.assertThat(result.events.first().legacySubjectId).isEqualTo(123)
-      Assertions.assertThat(result.events.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
+      Assertions.assertThat(result.services.size).isEqualTo(1)
+      Assertions.assertThat(result.services.first().legacySubjectId).isEqualTo(123)
+      Assertions.assertThat(result.services.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
     }
   }
 }

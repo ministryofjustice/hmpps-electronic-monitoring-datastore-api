@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks.MockEmDatastoreClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
 
 @ActiveProfiles("integration")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
