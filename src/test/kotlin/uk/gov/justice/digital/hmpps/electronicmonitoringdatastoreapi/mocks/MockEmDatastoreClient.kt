@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.mocks
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks
 
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
