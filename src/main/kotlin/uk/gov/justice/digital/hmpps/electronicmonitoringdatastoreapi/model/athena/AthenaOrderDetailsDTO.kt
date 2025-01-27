@@ -14,11 +14,11 @@ data class AthenaOrderDetailsDTO(
   val sex: String? = "",
   val contact: String? = "",
   @JsonProperty("primary_address_line_1")
-  val address1: String? = "",
+  val primaryAddressLine1: String? = "",
   @JsonProperty("primary_address_line_2")
-  val address2: String? = "",
+  val primaryAddressLine2: String? = "",
   @JsonProperty("primary_address_line_3")
-  val address3: String? = "",
+  val primaryAddressLine3: String? = "",
   val primaryAddressPostCode: String? = "",
   val phoneOrMobileNumber: String? = "",
   val ppo: String? = "",
@@ -79,7 +79,8 @@ data class AthenaOrderDetailsDTO(
 // Datum(VarCharValue=responsible_organisation),
 // Datum(VarCharValue=responsible_organisation_details_region)])
 
-// Row(Data=[Datum(VarCharValue=1253587),
+// Row(Data=[
+// Datum(VarCharValue=1253587),
 // Datum(VarCharValue=1250042),
 // Datum(VarCharValue=ELLEN),
 // Datum(VarCharValue=RIPLY),
