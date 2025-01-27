@@ -9,6 +9,7 @@ import org.mockito.kotlin.any
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventListDTO
@@ -24,88 +25,51 @@ class OrderEventsRepositoryTest {
     repository = OrderEventsRepository(emDatastoreClient)
   }
 
-  fun metaDataRow(label: String) = """
-    {
-      "CatalogName": "hive",
-      "SchemaName": "",
-      "TableName": "",
-      "Name": "$label",
-      "Label": "$label",
-      "Type": "varchar",
-      "Precision": 2147483647,
-      "Scale": 0,
-      "Nullable": "UNKNOWN",
-      "CaseSensitive": true
-    }
-  """.trimIndent()
-
-  fun varCharValueColumn(value: String) = """
-    {
-      "VarCharValue": "$value"
-    }
-  """.trimIndent()
-
   @Test
   fun `OrderEventsRepository can be instantiated`() {
-    val sut = OrderInformationRepository(Mockito.mock(EmDatastoreClient::class.java))
+    val sut = OrderEventsRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 
   @Nested
   inner class GetMonitoringEventsList {
-    fun monitoringEventData(id: String) = """
-      {
-        "Data": [
-          ${varCharValueColumn(id)},
-          ${varCharValueColumn(id)},
-          ${varCharValueColumn("TEST_EVENT")},
-          ${varCharValueColumn("2001-01-01")},
-          ${varCharValueColumn("01:01:01")},
-          ${varCharValueColumn("1")},
-          ${varCharValueColumn("2002-02-02")},
-          ${varCharValueColumn("02:02:02")},
-          ${varCharValueColumn("2")}
-        ]
-      }
-    """.trimIndent()
-
-    fun monitoringEventsResultSet(firstId: String = "987123") = """
-      {
-        "ResultSet": {
-          "Rows": [
-            {
-              "Data": [
-                ${varCharValueColumn("legacy_subject_id")},
-                ${varCharValueColumn("legacy_order_id")},
-                ${varCharValueColumn("event_type")},
-                ${varCharValueColumn("event_date")},
-                ${varCharValueColumn("event_time")},
-                ${varCharValueColumn("event_second")},
-                ${varCharValueColumn("process_date")},
-                ${varCharValueColumn("process_time")},
-                ${varCharValueColumn("process_second")}
-              ]
-            },
-            ${monitoringEventData(firstId)},
-            ${monitoringEventData("123456789")}
-          ],
-          "ResultSetMetadata": {
-            "ColumnInfo": [
-              ${metaDataRow("legacy_subject_id")},
-              ${metaDataRow("legacy_order_id")},
-              ${metaDataRow("event_type")},
-              ${metaDataRow("event_date")},
-              ${metaDataRow("event_time")},
-              ${metaDataRow("event_second")},
-              ${metaDataRow("process_date")},
-              ${metaDataRow("process_time")},
-              ${metaDataRow("process_second")}
-            ]
-          }
-        },
-        "UpdateCount": 0
-      }
-    """.trimIndent()
+    fun monitoringEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
+      columns = arrayOf(
+        "legacy_subject_id",
+        "legacy_order_id",
+        "event_type",
+        "event_date",
+        "event_time",
+        "event_second",
+        "process_date",
+        "process_time",
+        "process_second",
+      ),
+      rows = arrayOf(
+        arrayOf(
+          firstId,
+          firstId,
+          "TEST_EVENT",
+          "2001-01-01",
+          "01:01:01",
+          "1",
+          "2002-02-02",
+          "02:02:02",
+          "2",
+        ),
+        arrayOf(
+          "123456789",
+          "123456789",
+          "TEST_EVENT",
+          "2001-01-01",
+          "01:01:01",
+          "1",
+          "2002-02-02",
+          "02:02:02",
+          "2",
+        ),
+      ),
+    ).build()
 
     @Test
     fun `getMonitoringEventsList passes correct query to getQueryResult`() {
@@ -147,47 +111,31 @@ class OrderEventsRepositoryTest {
 
   @Nested
   inner class GetIncidentEventsList {
-    fun incidentEventData(id: String) = """
-      {
-        "Data": [
-          ${varCharValueColumn(id)},
-          ${varCharValueColumn(id)},
-          ${varCharValueColumn("TEST_ALERT")},
-          ${varCharValueColumn("2001-01-01")},
-          ${varCharValueColumn("01:01:01")}
-        ]
-      }
-    """.trimIndent()
-
-    fun incidentEventsResultSet(firstId: String = "987123") = """
-      {
-        "ResultSet": {
-          "Rows": [
-            {
-              "Data": [
-                ${varCharValueColumn("legacy_subject_id")},
-                ${varCharValueColumn("legacy_order_id")},
-                ${varCharValueColumn("violation_alert_type")},
-                ${varCharValueColumn("violation_alert_date")},
-                ${varCharValueColumn("violation_alert_time")}
-              ]
-            },
-            ${incidentEventData(firstId)},
-            ${incidentEventData("123456789")}
-          ],
-          "ResultSetMetadata": {
-            "ColumnInfo": [
-              ${metaDataRow("legacy_subject_id")},
-              ${metaDataRow("legacy_order_id")},
-              ${metaDataRow("violation_alert_type")},
-              ${metaDataRow("violation_alert_date")},
-              ${metaDataRow("violation_alert_time")}
-            ]
-          }
-        },
-        "UpdateCount": 0
-      }
-    """.trimIndent()
+    fun incidentEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
+      columns = arrayOf(
+        "legacy_subject_id",
+        "legacy_order_id",
+        "violation_alert_type",
+        "violation_alert_date",
+        "violation_alert_time",
+      ),
+      rows = arrayOf(
+        arrayOf(
+          firstId,
+          firstId,
+          "TEST_ALERT",
+          "2001-01-01",
+          "01:01:01",
+        ),
+        arrayOf(
+          "123456789",
+          "123456789",
+          "TEST_ALERT",
+          "2001-01-01",
+          "01:01:01",
+        ),
+      ),
+    ).build()
 
     @Test
     fun `getIncidentEventsList passes correct query to getQueryResult`() {
@@ -229,65 +177,49 @@ class OrderEventsRepositoryTest {
 
   @Nested
   inner class GetContactEventsList {
-    fun contactEventData(id: String) = """
-      {
-        "Data": [
-          ${varCharValueColumn(id)},
-          ${varCharValueColumn(id)},
-          ${varCharValueColumn("TEST_CONTACT")},
-          ${varCharValueColumn("No reason")},
-          ${varCharValueColumn("PHONE_CALL")},
-          ${varCharValueColumn("usr_001")},
-          ${varCharValueColumn("Bob the Builder")},
-          ${varCharValueColumn("2001-01-01")},
-          ${varCharValueColumn("01:01:01")},
-          ${varCharValueColumn("2002-02-02")},
-          ${varCharValueColumn("02:02:02")}
-        ]
-      }
-    """.trimIndent()
-
-    fun contactEventsResultSet(firstId: String = "987123") = """
-      {
-        "ResultSet": {
-          "Rows": [
-            {
-              "Data": [
-                ${varCharValueColumn("legacy_subject_id")},
-                ${varCharValueColumn("legacy_order_id")},
-                ${varCharValueColumn("contact_type")},
-                ${varCharValueColumn("reason")},
-                ${varCharValueColumn("channel")},
-                ${varCharValueColumn("user_id")},
-                ${varCharValueColumn("user_name")},
-                ${varCharValueColumn("contact_date")},
-                ${varCharValueColumn("contact_time")},
-                ${varCharValueColumn("modified_date")},
-                ${varCharValueColumn("modified_time")}
-              ]
-            },
-            ${contactEventData(firstId)},
-            ${contactEventData("123456789")}
-          ],
-          "ResultSetMetadata": {
-            "ColumnInfo": [
-              ${metaDataRow("legacy_subject_id")},
-              ${metaDataRow("legacy_order_id")},
-              ${metaDataRow("contact_type")},
-              ${metaDataRow("reason")},
-              ${metaDataRow("channel")},
-              ${metaDataRow("user_id")},
-              ${metaDataRow("user_name")},
-              ${metaDataRow("contact_date")},
-              ${metaDataRow("contact_time")},
-              ${metaDataRow("modified_date")},
-              ${metaDataRow("modified_time")}
-            ]
-          }
-        },
-        "UpdateCount": 0
-      }
-    """.trimIndent()
+    fun contactEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
+      columns = arrayOf(
+        "legacy_subject_id",
+        "legacy_order_id",
+        "contact_type",
+        "reason",
+        "channel",
+        "user_id",
+        "user_name",
+        "contact_date",
+        "contact_time",
+        "modified_date",
+        "modified_time",
+      ),
+      rows = arrayOf(
+        arrayOf(
+          firstId,
+          firstId,
+          "TEST_CONTACT",
+          "No reason",
+          "PHONE_CALL",
+          "usr_001",
+          "Bob the Builder",
+          "2001-01-01",
+          "01:01:01",
+          "2002-02-02",
+          "02:02:02",
+        ),
+        arrayOf(
+          "123456789",
+          "123456789",
+          "TEST_CONTACT",
+          "No reason",
+          "PHONE_CALL",
+          "usr_001",
+          "Bob the Builder",
+          "2001-01-01",
+          "01:01:01",
+          "2002-02-02",
+          "02:02:02",
+        ),
+      ),
+    ).build()
 
     @Test
     fun `getContactEventsList passes correct query to getQueryResult`() {
