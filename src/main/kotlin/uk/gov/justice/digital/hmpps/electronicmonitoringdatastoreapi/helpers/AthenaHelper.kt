@@ -15,6 +15,14 @@ import kotlin.reflect.full.memberProperties
 
 class AthenaHelper {
   companion object {
+    class MySnakeCaseStrategy : PropertyNamingStrategies.NamingBase() {
+      override fun translate(input: String?): String? = if (input == null) {
+        null
+      } else {
+        "([A-Z]+|[0-9]+)".toRegex().replace(input) { "_${it.groupValues[1]}".lowercase() }
+      }
+    }
+
     fun resultSetFromJson(string: String): ResultSet {
       val parsedJson = JSONObject(string)
       return resultSetFromJson(parsedJson)
@@ -90,7 +98,7 @@ class AthenaHelper {
       val mapper = jacksonObjectMapper()
         .registerKotlinModule()
         .apply {
-          propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+          propertyNamingStrategy = MySnakeCaseStrategy()
         }
 
       val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
