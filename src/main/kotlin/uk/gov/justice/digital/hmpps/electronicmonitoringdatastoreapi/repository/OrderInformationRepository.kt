@@ -6,12 +6,11 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.DocumentListQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.DocumentsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.KeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SubjectHistoryReportQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 
 @Service
@@ -44,18 +43,13 @@ class OrderInformationRepository(
     return result.first()
   }
 
-  fun getDocumentList(orderId: String, role: AthenaRole): AthenaResultListDTO<AthenaDocumentDTO> {
-    val documentListQuery = DocumentListQueryBuilder(athenaDatabase)
+  fun getDocumentList(orderId: String, role: AthenaRole): List<AthenaDocumentDTO> {
+    val documentListQuery = DocumentsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(documentListQuery, role)
 
-    val result = AthenaHelper.mapTo<AthenaDocumentDTO>(athenaResponse)
-
-    return AthenaResultListDTO(
-      pageSize = result.size,
-      items = result,
-    )
+    return AthenaHelper.mapTo<AthenaDocumentDTO>(athenaResponse)
   }
 }

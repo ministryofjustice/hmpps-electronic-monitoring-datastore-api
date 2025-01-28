@@ -12,7 +12,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 
 class CurfewTimetableRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -119,7 +118,7 @@ class CurfewTimetableRepositoryTest {
 
       val result = repository.getServicesList("123", AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(AthenaResultListDTO::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -131,11 +130,11 @@ class CurfewTimetableRepositoryTest {
       val result = repository.getServicesList("987", AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.size).isEqualTo(2)
 
-      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaCurfewTimetableDTO::class.java)
-      Assertions.assertThat(result.items.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().serviceId).isEqualTo(333)
+      Assertions.assertThat(result.first()).isInstanceOf(AthenaCurfewTimetableDTO::class.java)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().serviceId).isEqualTo(333)
     }
   }
 }
