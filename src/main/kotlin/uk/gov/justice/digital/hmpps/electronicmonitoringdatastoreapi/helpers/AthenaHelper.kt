@@ -15,7 +15,8 @@ import kotlin.reflect.full.memberProperties
 
 class AthenaHelper {
   companion object {
-    class MySnakeCaseStrategy : PropertyNamingStrategies.NamingBase() {
+    // NOTE: This SNAKE_CASE strategy also adds underscores before numbers which we need
+    class AlphanumericSnakeCaseStrategy : PropertyNamingStrategies.NamingBase() {
       override fun translate(input: String?): String? = if (input == null) {
         null
       } else {
@@ -98,7 +99,7 @@ class AthenaHelper {
       val mapper = jacksonObjectMapper()
         .registerKotlinModule()
         .apply {
-          propertyNamingStrategy = MySnakeCaseStrategy()
+          propertyNamingStrategy = AlphanumericSnakeCaseStrategy()
         }
 
       val columnNames: List<String> = resultSet.resultSetMetadata().columnInfo().map { it.name() }
