@@ -17,7 +17,7 @@ class OrderEventsService(
   fun getMonitoringEvents(orderId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
     val result = orderEventsRepository.getMonitoringEventsList(orderId, role)
 
-    return result.items.map { event ->
+    return result.map { event ->
       Event<MonitoringEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
@@ -31,7 +31,7 @@ class OrderEventsService(
   fun getIncidentEvents(orderId: String, role: AthenaRole): List<Event<IncidentEventDetails>> {
     val result = orderEventsRepository.getIncidentEventsList(orderId, role)
 
-    return result.items.map { event ->
+    return result.map { event ->
       Event<IncidentEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
@@ -45,7 +45,7 @@ class OrderEventsService(
   fun getContactEvents(orderId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
     val result = orderEventsRepository.getContactEventsList(orderId, role)
 
-    return result.items.map { event ->
+    return result.map { event ->
       Event<ContactEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,

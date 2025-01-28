@@ -13,6 +13,6 @@ class CurfewTimetableService(
   fun getServices(orderId: String, role: AthenaRole): List<CurfewTimetable> {
     val result = curfewTimetableRepository.getServicesList(orderId, role)
 
-    return result.items.map { item -> CurfewTimetable(item) }
+    return result.map { item -> CurfewTimetable(item) }
   }
 }

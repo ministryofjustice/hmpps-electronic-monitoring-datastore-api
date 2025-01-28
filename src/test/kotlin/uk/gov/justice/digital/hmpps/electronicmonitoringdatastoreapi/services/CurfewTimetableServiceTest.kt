@@ -8,7 +8,6 @@ import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.CurfewTimetableRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
 
@@ -32,30 +31,27 @@ class CurfewTimetableServiceTest {
   inner class GetMonitoringEventsList {
     val orderId = "fake-id"
 
-    val exampleMonitoringEventList = AthenaResultListDTO(
-      pageSize = 200,
-      items = listOf<AthenaCurfewTimetableDTO>(
-        AthenaCurfewTimetableDTO(
-          legacySubjectId = 123,
-          serviceId = 333,
-          serviceAddress1 = "",
-          serviceAddress2 = "",
-          serviceAddress3 = "",
-          serviceAddressPostcode = "WA16 9GH",
-          serviceStartDate = "",
-          serviceEndDate = "",
-          curfewStartDate = "",
-          curfewEndDate = "",
-          curfewStartTime = "",
-          curfewEndTime = "",
-          monday = 0,
-          tuesday = 0,
-          wednesday = 0,
-          thursday = 0,
-          friday = 0,
-          saturday = 0,
-          sunday = 0,
-        ),
+    val exampleMonitoringEventList = listOf<AthenaCurfewTimetableDTO>(
+      AthenaCurfewTimetableDTO(
+        legacySubjectId = 123,
+        serviceId = 333,
+        serviceAddress1 = "",
+        serviceAddress2 = "",
+        serviceAddress3 = "",
+        serviceAddressPostcode = "WA16 9GH",
+        serviceStartDate = "",
+        serviceEndDate = "",
+        curfewStartDate = "",
+        curfewEndDate = "",
+        curfewStartTime = "",
+        curfewEndTime = "",
+        monday = 0,
+        tuesday = 0,
+        wednesday = 0,
+        thursday = 0,
+        friday = 0,
+        saturday = 0,
+        sunday = 0,
       ),
     )
 

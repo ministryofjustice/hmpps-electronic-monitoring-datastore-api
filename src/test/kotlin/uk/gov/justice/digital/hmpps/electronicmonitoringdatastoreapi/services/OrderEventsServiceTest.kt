@@ -13,7 +13,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Monit
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 
@@ -37,20 +36,17 @@ class OrderEventsServiceTest {
   inner class GetMonitoringEventsList {
     val orderId = "fake-id"
 
-    val exampleMonitoringEventList = AthenaResultListDTO(
-      pageSize = 200,
-      items = listOf<AthenaMonitoringEventDTO>(
-        AthenaMonitoringEventDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 123,
-          eventType = "TEST_EVENT",
-          eventDate = "2022-10-10",
-          eventTime = "13:00:05",
-          eventSecond = 5,
-          processDate = "2025-01-08",
-          processTime = "09:10:45",
-          processSecond = 10,
-        ),
+    val exampleMonitoringEventList = listOf<AthenaMonitoringEventDTO>(
+      AthenaMonitoringEventDTO(
+        legacySubjectId = 123,
+        legacyOrderId = 123,
+        eventType = "TEST_EVENT",
+        eventDate = "2022-10-10",
+        eventTime = "13:00:05",
+        eventSecond = 5,
+        processDate = "2025-01-08",
+        processTime = "09:10:45",
+        processSecond = 10,
       ),
     )
 
@@ -93,16 +89,13 @@ class OrderEventsServiceTest {
   inner class GetIncidentEvents {
     val orderId = "fake-id"
 
-    val exampleIncidentEventList = AthenaResultListDTO(
-      pageSize = 200,
-      items = listOf<AthenaIncidentEventDTO>(
-        AthenaIncidentEventDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 123,
-          violationAlertType = "TEST_VIOLATION",
-          violationAlertDate = "2019-06-24",
-          violationAlertTime = "05:38:23",
-        ),
+    val exampleIncidentEventList = listOf<AthenaIncidentEventDTO>(
+      AthenaIncidentEventDTO(
+        legacySubjectId = 123,
+        legacyOrderId = 123,
+        violationAlertType = "TEST_VIOLATION",
+        violationAlertDate = "2019-06-24",
+        violationAlertTime = "05:38:23",
       ),
     )
 
@@ -145,23 +138,20 @@ class OrderEventsServiceTest {
   inner class GetContactEvents {
     val orderId = "fake-id"
 
-    val exampleContactEventList = AthenaResultListDTO(
-      pageSize = 200,
-      items = listOf<AthenaContactEventDTO>(
-        AthenaContactEventDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 123,
-          outcome = "Mr silly laughed out loud",
-          contactType = "TEST_CONTACT",
-          reason = "A silly reason",
-          channel = "Tickles",
-          userId = "",
-          userName = "",
-          contactDate = "2547-03-12",
-          contactTime = "04:27:24",
-          modifiedDate = "2135-12-31",
-          modifiedTime = "12:34:12",
-        ),
+    val exampleContactEventList = listOf<AthenaContactEventDTO>(
+      AthenaContactEventDTO(
+        legacySubjectId = 123,
+        legacyOrderId = 123,
+        outcome = "Mr silly laughed out loud",
+        contactType = "TEST_CONTACT",
+        reason = "A silly reason",
+        channel = "Tickles",
+        userId = "",
+        userName = "",
+        contactDate = "2547-03-12",
+        contactTime = "04:27:24",
+        modifiedDate = "2135-12-31",
+        modifiedTime = "12:34:12",
       ),
     )
 

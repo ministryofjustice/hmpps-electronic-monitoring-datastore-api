@@ -14,7 +14,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 
 class OrderEventsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -91,7 +90,7 @@ class OrderEventsRepositoryTest {
 
       val result = repository.getMonitoringEventsList("123", AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(AthenaResultListDTO::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -103,12 +102,12 @@ class OrderEventsRepositoryTest {
       val result = repository.getMonitoringEventsList("987", AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.size).isEqualTo(2)
 
-      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaMonitoringEventDTO::class.java)
-      Assertions.assertThat(result.items.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().legacyOrderId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().eventType).isEqualTo("TEST_EVENT")
+      Assertions.assertThat(result.first()).isInstanceOf(AthenaMonitoringEventDTO::class.java)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().eventType).isEqualTo("TEST_EVENT")
     }
   }
 
@@ -159,7 +158,7 @@ class OrderEventsRepositoryTest {
 
       val result = repository.getIncidentEventsList("123", AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(AthenaResultListDTO::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -171,12 +170,12 @@ class OrderEventsRepositoryTest {
       val result = repository.getIncidentEventsList("987", AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.size).isEqualTo(2)
 
-      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaIncidentEventDTO::class.java)
-      Assertions.assertThat(result.items.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().legacyOrderId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().violationAlertType).isEqualTo("TEST_ALERT")
+      Assertions.assertThat(result.first()).isInstanceOf(AthenaIncidentEventDTO::class.java)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().violationAlertType).isEqualTo("TEST_ALERT")
     }
   }
 
@@ -245,7 +244,7 @@ class OrderEventsRepositoryTest {
 
       val result = repository.getContactEventsList("123", AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(AthenaResultListDTO::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -257,12 +256,12 @@ class OrderEventsRepositoryTest {
       val result = repository.getContactEventsList("987", AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(2)
+      Assertions.assertThat(result.size).isEqualTo(2)
 
-      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaContactEventDTO::class.java)
-      Assertions.assertThat(result.items.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().legacyOrderId).isEqualTo(987)
-      Assertions.assertThat(result.items.first().contactType).isEqualTo("TEST_CONTACT")
+      Assertions.assertThat(result.first()).isInstanceOf(AthenaContactEventDTO::class.java)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().contactType).isEqualTo("TEST_CONTACT")
     }
   }
 }

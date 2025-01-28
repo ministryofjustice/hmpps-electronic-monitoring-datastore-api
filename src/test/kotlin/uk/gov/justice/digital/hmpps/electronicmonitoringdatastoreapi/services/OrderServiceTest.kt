@@ -18,7 +18,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
@@ -177,10 +176,7 @@ class OrderServiceTest {
       time = "",
     )
 
-    val blankDocumentList = AthenaResultListDTO<AthenaDocumentDTO>(
-      pageSize = 200,
-      items = listOf(),
-    )
+    val blankDocumentList = listOf<AthenaDocumentDTO>()
 
     @BeforeEach
     fun setup() {
