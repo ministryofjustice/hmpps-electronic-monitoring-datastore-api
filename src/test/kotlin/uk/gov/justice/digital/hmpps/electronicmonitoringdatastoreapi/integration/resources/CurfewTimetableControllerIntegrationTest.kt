@@ -8,13 +8,13 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
 
 @ActiveProfiles("integration")
-class OrderServicesControllerIntegrationTest : ControllerIntegrationBase() {
+class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("GET /orders/{orderId}/services")
   inner class GetMonitoringEvents {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.Companion.addResponseFile("successfulOrderServicesListResponse")
+      MockEmDatastoreClient.Companion.addResponseFile("successfulCurfewTimetableResponse")
     }
 
     @Test

@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
 
-data class OrderService(
+data class CurfewTimetable(
   val legacySubjectId: Int,
   val serviceId: Int,
   val serviceAddress1: String,
@@ -23,7 +23,7 @@ data class OrderService(
   val saturday: Int,
   val sunday: Int,
 ) {
-  constructor(dto: AthenaServicesDTO) : this (
+  constructor(dto: AthenaCurfewTimetableDTO) : this (
     legacySubjectId = dto.legacySubjectId,
     serviceId = dto.serviceId,
     serviceAddress1 = dto.serviceAddress1,

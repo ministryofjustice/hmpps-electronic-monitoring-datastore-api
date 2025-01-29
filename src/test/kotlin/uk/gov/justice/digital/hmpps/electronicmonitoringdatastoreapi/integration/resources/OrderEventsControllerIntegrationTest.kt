@@ -14,7 +14,7 @@ class OrderEventsControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetMonitoringEvents {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulMonitoringEventListResponse")
+      MockEmDatastoreClient.addResponseFile("successfulMonitoringEventsResponse")
     }
 
     @Test
@@ -50,7 +50,7 @@ class OrderEventsControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetIncidentEvents {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulIncidentEventListResponse")
+      MockEmDatastoreClient.addResponseFile("successfulIncidentEventsResponse")
     }
 
     @Test
@@ -86,7 +86,7 @@ class OrderEventsControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetContactEvents {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulContactEventListResponse")
+      MockEmDatastoreClient.addResponseFile("successfulContactEventsResponse")
     }
 
     @Test

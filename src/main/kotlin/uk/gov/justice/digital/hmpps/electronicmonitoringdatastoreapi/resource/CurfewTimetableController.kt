@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderServicesService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class OrderServicesController(
-  @Autowired val orderServicesService: OrderServicesService,
+class CurfewTimetableController(
+  @Autowired val curfewTimetableService: CurfewTimetableService,
   val athenaRoleService: AthenaRoleService,
 
   // TODO: Re-enable audit as @autowired once Cloud Platform in place
@@ -28,10 +28,10 @@ class OrderServicesController(
   fun getServices(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<List<OrderService>> {
+  ): ResponseEntity<List<CurfewTimetable>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderServicesService.getServices(orderId, validatedRole)
+    val result = curfewTimetableService.getServices(orderId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,

@@ -17,7 +17,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 
-class OrderEventServiceTest {
+class OrderEventsServiceTest {
   private lateinit var orderEventsRepository: OrderEventsRepository
   private lateinit var service: OrderEventsService
 
