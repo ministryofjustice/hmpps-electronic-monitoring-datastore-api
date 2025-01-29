@@ -129,7 +129,12 @@ class OrderControllerTest {
     @Test
     fun `Returns the appropriate object type`() {
       val orderId = "1ab"
-      val expectedResult: OrderDetails = OrderDetails("testData", "")
+      val expectedResult: OrderDetails = OrderDetails(
+        specials = "no",
+        legacySubjectId = "",
+        legacyOrderId = "",
+        offenceRisk = false,
+      )
 
       `when`(orderService.getOrderDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
@@ -143,7 +148,12 @@ class OrderControllerTest {
     @Test
     fun `gets order details from order service`() {
       val orderId = "1ab"
-      val expectedResult: OrderDetails = OrderDetails("testData", "")
+      val expectedResult: OrderDetails = OrderDetails(
+        specials = "no",
+        legacySubjectId = "",
+        legacyOrderId = "",
+        offenceRisk = false,
+      )
 
       `when`(orderService.getOrderDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
