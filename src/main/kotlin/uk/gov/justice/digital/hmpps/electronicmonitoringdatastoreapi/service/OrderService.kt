@@ -10,12 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
@@ -73,48 +69,5 @@ class OrderService(
   fun getOrderDetails(orderId: String, role: AthenaRole): OrderDetails {
     val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
     return OrderDetails(orderDetailsDTO)
-  }
-
-  private fun parseOrderSearchResults(athenaOrderSearchResultList: List<AthenaOrderSearchResultDTO>): List<OrderSearchResult> {
-    var orderSearchResults = athenaOrderSearchResultList.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
-
-    // TODO: The field list being returned doesn't match 'order' object - this needs resolving asap!
-    // Solution: use an OrderDTO object? I suspect this is the best approach.Or just map to an Order object that the UI needs
-    // Probably: rename Order to OrderDTO and have an internal Order class that matches the SQL
-    return orderSearchResults
-  }
-
-  private fun parseKeyOrderInformation(athenaKeyOrderInformation: AthenaKeyOrderInformationDTO): KeyOrderInformation {
-    var keyOrderInformation = KeyOrderInformation(athenaKeyOrderInformation)
-
-    return keyOrderInformation
-  }
-
-  private fun parseSubjectHistoryReport(athenaSubjectHistoryReport: AthenaSubjectHistoryReportDTO): SubjectHistoryReport {
-    var subjectHistoryReport = SubjectHistoryReport(
-      name = athenaSubjectHistoryReport.name,
-      reportUrl = athenaSubjectHistoryReport.reportUrl,
-      createdOn = athenaSubjectHistoryReport.createdOn,
-      time = athenaSubjectHistoryReport.time,
-    )
-
-    return subjectHistoryReport
-  }
-
-  private fun parseDocumentList(athenaDocumentList: AthenaDocumentListDTO): DocumentList {
-    var documentList = DocumentList(
-      pageSize = athenaDocumentList.pageSize,
-      orderDocuments = athenaDocumentList.orderDocuments.map { document ->
-        Document(
-          name = document.name,
-          url = document.url,
-          notes = document.notes,
-          createdOn = document.createdOn,
-          time = document.time,
-        )
-      },
-    )
-
-    return documentList
   }
 }
