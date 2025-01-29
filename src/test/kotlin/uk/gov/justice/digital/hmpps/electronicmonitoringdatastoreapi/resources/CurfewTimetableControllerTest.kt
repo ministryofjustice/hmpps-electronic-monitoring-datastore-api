@@ -15,6 +15,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.Cu
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
@@ -37,7 +38,7 @@ class CurfewTimetableControllerTest {
   }
 
   @Nested
-  inner class GetServices {
+  inner class GetCurfewTimetable {
     @Test
     fun `gets order information from order service`() {
       val orderId = "1ab"
@@ -49,12 +50,10 @@ class CurfewTimetableControllerTest {
           serviceAddress2 = "",
           serviceAddress3 = "",
           serviceAddressPostcode = "TEST+POSTCODE",
-          serviceStartDate = "",
-          serviceEndDate = "",
-          curfewStartDate = "",
-          curfewEndDate = "",
-          curfewStartTime = "",
-          curfewEndTime = "",
+          serviceStartDate = LocalDateTime.parse("2020-04-04T00:00:00"),
+          serviceEndDate = LocalDateTime.parse("2020-04-14T00:00:00"),
+          curfewStartDate = LocalDateTime.parse("2020-04-06T00:00:00"),
+          curfewEndDate = LocalDateTime.parse("2020-04-08T00:00:00"),
           monday = 0,
           tuesday = 0,
           wednesday = 0,
@@ -65,14 +64,14 @@ class CurfewTimetableControllerTest {
         ),
       )
 
-      Mockito.`when`(curfewTimetableService.getServices(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+      Mockito.`when`(curfewTimetableService.getCurfewTimetable(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
       val result = controller.getServices(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(curfewTimetableService, Mockito.times(1)).getServices(orderId, AthenaRole.DEV)
+      Mockito.verify(curfewTimetableService, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.DEV)
     }
   }
 }
