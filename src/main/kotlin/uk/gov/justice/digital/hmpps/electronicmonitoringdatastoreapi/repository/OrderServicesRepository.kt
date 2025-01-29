@@ -7,8 +7,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ServicesQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesListDTO
 
 @Service
 class OrderServicesRepository(
@@ -16,7 +16,7 @@ class OrderServicesRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getServicesList(orderId: String, role: AthenaRole): AthenaServicesListDTO {
+  fun getServicesList(orderId: String, role: AthenaRole): AthenaResultListDTO<AthenaServicesDTO> {
     val servicesQuery = ServicesQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
@@ -25,9 +25,9 @@ class OrderServicesRepository(
 
     val result = AthenaHelper.Companion.mapTo<AthenaServicesDTO>(athenaResponse)
 
-    return AthenaServicesListDTO(
+    return AthenaResultListDTO(
       pageSize = result.size,
-      services = result,
+      items = result,
     )
   }
 }

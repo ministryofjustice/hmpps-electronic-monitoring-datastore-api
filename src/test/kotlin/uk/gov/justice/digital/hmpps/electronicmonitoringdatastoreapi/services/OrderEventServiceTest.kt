@@ -6,15 +6,14 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventListDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 
@@ -38,9 +37,9 @@ class OrderEventServiceTest {
   inner class GetMonitoringEventsList {
     val orderId = "fake-id"
 
-    val exampleMonitoringEventList = AthenaMonitoringEventListDTO(
+    val exampleMonitoringEventList = AthenaResultListDTO(
       pageSize = 200,
-      events = listOf<AthenaMonitoringEventDTO>(
+      items = listOf<AthenaMonitoringEventDTO>(
         AthenaMonitoringEventDTO(
           legacySubjectId = 123,
           legacyOrderId = 123,
@@ -72,7 +71,7 @@ class OrderEventServiceTest {
     fun `returns MonitoringEventList when a response is received`() {
       var result = service.getMonitoringEvents(orderId, AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(MonitoringEventList::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -80,10 +79,13 @@ class OrderEventServiceTest {
       var result = service.getMonitoringEvents(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(200)
-      Assertions.assertThat(result.events.size).isEqualTo(1)
-      Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(123)
-      Assertions.assertThat(result.events.first().type).isEqualTo("TEST_EVENT")
+      Assertions.assertThat(result.size).isEqualTo(1)
+
+      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+
+      Assertions.assertThat(result.first().details).isInstanceOf(MonitoringEventDetails::class.java)
+      Assertions.assertThat(result.first().type).isEqualTo("TEST_EVENT")
     }
   }
 
@@ -91,9 +93,9 @@ class OrderEventServiceTest {
   inner class GetIncidentEvents {
     val orderId = "fake-id"
 
-    val exampleIncidentEventList = AthenaIncidentEventListDTO(
+    val exampleIncidentEventList = AthenaResultListDTO(
       pageSize = 200,
-      events = listOf<AthenaIncidentEventDTO>(
+      items = listOf<AthenaIncidentEventDTO>(
         AthenaIncidentEventDTO(
           legacySubjectId = 123,
           legacyOrderId = 123,
@@ -121,7 +123,7 @@ class OrderEventServiceTest {
     fun `returns IncidentEventList when a response is received`() {
       var result = service.getIncidentEvents(orderId, AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(IncidentEventList::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -129,10 +131,13 @@ class OrderEventServiceTest {
       var result = service.getIncidentEvents(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(200)
-      Assertions.assertThat(result.events.size).isEqualTo(1)
-      Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(123)
-      Assertions.assertThat(result.events.first().details.violation).isEqualTo("TEST_VIOLATION")
+      Assertions.assertThat(result.size).isEqualTo(1)
+
+      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+
+      Assertions.assertThat(result.first().details).isInstanceOf(IncidentEventDetails::class.java)
+      Assertions.assertThat(result.first().details.violation).isEqualTo("TEST_VIOLATION")
     }
   }
 
@@ -140,9 +145,9 @@ class OrderEventServiceTest {
   inner class GetContactEvents {
     val orderId = "fake-id"
 
-    val exampleContactEventList = AthenaContactEventListDTO(
+    val exampleContactEventList = AthenaResultListDTO(
       pageSize = 200,
-      events = listOf<AthenaContactEventDTO>(
+      items = listOf<AthenaContactEventDTO>(
         AthenaContactEventDTO(
           legacySubjectId = 123,
           legacyOrderId = 123,
@@ -177,7 +182,7 @@ class OrderEventServiceTest {
     fun `returns ContactsEventList when a response is received`() {
       var result = service.getContactEvents(orderId, AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(ContactEventList::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -185,10 +190,13 @@ class OrderEventServiceTest {
       var result = service.getContactEvents(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(200)
-      Assertions.assertThat(result.events.size).isEqualTo(1)
-      Assertions.assertThat(result.events.first().legacyOrderId).isEqualTo(123)
-      Assertions.assertThat(result.events.first().details.contactType).isEqualTo("TEST_CONTACT")
+      Assertions.assertThat(result.size).isEqualTo(1)
+
+      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+
+      Assertions.assertThat(result.first().details).isInstanceOf(ContactEventDetails::class.java)
+      Assertions.assertThat(result.first().details.contactType).isEqualTo("TEST_CONTACT")
     }
   }
 }

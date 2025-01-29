@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
@@ -51,7 +51,6 @@ class OrderService(
 //    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(orderId, role)
 //    val parsedSubjectHistoryReport = parseSubjectHistoryReport(subjectHistoryReport)
 
-    val emptyDocumentList: DocumentList = DocumentList.createEmpty()
 //    val documentList = orderInformationRepository.getDocumentList(orderId, role)
 //    val parsedDocumentList = parseDocumentList(documentList)
 
@@ -59,7 +58,7 @@ class OrderService(
     return OrderInformation(
       keyOrderInformation = parsedKeyOrderInformation,
       subjectHistoryReport = emptyHistoryReport,
-      documents = emptyDocumentList,
+      documents = listOf<Document>(),
     )
   }
 }

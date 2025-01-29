@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
-data class AthenaContactEventListDTO(
+data class AthenaResultListDTO<T>(
   val pageSize: Int,
-  val events: List<AthenaContactEventDTO>,
+  val items: List<T>,
 )

@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderServicesList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderServicesController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderServicesService
@@ -42,30 +41,27 @@ class OrderServicesControllerTest {
     @Test
     fun `gets order information from order service`() {
       val orderId = "1ab"
-      val expectedResult = OrderServicesList(
-        pageSize = 1,
-        services = listOf(
-          OrderService(
-            legacySubjectId = 123,
-            serviceId = 1,
-            serviceAddress1 = "",
-            serviceAddress2 = "",
-            serviceAddress3 = "",
-            serviceAddressPostcode = "TEST+POSTCODE",
-            serviceStartDate = "",
-            serviceEndDate = "",
-            curfewStartDate = "",
-            curfewEndDate = "",
-            curfewStartTime = "",
-            curfewEndTime = "",
-            monday = 0,
-            tuesday = 0,
-            wednesday = 0,
-            thursday = 0,
-            friday = 1,
-            saturday = 1,
-            sunday = 0,
-          ),
+      val expectedResult = listOf(
+        OrderService(
+          legacySubjectId = 123,
+          serviceId = 1,
+          serviceAddress1 = "",
+          serviceAddress2 = "",
+          serviceAddress3 = "",
+          serviceAddressPostcode = "TEST+POSTCODE",
+          serviceStartDate = "",
+          serviceEndDate = "",
+          curfewStartDate = "",
+          curfewEndDate = "",
+          curfewStartTime = "",
+          curfewEndTime = "",
+          monday = 0,
+          tuesday = 0,
+          wednesday = 0,
+          thursday = 0,
+          friday = 1,
+          saturday = 1,
+          sunday = 0,
         ),
       )
 

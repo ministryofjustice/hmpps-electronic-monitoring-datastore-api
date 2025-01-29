@@ -10,8 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.KeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SubjectHistoryReportQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 
 @Service
@@ -44,7 +44,7 @@ class OrderInformationRepository(
     return result.first()
   }
 
-  fun getDocumentList(orderId: String, role: AthenaRole): AthenaDocumentListDTO {
+  fun getDocumentList(orderId: String, role: AthenaRole): AthenaResultListDTO<AthenaDocumentDTO> {
     val documentListQuery = DocumentListQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
@@ -53,9 +53,9 @@ class OrderInformationRepository(
 
     val result = AthenaHelper.mapTo<AthenaDocumentDTO>(athenaResponse)
 
-    return AthenaDocumentListDTO(
+    return AthenaResultListDTO(
       pageSize = result.size,
-      orderDocuments = result,
+      items = result,
     )
   }
 }

@@ -11,7 +11,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDa
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesListDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesDTO
 
 class OrderServicesRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -118,7 +119,7 @@ class OrderServicesRepositoryTest {
 
       val result = repository.getServicesList("123", AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(AthenaServicesListDTO::class.java)
+      Assertions.assertThat(result).isInstanceOf(AthenaResultListDTO::class.java)
     }
 
     @Test
@@ -131,8 +132,10 @@ class OrderServicesRepositoryTest {
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.pageSize).isEqualTo(2)
-      Assertions.assertThat(result.services.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.services.first().serviceId).isEqualTo(333)
+
+      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaServicesDTO::class.java)
+      Assertions.assertThat(result.items.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.items.first().serviceId).isEqualTo(333)
     }
   }
 }
