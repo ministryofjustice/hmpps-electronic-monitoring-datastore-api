@@ -15,19 +15,19 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import kotlin.String
 import kotlin.collections.first
 
-class OrderSuspensionOfVisitsRepositoryTest {
+class SuspensionOfVisitsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
-  private lateinit var repository: OrderSuspensionOfVisitsRepository
+  private lateinit var repository: SuspensionOfVisitsRepository
 
   @BeforeEach
   fun setup() {
     emDatastoreClient = Mockito.mock(EmDatastoreClient::class.java)
-    repository = OrderSuspensionOfVisitsRepository(emDatastoreClient)
+    repository = SuspensionOfVisitsRepository(emDatastoreClient)
   }
 
   @Test
   fun `OrderSuspensionOfVisitsRepository can be instantiated`() {
-    val sut = OrderSuspensionOfVisitsRepository(Mockito.mock(EmDatastoreClient::class.java))
+    val sut = SuspensionOfVisitsRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 
@@ -68,7 +68,7 @@ class OrderSuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getSuspensionOfVisitsList("123", AthenaRole.DEV)
+      repository.getSuspensionOfVisits("123", AthenaRole.DEV)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -79,7 +79,7 @@ class OrderSuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisitsList("123", AthenaRole.DEV)
+      val result = repository.getSuspensionOfVisits("123", AthenaRole.DEV)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -90,7 +90,7 @@ class OrderSuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisitsList("987", AthenaRole.DEV)
+      val result = repository.getSuspensionOfVisits("987", AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
