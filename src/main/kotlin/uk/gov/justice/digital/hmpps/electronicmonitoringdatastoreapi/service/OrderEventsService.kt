@@ -3,30 +3,56 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
+import java.time.LocalDateTime
 
 @Service
 class OrderEventsService(
   @Autowired val orderEventsRepository: OrderEventsRepository,
 ) {
-  fun getMonitoringEvents(orderId: String, role: AthenaRole): MonitoringEventList {
+  fun getMonitoringEvents(orderId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
     val result = orderEventsRepository.getMonitoringEventsList(orderId, role)
 
-    return MonitoringEventList(result)
+    return result.items.map { event ->
+      Event<MonitoringEventDetails>(
+        legacyOrderId = event.legacyOrderId,
+        legacySubjectId = event.legacySubjectId,
+        type = event.eventType,
+        dateTime = LocalDateTime.parse("${event.eventDate}T${event.eventTime}"),
+        details = MonitoringEventDetails(event),
+      )
+    }
   }
 
-  fun getIncidentEvents(orderId: String, role: AthenaRole): IncidentEventList {
+  fun getIncidentEvents(orderId: String, role: AthenaRole): List<Event<IncidentEventDetails>> {
     val result = orderEventsRepository.getIncidentEventsList(orderId, role)
 
-    return IncidentEventList(result)
+    return result.items.map { event ->
+      Event<IncidentEventDetails>(
+        legacyOrderId = event.legacyOrderId,
+        legacySubjectId = event.legacySubjectId,
+        type = event.violationAlertType,
+        dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
+        details = IncidentEventDetails(event),
+      )
+    }
   }
 
-  fun getContactEvents(orderId: String, role: AthenaRole): ContactEventList {
+  fun getContactEvents(orderId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
     val result = orderEventsRepository.getContactEventsList(orderId, role)
 
-    return ContactEventList(result)
+    return result.items.map { event ->
+      Event<ContactEventDetails>(
+        legacyOrderId = event.legacyOrderId,
+        legacySubjectId = event.legacySubjectId,
+        type = event.contactType,
+        dateTime = LocalDateTime.parse("${event.contactDate}T${event.contactTime}"),
+        details = ContactEventDetails(event),
+      )
+    }
   }
 }

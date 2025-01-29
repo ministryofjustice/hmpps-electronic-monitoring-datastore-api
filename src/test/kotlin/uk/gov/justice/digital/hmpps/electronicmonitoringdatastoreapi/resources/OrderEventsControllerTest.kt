@@ -13,12 +13,9 @@ import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderEventsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
@@ -50,17 +47,14 @@ class OrderEventsControllerTest {
     @Test
     fun `gets order information from order service`() {
       val orderId = "1ab"
-      val expectedResult = MonitoringEventList(
-        pageSize = 1,
-        events = listOf<Event<MonitoringEventDetails>>(
-          Event<MonitoringEventDetails>(
-            legacyOrderId = 123,
-            legacySubjectId = 1543,
-            type = "TEST_STATUS",
-            dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
-            details = MonitoringEventDetails(
-              processedDateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 2),
-            ),
+      val expectedResult = listOf<Event<MonitoringEventDetails>>(
+        Event<MonitoringEventDetails>(
+          legacyOrderId = 123,
+          legacySubjectId = 1543,
+          type = "TEST_STATUS",
+          dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
+          details = MonitoringEventDetails(
+            processedDateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 2),
           ),
         ),
       )
@@ -81,17 +75,14 @@ class OrderEventsControllerTest {
     @Test
     fun `gets order information from order service`() {
       val orderId = "1ab"
-      val expectedResult = IncidentEventList(
-        pageSize = 1,
-        events = listOf<Event<IncidentEventDetails>>(
-          Event<IncidentEventDetails>(
-            legacyOrderId = 123,
-            legacySubjectId = 1543,
-            type = "TEST_STATUS",
-            dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
-            details = IncidentEventDetails(
-              violation = "TEST_VIOLATION",
-            ),
+      val expectedResult = listOf<Event<IncidentEventDetails>>(
+        Event<IncidentEventDetails>(
+          legacyOrderId = 123,
+          legacySubjectId = 1543,
+          type = "TEST_STATUS",
+          dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
+          details = IncidentEventDetails(
+            violation = "TEST_VIOLATION",
           ),
         ),
       )
@@ -112,23 +103,20 @@ class OrderEventsControllerTest {
     @Test
     fun `gets order information from order service`() {
       val orderId = "1ab"
-      val expectedResult = ContactEventList(
-        pageSize = 1,
-        events = listOf<Event<ContactEventDetails>>(
-          Event<ContactEventDetails>(
-            legacyOrderId = 123,
-            legacySubjectId = 1543,
-            type = "TEST_STATUS",
-            dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
-            details = ContactEventDetails(
-              outcome = null,
-              contactType = "PHONE_CALL",
-              reason = "TEST_REASON",
-              channel = "TEST_CHANNEL",
-              userId = null,
-              userName = null,
-              modifiedDateTime = LocalDateTime.of(2019, 9, 1, 12, 15, 9),
-            ),
+      val expectedResult = listOf<Event<ContactEventDetails>>(
+        Event<ContactEventDetails>(
+          legacyOrderId = 123,
+          legacySubjectId = 1543,
+          type = "TEST_STATUS",
+          dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
+          details = ContactEventDetails(
+            outcome = null,
+            contactType = "PHONE_CALL",
+            reason = "TEST_REASON",
+            channel = "TEST_CHANNEL",
+            userId = null,
+            userName = null,
+            modifiedDateTime = LocalDateTime.of(2019, 9, 1, 12, 15, 9),
           ),
         ),
       )

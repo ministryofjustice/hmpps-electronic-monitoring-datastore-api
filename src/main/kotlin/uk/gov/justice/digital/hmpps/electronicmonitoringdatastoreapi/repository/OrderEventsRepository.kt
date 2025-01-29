@@ -10,11 +10,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.IncidentEventsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.MonitoringEventsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventListDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 
 @Service
 class OrderEventsRepository(
@@ -22,7 +20,7 @@ class OrderEventsRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getMonitoringEventsList(orderId: String, role: AthenaRole): AthenaMonitoringEventListDTO {
+  fun getMonitoringEventsList(orderId: String, role: AthenaRole): AthenaResultListDTO<AthenaMonitoringEventDTO> {
     val monitoringEventsQuery = MonitoringEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
@@ -31,13 +29,13 @@ class OrderEventsRepository(
 
     val result = AthenaHelper.Companion.mapTo<AthenaMonitoringEventDTO>(athenaResponse)
 
-    return AthenaMonitoringEventListDTO(
+    return AthenaResultListDTO(
       pageSize = result.size,
-      events = result,
+      items = result,
     )
   }
 
-  fun getIncidentEventsList(orderId: String, role: AthenaRole): AthenaIncidentEventListDTO {
+  fun getIncidentEventsList(orderId: String, role: AthenaRole): AthenaResultListDTO<AthenaIncidentEventDTO> {
     val incidentEventsQuery = IncidentEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
@@ -46,13 +44,13 @@ class OrderEventsRepository(
 
     val result = AthenaHelper.Companion.mapTo<AthenaIncidentEventDTO>(athenaResponse)
 
-    return AthenaIncidentEventListDTO(
+    return AthenaResultListDTO(
       pageSize = result.size,
-      events = result,
+      items = result,
     )
   }
 
-  fun getContactEventsList(orderId: String, role: AthenaRole): AthenaContactEventListDTO {
+  fun getContactEventsList(orderId: String, role: AthenaRole): AthenaResultListDTO<AthenaContactEventDTO> {
     val contactEventsQuery = ContactEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
@@ -61,9 +59,9 @@ class OrderEventsRepository(
 
     val result = AthenaHelper.Companion.mapTo<AthenaContactEventDTO>(athenaResponse)
 
-    return AthenaContactEventListDTO(
+    return AthenaResultListDTO(
       pageSize = result.size,
-      events = result,
+      items = result,
     )
   }
 }

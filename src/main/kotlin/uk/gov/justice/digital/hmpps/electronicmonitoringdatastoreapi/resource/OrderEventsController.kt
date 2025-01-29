@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventList
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventList
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -30,7 +31,7 @@ class OrderEventsController(
   fun getMonitoringEvents(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<MonitoringEventList> {
+  ): ResponseEntity<List<Event<MonitoringEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderEventsService.getMonitoringEvents(orderId, validatedRole)
@@ -48,7 +49,7 @@ class OrderEventsController(
   fun getViolationAlerts(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<IncidentEventList> {
+  ): ResponseEntity<List<Event<IncidentEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderEventsService.getIncidentEvents(orderId, validatedRole)
@@ -66,7 +67,7 @@ class OrderEventsController(
   fun getContactEvents(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<ContactEventList> {
+  ): ResponseEntity<List<Event<ContactEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderEventsService.getContactEvents(orderId, validatedRole)

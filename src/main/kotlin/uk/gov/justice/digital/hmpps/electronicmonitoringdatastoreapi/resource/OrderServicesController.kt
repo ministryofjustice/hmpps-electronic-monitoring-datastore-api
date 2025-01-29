@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderServicesList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderServicesService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -28,7 +28,7 @@ class OrderServicesController(
   fun getServices(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<OrderServicesList> {
+  ): ResponseEntity<List<OrderService>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderServicesService.getServices(orderId, validatedRole)

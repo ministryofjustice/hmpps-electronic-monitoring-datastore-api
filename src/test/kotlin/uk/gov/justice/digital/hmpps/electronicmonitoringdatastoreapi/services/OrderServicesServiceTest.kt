@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderServicesList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderServicesRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderServicesService
 
 class OrderServicesServiceTest {
@@ -32,9 +32,9 @@ class OrderServicesServiceTest {
   inner class GetMonitoringEventsList {
     val orderId = "fake-id"
 
-    val exampleMonitoringEventList = AthenaServicesListDTO(
+    val exampleMonitoringEventList = AthenaResultListDTO(
       pageSize = 200,
-      services = listOf<AthenaServicesDTO>(
+      items = listOf<AthenaServicesDTO>(
         AthenaServicesDTO(
           legacySubjectId = 123,
           serviceId = 333,
@@ -76,7 +76,7 @@ class OrderServicesServiceTest {
     fun `returns MonitoringEventList when a response is received`() {
       var result = service.getServices(orderId, AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(OrderServicesList::class.java)
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
@@ -84,10 +84,11 @@ class OrderServicesServiceTest {
       var result = service.getServices(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.pageSize).isEqualTo(200)
-      Assertions.assertThat(result.services.size).isEqualTo(1)
-      Assertions.assertThat(result.services.first().legacySubjectId).isEqualTo(123)
-      Assertions.assertThat(result.services.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
+      Assertions.assertThat(result.size).isEqualTo(1)
+
+      Assertions.assertThat(result.first()).isInstanceOf(OrderService::class.java)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(123)
+      Assertions.assertThat(result.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
     }
   }
 }

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.DocumentList
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
@@ -68,10 +68,7 @@ class OrderControllerTest {
           createdOn = "01-02-2020",
           time = "0900",
         ),
-        documents = DocumentList(
-          pageSize = 0,
-          orderDocuments = listOf(),
-        ),
+        documents = listOf<Document>(),
       )
 
       `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
@@ -111,10 +108,7 @@ class OrderControllerTest {
           createdOn = "01-02-2020",
           time = "0900",
         ),
-        documents = DocumentList(
-          pageSize = 0,
-          orderDocuments = listOf(),
-        ),
+        documents = listOf<Document>(),
       )
 
       `when`(orderService.getOrderInformation(orderId, AthenaRole.DEV)).thenReturn(expectedResult)

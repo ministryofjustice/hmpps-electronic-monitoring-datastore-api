@@ -13,9 +13,10 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
@@ -172,9 +173,9 @@ class OrderServiceTest {
       time = "",
     )
 
-    val blankDocumentList = AthenaDocumentListDTO(
+    val blankDocumentList = AthenaResultListDTO<AthenaDocumentDTO>(
       pageSize = 200,
-      orderDocuments = listOf(),
+      items = listOf(),
     )
 
     @BeforeEach
@@ -225,8 +226,7 @@ class OrderServiceTest {
       Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(orderId)
       Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
       Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
-      Assertions.assertThat(result.documents.pageSize).isEqualTo(1)
-      Assertions.assertThat(result.documents.orderDocuments).isEmpty()
+      Assertions.assertThat(result.documents).isEmpty()
     }
   }
 }
