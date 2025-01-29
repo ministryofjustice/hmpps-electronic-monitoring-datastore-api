@@ -7,24 +7,24 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderServicesRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderServicesService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.CurfewTimetableRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
 
-class OrderServicesServiceTest {
-  private lateinit var orderServicesRepository: OrderServicesRepository
-  private lateinit var service: OrderServicesService
+class CurfewTimetableServiceTest {
+  private lateinit var curfewTimetableRepository: CurfewTimetableRepository
+  private lateinit var service: CurfewTimetableService
 
   @BeforeEach
   fun setup() {
-    orderServicesRepository = Mockito.mock(OrderServicesRepository::class.java)
-    service = OrderServicesService(orderServicesRepository)
+    curfewTimetableRepository = Mockito.mock(CurfewTimetableRepository::class.java)
+    service = CurfewTimetableService(curfewTimetableRepository)
   }
 
   @Test
   fun `OrderService can be instantiated`() {
-    val sut = OrderServicesService(orderServicesRepository)
+    val sut = CurfewTimetableService(curfewTimetableRepository)
     Assertions.assertThat(sut).isNotNull()
   }
 
@@ -34,8 +34,8 @@ class OrderServicesServiceTest {
 
     val exampleMonitoringEventList = AthenaResultListDTO(
       pageSize = 200,
-      items = listOf<AthenaServicesDTO>(
-        AthenaServicesDTO(
+      items = listOf<AthenaCurfewTimetableDTO>(
+        AthenaCurfewTimetableDTO(
           legacySubjectId = 123,
           serviceId = 333,
           serviceAddress1 = "",
@@ -61,7 +61,7 @@ class OrderServicesServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(orderServicesRepository.getServicesList(orderId, AthenaRole.DEV))
+      Mockito.`when`(curfewTimetableRepository.getServicesList(orderId, AthenaRole.DEV))
         .thenReturn(exampleMonitoringEventList)
     }
 
@@ -69,7 +69,7 @@ class OrderServicesServiceTest {
     fun `calls getMonitoringEventsList from order information repository`() {
       service.getServices(orderId, AthenaRole.DEV)
 
-      Mockito.verify(orderServicesRepository, Mockito.times(1)).getServicesList(orderId, AthenaRole.DEV)
+      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getServicesList(orderId, AthenaRole.DEV)
     }
 
     @Test
@@ -86,7 +86,7 @@ class OrderServicesServiceTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
 
-      Assertions.assertThat(result.first()).isInstanceOf(OrderService::class.java)
+      Assertions.assertThat(result.first()).isInstanceOf(CurfewTimetable::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo(123)
       Assertions.assertThat(result.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
     }

@@ -12,21 +12,21 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaResultListDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
 
-class OrderServicesRepositoryTest {
+class CurfewTimetableRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
-  private lateinit var repository: OrderServicesRepository
+  private lateinit var repository: CurfewTimetableRepository
 
   @BeforeEach
   fun setup() {
     emDatastoreClient = Mockito.mock(EmDatastoreClient::class.java)
-    repository = OrderServicesRepository(emDatastoreClient)
+    repository = CurfewTimetableRepository(emDatastoreClient)
   }
 
   @Test
-  fun `OrderServicesRepository can be instantiated`() {
-    val sut = OrderServicesRepository(Mockito.mock(EmDatastoreClient::class.java))
+  fun `CurfewTimetableRepository can be instantiated`() {
+    val sut = CurfewTimetableRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 
@@ -133,7 +133,7 @@ class OrderServicesRepositoryTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.pageSize).isEqualTo(2)
 
-      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaServicesDTO::class.java)
+      Assertions.assertThat(result.items.first()).isInstanceOf(AthenaCurfewTimetableDTO::class.java)
       Assertions.assertThat(result.items.first().legacySubjectId).isEqualTo(987)
       Assertions.assertThat(result.items.first().serviceId).isEqualTo(333)
     }
