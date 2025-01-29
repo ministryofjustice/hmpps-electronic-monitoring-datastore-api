@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
+import java.time.LocalDateTime
 
 data class CurfewTimetable(
   val legacySubjectId: Int,
@@ -9,12 +10,10 @@ data class CurfewTimetable(
   val serviceAddress2: String,
   val serviceAddress3: String,
   val serviceAddressPostcode: String,
-  val serviceStartDate: String,
-  val serviceEndDate: String,
-  val curfewStartDate: String,
-  val curfewEndDate: String,
-  val curfewStartTime: String,
-  val curfewEndTime: String,
+  val serviceStartDate: LocalDateTime,
+  val serviceEndDate: LocalDateTime,
+  val curfewStartDate: LocalDateTime,
+  val curfewEndDate: LocalDateTime,
   val monday: Int,
   val tuesday: Int,
   val wednesday: Int,
@@ -30,12 +29,10 @@ data class CurfewTimetable(
     serviceAddress2 = dto.serviceAddress2,
     serviceAddress3 = dto.serviceAddress3,
     serviceAddressPostcode = dto.serviceAddressPostcode,
-    serviceStartDate = dto.serviceStartDate,
-    serviceEndDate = dto.serviceEndDate,
-    curfewStartDate = dto.curfewStartDate,
-    curfewEndDate = dto.curfewEndDate,
-    curfewStartTime = dto.curfewStartTime,
-    curfewEndTime = dto.curfewEndTime,
+    serviceStartDate = LocalDateTime.parse("${dto.serviceStartDate}T00:00:00"),
+    serviceEndDate = LocalDateTime.parse("${dto.serviceEndDate}T00:00:00"),
+    curfewStartDate = LocalDateTime.parse("${dto.curfewStartDate}T${dto.curfewStartTime}"),
+    curfewEndDate = LocalDateTime.parse("${dto.curfewEndDate}T${dto.curfewEndTime}"),
     monday = dto.monday,
     tuesday = dto.tuesday,
     wednesday = dto.wednesday,

@@ -24,14 +24,14 @@ class CurfewTimetableController(
   // TODO: Re-enable audit as @autowired once Cloud Platform in place
   val auditService: AuditService? = null,
 ) {
-  @GetMapping("/{orderId}/services")
+  @GetMapping("/{orderId}/curfew-timetable")
   fun getServices(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<CurfewTimetable>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = curfewTimetableService.getServices(orderId, validatedRole)
+    val result = curfewTimetableService.getCurfewTimetable(orderId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,

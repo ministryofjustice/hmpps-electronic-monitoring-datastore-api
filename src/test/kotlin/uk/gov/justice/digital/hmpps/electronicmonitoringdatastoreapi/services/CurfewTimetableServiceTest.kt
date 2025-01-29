@@ -22,16 +22,16 @@ class CurfewTimetableServiceTest {
   }
 
   @Test
-  fun `OrderService can be instantiated`() {
+  fun `CurfewTimetableService can be instantiated`() {
     val sut = CurfewTimetableService(curfewTimetableRepository)
     Assertions.assertThat(sut).isNotNull()
   }
 
   @Nested
-  inner class GetMonitoringEventsList {
+  inner class GetCurfewTimetable {
     val orderId = "fake-id"
 
-    val exampleMonitoringEventList = listOf<AthenaCurfewTimetableDTO>(
+    val exampleCurfewTimetable = listOf<AthenaCurfewTimetableDTO>(
       AthenaCurfewTimetableDTO(
         legacySubjectId = 123,
         serviceId = 333,
@@ -39,12 +39,12 @@ class CurfewTimetableServiceTest {
         serviceAddress2 = "",
         serviceAddress3 = "",
         serviceAddressPostcode = "WA16 9GH",
-        serviceStartDate = "",
-        serviceEndDate = "",
-        curfewStartDate = "",
-        curfewEndDate = "",
-        curfewStartTime = "",
-        curfewEndTime = "",
+        serviceStartDate = "2020-02-02",
+        serviceEndDate = "2021-02-02",
+        curfewStartDate = "2020-02-02",
+        curfewEndDate = "2021-02-02",
+        curfewStartTime = "07:07:07",
+        curfewEndTime = "08:08:08",
         monday = 0,
         tuesday = 0,
         wednesday = 0,
@@ -57,27 +57,27 @@ class CurfewTimetableServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(curfewTimetableRepository.getServicesList(orderId, AthenaRole.DEV))
-        .thenReturn(exampleMonitoringEventList)
+      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(orderId, AthenaRole.DEV))
+        .thenReturn(exampleCurfewTimetable)
     }
 
     @Test
-    fun `calls getMonitoringEventsList from order information repository`() {
-      service.getServices(orderId, AthenaRole.DEV)
+    fun `calls getCurfewTimetable from order information repository`() {
+      service.getCurfewTimetable(orderId, AthenaRole.DEV)
 
-      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getServicesList(orderId, AthenaRole.DEV)
+      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.DEV)
     }
 
     @Test
-    fun `returns MonitoringEventList when a response is received`() {
-      var result = service.getServices(orderId, AthenaRole.DEV)
+    fun `returns a list of CurfewTimetable when a response is received`() {
+      var result = service.getCurfewTimetable(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
-    fun `returns correct details of the order when a response is received`() {
-      var result = service.getServices(orderId, AthenaRole.DEV)
+    fun `returns correct details of the CurfewTimetable when a response is received`() {
+      var result = service.getCurfewTimetable(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

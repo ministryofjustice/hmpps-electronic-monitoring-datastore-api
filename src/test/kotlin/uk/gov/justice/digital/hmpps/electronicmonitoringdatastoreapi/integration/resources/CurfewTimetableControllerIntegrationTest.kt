@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /orders/{orderId}/services")
+  @DisplayName("GET /orders/{orderId}/curfew-timetable")
   inner class GetMonitoringEvents {
     @BeforeEach
     fun setup() {
@@ -19,22 +19,22 @@ class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("/orders/234/services")
+      noAuthHeaderRespondsWithUnauthorizedTest("/orders/234/curfew-timetable")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/234/services")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/234/curfew-timetable")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/234/services", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("/orders/234/curfew-timetable", listOf("ROLE_WRONG"))
     }
 
     @Test
     fun `should return OK with valid auth header, role`() {
-      val uri = "/orders/234/services"
+      val uri = "/orders/234/curfew-timetable"
 
       webTestClient.get()
         .uri(uri)
