@@ -72,9 +72,14 @@ minutes.
 
 ### Running the application locally from the CLI
 
-The application comes with a `dev` spring profile that includes default settings for running locally. This is not
-necessary when deploying to kubernetes as these values are included in the helm configuration templates -
-e.g. `values-dev.yaml`.
+The application comes with several spring profiles (each of which has a `{profile}.run.xml` file defined in [.run](.run)) :
+1) [Local](src/main/resources/application-local.yml): default settings for running locally and connecting to Athena.  
+   To use this, you must create a non `-example` version of [Local.run.xml.example](.run/Local.run.xml.example) and add environment variables as specified in [Querying Athena with the local EM API](#querying-athena-with-the-local-em-api)
+2) [Mocking](src/main/resources/application-mocking.yml): run locally, but use a [`MockEMDatastoreClient`](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/MockEMDatastoreClient.kt) instead of `EMDatastoreClient`, with dummy Athena responses
+3) [Default](src/main/resources/application.yml): the main runtime configuration
+
+These profiles are not necessary when deploying to kubernetes as these values are included in the helm configuration templates -
+e.g. [`values-dev.yaml`](helm_deploy/values-dev.yaml).
 
 
 ### Running with Docker

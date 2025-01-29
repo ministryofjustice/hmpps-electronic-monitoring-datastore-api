@@ -77,3 +77,6 @@ localstack
 
 # Mac files
 .DS_Store
+
+# Project-specific ignores
+.run/Local.run.xml
