@@ -34,21 +34,6 @@ class OrderInformationRepositoryTest {
     Assertions.assertThat(sut).isNotNull()
   }
 
-  fun metaDataRow(label: String) = """
-    {
-      "CatalogName": "hive",
-      "SchemaName": "",
-      "TableName": "",
-      "Name": "$label",
-      "Label": "$label",
-      "Type": "varchar",
-      "Precision": 2147483647,
-      "Scale": 0,
-      "Nullable": "UNKNOWN",
-      "CaseSensitive": true
-    }
-  """.trimIndent()
-
   fun varCharValueColumn(value: String) = """
     {
       "VarCharValue": "$value"
