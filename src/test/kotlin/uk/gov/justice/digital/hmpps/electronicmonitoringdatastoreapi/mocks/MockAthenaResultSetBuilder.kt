@@ -20,7 +20,11 @@ class MockAthenaResultSetBuilder(
       }
     """.trimIndent()
 
-    fun varCharValueColumn(value: String) = """{ "VarCharValue": "$value" }""".trimIndent()
+    fun varCharValueColumn(value: String) = if (value.isEmpty()) {
+      "{}"
+    } else {
+      """{ "VarCharValue": "$value" }"""
+    }.trimIndent()
 
     fun row(data: Array<String>) = """
       {

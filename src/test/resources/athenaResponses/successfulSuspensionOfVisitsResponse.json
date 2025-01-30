@@ -1,0 +1,323 @@
+{
+  "ResultSet": {
+    "ColumnInfos": [],
+    "ResultRows": [],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_subject_id",
+          "Name": "legacy_subject_id",
+          "Nullable": "UNKNOWN",
+          "Precision": 19,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "bigint"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "suspension_of_visits",
+          "Name": "suspension_of_visits",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "suspension_of_visits_requested_date",
+          "Name": "suspension_of_visits_requested_date",
+          "Nullable": "UNKNOWN",
+          "Precision": 0,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "date"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "suspension_of_visits_start_date",
+          "Name": "suspension_of_visits_start_date",
+          "Nullable": "UNKNOWN",
+          "Precision": 0,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "date"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "suspension_of_visits_start_time",
+          "Name": "suspension_of_visits_start_time",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "suspension_of_visits_end_date",
+          "Name": "suspension_of_visits_end_date",
+          "Nullable": "UNKNOWN",
+          "Precision": 0,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "date"
+        }
+      ]
+    },
+    "Rows": [
+      {
+        "Data": [
+          {
+            "VarCharValue": "legacy_subject_id"
+          },
+          {
+            "VarCharValue": "suspension_of_visits"
+          },
+          {
+            "VarCharValue": "suspension_of_visits_requested_date"
+          },
+          {
+            "VarCharValue": "suspension_of_visits_start_date"
+          },
+          {
+            "VarCharValue": "suspension_of_visits_start_time"
+          },
+          {
+            "VarCharValue": "suspension_of_visits_end_date"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-08-05"
+          },
+          {
+            "VarCharValue": "2021-08-05"
+          },
+          {
+            "VarCharValue": "08:00:00"
+          },
+          {
+            "VarCharValue": "2021-08-16"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-11-14"
+          },
+          {
+            "VarCharValue": "2021-11-15"
+          },
+          {
+            "VarCharValue": "00:25:00"
+          },
+          {
+            "VarCharValue": "2021-11-23"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-08-24"
+          },
+          {
+            "VarCharValue": "2021-08-24"
+          },
+          {
+            "VarCharValue": "22:11:00"
+          },
+          {
+            "VarCharValue": "2021-09-02"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-09-03"
+          },
+          {
+            "VarCharValue": "2021-09-03"
+          },
+          {
+            "VarCharValue": "08:00:00"
+          },
+          {
+            "VarCharValue": "2021-09-13"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-10-13"
+          },
+          {
+            "VarCharValue": "2021-10-13"
+          },
+          {
+            "VarCharValue": "08:00:00"
+          },
+          {
+            "VarCharValue": "2021-11-01"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-09-29"
+          },
+          {
+            "VarCharValue": "2021-09-30"
+          },
+          {
+            "VarCharValue": "08:00:00"
+          },
+          {
+            "VarCharValue": "2021-10-11"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-12-08"
+          },
+          {},
+          {},
+          {
+            "VarCharValue": "2021-12-18"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-11-02"
+          },
+          {
+            "VarCharValue": "2021-11-03"
+          },
+          {
+            "VarCharValue": "01:04:00"
+          },
+          {
+            "VarCharValue": "2021-11-12"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-11-26"
+          },
+          {
+            "VarCharValue": "2021-11-26"
+          },
+          {
+            "VarCharValue": "08:00:00"
+          },
+          {
+            "VarCharValue": "2021-12-04"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1356796"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "2021-09-13"
+          },
+          {
+            "VarCharValue": "2021-09-14"
+          },
+          {
+            "VarCharValue": "08:00:00"
+          },
+          {
+            "VarCharValue": "2021-09-28"
+          }
+        ]
+      }
+    ]
+  },
+  "UpdateCount": 0
+}

@@ -82,14 +82,14 @@ class OrderEventsControllerTest {
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = IncidentEventDetails(
-            violation = "TEST_VIOLATION",
+            violation = "TEST_INCIDENT",
           ),
         ),
       )
 
       `when`(orderEventsService.getIncidentEvents(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      val result = controller.getViolationAlerts(authentication, orderId)
+      val result = controller.getIncidentEvents(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)

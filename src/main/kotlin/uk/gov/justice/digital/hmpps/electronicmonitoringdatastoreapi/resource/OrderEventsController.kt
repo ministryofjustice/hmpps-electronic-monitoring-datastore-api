@@ -45,8 +45,8 @@ class OrderEventsController(
     return ResponseEntity.ok(result)
   }
 
-  @GetMapping("/getViolationAlerts/{orderId}")
-  fun getViolationAlerts(
+  @GetMapping("/getIncidentEvents/{orderId}")
+  fun getIncidentEvents(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<Event<IncidentEventDetails>>> {
@@ -56,7 +56,7 @@ class OrderEventsController(
 
     auditService?.createEvent(
       authentication.name,
-      "GET_VIOLATION_ALERTS",
+      "GET_INCIDENT_EVENTS",
       mapOf("orderId" to orderId),
     )
 

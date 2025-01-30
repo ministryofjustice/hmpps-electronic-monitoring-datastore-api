@@ -8,15 +8,15 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
 
 @ActiveProfiles("integration")
-class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
+class SuspensionOfVisitsControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /orders/getCurfewTimetable/{orderId}/curfew-timetable")
-  inner class GetCurfewTimetable {
-    val baseUri = "/orders/getCurfewTimetable"
+  @DisplayName("GET /orders/getSuspensionOfVisits/{orderId}")
+  inner class GetSuspensionOfVisits {
+    val baseUri = "/orders/getSuspensionOfVisits"
 
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.Companion.addResponseFile("successfulCurfewTimetableResponse")
+      MockEmDatastoreClient.Companion.addResponseFile("successfulSuspensionOfVisitsResponse")
     }
 
     @Test
