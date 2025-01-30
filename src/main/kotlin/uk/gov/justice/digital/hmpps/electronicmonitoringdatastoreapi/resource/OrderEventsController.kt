@@ -27,7 +27,7 @@ class OrderEventsController(
   // TODO: Re-enable audit as @autowired once Cloud Platform in place
   val auditService: AuditService? = null,
 ) {
-  @GetMapping("/{orderId}/monitoring-events")
+  @GetMapping("/getMonitoringEvents/{orderId}")
   fun getMonitoringEvents(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
@@ -45,7 +45,7 @@ class OrderEventsController(
     return ResponseEntity.ok(result)
   }
 
-  @GetMapping("/{orderId}/incident-events")
+  @GetMapping("/getViolationAlerts/{orderId}")
   fun getViolationAlerts(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
@@ -63,7 +63,7 @@ class OrderEventsController(
     return ResponseEntity.ok(result)
   }
 
-  @GetMapping("/{orderId}/contact-events")
+  @GetMapping("/getContactEvents/{orderId}")
   fun getContactEvents(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
