@@ -10,68 +10,56 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.CurfewTimetableController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SuspensionOfVisits
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SuspensionOfVisitsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.SuspensionOfVisitsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
-class CurfewTimetableControllerTest {
-  private lateinit var curfewTimetableService: CurfewTimetableService
+class SuspensionOfVisitsControllerTest {
+  private lateinit var suspensionOfVisitsService: SuspensionOfVisitsService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
-  private lateinit var controller: CurfewTimetableController
+  private lateinit var controller: SuspensionOfVisitsController
   private lateinit var authentication: Authentication
 
   @BeforeEach
   fun setup() {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    curfewTimetableService = Mockito.mock(CurfewTimetableService::class.java)
+    suspensionOfVisitsService = Mockito.mock(SuspensionOfVisitsService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
     Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = CurfewTimetableController(curfewTimetableService, roleService, auditService)
+    controller = SuspensionOfVisitsController(suspensionOfVisitsService, roleService, auditService)
   }
 
   @Nested
-  inner class GetCurfewTimetable {
+  inner class GetSuspensionOfVisits {
     @Test
     fun `gets order information from order service`() {
       val orderId = "1ab"
       val expectedResult = listOf(
-        CurfewTimetable(
+        SuspensionOfVisits(
           legacySubjectId = 123,
-          serviceId = 1,
-          serviceAddress1 = "",
-          serviceAddress2 = "",
-          serviceAddress3 = "",
-          serviceAddressPostcode = "TEST+POSTCODE",
-          serviceStartDate = LocalDateTime.parse("2020-04-04T00:00:00"),
-          serviceEndDate = LocalDateTime.parse("2020-04-14T00:00:00"),
-          curfewStartDate = LocalDateTime.parse("2020-04-06T00:00:00"),
-          curfewEndDate = LocalDateTime.parse("2020-04-08T00:00:00"),
-          monday = 0,
-          tuesday = 0,
-          wednesday = 0,
-          thursday = 0,
-          friday = 1,
-          saturday = 1,
-          sunday = 0,
+          suspensionOfVisits = "Yes",
+          suspensionOfVisitsRequestedDate = LocalDateTime.parse("2020-04-04T00:00:00"),
+          suspensionOfVisitsStartDate = LocalDateTime.parse("2020-04-14T00:00:00"),
+          suspensionOfVisitsEndDate = LocalDateTime.parse("2020-04-24T00:00:00"),
         ),
       )
 
-      Mockito.`when`(curfewTimetableService.getCurfewTimetable(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+      Mockito.`when`(suspensionOfVisitsService.getSuspensionOfVisits(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      val result = controller.getCurfewTimetable(authentication, orderId)
+      val result = controller.getSuspensionOfVisits(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(curfewTimetableService, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.DEV)
+      Mockito.verify(suspensionOfVisitsService, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.DEV)
     }
   }
 }
