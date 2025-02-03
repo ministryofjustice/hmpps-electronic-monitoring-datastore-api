@@ -13,6 +13,7 @@ generic-service:
     SENTRY_ENV: preprod
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
+    ATHENA_DATABASE_NAME: "historic_api_mart"
 
   namespace_secrets:
     hmpps-auth:
