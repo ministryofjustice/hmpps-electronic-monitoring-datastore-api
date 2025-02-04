@@ -28,14 +28,14 @@ generic-service:
   namespace_secrets:
     # [name of kubernetes secret]:
     #   [name of environment variable as seen by app]: [key of kubernetes secret to load]
+    #   Environment variables map to application.yml hierarchy levels via underscores
     hmpps-electronic-monitoring-datastore-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       # CLIENT_ID: "API_CLIENT_ID"                              # <== COMMENTED OUT to investigate failing build 20/12/2024
       # CLIENT_SECRET: "API_CLIENT_SECRET"                      # <== COMMENTED OUT to investigate failing build 20/12/2024
     sqs-hmpps-audit-secret:
-      # AUDIT_QUEUE_ARN: "sqs_queue_arn"
-      AUDIT_QUEUE_NAME: "sqs_queue_name"
-      # AUDIT_QUEUE_URL: "sqs_queue_url"
+      HMPPS_SQS_QUEUES_AUDIT_QUEUEARN: "sqs_queue_arn"
+      HMPPS_SQS_QUEUES_AUDIT_QUEUENAME: "sqs_queue_name"
 
   allowlist:
     groups:
