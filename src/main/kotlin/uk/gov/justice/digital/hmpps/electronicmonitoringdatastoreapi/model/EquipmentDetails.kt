@@ -7,7 +7,7 @@ data class EquipmentDetail(
   val id: String,
   val equipmentCategoryDescription: String,
   val installedDateTime: LocalDateTime,
-  val removedDate: LocalDateTime,
+  val removedDateTime: LocalDateTime,
 )
 
 data class EquipmentDetails(
@@ -23,13 +23,13 @@ data class EquipmentDetails(
       id = dto.pidId,
       equipmentCategoryDescription = dto.pidEquipmentCategoryDescription,
       installedDateTime = LocalDateTime.parse("${dto.dateDeviceInstalled}T${dto.timeDeviceInstalled}"),
-      removedDate = LocalDateTime.parse("${dto.dateDeviceRemoved}T${dto.timeDeviceRemoved}"),
+      removedDateTime = LocalDateTime.parse("${dto.dateDeviceRemoved}T${dto.timeDeviceRemoved}"),
     ),
     hmu = EquipmentDetail(
       id = dto.hmuId,
       equipmentCategoryDescription = dto.hmuEquipmentCategoryDescription,
       installedDateTime = LocalDateTime.parse("${dto.hmuInstallDate}T${dto.hmuInstallTime}"),
-      removedDate = LocalDateTime.parse("${dto.hmuRemovedDate}T${dto.hmuRemovedTime}"),
+      removedDateTime = LocalDateTime.parse("${dto.hmuRemovedDate}T${dto.hmuRemovedTime}"),
     ),
   )
 }
