@@ -47,3 +47,7 @@ data class AthenaServicesQuery(
 data class AthenaSuspensionOfVisitsListQuery(
   override val queryString: String,
 ) : AthenaQuery(queryString)
+
+data class AthenaEquipmentDetailsListQuery(
+  override val queryString: String,
+) : AthenaQuery(queryString)
