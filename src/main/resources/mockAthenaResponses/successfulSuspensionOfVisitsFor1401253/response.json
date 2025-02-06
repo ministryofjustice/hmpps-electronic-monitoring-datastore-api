@@ -106,9 +106,7 @@
           {
             "VarCharValue": "08:00:00"
           },
-          {
-            "VarCharValue": "2021-09-13"
-          }
+          {}
         ]
       },
       {
@@ -120,14 +118,10 @@
             "VarCharValue": "Yes"
           },
           {
-            "VarCharValue": "2021-10-13"
+            "VarCharValue": "2021-02-14"
           },
-          {
-            "VarCharValue": "2021-10-13"
-          },
-          {
-            "VarCharValue": "08:00:00"
-          },
+          {},
+          {},
           {
             "VarCharValue": "2021-11-01"
           }
