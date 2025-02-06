@@ -14,8 +14,8 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.2.2")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
-  implementation("software.amazon.awssdk:athena:2.30.10")
-  implementation("software.amazon.awssdk:sts:2.30.10")
+  implementation("software.amazon.awssdk:athena:2.30.14")
+  implementation("software.amazon.awssdk:sts:2.30.14")
   implementation("org.json:json:20250107")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 
