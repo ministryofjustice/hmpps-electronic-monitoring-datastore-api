@@ -6,19 +6,19 @@ import java.time.LocalDateTime
 data class SuspensionOfVisits(
   val legacySubjectId: Int,
   val suspensionOfVisits: String,
-  val suspensionOfVisitsRequestedDate: LocalDateTime,
+  val suspensionOfVisitsRequestedDate: LocalDateTime?,
   val suspensionOfVisitsStartDate: LocalDateTime?,
-  val suspensionOfVisitsEndDate: LocalDateTime,
+  val suspensionOfVisitsEndDate: LocalDateTime?,
 ) {
+  companion object {
+    fun processDate(date: String?): LocalDateTime? = if (!date.isNullOrEmpty()) LocalDateTime.parse("${date}T00:00:00") else null
+  }
+
   constructor(dto: AthenaSuspensionOfVisitsDTO) : this(
     legacySubjectId = dto.legacySubjectId,
     suspensionOfVisits = dto.suspensionOfVisits,
-    suspensionOfVisitsRequestedDate = LocalDateTime.parse("${dto.suspensionOfVisitsRequestedDate}T00:00:00"),
-    suspensionOfVisitsStartDate = if (!dto.suspensionOfVisitsStartDate.isNullOrEmpty()) {
-      LocalDateTime.parse("${dto.suspensionOfVisitsStartDate}T${dto.suspensionOfVisitsStartTime}")
-    } else {
-      null
-    },
-    suspensionOfVisitsEndDate = LocalDateTime.parse("${dto.suspensionOfVisitsEndDate}T00:00:00"),
+    suspensionOfVisitsRequestedDate = processDate(dto.suspensionOfVisitsRequestedDate),
+    suspensionOfVisitsStartDate = processDate(dto.suspensionOfVisitsStartDate),
+    suspensionOfVisitsEndDate = processDate(dto.suspensionOfVisitsEndDate),
   )
 }
