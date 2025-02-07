@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Conta
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -57,6 +58,24 @@ class OrderEventsController(
     auditService?.createEvent(
       authentication.name,
       "GET_INCIDENT_EVENTS",
+      mapOf("orderId" to orderId),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @GetMapping("/getViolationEvents/{orderId}")
+  fun getViolationEvents(
+    authentication: Authentication,
+    @PathVariable(required = true) orderId: String,
+  ): ResponseEntity<List<Event<ViolationEventDetails>>> {
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+
+    val result = orderEventsService.getViolationEvents(orderId, validatedRole)
+
+    auditService?.createEvent(
+      authentication.name,
+      "GET_VIOLATION_EVENTS",
       mapOf("orderId" to orderId),
     )
 
