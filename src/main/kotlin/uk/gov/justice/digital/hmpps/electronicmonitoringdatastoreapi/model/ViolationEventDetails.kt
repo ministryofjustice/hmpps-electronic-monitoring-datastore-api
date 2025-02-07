@@ -12,15 +12,23 @@ data class ViolationEventDetails(
   val breachDateTime: LocalDateTime,
   val breachIdentifiedDateTime: LocalDateTime,
   val authorityFirstNotifiedDateTime: LocalDateTime,
-  val agencyResponseDate: LocalDateTime,
-  val breachPackRequestedDate: LocalDateTime,
-  val breachPackSentDate: LocalDateTime,
-  val section9Date: LocalDateTime,
-  val hearingDate: LocalDateTime,
-  val summonsServedDate: LocalDateTime,
-  val subjectLetterSentDate: LocalDateTime,
-  val warningLetterSentDateTime: LocalDateTime,
+  val agencyResponseDate: LocalDateTime?,
+  val breachPackRequestedDate: LocalDateTime?,
+  val breachPackSentDate: LocalDateTime?,
+  val section9Date: LocalDateTime?,
+  val hearingDate: LocalDateTime?,
+  val summonsServedDate: LocalDateTime?,
+  val subjectLetterSentDate: LocalDateTime?,
+  val warningLetterSentDateTime: LocalDateTime?,
 ) : EventDetails() {
+  companion object {
+    private fun asNullableDateTime(date: String?, time: String?): LocalDateTime? = if (date != null) {
+      LocalDateTime.parse("${date}T${time ?: "00:00:00"}")
+    } else {
+      null
+    }
+  }
+
   constructor(dto: AthenaViolationEventDTO) : this (
     enforcementReason = dto.enforcementReason,
     investigationOutcomeReason = dto.investigationOutcomeReason,
@@ -30,13 +38,13 @@ data class ViolationEventDetails(
     breachDateTime = LocalDateTime.parse("${dto.breachDate}T${dto.breachTime}"),
     breachIdentifiedDateTime = LocalDateTime.parse("${dto.breachIdentifiedDate}T${dto.breachIdentifiedTime}"),
     authorityFirstNotifiedDateTime = LocalDateTime.parse("${dto.authorityFirstNotifiedDate}T${dto.authorityFirstNotifiedTime}"),
-    agencyResponseDate = LocalDateTime.parse("${dto.agencyResponseDate}T00:00:00"),
-    breachPackRequestedDate = LocalDateTime.parse("${dto.breachPackRequestedDate}T00:00:00"),
-    breachPackSentDate = LocalDateTime.parse("${dto.breachPackSentDate}T00:00:00"),
-    section9Date = LocalDateTime.parse("${dto.section9Date}T00:00:00"),
-    hearingDate = LocalDateTime.parse("${dto.hearingDate}T00:00:00"),
-    summonsServedDate = LocalDateTime.parse("${dto.summonsServedDate}T00:00:00"),
-    subjectLetterSentDate = LocalDateTime.parse("${dto.subjectLetterSentDate}T00:00:00"),
-    warningLetterSentDateTime = LocalDateTime.parse("${dto.warningLetterSentDate}T${dto.warningLetterSentTime}"),
+    agencyResponseDate = asNullableDateTime(dto.agencyResponseDate, null),
+    breachPackRequestedDate = asNullableDateTime(dto.breachPackRequestedDate, null),
+    breachPackSentDate = asNullableDateTime(dto.breachPackSentDate, null),
+    section9Date = asNullableDateTime(dto.section9Date, null),
+    hearingDate = asNullableDateTime(dto.hearingDate, null),
+    summonsServedDate = asNullableDateTime(dto.summonsServedDate, null),
+    subjectLetterSentDate = asNullableDateTime(dto.subjectLetterSentDate, null),
+    warningLetterSentDateTime = asNullableDateTime(dto.warningLetterSentDate, dto.warningLetterSentTime),
   )
 }
