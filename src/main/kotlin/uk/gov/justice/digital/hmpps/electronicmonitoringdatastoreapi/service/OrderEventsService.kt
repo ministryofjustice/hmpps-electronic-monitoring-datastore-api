@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Conta
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
 import java.time.LocalDateTime
 
@@ -38,6 +39,20 @@ class OrderEventsService(
         type = event.violationAlertType,
         dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
         details = IncidentEventDetails(event),
+      )
+    }
+  }
+
+  fun getViolationEvents(orderId: String, role: AthenaRole): List<Event<ViolationEventDetails>> {
+    val result = orderEventsRepository.getViolationEventsList(orderId, role)
+
+    return result.map { event ->
+      Event<ViolationEventDetails>(
+        legacyOrderId = event.legacyOrderId,
+        legacySubjectId = event.legacySubjectId,
+        type = "violation",
+        dateTime = LocalDateTime.parse("${event.breachDate}T${event.breachTime}"),
+        details = ViolationEventDetails(event),
       )
     }
   }

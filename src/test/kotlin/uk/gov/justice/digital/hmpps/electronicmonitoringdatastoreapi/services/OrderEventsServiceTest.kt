@@ -10,9 +10,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Conta
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaViolationEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 
@@ -131,6 +133,72 @@ class OrderEventsServiceTest {
 
       Assertions.assertThat(result.first().details).isInstanceOf(IncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.violation).isEqualTo("TEST_VIOLATION")
+    }
+  }
+
+  @Nested
+  inner class GetViolationEvents {
+    val orderId = "fake-id"
+
+    val exampleViolationEventList = listOf<AthenaViolationEventDTO>(
+      AthenaViolationEventDTO(
+        legacySubjectId = 123,
+        legacyOrderId = 123,
+        enforcementReason = "TEST_REASON",
+        investigationOutcomeReason = "TEST_OUTCOME",
+        breachDetails = "TEST_BREACH",
+        breachEnforcementOutcome = "TEST_OUTCOME",
+        agencyAction = "no action",
+        breachDate = "2022-10-10",
+        breachTime = "10:10:10",
+        breachIdentifiedDate = "2022-11-11",
+        breachIdentifiedTime = "11:11:11",
+        authorityFirstNotifiedDate = "2022-12-12",
+        authorityFirstNotifiedTime = "12:12:12",
+        agencyResponseDate = "2023-01-13",
+        breachPackRequestedDate = "2023-02-14",
+        breachPackSentDate = "2023-03-15",
+        section9Date = "2023-04-16",
+        hearingDate = "2023-05-17",
+        summonsServedDate = "2023-06-18",
+        subjectLetterSentDate = "2023-07-18",
+        warningLetterSentDate = "2023-08-19",
+        warningLetterSentTime = "19:19:19",
+      ),
+    )
+
+    @BeforeEach
+    fun setup() {
+      Mockito.`when`(orderEventsRepository.getViolationEventsList(orderId, AthenaRole.DEV))
+        .thenReturn(exampleViolationEventList)
+    }
+
+    @Test
+    fun `calls getViolationEventsList from order information repository`() {
+      service.getViolationEvents(orderId, AthenaRole.DEV)
+
+      Mockito.verify(orderEventsRepository, Mockito.times(1)).getViolationEventsList(orderId, AthenaRole.DEV)
+    }
+
+    @Test
+    fun `returns ViolationEventList when a response is received`() {
+      var result = service.getViolationEvents(orderId, AthenaRole.DEV)
+
+      Assertions.assertThat(result).isInstanceOf(List::class.java)
+    }
+
+    @Test
+    fun `returns correct details of the order when a response is received`() {
+      var result = service.getViolationEvents(orderId, AthenaRole.DEV)
+
+      Assertions.assertThat(result).isNotNull
+      Assertions.assertThat(result.size).isEqualTo(1)
+
+      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+
+      Assertions.assertThat(result.first().details).isInstanceOf(ViolationEventDetails::class.java)
+      Assertions.assertThat(result.first().details.breachDetails).isEqualTo("TEST_BREACH")
     }
   }
 
