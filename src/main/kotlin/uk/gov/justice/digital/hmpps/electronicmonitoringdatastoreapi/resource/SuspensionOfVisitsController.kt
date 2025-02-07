@@ -42,4 +42,3 @@ class SuspensionOfVisitsController(
     return ResponseEntity.ok(result)
   }
 }
-
