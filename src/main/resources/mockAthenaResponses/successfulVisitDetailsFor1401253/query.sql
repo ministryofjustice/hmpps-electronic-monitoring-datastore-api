@@ -13,6 +13,10 @@ SELECT
     , visit_type
     , visit_outcome
 FROM
+<<<<<<< HEAD
     historic_api_mart_integration.visit_details
+=======
+    historic_api_mart.visit_details
+>>>>>>> ec4ebac (Add Visit Details integration testing and mocks)
 WHERE
     legacy_subject_id = 1401253
