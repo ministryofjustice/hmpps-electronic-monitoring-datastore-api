@@ -52,6 +52,10 @@ data class AthenaEquipmentDetailsListQuery(
   override val queryString: String,
 ) : AthenaQuery(queryString)
 
+data class AthenaVisitDetailsListQuery(
+  override val queryString: String,
+) : AthenaQuery(queryString)
+
 data class AthenaViolationEventsListQuery(
   override val queryString: String,
 ) : AthenaQuery(queryString)
