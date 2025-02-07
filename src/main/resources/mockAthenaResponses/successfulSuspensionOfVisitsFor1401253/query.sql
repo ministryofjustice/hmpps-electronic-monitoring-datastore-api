@@ -6,6 +6,6 @@ SELECT
      , suspension_of_visits_start_time
      , suspension_of_visits_end_date
 FROM
-    historic_api_mart.suspension_of_visits
+    historic_api_mart_integration.suspension_of_visits
 WHERE
-    legacy_subject_id = 1401253;
+    legacy_subject_id = 1401253
