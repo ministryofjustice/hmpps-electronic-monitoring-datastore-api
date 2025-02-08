@@ -22,7 +22,7 @@ class OrderEventsService(
       Event<MonitoringEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
-        type = event.eventType,
+        type = "monitoring",
         dateTime = LocalDateTime.parse("${event.eventDate}T${event.eventTime}"),
         details = MonitoringEventDetails(event),
       )
@@ -36,7 +36,7 @@ class OrderEventsService(
       Event<IncidentEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
-        type = event.violationAlertType,
+        type = "incident",
         dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
         details = IncidentEventDetails(event),
       )
@@ -64,7 +64,7 @@ class OrderEventsService(
       Event<ContactEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
-        type = event.contactType,
+        type = "contact",
         dateTime = LocalDateTime.parse("${event.contactDate}T${event.contactTime}"),
         details = ContactEventDetails(event),
       )

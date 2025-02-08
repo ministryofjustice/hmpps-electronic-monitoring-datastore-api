@@ -4,9 +4,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import java.time.LocalDateTime
 
 data class MonitoringEventDetails(
+  val type: String,
   val processedDateTime: LocalDateTime,
 ) : EventDetails() {
   constructor(dto: AthenaMonitoringEventDTO) : this(
+    type = dto.eventType,
     processedDateTime = LocalDateTime.parse("${dto.processDate}T${dto.processTime}"),
   )
 }

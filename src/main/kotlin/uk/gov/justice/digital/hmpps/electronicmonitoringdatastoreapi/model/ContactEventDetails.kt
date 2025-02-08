@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class ContactEventDetails(
   val outcome: String?,
-  val contactType: String,
+  val type: String,
   val reason: String,
   val channel: String,
   val userId: String?,
@@ -14,7 +14,7 @@ data class ContactEventDetails(
 ) : EventDetails() {
   constructor(dto: AthenaContactEventDTO) : this (
     outcome = dto.outcome,
-    contactType = dto.contactType,
+    type = dto.contactType,
     reason = dto.reason,
     channel = dto.channel,
     userId = dto.userId,
