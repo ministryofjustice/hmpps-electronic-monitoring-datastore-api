@@ -5,31 +5,47 @@ import java.time.LocalDateTime
 
 data class EquipmentDetail(
   val id: String,
-  val equipmentCategoryDescription: String,
-  val installedDateTime: LocalDateTime,
-  val removedDateTime: LocalDateTime,
+  val equipmentCategoryDescription: String?,
+  val installedDateTime: LocalDateTime?,
+  val removedDateTime: LocalDateTime?,
 )
 
 data class EquipmentDetails(
   val legacySubjectId: Int,
   val legacyOrderId: Int,
-  val pid: EquipmentDetail,
-  val hmu: EquipmentDetail,
+  val pid: EquipmentDetail?,
+  val hmu: EquipmentDetail?,
 ) {
+  companion object {
+    fun nullableLocalDateTime(date: String?, time: String?): LocalDateTime? = if (!date.isNullOrBlank()) {
+      LocalDateTime.parse("${date}T${time ?: "00:00:00"}")
+    } else {
+      null
+    }
+  }
+
   constructor(dto: AthenaEquipmentDetailsDTO) : this(
     legacySubjectId = dto.legacySubjectId,
     legacyOrderId = dto.legacyOrderId,
-    pid = EquipmentDetail(
-      id = dto.pidId,
-      equipmentCategoryDescription = dto.pidEquipmentCategoryDescription,
-      installedDateTime = LocalDateTime.parse("${dto.dateDeviceInstalled}T${dto.timeDeviceInstalled}"),
-      removedDateTime = LocalDateTime.parse("${dto.dateDeviceRemoved}T${dto.timeDeviceRemoved}"),
-    ),
-    hmu = EquipmentDetail(
-      id = dto.hmuId,
-      equipmentCategoryDescription = dto.hmuEquipmentCategoryDescription,
-      installedDateTime = LocalDateTime.parse("${dto.hmuInstallDate}T${dto.hmuInstallTime}"),
-      removedDateTime = LocalDateTime.parse("${dto.hmuRemovedDate}T${dto.hmuRemovedTime}"),
-    ),
+    pid = if (!dto.pidId.isNullOrEmpty()) {
+      EquipmentDetail(
+        id = dto.pidId,
+        equipmentCategoryDescription = dto.pidEquipmentCategoryDescription,
+        installedDateTime = nullableLocalDateTime(dto.dateDeviceInstalled, dto.timeDeviceInstalled),
+        removedDateTime = nullableLocalDateTime(dto.dateDeviceRemoved, dto.timeDeviceRemoved),
+      )
+    } else {
+      null
+    },
+    hmu = if (!dto.hmuId.isNullOrEmpty()) {
+      EquipmentDetail(
+        id = dto.hmuId,
+        equipmentCategoryDescription = dto.hmuEquipmentCategoryDescription,
+        installedDateTime = nullableLocalDateTime(dto.hmuInstallDate, dto.hmuInstallTime),
+        removedDateTime = nullableLocalDateTime(dto.hmuRemovedDate, dto.hmuRemovedTime),
+      )
+    } else {
+      null
+    },
   )
 }
