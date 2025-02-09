@@ -55,6 +55,7 @@ class OrderEventsControllerTest {
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = MonitoringEventDetails(
+            type = "monitoring",
             processedDateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 2),
           ),
         ),
@@ -83,7 +84,7 @@ class OrderEventsControllerTest {
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = IncidentEventDetails(
-            violation = "TEST_INCIDENT",
+            type = "incident",
           ),
         ),
       )
@@ -155,7 +156,7 @@ class OrderEventsControllerTest {
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = ContactEventDetails(
             outcome = null,
-            contactType = "PHONE_CALL",
+            type = "PHONE_CALL",
             reason = "TEST_REASON",
             channel = "TEST_CHANNEL",
             userId = null,

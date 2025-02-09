@@ -83,7 +83,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
 
       Assertions.assertThat(result.first().details).isInstanceOf(MonitoringEventDetails::class.java)
-      Assertions.assertThat(result.first().type).isEqualTo("TEST_EVENT")
+      Assertions.assertThat(result.first().details.type).isEqualTo("TEST_EVENT")
     }
   }
 
@@ -132,7 +132,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
 
       Assertions.assertThat(result.first().details).isInstanceOf(IncidentEventDetails::class.java)
-      Assertions.assertThat(result.first().details.violation).isEqualTo("TEST_VIOLATION")
+      Assertions.assertThat(result.first().details.type).isEqualTo("TEST_VIOLATION")
     }
   }
 
@@ -254,7 +254,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
 
       Assertions.assertThat(result.first().details).isInstanceOf(ContactEventDetails::class.java)
-      Assertions.assertThat(result.first().details.contactType).isEqualTo("TEST_CONTACT")
+      Assertions.assertThat(result.first().details.type).isEqualTo("TEST_CONTACT")
     }
   }
 }
