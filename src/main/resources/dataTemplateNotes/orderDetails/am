@@ -1,0 +1,42 @@
+  id bigint,
+  legacy_order_id string,
+  legacy_subject_id string,
+  first_name string,
+  last_name string,
+
+  alias string,
+  date_of_birth date,
+
+  legacy_gender string,
+
+  primary_address_line1 string,
+  primary_address_line2 string,
+  primary_address_line3 string,
+  primary_address_postcode string,
+  phone_number1 string,
+
+
+
+
+
+
+
+
+
+
+
+  order_start_date date,
+  order_end_date date,
+  order_type string,
+  order_type_description string,
+
+
+        enforceable_condition string,
+        order_end_outcome string,
+        responsible_org_details_phone_number string,
+        responsible_org_details_email string,
+
+
+
+        tag_at_source string,
+        special_instructions string
