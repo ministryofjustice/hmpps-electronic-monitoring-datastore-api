@@ -61,7 +61,7 @@ class OrderDetailsQueryBuilder(
       FROM 
         $databaseName.order_details
       WHERE
-        legacy_subject_id=$legacySubjectId
+        legacy_subject_id = $legacySubjectId
     """.trimIndent(),
   )
 }

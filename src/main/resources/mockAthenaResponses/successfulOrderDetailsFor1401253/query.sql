@@ -33,6 +33,6 @@ SELECT
      , responsible_organisation
      , responsible_organisation_details_region
 FROM
-    test_database.order_details
+    historic_api_mart_integration.order_details
 WHERE
-    legacy_subject_id=1401253
+    legacy_subject_id = 1401253
