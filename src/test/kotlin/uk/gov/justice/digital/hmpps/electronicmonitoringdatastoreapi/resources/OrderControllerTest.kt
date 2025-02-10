@@ -13,12 +13,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -27,6 +29,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @JsonTest
 class OrderControllerTest {
   private lateinit var orderService: OrderService
+  private lateinit var amOrderService: AmOrderService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: OrderController
@@ -37,10 +40,11 @@ class OrderControllerTest {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = mock(OrderService::class.java)
+    amOrderService = mock(AmOrderService::class.java)
     roleService = mock(AthenaRoleService::class.java)
     `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
     auditService = mock(AuditService::class.java)
-    controller = OrderController(orderService, roleService, auditService)
+    controller = OrderController(orderService, amOrderService, roleService, auditService)
   }
 
   @Nested
@@ -163,6 +167,48 @@ class OrderControllerTest {
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
       Mockito.verify(orderService, times(1)).getOrderDetails(orderId, AthenaRole.DEV)
+    }
+  }
+
+  @Nested
+  inner class GetAmOrderDetails {
+    @Test
+    fun `Returns the appropriate object type`() {
+      val orderId = "1ab"
+      val expectedResult: AmOrderDetails = AmOrderDetails(
+        specials = "no",
+        legacySubjectId = "",
+        legacyOrderId = "",
+        responsibleOrgDetailsPhoneNumber = "07777777777",
+      )
+
+      `when`(amOrderService.getAmOrderDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+
+      val result = controller.getAmOrderDetails(authentication, orderId)
+
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isNotNull
+      Assertions.assertThat(result.body).isInstanceOf(AmOrderDetails::class.java)
+    }
+
+    @Test
+    fun `gets order details from order service`() {
+      val orderId = "1ab"
+      val expectedResult: AmOrderDetails = AmOrderDetails(
+        specials = "no",
+        legacySubjectId = "",
+        legacyOrderId = "",
+        responsibleOrgDetailsPhoneNumber = "07777777777",
+      )
+
+      `when`(amOrderService.getAmOrderDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+
+      val result = controller.getAmOrderDetails(authentication, orderId)
+
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isEqualTo(expectedResult)
+
+      Mockito.verify(amOrderService, times(1)).getAmOrderDetails(orderId, AthenaRole.DEV)
     }
   }
 }
