@@ -8,6 +8,7 @@ data class SuspensionOfVisits(
   val suspensionOfVisits: String,
   val suspensionOfVisitsRequestedDate: LocalDateTime?,
   val suspensionOfVisitsStartDate: LocalDateTime?,
+  val suspensionOfVisitsStartTime: String?,
   val suspensionOfVisitsEndDate: LocalDateTime?,
 ) {
   companion object {
@@ -19,6 +20,7 @@ data class SuspensionOfVisits(
     suspensionOfVisits = dto.suspensionOfVisits,
     suspensionOfVisitsRequestedDate = processDate(dto.suspensionOfVisitsRequestedDate),
     suspensionOfVisitsStartDate = processDate(dto.suspensionOfVisitsStartDate),
+    suspensionOfVisitsStartTime = dto.suspensionOfVisitsStartTime,
     suspensionOfVisitsEndDate = processDate(dto.suspensionOfVisitsEndDate),
   )
 }
