@@ -16,6 +16,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CapOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetailsBase
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
@@ -53,21 +54,23 @@ class OrderControllerTest {
     fun `gets specials order information from order service `() {
       val orderId = "1ab"
       val expectedResult = OrderInformation(
-        keyOrderInformation = OrderDetailsBase(
-          type = "BASE",
-          specials = "NO",
-          legacySubjectId = "1234567",
-          legacyOrderId = "7654321-DIFFERENT ID",
-          firstName = "John",
-          lastName = "Smith",
-          alias = "Zeno",
-          dateOfBirth = "01-02-1980",
-          primaryAddressLine1 = "1 Primary Street",
-          primaryAddressLine2 = "Sutton",
-          primaryAddressLine3 = "London",
-          primaryAddressPostCode = "ABC 123",
-          orderStartDate = "01-02-2012",
-          orderEndDate = "03-04-2013",
+        keyOrderInformation = KeyOrderInformation(
+          OrderDetailsBase(
+            type = "BASE",
+            specials = "NO",
+            legacySubjectId = "1234567",
+            legacyOrderId = "7654321-DIFFERENT ID",
+            firstName = "John",
+            lastName = "Smith",
+            alias = "Zeno",
+            dateOfBirth = "01-02-1980",
+            primaryAddressLine1 = "1 Primary Street",
+            primaryAddressLine2 = "Sutton",
+            primaryAddressLine3 = "London",
+            primaryAddressPostCode = "ABC 123",
+            orderStartDate = "01-02-2012",
+            orderEndDate = "03-04-2013",
+          ),
         ),
         subjectHistoryReport = SubjectHistoryReport(
           reportUrl = "#",
@@ -95,21 +98,23 @@ class OrderControllerTest {
     fun `gets order information from order service`() {
       val orderId = "1ab"
       val expectedResult = OrderInformation(
-        keyOrderInformation = OrderDetailsBase(
-          type = "BASE",
-          specials = "NO",
-          legacySubjectId = "1234567",
-          legacyOrderId = "7654321-DIFFERENT ID",
-          firstName = "John",
-          lastName = "Smith",
-          alias = "Zeno",
-          dateOfBirth = "01-02-1980",
-          primaryAddressLine1 = "1 Primary Street",
-          primaryAddressLine2 = "Sutton",
-          primaryAddressLine3 = "London",
-          primaryAddressPostCode = "ABC 123",
-          orderStartDate = "01-02-2012",
-          orderEndDate = "03-04-2013",
+        keyOrderInformation = KeyOrderInformation(
+          OrderDetailsBase(
+            type = "BASE",
+            specials = "NO",
+            legacySubjectId = "1234567",
+            legacyOrderId = "7654321-DIFFERENT ID",
+            firstName = "John",
+            lastName = "Smith",
+            alias = "Zeno",
+            dateOfBirth = "01-02-1980",
+            primaryAddressLine1 = "1 Primary Street",
+            primaryAddressLine2 = "Sutton",
+            primaryAddressLine3 = "London",
+            primaryAddressPostCode = "ABC 123",
+            orderStartDate = "01-02-2012",
+            orderEndDate = "03-04-2013",
+          ),
         ),
         subjectHistoryReport = SubjectHistoryReport(
           reportUrl = "#",

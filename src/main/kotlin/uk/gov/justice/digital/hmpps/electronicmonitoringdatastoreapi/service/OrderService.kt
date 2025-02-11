@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CapOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformationInterface
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
@@ -47,7 +47,7 @@ class OrderService(
 
   fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
     val orderDetailsDTO: AthenaCapOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
-    val parsedKeyOrderInformation: KeyOrderInformationInterface = CapOrderDetails(orderDetailsDTO)
+    val parsedKeyOrderInformation: KeyOrderInformation = KeyOrderInformation(CapOrderDetails(orderDetailsDTO))
 
     // Put it together
     return OrderInformation(
