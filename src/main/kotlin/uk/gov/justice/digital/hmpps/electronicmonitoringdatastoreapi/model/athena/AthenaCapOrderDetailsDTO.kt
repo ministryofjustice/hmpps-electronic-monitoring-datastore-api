@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athe
 import com.fasterxml.jackson.annotation.JsonProperty
 
 // TODO: Check which fields are nullable
-data class AthenaOrderDetailsDTO(
+data class AthenaCapOrderDetailsDTO(
   val legacySubjectId: String,
   val legacyOrderId: String,
   val firstName: String? = "",

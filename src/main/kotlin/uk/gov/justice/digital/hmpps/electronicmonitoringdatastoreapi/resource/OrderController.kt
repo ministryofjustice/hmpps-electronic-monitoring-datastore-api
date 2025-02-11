@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CapOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
@@ -95,7 +95,7 @@ class OrderController(
   fun getOrderDetails(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<OrderDetails> {
+  ): ResponseEntity<CapOrderDetails> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = orderService.getOrderDetails(orderId, validatedRole)

@@ -30,7 +30,7 @@ class AmOrderServiceTest {
   }
 
   @Nested
-  inner class GetOrderDetails {
+  inner class GetCapOrderDetails {
     val orderId = "fake-id"
 
     val blankOrderDetails = AthenaAmOrderDetailsDTO(

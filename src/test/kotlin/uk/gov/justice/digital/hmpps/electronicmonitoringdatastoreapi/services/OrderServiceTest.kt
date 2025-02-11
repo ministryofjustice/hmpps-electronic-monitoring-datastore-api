@@ -10,13 +10,13 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CapOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCapOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
@@ -158,8 +158,8 @@ class OrderServiceTest {
     val blankKeyOrderInformation = AthenaKeyOrderInformationDTO(
       legacySubjectId = "",
       legacyOrderId = orderId,
-      name = "TEST",
-      alias = "",
+      name = "",
+      alias = "TEST",
       dateOfBirth = "",
       address1 = "",
       address2 = "",
@@ -224,17 +224,17 @@ class OrderServiceTest {
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(orderId)
-      Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
+      Assertions.assertThat(result.keyOrderInformation.alias).isEqualTo("TEST")
       Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
       Assertions.assertThat(result.documents).isEmpty()
     }
   }
 
   @Nested
-  inner class GetOrderDetails {
+  inner class GetCapOrderDetails {
     val orderId = "fake-id"
 
-    val blankOrderDetails = AthenaOrderDetailsDTO(
+    val blankOrderDetails = AthenaCapOrderDetailsDTO(
       legacySubjectId = "",
       legacyOrderId = "",
       offenceRisk = true,
@@ -256,7 +256,7 @@ class OrderServiceTest {
     fun `returns OrderDetails`() {
       val result = service.getOrderDetails(orderId, AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(OrderDetails::class.java)
+      Assertions.assertThat(result).isInstanceOf(CapOrderDetails::class.java)
     }
 
     @Test
