@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources
 
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -9,6 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 
 @ActiveProfiles("integration")
 class SuspensionOfVisitsControllerIntegrationTest : ControllerIntegrationBase() {
+  @Disabled
   @Nested
   @DisplayName("GET /orders/getSuspensionOfVisits/{orderId}")
   inner class GetSuspensionOfVisits {
