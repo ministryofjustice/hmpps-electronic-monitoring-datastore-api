@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.varCharValueColumn
 
-class AmOrderDetailsRepositoryTest {
+class AmCapOrderDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
   private lateinit var repository: AmOrderDetailsRepository
 
@@ -69,7 +69,7 @@ class AmOrderDetailsRepositoryTest {
   }
 
   @Nested
-  inner class GetOrderDetails {
+  inner class GetCapOrderDetails {
     @Test
     fun `getAmOrderDetails calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())

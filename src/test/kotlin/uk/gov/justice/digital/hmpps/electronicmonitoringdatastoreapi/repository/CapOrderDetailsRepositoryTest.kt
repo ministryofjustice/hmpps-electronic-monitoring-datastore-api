@@ -9,13 +9,12 @@ import org.mockito.kotlin.any
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCapOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.varCharValueColumn
-import java.util.*
 
-class OrderDetailsRepositoryTest {
+class CapOrderDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
   private lateinit var repository: OrderDetailsRepository
 
@@ -70,7 +69,7 @@ class OrderDetailsRepositoryTest {
   }
 
   @Nested
-  inner class GetOrderDetails {
+  inner class GetCapOrderDetails {
     @Test
     fun `getOrderDetails calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet())
@@ -90,7 +89,7 @@ class OrderDetailsRepositoryTest {
 
       val result = repository.getOrderDetails("123", AthenaRole.DEV)
 
-      Assertions.assertThat(result).isInstanceOf(AthenaOrderDetailsDTO::class.java)
+      Assertions.assertThat(result).isInstanceOf(AthenaCapOrderDetailsDTO::class.java)
     }
 
     @Test
