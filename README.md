@@ -50,13 +50,13 @@ using IntelliJ but other IDEs will prove similar.
 git clone git@github.com:ministryofjustice/hmpps-electronic-monitoring-datastore-api.git
 ```
 
-2. Launch IntelliJ and open the `hmpps-electronic-monitoring-datastore-api` project by navigating to the location 
+1. Launch IntelliJ and open the `hmpps-electronic-monitoring-datastore-api` project by navigating to the location 
 of the repository.
 
 Upon opening the project, IntelliJ will begin downloading and installing necessary dependencies which may take a few
 minutes.
 
-3. Enable pre-commit hooks for formatting and linting code with the following command;
+1. Enable pre-commit hooks for formatting and linting code with the following command;
 
 ```bash
 ./gradlew addKtlintFormatGitPreCommitHook addKtlintCheckGitPreCommitHook
@@ -97,13 +97,13 @@ will build the application and run it and HMPPS Auth within a local docker insta
 1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0`
 , which will just start a docker instance of the database and HMPPS Auth.
 
-3. Click the drop-down button for the `HmppsElectronicMonitoringDatastoreApi` run configuration file in the top 
+2. Click the drop-down button for the `HmppsElectronicMonitoringDatastoreApi` run configuration file in the top 
 right corner, and select Edit Configurations. 
     - For the 'Active Profiles' field, put 'local'
     - You may also need to set the JDK to openjdk-23 or openjdk-21
     - Apply these changes
 
-4. Click the run button.
+3. Click the run button.
 
 Or, to run the application using the command line:
 
@@ -126,7 +126,7 @@ The process by which the API queries Athena is:
 3. The EmDatastoreRoleProvider makes an `StsClient.assumeRole()` call using the local Cloud Platform role, and gives the `CredentialsProvider` this returns to the `EmDatastoreClient`
 4. The EmDatastoreClient builds an AWS.AthenaClient with these credentials that has access to the appropriate data in the Athena datastore.
 
-For debugging it's useful to be able to run these queries ourselves. To do this you will need:
+For debugging, it's useful to be able to run these queries ourselves. To do this you will need:
 - To be a member of [our GitHub team](https://github.com/orgs/ministryofjustice/teams/hmpps-electronic-monitoring)
 - To configure KubeCtl to let you connect to the CLoud Platform Kubernetes cluster - [follow this guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html)
 - The [cloud platform CLI](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/cloud-platform-cli.html)

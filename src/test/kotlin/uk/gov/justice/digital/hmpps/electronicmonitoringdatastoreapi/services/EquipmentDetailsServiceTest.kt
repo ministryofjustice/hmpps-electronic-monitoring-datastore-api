@@ -81,9 +81,9 @@ class EquipmentDetailsServiceTest {
       Assertions.assertThat(result.first()).isInstanceOf(EquipmentDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo(123)
       Assertions.assertThat(result.first().pid).isInstanceOf(EquipmentDetail::class.java)
-      Assertions.assertThat(result.first().pid.equipmentCategoryDescription).isEqualTo("TEST_PID_CATEGORY")
+      Assertions.assertThat(result.first().pid?.equipmentCategoryDescription).isEqualTo("TEST_PID_CATEGORY")
       Assertions.assertThat(result.first().hmu).isInstanceOf(EquipmentDetail::class.java)
-      Assertions.assertThat(result.first().hmu.equipmentCategoryDescription).isEqualTo("TEST_HMU_CATEGORY")
+      Assertions.assertThat(result.first().hmu?.equipmentCategoryDescription).isEqualTo("TEST_HMU_CATEGORY")
     }
   }
 }
