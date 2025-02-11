@@ -53,7 +53,7 @@ class OrderDetailsQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            legacy_subject_id=$legacySubjectId
+            legacy_subject_id = $legacySubjectId
       """.trimIndent(),
     )
 
