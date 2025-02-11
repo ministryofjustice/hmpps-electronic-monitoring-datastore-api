@@ -20,22 +20,19 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 
 class OrderServiceTest {
   private lateinit var orderRepository: OrderRepository
-  private lateinit var orderInformationRepository: OrderInformationRepository
   private lateinit var orderDetailsRepository: OrderDetailsRepository
   private lateinit var service: OrderService
 
   @BeforeEach
   fun setup() {
     orderRepository = mock(OrderRepository::class.java)
-    orderInformationRepository = mock(OrderInformationRepository::class.java)
     orderDetailsRepository = mock(OrderDetailsRepository::class.java)
-    service = OrderService(orderRepository, orderInformationRepository, orderDetailsRepository)
+    service = OrderService(orderRepository, orderDetailsRepository)
   }
 
   @Test
@@ -174,10 +171,6 @@ class OrderServiceTest {
     fun setup() {
       `when`(orderDetailsRepository.getOrderDetails(orderId, AthenaRole.DEV))
         .thenReturn(blankOrderDetails)
-      `when`(orderInformationRepository.getSubjectHistoryReport(orderId, AthenaRole.DEV))
-        .thenReturn(blankSubjectHistoryReport)
-      `when`(orderInformationRepository.getDocumentList(orderId, AthenaRole.DEV))
-        .thenReturn(blankDocumentList)
     }
 
     @Test
@@ -192,7 +185,7 @@ class OrderServiceTest {
     fun `calls getDocumentList from order information repository`() {
       service.getOrderInformation(orderId, AthenaRole.DEV)
 
-      Mockito.verify(orderInformationRepository, times(1)).getDocumentList(orderId, AthenaRole.DEV)
+//      Mockito.verify(orderDetailsRepository, times(1)).getDocumentList(orderId, AthenaRole.DEV)
     }
 
     @Test

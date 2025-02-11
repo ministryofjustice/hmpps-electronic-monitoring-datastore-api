@@ -13,14 +13,12 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Subje
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCapOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
 import kotlin.String
 
 @Service
 class OrderService(
   @Autowired val orderRepository: OrderRepository,
-  @Autowired val orderInformationRepository: OrderInformationRepository,
   @Autowired val orderDetailsRepository: OrderDetailsRepository,
 ) {
   fun checkAthenaAccessible(role: AthenaRole): Boolean {
