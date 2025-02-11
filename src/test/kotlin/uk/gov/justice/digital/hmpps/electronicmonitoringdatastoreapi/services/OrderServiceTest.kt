@@ -50,7 +50,7 @@ class OrderServiceTest {
     fun `calls listLegacyIds from order repository`() {
       `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
 
-      service.checkAvailability(AthenaRole.DEV)
+      service.checkAthenaAccessible(AthenaRole.DEV)
 
       Mockito.verify(orderRepository, times(1)).listLegacyIds(AthenaRole.DEV)
     }
@@ -59,7 +59,7 @@ class OrderServiceTest {
     fun `confirms AWS athena is available if successful`() {
       `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
 
-      var result = service.checkAvailability(AthenaRole.DEV)
+      var result = service.checkAthenaAccessible(AthenaRole.DEV)
 
       Assertions.assertThat(result).isTrue
     }
@@ -70,7 +70,7 @@ class OrderServiceTest {
 
       `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
 
-      var result = service.checkAvailability(AthenaRole.DEV)
+      var result = service.checkAthenaAccessible(AthenaRole.DEV)
 
       Assertions.assertThat(result).isFalse
     }
@@ -84,7 +84,7 @@ class OrderServiceTest {
     fun `passes query to order repository`() {
       `when`(orderRepository.runQuery(athenaQuery, AthenaRole.DEV)).thenReturn("Expected response")
 
-      service.query(athenaQuery, AthenaRole.DEV)
+      service.runCustomQuery(athenaQuery, AthenaRole.DEV)
 
       Mockito.verify(orderRepository, times(1)).runQuery(athenaQuery, AthenaRole.DEV)
     }
@@ -93,7 +93,7 @@ class OrderServiceTest {
     fun `returns response from order repository`() {
       `when`(orderRepository.runQuery(athenaQuery, AthenaRole.DEV)).thenReturn("Expected response")
 
-      var result = service.query(athenaQuery, AthenaRole.DEV)
+      var result = service.runCustomQuery(athenaQuery, AthenaRole.DEV)
 
       Assertions.assertThat(result).isEqualTo("Expected response")
     }
@@ -155,18 +155,11 @@ class OrderServiceTest {
   inner class GetOrderInformation {
     val orderId = "fake-id"
 
-    val blankKeyOrderInformation = AthenaKeyOrderInformationDTO(
+    val blankOrderDetails = AthenaCapOrderDetailsDTO(
       legacySubjectId = "",
       legacyOrderId = orderId,
-      name = "",
       alias = "TEST",
-      dateOfBirth = "",
-      address1 = "",
-      address2 = "",
-      address3 = "",
-      postcode = "",
-      orderStartDate = "",
-      orderEndDate = "",
+      offenceRisk = true,
     )
 
     val blankSubjectHistoryReport = AthenaSubjectHistoryReportDTO(
@@ -180,8 +173,8 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(orderInformationRepository.getKeyOrderInformation(orderId, AthenaRole.DEV))
-        .thenReturn(blankKeyOrderInformation)
+      `when`(orderDetailsRepository.getOrderDetails(orderId, AthenaRole.DEV))
+        .thenReturn(blankOrderDetails)
       `when`(orderInformationRepository.getSubjectHistoryReport(orderId, AthenaRole.DEV))
         .thenReturn(blankSubjectHistoryReport)
       `when`(orderInformationRepository.getDocumentList(orderId, AthenaRole.DEV))
@@ -189,18 +182,10 @@ class OrderServiceTest {
     }
 
     @Test
-    fun `calls getKeyOrderInformation from order information repository`() {
+    fun `calls getOrderDetails from order details repository`() {
       service.getOrderInformation(orderId, AthenaRole.DEV)
 
-      Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(orderId, AthenaRole.DEV)
-    }
-
-    @Disabled("SubjectHistoryReport will no longer be used")
-    @Test
-    fun `calls getSubjectHistoryReport from order information repository`() {
-      service.getOrderInformation(orderId, AthenaRole.DEV)
-
-      Mockito.verify(orderInformationRepository, times(1)).getSubjectHistoryReport(orderId, AthenaRole.DEV)
+      Mockito.verify(orderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.DEV)
     }
 
     @Disabled("We are not currently returning documents")

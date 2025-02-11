@@ -11,29 +11,25 @@ open class OrderDetailsBase(
   open val lastName: String? = "",
   override val alias: String? = "",
   override val dateOfBirth: String? = "",
-  open val primaryAddressLine1: String? = "",
-  open val primaryAddressLine2: String? = "",
-  open val primaryAddressLine3: String? = "",
+  override val primaryAddressLine1: String? = "",
+  override val primaryAddressLine2: String? = "",
+  override val primaryAddressLine3: String? = "",
   override val orderStartDate: String? = "",
   override val orderEndDate: String? = "",
-  open val primaryAddressPostCode: String? = "",
+  override val primaryAddressPostCode: String? = "",
   open val orderTypeDescription: String? = "",
   open val orderType: String? = "",
   open val phoneOrMobileNumber: String? = "",
   open val sex: String? = "",
 ): IKeyOrderInformation {
   override val name = "$firstName $lastName"
-  override val address1 = primaryAddressLine1
-  override val address2 = primaryAddressLine2
-  override val address3 = primaryAddressLine3
-  override val postcode = primaryAddressPostCode
 
   constructor(dto: AthenaKeyOrderInformationDTO) : this (
     type = "BASE",
     specials = "no",
     legacySubjectId = dto.legacySubjectId,
     legacyOrderId = dto.legacyOrderId,
-    firstName = dto.name, //TO FIX
+    firstName = "", //TO FIX
     lastName = dto.name, //TO FIX
     alias = dto.alias,
     dateOfBirth = dto.dateOfBirth,

@@ -66,7 +66,7 @@ class SearchController(
 
     var isAvailable: Boolean
     try {
-      isAvailable = orderService.checkAvailability(validatedRole)
+      isAvailable = orderService.checkAthenaAccessible(validatedRole)
     } catch (ex: Exception) {
       throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
     }
@@ -92,7 +92,7 @@ class SearchController(
 
     var result: AthenaQueryResponse<String>
     try {
-      val queryResponse = orderService.query(athenaQuery, validatedRole)
+      val queryResponse = orderService.runCustomQuery(athenaQuery, validatedRole)
 
       result = AthenaQueryResponse<String>(
         queryString = athenaQuery.queryString,

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CapOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetailsBase
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IKeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
@@ -23,7 +23,7 @@ class OrderService(
   @Autowired val orderInformationRepository: OrderInformationRepository,
   @Autowired val orderDetailsRepository: OrderDetailsRepository,
 ) {
-  fun checkAvailability(role: AthenaRole): Boolean {
+  fun checkAthenaAccessible(role: AthenaRole): Boolean {
     try {
       orderRepository.listLegacyIds(role)
     } catch (_: Exception) {
@@ -33,7 +33,7 @@ class OrderService(
     return true
   }
 
-  fun query(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
+  fun runCustomQuery(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
     val result = orderRepository.runQuery(athenaQuery, role)
 
     return result
@@ -48,20 +48,13 @@ class OrderService(
   }
 
   fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
-    val keyOrderInformationDTO = orderInformationRepository.getKeyOrderInformation(orderId, role)
-    val parsedKeyOrderInformation = OrderDetailsBase(keyOrderInformationDTO)
-
-    val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()
-//    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(orderId, role)
-//    val parsedSubjectHistoryReport = parseSubjectHistoryReport(subjectHistoryReport)
-
-//    val documentList = orderInformationRepository.getDocumentList(orderId, role)
-//    val parsedDocumentList = parseDocumentList(documentList)
+    val orderDetailsDTO: AthenaCapOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
+    val parsedKeyOrderInformation: IKeyOrderInformation = CapOrderDetails(orderDetailsDTO)
 
     // Put it together
     return OrderInformation(
       keyOrderInformation = parsedKeyOrderInformation,
-      subjectHistoryReport = emptyHistoryReport,
+      subjectHistoryReport = SubjectHistoryReport.createEmpty(),
       documents = listOf<Document>(),
     )
   }

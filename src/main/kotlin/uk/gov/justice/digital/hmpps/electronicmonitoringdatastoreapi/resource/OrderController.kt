@@ -67,6 +67,7 @@ class OrderController(
     return ResponseEntity.ok(result)
   }
 
+//  TODO: Probably refactor/remove this wrapper endpoint for getOrder() just below
   @GetMapping("/getOrderSummary/{orderId}")
   fun getOrderSummary(
     authentication: Authentication,

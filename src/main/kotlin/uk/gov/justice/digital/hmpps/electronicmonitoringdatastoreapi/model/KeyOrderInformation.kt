@@ -1,7 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-
 interface IKeyOrderInformation {
   val specials: String
   val legacySubjectId: String
@@ -9,10 +7,10 @@ interface IKeyOrderInformation {
   val name: String?
   val alias: String?
   val dateOfBirth: String?
-  val address1: String?
-  val address2: String?
-  val address3: String?
-  val postcode: String?
+  val primaryAddressLine1: String?
+  val primaryAddressLine2: String?
+  val primaryAddressLine3: String?
+  val primaryAddressPostCode: String?
   val orderStartDate: String?
   val orderEndDate: String?
 }

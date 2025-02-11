@@ -14,7 +14,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetOrderSummary {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulKeyOrderInformationResponse")
+      MockEmDatastoreClient.addResponseFile("successfulOrderDetailsResponse")
       MockEmDatastoreClient.addResponseFile("successfulSubjectHistoryReportResponse")
       MockEmDatastoreClient.addResponseFile("successfulDocumentListResponse")
     }
@@ -54,7 +54,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetSpecialsOrder {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulKeyOrderInformationResponse")
+      MockEmDatastoreClient.addResponseFile("successfulOrderDetailsResponse")
       MockEmDatastoreClient.addResponseFile("successfulSubjectHistoryReportResponse")
       MockEmDatastoreClient.addResponseFile("successfulDocumentListResponse")
     }
@@ -132,7 +132,7 @@ class OrderControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetOrder {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulKeyOrderInformationResponse")
+      MockEmDatastoreClient.addResponseFile("successfulOrderDetailsResponse")
       MockEmDatastoreClient.addResponseFile("successfulSubjectHistoryReportResponse")
       MockEmDatastoreClient.addResponseFile("successfulDocumentListResponse")
     }
