@@ -20,6 +20,7 @@ data class AthenaAmOrderDetailsDTO(
   val primaryAddressLine2: String? = "",
   @JsonProperty("primary_address_line3")
   val primaryAddressLine3: String? = "",
+  @JsonProperty("primary_address_postcode")
   val primaryAddressPostCode: String? = "",
   @JsonProperty("phone_number1")
   val phoneOrMobileNumber: String? = "",

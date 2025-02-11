@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-interface IKeyOrderInformation {
+interface KeyOrderInformationInterface {
   val specials: String
   val legacySubjectId: String
   val legacyOrderId: String
