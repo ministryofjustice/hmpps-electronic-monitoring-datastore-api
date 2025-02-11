@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Conta
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderEventsRepository
 import java.time.LocalDateTime
 
@@ -21,7 +22,7 @@ class OrderEventsService(
       Event<MonitoringEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
-        type = event.eventType,
+        type = "monitoring",
         dateTime = LocalDateTime.parse("${event.eventDate}T${event.eventTime}"),
         details = MonitoringEventDetails(event),
       )
@@ -35,9 +36,23 @@ class OrderEventsService(
       Event<IncidentEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
-        type = event.violationAlertType,
+        type = "incident",
         dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
         details = IncidentEventDetails(event),
+      )
+    }
+  }
+
+  fun getViolationEvents(orderId: String, role: AthenaRole): List<Event<ViolationEventDetails>> {
+    val result = orderEventsRepository.getViolationEventsList(orderId, role)
+
+    return result.map { event ->
+      Event<ViolationEventDetails>(
+        legacyOrderId = event.legacyOrderId,
+        legacySubjectId = event.legacySubjectId,
+        type = "violation",
+        dateTime = LocalDateTime.parse("${event.breachDate}T${event.breachTime}"),
+        details = ViolationEventDetails(event),
       )
     }
   }
@@ -49,7 +64,7 @@ class OrderEventsService(
       Event<ContactEventDetails>(
         legacyOrderId = event.legacyOrderId,
         legacySubjectId = event.legacySubjectId,
-        type = event.contactType,
+        type = "contact",
         dateTime = LocalDateTime.parse("${event.contactDate}T${event.contactTime}"),
         details = ContactEventDetails(event),
       )

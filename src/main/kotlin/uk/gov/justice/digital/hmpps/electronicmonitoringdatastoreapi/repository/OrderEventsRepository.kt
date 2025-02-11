@@ -9,9 +9,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ContactEventsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.IncidentEventsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.MonitoringEventsQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ViolationEventsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaIncidentEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaMonitoringEventDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaViolationEventDTO
 
 @Service
 class OrderEventsRepository(
@@ -37,6 +39,16 @@ class OrderEventsRepository(
     val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, role)
 
     return AthenaHelper.Companion.mapTo<AthenaIncidentEventDTO>(athenaResponse)
+  }
+
+  fun getViolationEventsList(orderId: String, role: AthenaRole): List<AthenaViolationEventDTO> {
+    val violationEventsQuery = ViolationEventsQueryBuilder(athenaDatabase)
+      .withLegacySubjectId(orderId)
+      .build()
+
+    val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, role)
+
+    return AthenaHelper.Companion.mapTo<AthenaViolationEventDTO>(athenaResponse)
   }
 
   fun getContactEventsList(orderId: String, role: AthenaRole): List<AthenaContactEventDTO> {

@@ -16,6 +16,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Conta
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderEventsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
@@ -45,7 +46,7 @@ class OrderEventsControllerTest {
   @Nested
   inner class GetMonitoringEvents {
     @Test
-    fun `gets order information from order service`() {
+    fun `gets monitoring events from order events service`() {
       val orderId = "1ab"
       val expectedResult = listOf<Event<MonitoringEventDetails>>(
         Event<MonitoringEventDetails>(
@@ -54,6 +55,7 @@ class OrderEventsControllerTest {
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = MonitoringEventDetails(
+            type = "monitoring",
             processedDateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 2),
           ),
         ),
@@ -71,9 +73,9 @@ class OrderEventsControllerTest {
   }
 
   @Nested
-  inner class GetViolationAlerts {
+  inner class GetIncidentEvents {
     @Test
-    fun `gets order information from order service`() {
+    fun `gets incident events from order events service`() {
       val orderId = "1ab"
       val expectedResult = listOf<Event<IncidentEventDetails>>(
         Event<IncidentEventDetails>(
@@ -82,7 +84,7 @@ class OrderEventsControllerTest {
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = IncidentEventDetails(
-            violation = "TEST_INCIDENT",
+            type = "incident",
           ),
         ),
       )
@@ -99,9 +101,52 @@ class OrderEventsControllerTest {
   }
 
   @Nested
+  inner class GetViolationEvents {
+    @Test
+    fun `gets violation events from order events service`() {
+      val orderId = "1ab"
+      val expectedResult = listOf<Event<ViolationEventDetails>>(
+        Event<ViolationEventDetails>(
+          legacyOrderId = 123,
+          legacySubjectId = 1543,
+          type = "TEST_STATUS",
+          dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
+          details = ViolationEventDetails(
+            enforcementReason = "ENFORCEMENT_REASON",
+            investigationOutcomeReason = "INVESTIGATION_OUTCOME",
+            breachDetails = "BREACH_DETAILS",
+            breachEnforcementOutcome = "ENFORCEMENT_OUTCOME",
+            agencyAction = "AGENCY_ACTION",
+            breachDateTime = LocalDateTime.parse("2020-01-01T00:00:00"),
+            breachIdentifiedDateTime = LocalDateTime.parse("2020-01-01T00:00:00"),
+            authorityFirstNotifiedDateTime = LocalDateTime.parse("2020-01-01T00:00:00"),
+            agencyResponseDate = LocalDateTime.parse("2020-01-01T00:00:00"),
+            breachPackRequestedDate = LocalDateTime.parse("2020-01-01T00:00:00"),
+            breachPackSentDate = LocalDateTime.parse("2020-01-01T00:00:00"),
+            section9Date = LocalDateTime.parse("2020-01-01T00:00:00"),
+            hearingDate = LocalDateTime.parse("2020-01-01T00:00:00"),
+            summonsServedDate = LocalDateTime.parse("2020-01-01T00:00:00"),
+            subjectLetterSentDate = LocalDateTime.parse("2020-01-01T00:00:00"),
+            warningLetterSentDateTime = LocalDateTime.parse("2020-01-01T00:00:00"),
+          ),
+        ),
+      )
+
+      `when`(orderEventsService.getViolationEvents(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+
+      val result = controller.getViolationEvents(authentication, orderId)
+
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isEqualTo(expectedResult)
+
+      Mockito.verify(orderEventsService, Mockito.times(1)).getViolationEvents(orderId, AthenaRole.DEV)
+    }
+  }
+
+  @Nested
   inner class GetContactEvents {
     @Test
-    fun `gets order information from order service`() {
+    fun `gets contact events from order events service`() {
       val orderId = "1ab"
       val expectedResult = listOf<Event<ContactEventDetails>>(
         Event<ContactEventDetails>(
@@ -111,7 +156,7 @@ class OrderEventsControllerTest {
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = ContactEventDetails(
             outcome = null,
-            contactType = "PHONE_CALL",
+            type = "PHONE_CALL",
             reason = "TEST_REASON",
             channel = "TEST_CHANNEL",
             userId = null,
