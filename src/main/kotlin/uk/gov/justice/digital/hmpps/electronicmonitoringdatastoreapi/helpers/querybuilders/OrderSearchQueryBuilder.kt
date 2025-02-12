@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
-class SearchKeyOrderInformationQueryBuilder(
+class OrderSearchQueryBuilder(
   var databaseName: String? = null,
 ) {
   private var whereClause = mutableMapOf<String, String>()
@@ -23,7 +23,7 @@ class SearchKeyOrderInformationQueryBuilder(
       field = value
     }
 
-  fun withLegacySubjectId(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withLegacySubjectId(value: String?): OrderSearchQueryBuilder {
     legacySubjectId = value
     return this
   }
@@ -38,7 +38,7 @@ class SearchKeyOrderInformationQueryBuilder(
       field = value
     }
 
-  fun withFirstName(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withFirstName(value: String?): OrderSearchQueryBuilder {
     firstName = value
     return this
   }
@@ -53,7 +53,7 @@ class SearchKeyOrderInformationQueryBuilder(
       field = value
     }
 
-  fun withLastName(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withLastName(value: String?): OrderSearchQueryBuilder {
     lastName = value
     return this
   }
@@ -68,7 +68,7 @@ class SearchKeyOrderInformationQueryBuilder(
       field = value
     }
 
-  fun withAlias(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withAlias(value: String?): OrderSearchQueryBuilder {
     alias = value
     return this
   }

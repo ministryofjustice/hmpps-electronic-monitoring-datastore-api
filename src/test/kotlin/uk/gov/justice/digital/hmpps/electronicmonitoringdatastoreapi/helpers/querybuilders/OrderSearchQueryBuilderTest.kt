@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class SearchKeyOrderInformationQueryBuilderTest {
+class OrderSearchQueryBuilderTest {
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
 
   val baseQuery: String = """
@@ -31,7 +31,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database")
       .withLegacySubjectId(legacySubjectId)
       .build()
 
@@ -48,7 +48,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database")
       .withFirstName(firstName)
       .build()
 
@@ -65,7 +65,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database")
       .withLastName(lastName)
       .build()
 
@@ -82,7 +82,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database")
       .withAlias(alias)
       .build()
 
@@ -101,7 +101,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = SearchKeyOrderInformationQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database")
       .withLegacySubjectId(legacySubjectId)
       .withAlias(alias)
       .build()
@@ -112,7 +112,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
   @Test
   fun `Throws error if search criteria are null`() {
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      SearchKeyOrderInformationQueryBuilder().build()
+      OrderSearchQueryBuilder().build()
     }.withMessage("At least one search criteria must be populated")
   }
 
@@ -121,7 +121,7 @@ class SearchKeyOrderInformationQueryBuilderTest {
     val illegalLegacySubjectId = "fake-not a number"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      SearchKeyOrderInformationQueryBuilder().withLegacySubjectId(illegalLegacySubjectId)
+      OrderSearchQueryBuilder().withLegacySubjectId(illegalLegacySubjectId)
     }.withMessage("Legacy_subject_id must be convertable to type Long")
   }
 }
