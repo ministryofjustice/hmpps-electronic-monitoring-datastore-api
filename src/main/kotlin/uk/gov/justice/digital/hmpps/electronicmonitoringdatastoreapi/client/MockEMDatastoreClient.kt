@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.ResultSetAndId
 import java.io.File
 import kotlin.io.readText
 
@@ -65,5 +66,34 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
     }
 
     return AthenaHelper.resultSetFromJson(athenaResponse!!)
+  }
+
+  override fun getQueryResultAndId(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId {
+    if (athenaQuery.queryString == "THROW ERROR") {
+      throw IllegalArgumentException("I threw an error")
+    }
+
+    if (responses.isEmpty()) {
+      loadResponses()
+    }
+
+    val query = stripWhitespace(athenaQuery.queryString)
+
+    val athenaResponse = responses[query]?.trimIndent()
+    if (athenaResponse == null) {
+      log.info(
+        """
+          No response defined for query
+          -------------
+          ${athenaQuery.queryString}
+          -------------
+        """.trimIndent(),
+      )
+    }
+
+    val resultSet = AthenaHelper.resultSetFromJson(athenaResponse!!)
+    val queryExecutionId: String = "AB1234"
+
+    return ResultSetAndId(resultSet, queryExecutionId)
   }
 }
