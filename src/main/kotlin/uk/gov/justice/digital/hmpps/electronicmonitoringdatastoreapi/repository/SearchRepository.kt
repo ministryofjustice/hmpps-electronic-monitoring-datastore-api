@@ -8,7 +8,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SearchKeyOrderInformationQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.OrderSearchQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
@@ -20,14 +20,14 @@ class SearchRepository(
   var athenaDatabase: String = "unknown_database",
 ) {
   fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): String {
-    val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
+    val orderSearchQuery = OrderSearchQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)
       .withAlias(criteria.alias)
       .build()
 
-    return athenaClient.getQueryExecutionId(searchKeyOrderInformationQuery, role)
+    return athenaClient.getQueryExecutionId(orderSearchQuery, role)
   }
 
   fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
