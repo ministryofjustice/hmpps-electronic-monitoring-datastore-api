@@ -28,3 +28,8 @@ data class OrderSearchResult(
     orderEndDate = dto.orderEndDate,
   )
 }
+
+data class OrderSearchResults(
+  val results: List<OrderSearchResult>,
+  val queryExecutionId: String,
+)

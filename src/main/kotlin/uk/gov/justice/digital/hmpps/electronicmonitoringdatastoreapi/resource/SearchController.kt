@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResults
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
@@ -135,10 +135,10 @@ class SearchController(
   fun searchOrders(
     authentication: Authentication,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
-  ): ResponseEntity<List<OrderSearchResult>> {
+  ): ResponseEntity<OrderSearchResults> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val results = orderService.search(orderSearchCriteria, validatedRole)
+    val (results, queryExecutionId) = orderService.search(orderSearchCriteria, validatedRole)
 
 //    TODO: Error-handling for the audit service
     auditService?.createEvent(
@@ -151,6 +151,6 @@ class SearchController(
       ),
     )
 
-    return ResponseEntity.ok(results)
+    return ResponseEntity.ok(OrderSearchResults(results, queryExecutionId))
   }
 }

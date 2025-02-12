@@ -11,6 +11,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SearchKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResults
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 
 @Service
@@ -19,7 +20,7 @@ class OrderRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): AthenaOrderSearchResults {
     val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
@@ -27,11 +28,11 @@ class OrderRepository(
       .withAlias(criteria.alias)
       .build()
 
-    val athenaResponse: ResultSet = athenaClient.getQueryResult(searchKeyOrderInformationQuery, role)
+    val (resultSet, queryExecutionId) = athenaClient.getQueryResultAndId(searchKeyOrderInformationQuery, role)
 
-    val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
+    val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
 
-    return result
+    return AthenaOrderSearchResults(results, queryExecutionId)
   }
 
   fun listLegacyIds(role: AthenaRole): List<String> {

@@ -15,3 +15,8 @@ data class AthenaOrderSearchResultDTO(
   val orderStartDate: String,
   val orderEndDate: String,
 )
+
+data class AthenaOrderSearchResults(
+  val results: List<AthenaOrderSearchResultDTO>,
+  val queryExecutionId: String,
+)

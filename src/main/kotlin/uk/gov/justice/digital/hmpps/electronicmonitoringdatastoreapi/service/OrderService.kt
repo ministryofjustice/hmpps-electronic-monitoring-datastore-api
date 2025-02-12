@@ -9,6 +9,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResults
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
@@ -39,12 +40,12 @@ class OrderService(
     return result
   }
 
-  fun search(criteria: OrderSearchCriteria, role: AthenaRole): List<OrderSearchResult> {
-    val orders = orderRepository.searchOrders(criteria, role)
+  fun search(criteria: OrderSearchCriteria, role: AthenaRole): OrderSearchResults {
+    val (results, queryExecutionId) = orderRepository.searchOrders(criteria, role)
 
-    val parsedOrderSearchResults = orders.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
+    val parsedResults = results.map { result -> OrderSearchResult(result) }
 
-    return parsedOrderSearchResults
+    return OrderSearchResults(parsedResults, queryExecutionId)
   }
 
   fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
