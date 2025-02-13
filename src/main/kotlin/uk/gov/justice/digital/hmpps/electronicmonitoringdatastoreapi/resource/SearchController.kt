@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -149,6 +150,25 @@ class SearchController(
         "searchType" to orderSearchCriteria.searchType,
         "rows" to results.count().toString(),
       ),
+    )
+
+    return ResponseEntity.ok(OrderSearchResults(results, queryExecutionId))
+  }
+
+  @GetMapping("/{executionId}")
+  fun getPreviousSearchResults(
+    authentication: Authentication,
+    @PathVariable(required = true) executionId: String,
+  ): ResponseEntity<OrderSearchResults> {
+    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+
+    val (results, queryExecutionId) = orderService.getPreviousSearchResults(executionId, validatedRole)
+
+//    TODO: Error-handling for the audit service
+    auditService?.createEvent(
+      authentication.name,
+      "RETRIEVE_PREVIOUS_SEARCH_RESULT",
+      mapOf("executionId" to executionId),
     )
 
     return ResponseEntity.ok(OrderSearchResults(results, queryExecutionId))

@@ -38,7 +38,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
   }
 
   // Initialise a query, wait for completion, and return the ResultSet & queryExecutionId
-  override fun getQueryResultAndId(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId {
+  override fun getResultFromQueryString(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId {
     val athenaClient = startClient(role ?: defaultRole)
 
     val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
@@ -53,7 +53,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
   }
 
   // As above, but only return the ResultSet
-  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet = getQueryResultAndId(athenaQuery, role).resultSet
+  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet = getResultFromQueryString(athenaQuery, role).resultSet
 
   // Submits a query to Amazon Athena and returns the execution ID
   @Throws(AthenaClientException::class)
@@ -62,6 +62,15 @@ class EmDatastoreClient : EmDatastoreClientInterface {
     val queryId: String = submitAthenaQuery(athenaClient, querystring)
     athenaClient.close()
     return queryId
+  }
+
+  override fun getResultFromExecutionId(executionId: String, role: AthenaRole?): ResultSetAndId {
+    val athenaClient = startClient(role ?: defaultRole)
+
+    val resultSet: ResultSet = retrieveResults(athenaClient, executionId)
+
+    athenaClient.close()
+    return ResultSetAndId(resultSet, executionId)
   }
 
   @Throws(AthenaClientException::class)
@@ -77,10 +86,18 @@ class EmDatastoreClient : EmDatastoreClientInterface {
         .outputLocation(outputBucket)
         .build()
 
+      // TODO: Consider whether to enable the reuse of results - false by default
+      //  // result reuse configuration determines whether results should be reused
+      //  val resultReuseConfiguration = ResultReuseConfiguration.builder()
+      //    .resultReuseByAgeConfiguration(ResultReuseByAgeConfiguration.builder().enabled(false).build())
+      //    .build()
+
       val startQueryExecutionRequest = StartQueryExecutionRequest.builder()
         .queryString(querystring)
         .queryExecutionContext(queryExecutionContext)
         .resultConfiguration(resultConfiguration)
+        // TODO: Consider whether to enable the reuse of results - false by default
+        // .resultReuseConfiguration(resultReuseConfiguration)
         .build()
 
       val startQueryExecutionResponse = athenaClient

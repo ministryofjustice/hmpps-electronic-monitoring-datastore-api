@@ -28,7 +28,15 @@ class OrderRepository(
       .withAlias(criteria.alias)
       .build()
 
-    val (resultSet, queryExecutionId) = athenaClient.getQueryResultAndId(searchKeyOrderInformationQuery, role)
+    val (resultSet, queryExecutionId) = athenaClient.getResultFromQueryString(searchKeyOrderInformationQuery, role)
+
+    val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
+
+    return AthenaOrderSearchResults(results, queryExecutionId)
+  }
+
+  fun getPreviousSearchResults(executionId: String, role: AthenaRole): AthenaOrderSearchResults {
+    val (resultSet, queryExecutionId) = athenaClient.getResultFromExecutionId(executionId, role)
 
     val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
 

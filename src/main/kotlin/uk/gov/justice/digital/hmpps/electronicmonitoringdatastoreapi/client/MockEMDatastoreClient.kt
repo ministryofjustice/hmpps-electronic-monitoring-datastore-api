@@ -68,7 +68,7 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
     return AthenaHelper.resultSetFromJson(athenaResponse!!)
   }
 
-  override fun getQueryResultAndId(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId {
+  override fun getResultFromQueryString(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }

@@ -7,5 +7,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 interface EmDatastoreClientInterface {
   fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet
 
-  fun getQueryResultAndId(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId
+  fun getResultFromQueryString(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId
+
+  fun getResultFromExecutionId(executionId: String, role: AthenaRole?): ResultSetAndId
 }

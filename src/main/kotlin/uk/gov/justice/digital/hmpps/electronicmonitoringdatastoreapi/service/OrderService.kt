@@ -48,6 +48,14 @@ class OrderService(
     return OrderSearchResults(parsedResults, queryExecutionId)
   }
 
+  fun getPreviousSearchResults(executionId: String, role: AthenaRole): OrderSearchResults {
+    val (results, queryExecutionId) = orderRepository.getPreviousSearchResults(executionId, role)
+
+    val parsedResults = results.map { result -> OrderSearchResult(result) }
+
+    return OrderSearchResults(parsedResults, queryExecutionId)
+  }
+
   fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
     val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(orderId, role)
     val parsedKeyOrderInformation = KeyOrderInformation(keyOrderInformation)
