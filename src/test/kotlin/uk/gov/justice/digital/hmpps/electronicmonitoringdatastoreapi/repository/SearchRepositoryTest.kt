@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 
-class OrderRepositoryTest {
+class SearchRepositoryTest {
 
   @Test
   fun `OrderRepository can be instantiated`() {
-    val sut = OrderRepository(mock(EmDatastoreClient::class.java))
+    val sut = SearchRepository(mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 }

@@ -64,7 +64,7 @@ class AmOrderDetailsRepositoryTest {
 
   @Test
   fun `AmOrderDetailsRepository can be instantiated`() {
-    val sut = OrderRepository(Mockito.mock(EmDatastoreClient::class.java))
+    val sut = SearchRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 

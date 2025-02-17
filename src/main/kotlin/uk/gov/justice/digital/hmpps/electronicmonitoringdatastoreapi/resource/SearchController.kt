@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResults
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
@@ -133,13 +134,13 @@ class SearchController(
   }
 
   @PostMapping("/orders")
-  fun searchOrders(
+  fun getSearchQueryId(
     authentication: Authentication,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
-  ): ResponseEntity<OrderSearchResults> {
+  ): ResponseEntity<QueryExecutionResponse> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val (results, queryExecutionId) = orderService.search(orderSearchCriteria, validatedRole)
+    val queryExecutionId = orderService.getSearchQueryId(orderSearchCriteria, validatedRole)
 
 //    TODO: Error-handling for the audit service
     auditService?.createEvent(
@@ -148,29 +149,32 @@ class SearchController(
       mapOf(
         "legacySubjectId" to orderSearchCriteria.legacySubjectId,
         "searchType" to orderSearchCriteria.searchType,
-        "rows" to results.count().toString(),
+        "queryExecutionId" to queryExecutionId,
       ),
     )
 
-    return ResponseEntity.ok(OrderSearchResults(results, queryExecutionId))
+    return ResponseEntity.ok(QueryExecutionResponse(queryExecutionId))
   }
 
   @GetMapping("/{executionId}")
-  fun getPreviousSearchResults(
+  fun getSearchResult(
     authentication: Authentication,
     @PathVariable(required = true) executionId: String,
-  ): ResponseEntity<OrderSearchResults> {
+  ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val (results, queryExecutionId) = orderService.getPreviousSearchResults(executionId, validatedRole)
+    val results = orderService.getSearchResults(executionId, validatedRole)
 
 //    TODO: Error-handling for the audit service
     auditService?.createEvent(
       authentication.name,
-      "RETRIEVE_PREVIOUS_SEARCH_RESULT",
-      mapOf("executionId" to executionId),
+      "RETRIEVE_SEARCH_RESULT",
+      mapOf(
+        "executionId" to executionId,
+        "rows" to results.count().toString(),
+      ),
     )
 
-    return ResponseEntity.ok(OrderSearchResults(results, queryExecutionId))
+    return ResponseEntity.ok(results)
   }
 }

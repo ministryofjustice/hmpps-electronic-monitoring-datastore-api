@@ -11,16 +11,15 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SearchKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResults
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 
 @Service
-class OrderRepository(
+class SearchRepository(
   @Autowired val athenaClient: EmDatastoreClientInterface,
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): AthenaOrderSearchResults {
+  fun getSearchQueryId(criteria: OrderSearchCriteria, role: AthenaRole): String {
     val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
@@ -28,19 +27,13 @@ class OrderRepository(
       .withAlias(criteria.alias)
       .build()
 
-    val (resultSet, queryExecutionId) = athenaClient.getResultFromQueryString(searchKeyOrderInformationQuery, role)
-
-    val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
-
-    return AthenaOrderSearchResults(results, queryExecutionId)
+    return athenaClient.getQueryExecutionId(searchKeyOrderInformationQuery, role)
   }
 
-  fun getPreviousSearchResults(executionId: String, role: AthenaRole): AthenaOrderSearchResults {
-    val (resultSet, queryExecutionId) = athenaClient.getResultFromExecutionId(executionId, role)
-
+  fun getSearchResults(executionId: String, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+    val resultSet = athenaClient.getQueryResult(executionId, role)
     val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
-
-    return AthenaOrderSearchResults(results, queryExecutionId)
+    return results
   }
 
   fun listLegacyIds(role: AthenaRole): List<String> {

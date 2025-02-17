@@ -172,9 +172,9 @@ class SearchControllerTest {
         ),
       )
 
-      `when`(orderService.search(orderSearchCriteria, AthenaRole.DEV)).thenReturn(expectedResult)
+      `when`(orderService.getSearchQueryId(orderSearchCriteria, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      val result = controller.searchOrders(authentication, orderSearchCriteria)
+      val result = controller.getSearchQueryId(authentication, orderSearchCriteria)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)

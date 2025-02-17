@@ -17,7 +17,6 @@ import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.ResultSetAndId
 
 // We will instantiate as new for now
 @Component
@@ -37,8 +36,27 @@ class EmDatastoreClient : EmDatastoreClientInterface {
       .build()
   }
 
-  // Initialise a query, wait for completion, and return the ResultSet & queryExecutionId
-  override fun getResultFromQueryString(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSetAndId {
+  // Initialise a query and return the queryExecutionId
+  override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
+    val athenaClient = startClient(role ?: defaultRole)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
+    athenaClient.close()
+    return queryExecutionId
+  }
+
+  // Retrieve a query result by execution ID and return the ResultSet
+  override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
+    val athenaClient = startClient(role ?: defaultRole)
+
+    waitForQueryToComplete(athenaClient, queryExecutionId)
+    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+
+    athenaClient.close()
+    return resultSet
+  }
+
+  // Initialise a query, wait for completion, and return the ResultSet
+  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
     val athenaClient = startClient(role ?: defaultRole)
 
     val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
@@ -49,28 +67,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
     val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
 
     athenaClient.close()
-    return ResultSetAndId(resultSet, queryExecutionId)
-  }
-
-  // As above, but only return the ResultSet
-  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet = getResultFromQueryString(athenaQuery, role).resultSet
-
-  // Submits a query to Amazon Athena and returns the execution ID
-  @Throws(AthenaClientException::class)
-  fun startQuery(role: AthenaRole = defaultRole, querystring: String): String {
-    val athenaClient = startClient(role)
-    val queryId: String = submitAthenaQuery(athenaClient, querystring)
-    athenaClient.close()
-    return queryId
-  }
-
-  override fun getResultFromExecutionId(executionId: String, role: AthenaRole?): ResultSetAndId {
-    val athenaClient = startClient(role ?: defaultRole)
-
-    val resultSet: ResultSet = retrieveResults(athenaClient, executionId)
-
-    athenaClient.close()
-    return ResultSetAndId(resultSet, executionId)
+    return resultSet
   }
 
   @Throws(AthenaClientException::class)
@@ -137,15 +134,6 @@ class EmDatastoreClient : EmDatastoreClientInterface {
       }
       println("The current status is: $queryState")
     }
-  }
-
-  // Retrieve the results of a query by execution ID (non-paged)
-  @Throws(AthenaClientException::class)
-  private fun retrieveResults(role: AthenaRole = defaultRole, queryExecutionId: String?): ResultSet {
-    val athenaClient = startClient(role)
-    val results: ResultSet = retrieveResults(athenaClient, queryExecutionId)
-    athenaClient.close()
-    return results
   }
 
   @Throws(AthenaClientException::class)
