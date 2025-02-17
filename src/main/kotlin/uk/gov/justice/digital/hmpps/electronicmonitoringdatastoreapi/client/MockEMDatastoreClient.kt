@@ -15,6 +15,8 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
   private companion object {
     private const val MOCKS_RESOURCE_PATH = "./src/main/resources/mockAthenaResponses"
 
+    private const val MOCK_QUERY_EXECUTION_ID = "mock-query-execution-id"
+
     private val log = LoggerFactory.getLogger(this::class.java)
 
     private var responses: MutableMap<String, String> = mutableMapOf<String, String>()
@@ -41,7 +43,6 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       .trimIndent()
   }
 
-//  TODO: Configure to work the same way as the other mocks in this file.
   override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
@@ -65,29 +66,25 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       )
     }
 
-    return "mock-query-execution-id"
+    return MOCK_QUERY_EXECUTION_ID
   }
 
-//  TODO: Configure this mock to return data based on queryExecutionId instead of SQL query string.
   override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
     if (queryExecutionId == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
 
-    if (responses.isEmpty()) {
-      loadResponses()
-    }
-
-    val athenaResponse = responses[queryExecutionId]?.trimIndent()
-    if (athenaResponse == null) {
+    if (queryExecutionId != MOCK_QUERY_EXECUTION_ID) {
       log.info(
         """
-          No response defined for query $queryExecutionId
+          No response defined for query execution ID $queryExecutionId
         """.trimIndent(),
       )
     }
 
-    return AthenaHelper.resultSetFromJson(athenaResponse!!)
+    val athenaResponse = File("$MOCKS_RESOURCE_PATH/successfulGetSearchResults/response.json").readText(Charsets.UTF_8).trimIndent()
+
+    return AthenaHelper.resultSetFromJson(athenaResponse)
   }
 
   override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
@@ -115,22 +112,4 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
 
     return AthenaHelper.resultSetFromJson(athenaResponse!!)
   }
-
-//  TODO: Mock getResultFromExecutionId isn't yet configured to return mock data.
-//  override fun getResultFromExecutionId(executionId: String, role: AthenaRole?): ResultSetAndId {
-//    if (responses.isEmpty()) {
-//      loadResponses()
-//    }
-//
-//    val athenaResponse = responses[executionId]?.trimIndent()
-//
-//    if (athenaResponse == null) {
-//      log.info("""No response defined for order execution ID $executionId""")
-//    }
-//
-//    val resultSet = AthenaHelper.resultSetFromJson(athenaResponse!!)
-//    val queryExecutionId: String = "AB1234"
-//
-//    return ResultSetAndId(resultSet, queryExecutionId)
-//  }
 }

@@ -1,3 +1,0 @@
-{
-   "QueryExecutionId": "mockQueryExecutionId"
-}
