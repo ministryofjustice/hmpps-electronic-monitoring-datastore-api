@@ -134,7 +134,7 @@ class SearchController(
   }
 
   @PostMapping("/orders")
-  fun getSearchQueryId(
+  fun searchOrders(
     authentication: Authentication,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
   ): ResponseEntity<QueryExecutionResponse> {
@@ -156,21 +156,21 @@ class SearchController(
     return ResponseEntity.ok(QueryExecutionResponse(queryExecutionId))
   }
 
-  @GetMapping("/results/{executionId}")
+  @GetMapping("/results/{queryExecutionId}")
   fun getSearchResult(
     authentication: Authentication,
-    @PathVariable(required = true) executionId: String,
+    @PathVariable(required = true) queryExecutionId: String,
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val results = orderService.getSearchResults(executionId, validatedRole)
+    val results = orderService.getSearchResults(queryExecutionId, validatedRole)
 
 //    TODO: Error-handling for the audit service
     auditService?.createEvent(
       authentication.name,
       "RETRIEVE_SEARCH_RESULT",
       mapOf(
-        "executionId" to executionId,
+        "executionId" to queryExecutionId,
         "rows" to results.count().toString(),
       ),
     )

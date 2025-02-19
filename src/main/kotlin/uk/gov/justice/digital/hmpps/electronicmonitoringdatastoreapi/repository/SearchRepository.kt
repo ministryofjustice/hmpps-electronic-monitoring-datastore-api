@@ -19,7 +19,7 @@ class SearchRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String {
+  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): String {
     val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)

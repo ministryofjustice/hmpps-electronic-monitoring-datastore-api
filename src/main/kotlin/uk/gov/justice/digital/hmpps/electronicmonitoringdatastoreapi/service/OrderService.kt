@@ -39,7 +39,7 @@ class OrderService(
     return result
   }
 
-  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String = searchRepository.getQueryExecutionId(criteria, role)
+  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String = searchRepository.searchOrders(criteria, role)
 
   fun getSearchResults(executionId: String, role: AthenaRole): List<OrderSearchResult> {
     val results = searchRepository.getSearchResults(executionId, role)

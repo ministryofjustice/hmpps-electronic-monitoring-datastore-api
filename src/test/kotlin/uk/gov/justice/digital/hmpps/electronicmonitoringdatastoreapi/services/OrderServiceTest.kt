@@ -107,17 +107,17 @@ class OrderServiceTest {
 
     @Test
     fun `calls searchOrders from order repository`() {
-      `when`(searchRepository.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV))
+      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
         .thenReturn(listOf<AthenaOrderSearchResultDTO>())
 
       service.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)
 
-      Mockito.verify(searchRepository, times(1)).getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)
+      Mockito.verify(searchRepository, times(1)).searchOrders(orderSearchCriteria, AthenaRole.DEV)
     }
 
     @Test
     fun `returns empty list when now results are returned`() {
-      `when`(searchRepository.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV))
+      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
         .thenReturn(listOf<AthenaOrderSearchResultDTO>())
 
       var result = service.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)
@@ -127,7 +127,7 @@ class OrderServiceTest {
 
     @Test
     fun `returns list of order search results when results are returned`() {
-      `when`(searchRepository.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV))
+      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
         .thenReturn(
           listOf<AthenaOrderSearchResultDTO>(
             AthenaOrderSearchResultDTO(
