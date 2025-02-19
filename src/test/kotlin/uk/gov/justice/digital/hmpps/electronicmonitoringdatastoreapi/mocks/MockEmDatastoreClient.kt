@@ -29,8 +29,25 @@ class MockEmDatastoreClient : EmDatastoreClientInterface {
     }
   }
 
+  override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
+    if (athenaQuery.queryString == "THROW ERROR") {
+      throw IllegalArgumentException("I threw an error")
+    }
+
+    return "query-execution-id"
+  }
+
   override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
     if (athenaQuery.queryString == "THROW ERROR") {
+      throw IllegalArgumentException("I threw an error")
+    }
+
+    val athenaResponse = getNextResponse()
+    return AthenaHelper.Companion.resultSetFromJson(athenaResponse)
+  }
+
+  override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
+    if (queryExecutionId == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
 

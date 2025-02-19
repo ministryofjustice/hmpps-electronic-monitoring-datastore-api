@@ -157,7 +157,7 @@ class SearchController(
   }
 
   @GetMapping("/results/{queryExecutionId}")
-  fun getSearchResult(
+  fun getSearchResults(
     authentication: Authentication,
     @PathVariable(required = true) queryExecutionId: String,
   ): ResponseEntity<List<OrderSearchResult>> {
