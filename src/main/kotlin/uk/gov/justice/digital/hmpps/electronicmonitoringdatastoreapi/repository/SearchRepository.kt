@@ -19,7 +19,7 @@ class SearchRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getSearchQueryId(criteria: OrderSearchCriteria, role: AthenaRole): String {
+  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String {
     val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
@@ -30,8 +30,8 @@ class SearchRepository(
     return athenaClient.getQueryExecutionId(searchKeyOrderInformationQuery, role)
   }
 
-  fun getSearchResults(executionId: String, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
-    val resultSet = athenaClient.getQueryResult(executionId, role)
+  fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+    val resultSet = athenaClient.getQueryResult(queryExecutionId, role)
     val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
     return results
   }

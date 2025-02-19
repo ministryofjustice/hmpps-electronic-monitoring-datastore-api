@@ -140,7 +140,7 @@ class SearchController(
   ): ResponseEntity<QueryExecutionResponse> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val queryExecutionId = orderService.getSearchQueryId(orderSearchCriteria, validatedRole)
+    val queryExecutionId = orderService.getQueryExecutionId(orderSearchCriteria, validatedRole)
 
 //    TODO: Error-handling for the audit service
     auditService?.createEvent(
