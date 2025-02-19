@@ -36,7 +36,6 @@ class EmDatastoreClient : EmDatastoreClientInterface {
       .build()
   }
 
-  // Initialise a query and return the queryExecutionId
   override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
     val athenaClient = startClient(role ?: defaultRole)
     val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
@@ -44,7 +43,6 @@ class EmDatastoreClient : EmDatastoreClientInterface {
     return queryExecutionId
   }
 
-  // Retrieve a query result by execution ID and return the ResultSet
   override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
     val athenaClient = startClient(role ?: defaultRole)
 
@@ -55,7 +53,6 @@ class EmDatastoreClient : EmDatastoreClientInterface {
     return resultSet
   }
 
-  // Initialise a query, wait for completion, and return the ResultSet
   override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
     val athenaClient = startClient(role ?: defaultRole)
 

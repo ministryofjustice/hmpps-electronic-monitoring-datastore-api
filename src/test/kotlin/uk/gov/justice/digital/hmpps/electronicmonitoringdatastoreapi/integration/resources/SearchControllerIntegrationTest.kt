@@ -57,7 +57,6 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return 200 with valid body`() {
       MockEmDatastoreClient.addResponseFile("successfulGetQueryExecutionIdResponse")
-//      MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
 
       val requestBody = mapOf(
         "searchType" to "name",
@@ -77,7 +76,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.queryExecutionId").isEqualTo("query-execution-id") // Validate the first mock order
+        .jsonPath("$.queryExecutionId").isEqualTo("query-execution-id")
     }
   }
 
@@ -119,8 +118,8 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.length()").isEqualTo(6) // Expect 6 mock orders
-        .jsonPath("$[0].name").isEqualTo("Amy Smith") // Validate the first mock order
+        .jsonPath("$.length()").isEqualTo(6)
+        .jsonPath("$[0].name").isEqualTo("Amy Smith")
     }
   }
 

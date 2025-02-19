@@ -165,7 +165,6 @@ class SearchController(
 
     val results = orderService.getSearchResults(queryExecutionId, validatedRole)
 
-//    TODO: Error-handling for the audit service
     auditService?.createEvent(
       authentication.name,
       "RETRIEVE_SEARCH_RESULT",
