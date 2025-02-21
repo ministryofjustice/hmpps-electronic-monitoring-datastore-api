@@ -104,5 +104,14 @@ class AmOrderDetailsRepositoryTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo(orderId)
     }
+
+    @Test
+    fun `Throws an exception if orderId is not alphanumeric`() {
+      val dangerousInput = "123 OR 1=1"
+
+      Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+        repository.getAmOrderDetails(dangerousInput, AthenaRole.DEV)
+      }.withMessage("Input contains illegal characters")
+    }
   }
 }
