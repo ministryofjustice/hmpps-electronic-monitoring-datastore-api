@@ -19,7 +19,7 @@ class OrderSearchQueryBuilder(
         throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
       }
 
-      whereClause.put("legacy_subject_id", value)
+      whereClause.put("legacy_subject_id", "legacy_subject_id=$value")
       field = value
     }
 
@@ -34,7 +34,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("first_name", "upper('$value')")
+      whereClause.put("first_name", "first_name=upper('$value')")
       field = value
     }
 
@@ -49,7 +49,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("last_name", "upper('$value')")
+      whereClause.put("last_name", "last_name=upper('$value')")
       field = value
     }
 
@@ -64,7 +64,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("alias", "upper('$value')")
+      whereClause.put("alias", "alias=upper('$value')")
       field = value
     }
 
@@ -141,7 +141,9 @@ class OrderSearchQueryBuilder(
       """.trimIndent(),
     )
 
-    builder.append(whereClause.entries.joinToString(separator = " OR "))
+    // builder.append(whereClause.map{ "${it.key} LIKE '%${it.value}%'" }.joinToString(separator = " OR "))
+//    builder.append(whereClause.map { "${it.key}=${it.value}" }.joinToString(separator = " OR "))
+    builder.append(whereClause.values.joinToString(separator = " OR "))
 
     return AthenaOrderSearchQuery(builder.toString())
   }
