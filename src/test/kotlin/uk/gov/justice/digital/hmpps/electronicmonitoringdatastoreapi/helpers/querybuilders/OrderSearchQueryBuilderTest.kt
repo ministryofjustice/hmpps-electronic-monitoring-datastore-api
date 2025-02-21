@@ -39,6 +39,17 @@ class OrderSearchQueryBuilderTest {
   }
 
   @Test
+  fun `throws an error if legacySubjectId contains dangerous characters`() {
+    val dangerousInput: String = "12345 OR 1=1"
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+      OrderSearchQueryBuilder("test_database")
+        .withLegacySubjectId(dangerousInput)
+        .build()
+    }.withMessage("Input contains illegal characters")
+  }
+
+  @Test
   fun `returns valid SQL if only firstName is populated`() {
     val firstName = "Steeevooooo"
 
@@ -53,6 +64,17 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+  }
+
+  @Test
+  fun `throws an error if firstName contains dangerous characters`() {
+    val dangerousInput: String = "Steve OR 1=1"
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+      OrderSearchQueryBuilder("test_database")
+        .withFirstName(dangerousInput)
+        .build()
+    }.withMessage("Input contains illegal characters")
   }
 
   @Test
@@ -73,6 +95,17 @@ class OrderSearchQueryBuilderTest {
   }
 
   @Test
+  fun `throws an error if LastName contains dangerous characters`() {
+    val dangerousInput: String = "Jobs OR 1=1"
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+      OrderSearchQueryBuilder("test_database")
+        .withLastName(dangerousInput)
+        .build()
+    }.withMessage("Input contains illegal characters")
+  }
+
+  @Test
   fun `returns valid SQL if only alias is populated`() {
     val alias = "The Big Apple"
 
@@ -87,6 +120,17 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+  }
+
+  @Test
+  fun `throws an error if alias contains dangerous characters`() {
+    val dangerousInput: String = "Jobs OR 1=1"
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+      OrderSearchQueryBuilder("test_database")
+        .withAlias(dangerousInput)
+        .build()
+    }.withMessage("Input contains illegal characters")
   }
 
   @Test
