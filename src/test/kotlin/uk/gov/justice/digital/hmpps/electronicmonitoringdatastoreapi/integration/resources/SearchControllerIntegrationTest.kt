@@ -81,10 +81,10 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   }
 
   @Nested
-  @DisplayName("GET /search/results")
+  @DisplayName("GET /search/orders/queryExecutionId")
   inner class GetSearchResults {
 
-    private val baseUri: String = "/search/results/query-execution-id"
+    private val baseUri: String = "/search/orders/query-execution-id"
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
