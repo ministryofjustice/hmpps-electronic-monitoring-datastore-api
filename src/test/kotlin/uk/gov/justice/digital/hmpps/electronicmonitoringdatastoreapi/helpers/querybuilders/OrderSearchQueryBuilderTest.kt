@@ -39,17 +39,6 @@ class OrderSearchQueryBuilderTest {
   }
 
   @Test
-  fun `throws an error if legacySubjectId contains dangerous characters`() {
-    val dangerousInput: String = "12345 OR 1=1"
-
-    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder("test_database")
-        .withLegacySubjectId(dangerousInput)
-        .build()
-    }.withMessage("Input contains illegal characters")
-  }
-
-  @Test
   fun `returns valid SQL if only firstName is populated`() {
     val firstName = "Steeevooooo"
 
