@@ -1,7 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
+import org.apache.commons.lang3.StringUtils.isAlphanumeric
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
+// TODO: update to use PREPARED STATEMENTS instead of a plain SELECT: better injection protection.
 class OrderSearchQueryBuilder(
   var databaseName: String? = null,
 ) {
@@ -24,6 +26,9 @@ class OrderSearchQueryBuilder(
     }
 
   fun withLegacySubjectId(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumeric(value)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
     legacySubjectId = value
     return this
   }
@@ -39,6 +44,9 @@ class OrderSearchQueryBuilder(
     }
 
   fun withFirstName(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumeric(value)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
     firstName = value
     return this
   }
@@ -54,6 +62,9 @@ class OrderSearchQueryBuilder(
     }
 
   fun withLastName(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumeric(value)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
     lastName = value
     return this
   }
@@ -69,6 +80,9 @@ class OrderSearchQueryBuilder(
     }
 
   fun withAlias(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumeric(value)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
     alias = value
     return this
   }
