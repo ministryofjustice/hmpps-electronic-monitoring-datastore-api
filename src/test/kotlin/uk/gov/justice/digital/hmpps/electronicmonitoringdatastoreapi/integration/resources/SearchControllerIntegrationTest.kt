@@ -11,9 +11,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
   @DisplayName("POST /search/orders")
-  inner class SearchOrdersFake {
+  inner class SearchOrders {
 
-    val baseUri: String = "/search/orders"
+    private val baseUri: String = "/search/orders"
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
@@ -56,7 +56,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 200 with valid body`() {
-      MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
+      MockEmDatastoreClient.addResponseFile("successfulGetQueryExecutionIdResponse")
 
       val requestBody = mapOf(
         "searchType" to "name",
@@ -76,20 +76,62 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .expectHeader()
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
-        .jsonPath("$.length()").isEqualTo(6) // Expect 6 mock orders
-        .jsonPath("$[0].name").isEqualTo("Amy Smith") // Validate the first mock order
+        .jsonPath("$.queryExecutionId").isEqualTo("query-execution-id")
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /search/orders/queryExecutionId")
+  inner class GetSearchResults {
+
+    private val baseUri: String = "/search/orders/query-execution-id"
+
+    @Test
+    fun `should fail with 401 when no authorization header is provided`() {
+      webTestClient.get()
+        .uri(baseUri)
+        .exchange()
+        .expectStatus()
+        .isUnauthorized
+    }
+
+    @Test
+    fun `should fail with 403 when user has no required roles`() {
+      webTestClient.get()
+        .uri(baseUri)
+        .headers(setAuthorisation(roles = listOf()))
+        .exchange()
+        .expectStatus()
+        .isForbidden
+    }
+
+    @Test
+    fun `should return 200 with valid configuration`() {
+      MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
+
+      webTestClient.get()
+        .uri(baseUri)
+        .headers(setAuthorisation())
+        .exchange()
+        .expectStatus()
+        .isOk
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON)
+        .expectBody()
+        .jsonPath("$.length()").isEqualTo(6)
+        .jsonPath("$[0].name").isEqualTo("Amy Smith")
     }
   }
 
   @Nested
   @DisplayName("POST /search/custom-query")
   inner class QueryAthena {
-    val baseUri: String = "/search/custom-query"
+    private val baseUri: String = "/search/custom-query"
 
-    val requestBody = mapOf(
+    private val requestBody = mapOf(
       "queryString" to "fake-test-querystring",
     )
-    val failingRequestBody = mapOf(
+    private val failingRequestBody = mapOf(
       "queryString" to "THROW ERROR",
     )
 

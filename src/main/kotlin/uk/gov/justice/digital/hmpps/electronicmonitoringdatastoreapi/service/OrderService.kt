@@ -14,18 +14,18 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SearchRepository
 import kotlin.String
 
 @Service
 class OrderService(
-  @Autowired val orderRepository: OrderRepository,
+  @Autowired val searchRepository: SearchRepository,
   @Autowired val orderInformationRepository: OrderInformationRepository,
   @Autowired val orderDetailsRepository: OrderDetailsRepository,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
     try {
-      orderRepository.listLegacyIds(role)
+      searchRepository.listLegacyIds(role)
     } catch (_: Exception) {
       return false
     }
@@ -34,17 +34,16 @@ class OrderService(
   }
 
   fun query(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
-    val result = orderRepository.runQuery(athenaQuery, role)
+    val result = searchRepository.runQuery(athenaQuery, role)
 
     return result
   }
 
-  fun search(criteria: OrderSearchCriteria, role: AthenaRole): List<OrderSearchResult> {
-    val orders = orderRepository.searchOrders(criteria, role)
+  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String = searchRepository.searchOrders(criteria, role)
 
-    val parsedOrderSearchResults = orders.map { athenaOrderSearchResult -> OrderSearchResult(athenaOrderSearchResult) }
-
-    return parsedOrderSearchResults
+  fun getSearchResults(executionId: String, role: AthenaRole): List<OrderSearchResult> {
+    val results = searchRepository.getSearchResults(executionId, role)
+    return results.map { result -> OrderSearchResult(result) }
   }
 
   fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {

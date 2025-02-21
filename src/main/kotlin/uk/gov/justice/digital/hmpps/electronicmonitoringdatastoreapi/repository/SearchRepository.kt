@@ -14,12 +14,12 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 
 @Service
-class OrderRepository(
+class SearchRepository(
   @Autowired val athenaClient: EmDatastoreClientInterface,
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): String {
     val searchKeyOrderInformationQuery = SearchKeyOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
@@ -27,11 +27,13 @@ class OrderRepository(
       .withAlias(criteria.alias)
       .build()
 
-    val athenaResponse: ResultSet = athenaClient.getQueryResult(searchKeyOrderInformationQuery, role)
+    return athenaClient.getQueryExecutionId(searchKeyOrderInformationQuery, role)
+  }
 
-    val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(athenaResponse)
-
-    return result
+  fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<AthenaOrderSearchResultDTO> {
+    val resultSet = athenaClient.getQueryResult(queryExecutionId, role)
+    val results = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
+    return results
   }
 
   fun listLegacyIds(role: AthenaRole): List<String> {

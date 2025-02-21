@@ -36,28 +36,35 @@ class EmDatastoreClient : EmDatastoreClientInterface {
       .build()
   }
 
-  // Initialise a query, wait for completion, and return the ResultSet
+  override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
+    val athenaClient = startClient(role ?: defaultRole)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
+    athenaClient.close()
+    return queryExecutionId
+  }
+
+  override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
+    val athenaClient = startClient(role ?: defaultRole)
+
+    waitForQueryToComplete(athenaClient, queryExecutionId)
+    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+
+    athenaClient.close()
+    return resultSet
+  }
+
   override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
     val athenaClient = startClient(role ?: defaultRole)
 
-    val queryExecutionId = submitAthenaQuery(athenaClient, athenaQuery.queryString)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
 
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)
 
-    val output: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
 
     athenaClient.close()
-    return output
-  }
-
-  // Submits a query to Amazon Athena and returns the execution ID
-  @Throws(AthenaClientException::class)
-  fun startQuery(role: AthenaRole = defaultRole, querystring: String): String {
-    val athenaClient = startClient(role)
-    val queryId: String = submitAthenaQuery(athenaClient, querystring)
-    athenaClient.close()
-    return queryId
+    return resultSet
   }
 
   @Throws(AthenaClientException::class)
@@ -73,10 +80,18 @@ class EmDatastoreClient : EmDatastoreClientInterface {
         .outputLocation(outputBucket)
         .build()
 
+      // TODO: Consider whether to enable the reuse of results - false by default
+      //  // result reuse configuration determines whether results should be reused
+      //  val resultReuseConfiguration = ResultReuseConfiguration.builder()
+      //    .resultReuseByAgeConfiguration(ResultReuseByAgeConfiguration.builder().enabled(false).build())
+      //    .build()
+
       val startQueryExecutionRequest = StartQueryExecutionRequest.builder()
         .queryString(querystring)
         .queryExecutionContext(queryExecutionContext)
         .resultConfiguration(resultConfiguration)
+        // TODO: Consider whether to enable the reuse of results - false by default
+        // .resultReuseConfiguration(resultReuseConfiguration)
         .build()
 
       val startQueryExecutionResponse = athenaClient
@@ -116,15 +131,6 @@ class EmDatastoreClient : EmDatastoreClientInterface {
       }
       println("The current status is: $queryState")
     }
-  }
-
-  // Retrieve the results of a query by execution ID (non-paged)
-  @Throws(AthenaClientException::class)
-  private fun retrieveResults(role: AthenaRole = defaultRole, queryExecutionId: String?): ResultSet {
-    val athenaClient = startClient(role)
-    val results: ResultSet = retrieveResults(athenaClient, queryExecutionId)
-    athenaClient.close()
-    return results
   }
 
   @Throws(AthenaClientException::class)

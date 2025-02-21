@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
@@ -144,10 +145,8 @@ class SearchControllerTest {
 
   @Nested
   inner class SearchOrders {
-
     @Test
-    fun `find list of orders from order service`() {
-      // Arrange: Create search criteria
+    fun `get a query execution ID from order service`() {
       val orderSearchCriteria = OrderSearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
@@ -158,6 +157,27 @@ class SearchControllerTest {
         dobMonth = "01",
         dobYear = "1970",
       )
+
+      val queryExecutionId = "query-execution-id"
+
+      val expectedResult = QueryExecutionResponse(
+        queryExecutionId = queryExecutionId,
+      )
+
+      `when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)).thenReturn(queryExecutionId)
+
+      val result = controller.searchOrders(authentication, orderSearchCriteria)
+
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(expectedResult)
+    }
+  }
+
+  @Nested
+  inner class GetSearchResult {
+    @Test
+    fun `find list of orders from order service`() {
+      val queryExecutionId = "query-execution-id"
 
       val expectedResult = listOf(
         OrderSearchResult(
@@ -172,9 +192,9 @@ class SearchControllerTest {
         ),
       )
 
-      `when`(orderService.search(orderSearchCriteria, AthenaRole.DEV)).thenReturn(expectedResult)
+      `when`(orderService.getSearchResults(queryExecutionId, AthenaRole.DEV)).thenReturn(expectedResult)
 
-      val result = controller.searchOrders(authentication, orderSearchCriteria)
+      val result = controller.getSearchResults(authentication, queryExecutionId)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)

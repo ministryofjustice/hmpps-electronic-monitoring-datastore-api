@@ -22,21 +22,21 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SearchRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 
 class OrderServiceTest {
-  private lateinit var orderRepository: OrderRepository
+  private lateinit var searchRepository: SearchRepository
   private lateinit var orderInformationRepository: OrderInformationRepository
   private lateinit var orderDetailsRepository: OrderDetailsRepository
   private lateinit var service: OrderService
 
   @BeforeEach
   fun setup() {
-    orderRepository = mock(OrderRepository::class.java)
+    searchRepository = mock(SearchRepository::class.java)
     orderInformationRepository = mock(OrderInformationRepository::class.java)
     orderDetailsRepository = mock(OrderDetailsRepository::class.java)
-    service = OrderService(orderRepository, orderInformationRepository, orderDetailsRepository)
+    service = OrderService(searchRepository, orderInformationRepository, orderDetailsRepository)
   }
 
   @Test
@@ -48,18 +48,18 @@ class OrderServiceTest {
   inner class CheckAvailability {
     @Test
     fun `calls listLegacyIds from order repository`() {
-      `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
+      `when`(searchRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
 
       service.checkAvailability(AthenaRole.DEV)
 
-      Mockito.verify(orderRepository, times(1)).listLegacyIds(AthenaRole.DEV)
+      Mockito.verify(searchRepository, times(1)).listLegacyIds(AthenaRole.DEV)
     }
 
     @Test
     fun `confirms AWS athena is available if successful`() {
-      `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
+      `when`(searchRepository.listLegacyIds(AthenaRole.DEV)).thenReturn(listOf<String>())
 
-      var result = service.checkAvailability(AthenaRole.DEV)
+      val result = service.checkAvailability(AthenaRole.DEV)
 
       Assertions.assertThat(result).isTrue
     }
@@ -68,9 +68,9 @@ class OrderServiceTest {
     fun `confirms AWS athena is unavailable if not successful`() {
       val errorMessage = "fake error message"
 
-      `when`(orderRepository.listLegacyIds(AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
+      `when`(searchRepository.listLegacyIds(AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
 
-      var result = service.checkAvailability(AthenaRole.DEV)
+      val result = service.checkAvailability(AthenaRole.DEV)
 
       Assertions.assertThat(result).isFalse
     }
@@ -82,52 +82,79 @@ class OrderServiceTest {
 
     @Test
     fun `passes query to order repository`() {
-      `when`(orderRepository.runQuery(athenaQuery, AthenaRole.DEV)).thenReturn("Expected response")
+      `when`(searchRepository.runQuery(athenaQuery, AthenaRole.DEV)).thenReturn("Expected response")
 
       service.query(athenaQuery, AthenaRole.DEV)
 
-      Mockito.verify(orderRepository, times(1)).runQuery(athenaQuery, AthenaRole.DEV)
+      Mockito.verify(searchRepository, times(1)).runQuery(athenaQuery, AthenaRole.DEV)
     }
 
     @Test
     fun `returns response from order repository`() {
-      `when`(orderRepository.runQuery(athenaQuery, AthenaRole.DEV)).thenReturn("Expected response")
+      `when`(searchRepository.runQuery(athenaQuery, AthenaRole.DEV)).thenReturn("Expected response")
 
-      var result = service.query(athenaQuery, AthenaRole.DEV)
+      val result = service.query(athenaQuery, AthenaRole.DEV)
 
       Assertions.assertThat(result).isEqualTo("Expected response")
     }
   }
 
   @Nested
-  inner class Search {
-    val orderSearchCriteria = OrderSearchCriteria(
+  inner class SearchOrders {
+    private val orderSearchCriteria = OrderSearchCriteria(
       legacySubjectId = "fake-id",
     )
 
     @Test
     fun `calls searchOrders from order repository`() {
-      `when`(orderRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
-        .thenReturn(listOf<AthenaOrderSearchResultDTO>())
+      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
+        .thenReturn("query-execution-id")
 
-      service.search(orderSearchCriteria, AthenaRole.DEV)
+      service.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)
 
-      Mockito.verify(orderRepository, times(1)).searchOrders(orderSearchCriteria, AthenaRole.DEV)
+      Mockito.verify(searchRepository, times(1)).searchOrders(orderSearchCriteria, AthenaRole.DEV)
     }
 
     @Test
-    fun `returns empty list when now results are returned`() {
-      `when`(orderRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
+    fun `returns a query execution ID`() {
+      val expectedResult: String = "query-execution-id"
+      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
+        .thenReturn("query-execution-id")
+
+      val result = service.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)
+
+      Assertions.assertThat(result).isEqualTo(expectedResult)
+    }
+  }
+
+  @Nested
+  inner class GetSearchResults {
+    private val queryExecutionId = "query-execution-id"
+
+    @Test
+    fun `calls searchOrders from order repository`() {
+      `when`(searchRepository.getSearchResults(queryExecutionId, AthenaRole.DEV))
         .thenReturn(listOf<AthenaOrderSearchResultDTO>())
 
-      var result = service.search(orderSearchCriteria, AthenaRole.DEV)
+      service.getSearchResults(queryExecutionId, AthenaRole.DEV)
+
+      Mockito.verify(searchRepository, times(1)).getSearchResults(queryExecutionId, AthenaRole.DEV)
+    }
+
+    @Test
+    fun `returns empty list when no results are returned`() {
+      `when`(searchRepository.getSearchResults(queryExecutionId, AthenaRole.DEV))
+        .thenReturn(listOf<AthenaOrderSearchResultDTO>())
+
+      val result = service.getSearchResults(queryExecutionId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Assertions.assertThat(result.count()).isEqualTo(0)
     }
 
     @Test
     fun `returns list of order search results when results are returned`() {
-      `when`(orderRepository.searchOrders(orderSearchCriteria, AthenaRole.DEV))
+      `when`(searchRepository.getSearchResults(queryExecutionId, AthenaRole.DEV))
         .thenReturn(
           listOf<AthenaOrderSearchResultDTO>(
             AthenaOrderSearchResultDTO(
@@ -143,7 +170,7 @@ class OrderServiceTest {
           ),
         )
 
-      var result = service.search(orderSearchCriteria, AthenaRole.DEV)
+      val result = service.getSearchResults(queryExecutionId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result.count()).isEqualTo(1)
@@ -213,14 +240,14 @@ class OrderServiceTest {
 
     @Test
     fun `returns OrderInformation when a document is found`() {
-      var result = service.getOrderInformation(orderId, AthenaRole.DEV)
+      val result = service.getOrderInformation(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isInstanceOf(OrderInformation::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a document is found`() {
-      var result = service.getOrderInformation(orderId, AthenaRole.DEV)
+      val result = service.getOrderInformation(orderId, AthenaRole.DEV)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(orderId)

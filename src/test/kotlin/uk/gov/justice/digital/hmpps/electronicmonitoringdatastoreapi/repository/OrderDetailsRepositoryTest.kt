@@ -13,7 +13,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.varCharValueColumn
-import java.util.*
 
 class OrderDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -65,7 +64,7 @@ class OrderDetailsRepositoryTest {
 
   @Test
   fun `OrderDetailsRepository can be instantiated`() {
-    val sut = OrderRepository(Mockito.mock(EmDatastoreClient::class.java))
+    val sut = SearchRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 
