@@ -49,7 +49,7 @@ class SearchControllerTest {
       val expectedRole = AthenaRole.NONE
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
+      `when`(orderService.checkAthenaAccessible(AthenaRole.NONE)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       controller.confirmAthenaAccess(authentication)
@@ -57,7 +57,7 @@ class SearchControllerTest {
       Mockito.verify(roleService, Mockito.times(1))
         .getRoleFromAuthentication(authentication)
       Mockito.verify(orderService, Mockito.times(1))
-        .checkAvailability(expectedRole)
+        .checkAthenaAccessible(expectedRole)
     }
 
     @Test
@@ -65,7 +65,7 @@ class SearchControllerTest {
       val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
+      `when`(orderService.checkAthenaAccessible(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.confirmAthenaAccess(authentication)
@@ -79,7 +79,7 @@ class SearchControllerTest {
       val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
+      `when`(orderService.checkAthenaAccessible(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.confirmAthenaAccess(authentication)
@@ -93,7 +93,7 @@ class SearchControllerTest {
       val expectedRole = AthenaRole.NONE
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(false)
+      `when`(orderService.checkAthenaAccessible(AthenaRole.NONE)).thenReturn(false)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.confirmAthenaAccess(authentication)
@@ -113,7 +113,7 @@ class SearchControllerTest {
       val queryObject = AthenaStringQuery(queryString)
       val queryResponse = "fake query response"
 
-      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
+      `when`(orderService.runCustomQuery(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
 
       val result = controller.queryAthena(authentication, queryObject, queryRole)
 
@@ -131,7 +131,7 @@ class SearchControllerTest {
       val queryObject = AthenaStringQuery(queryString)
       val errorMessage = "fake error message"
 
-      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
+      `when`(orderService.runCustomQuery(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
 
       val result = controller.queryAthena(authentication, queryObject, queryRole)
 

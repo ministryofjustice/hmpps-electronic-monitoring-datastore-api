@@ -1,35 +1,20 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
-
-data class KeyOrderInformation(
-  val specials: String,
-  val legacySubjectId: String,
-  val legacyOrderId: String,
-  val name: String,
-  val alias: String?,
-  val dateOfBirth: String,
-  val address1: String,
-  val address2: String,
-  val address3: String,
-  val postcode: String,
-  val orderStartDate: String,
-  val orderEndDate: String,
+class KeyOrderInformation(
+  orderDetails: OrderDetailsBase,
 ) {
-  constructor(dto: AthenaKeyOrderInformationDTO) : this (
-    specials = "no",
-    legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
-    name = dto.name,
-    alias = dto.alias,
-    dateOfBirth = dto.dateOfBirth,
-    address1 = dto.address1,
-    address2 = dto.address2,
-    address3 = dto.address3,
-    postcode = dto.postcode,
-    orderStartDate = dto.orderStartDate,
-    orderEndDate = dto.orderEndDate,
-  )
+  val specials: String = orderDetails.specials
+  val legacySubjectId: String = orderDetails.legacySubjectId
+  val legacyOrderId: String = orderDetails.legacyOrderId
+  val name: String = "${orderDetails.firstName} ${orderDetails.lastName}"
+  val alias: String? = orderDetails.alias
+  val dateOfBirth: String? = orderDetails.dateOfBirth
+  val primaryAddressLine1: String? = orderDetails.primaryAddressLine1
+  val primaryAddressLine2: String? = orderDetails.primaryAddressLine2
+  val primaryAddressLine3: String? = orderDetails.primaryAddressLine3
+  val primaryAddressPostCode: String? = orderDetails.primaryAddressPostCode
+  val orderStartDate: String? = orderDetails.orderStartDate
+  val orderEndDate: String? = orderDetails.orderEndDate
 }
 
 // legacy_subject_id

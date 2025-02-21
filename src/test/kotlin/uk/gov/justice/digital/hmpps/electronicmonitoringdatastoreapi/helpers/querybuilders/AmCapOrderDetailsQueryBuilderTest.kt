@@ -3,27 +3,26 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class AmOrderDetailsQueryBuilderTest {
+class AmCapOrderDetailsQueryBuilderTest {
 
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
 
   val baseQuery: String = """
       SELECT
-        id
-      , legacy_order_id
+        legacy_order_id
       , legacy_subject_id
       , first_name
       , last_name
       , alias
-      , date_of_birth date
+      , date_of_birth
       , legacy_gender
       , primary_address_line1
       , primary_address_line2
       , primary_address_line3
       , primary_address_postcode
       , phone_number1
-      , order_start_date date
-      , order_end_date date
+      , order_start_date
+      , order_end_date
       , order_type
       , order_type_description
       , enforceable_condition

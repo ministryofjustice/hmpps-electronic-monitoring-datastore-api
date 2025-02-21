@@ -14,9 +14,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CapOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetailsBase
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
@@ -54,18 +55,22 @@ class OrderControllerTest {
       val orderId = "1ab"
       val expectedResult = OrderInformation(
         keyOrderInformation = KeyOrderInformation(
-          specials = "NO",
-          legacySubjectId = "1234567",
-          legacyOrderId = "7654321-DIFFERENT ID",
-          name = "John Smith",
-          alias = "Zeno",
-          dateOfBirth = "01-02-1980",
-          address1 = "1 Primary Street",
-          address2 = "Sutton",
-          address3 = "London",
-          postcode = "ABC 123",
-          orderStartDate = "01-02-2012",
-          orderEndDate = "03-04-2013",
+          OrderDetailsBase(
+            type = "BASE",
+            specials = "NO",
+            legacySubjectId = "1234567",
+            legacyOrderId = "7654321-DIFFERENT ID",
+            firstName = "John",
+            lastName = "Smith",
+            alias = "Zeno",
+            dateOfBirth = "01-02-1980",
+            primaryAddressLine1 = "1 Primary Street",
+            primaryAddressLine2 = "Sutton",
+            primaryAddressLine3 = "London",
+            primaryAddressPostCode = "ABC 123",
+            orderStartDate = "01-02-2012",
+            orderEndDate = "03-04-2013",
+          ),
         ),
         subjectHistoryReport = SubjectHistoryReport(
           reportUrl = "#",
@@ -94,18 +99,22 @@ class OrderControllerTest {
       val orderId = "1ab"
       val expectedResult = OrderInformation(
         keyOrderInformation = KeyOrderInformation(
-          specials = "NO",
-          legacySubjectId = "1234567",
-          legacyOrderId = "7654321-DIFFERENT ID",
-          name = "John Smith",
-          alias = "Zeno",
-          dateOfBirth = "01-02-1980",
-          address1 = "1 Primary Street",
-          address2 = "Sutton",
-          address3 = "London",
-          postcode = "ABC 123",
-          orderStartDate = "01-02-2012",
-          orderEndDate = "03-04-2013",
+          OrderDetailsBase(
+            type = "BASE",
+            specials = "NO",
+            legacySubjectId = "1234567",
+            legacyOrderId = "7654321-DIFFERENT ID",
+            firstName = "John",
+            lastName = "Smith",
+            alias = "Zeno",
+            dateOfBirth = "01-02-1980",
+            primaryAddressLine1 = "1 Primary Street",
+            primaryAddressLine2 = "Sutton",
+            primaryAddressLine3 = "London",
+            primaryAddressPostCode = "ABC 123",
+            orderStartDate = "01-02-2012",
+            orderEndDate = "03-04-2013",
+          ),
         ),
         subjectHistoryReport = SubjectHistoryReport(
           reportUrl = "#",
@@ -129,11 +138,11 @@ class OrderControllerTest {
   }
 
   @Nested
-  inner class GetOrderDetails {
+  inner class GetCapOrderDetails {
     @Test
     fun `Returns the appropriate object type`() {
       val orderId = "1ab"
-      val expectedResult: OrderDetails = OrderDetails(
+      val expectedResult: CapOrderDetails = CapOrderDetails(
         specials = "no",
         legacySubjectId = "",
         legacyOrderId = "",
@@ -146,13 +155,13 @@ class OrderControllerTest {
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isNotNull
-      Assertions.assertThat(result.body).isInstanceOf(OrderDetails::class.java)
+      Assertions.assertThat(result.body).isInstanceOf(CapOrderDetails::class.java)
     }
 
     @Test
     fun `gets order details from order service`() {
       val orderId = "1ab"
-      val expectedResult: OrderDetails = OrderDetails(
+      val expectedResult: CapOrderDetails = CapOrderDetails(
         specials = "no",
         legacySubjectId = "",
         legacyOrderId = "",
@@ -171,7 +180,7 @@ class OrderControllerTest {
   }
 
   @Nested
-  inner class GetAmOrderDetails {
+  inner class GetAmCapOrderDetails {
     @Test
     fun `Returns the appropriate object type`() {
       val orderId = "1ab"
