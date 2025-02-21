@@ -10,4 +10,4 @@ SELECT
 FROM
     historic_api_mart_integration.order_details
 WHERE
-    first_name=upper('any')
+    first_name LIKE UPPER('%any%')

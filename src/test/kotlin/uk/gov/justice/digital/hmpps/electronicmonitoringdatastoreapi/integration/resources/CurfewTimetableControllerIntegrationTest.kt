@@ -35,6 +35,16 @@ class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
+    fun `should throw a Bad Request exception if the URL param format is invalid`() {
+      webTestClient.get()
+        .uri("$baseUri/2_4")
+        .headers(setAuthorisation())
+        .exchange()
+        .expectStatus()
+        .isBadRequest
+    }
+
+    @Test
     fun `should return OK with valid auth header, role`() {
       webTestClient.get()
         .uri("$baseUri/234")

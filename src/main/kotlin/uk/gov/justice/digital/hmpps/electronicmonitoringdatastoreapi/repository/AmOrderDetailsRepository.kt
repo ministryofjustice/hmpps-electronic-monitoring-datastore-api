@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
+import org.apache.commons.lang3.StringUtils.isAlphanumeric
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
@@ -14,6 +15,10 @@ class AmOrderDetailsRepository(
   @Autowired val athenaClient: EmDatastoreClientInterface,
 ) {
   fun getAmOrderDetails(orderId: String, role: AthenaRole): AthenaAmOrderDetailsDTO {
+    if (!isAlphanumeric(orderId)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
+
     val amOrderDetailsQuery: AthenaAmOrderDetailsQuery = AmOrderDetailsQueryBuilder()
       .withLegacySubjectId(orderId)
       .build()

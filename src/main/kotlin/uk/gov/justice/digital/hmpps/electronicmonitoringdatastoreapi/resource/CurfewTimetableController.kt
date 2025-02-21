@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
+import jakarta.validation.constraints.Pattern
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -27,7 +28,9 @@ class CurfewTimetableController(
   @GetMapping("/getCurfewTimetable/{orderId}")
   fun getCurfewTimetable(
     authentication: Authentication,
-    @PathVariable(required = true) orderId: String,
+    @PathVariable(required = true)
+    @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - ID must be a number")
+    orderId: String,
   ): ResponseEntity<List<CurfewTimetable>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 

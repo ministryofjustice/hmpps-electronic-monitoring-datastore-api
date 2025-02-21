@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
+import org.apache.commons.lang3.StringUtils.isAlphanumericSpace
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
-class SearchKeyOrderInformationQueryBuilder(
+// TODO: update to use PREPARED STATEMENTS instead of a plain SELECT: better injection protection.
+class OrderSearchQueryBuilder(
   var databaseName: String? = null,
 ) {
   private var whereClause = mutableMapOf<String, String>()
@@ -19,11 +21,11 @@ class SearchKeyOrderInformationQueryBuilder(
         throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
       }
 
-      whereClause.put("legacy_subject_id", value)
+      whereClause.put("legacy_subject_id", "legacy_subject_id=$value")
       field = value
     }
 
-  fun withLegacySubjectId(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withLegacySubjectId(value: String?): OrderSearchQueryBuilder {
     legacySubjectId = value
     return this
   }
@@ -34,11 +36,14 @@ class SearchKeyOrderInformationQueryBuilder(
         return
       }
 
-      whereClause.put("first_name", "upper('$value')")
+      whereClause.put("first_name", "first_name LIKE UPPER('%$value%')")
       field = value
     }
 
-  fun withFirstName(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withFirstName(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumericSpace(value ?: "")) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
     firstName = value
     return this
   }
@@ -49,11 +54,14 @@ class SearchKeyOrderInformationQueryBuilder(
         return
       }
 
-      whereClause.put("last_name", "upper('$value')")
+      whereClause.put("last_name", "last_name LIKE UPPER('%$value%')")
       field = value
     }
 
-  fun withLastName(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withLastName(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumericSpace(value ?: "")) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
     lastName = value
     return this
   }
@@ -64,11 +72,15 @@ class SearchKeyOrderInformationQueryBuilder(
         return
       }
 
-      whereClause.put("alias", "upper('$value')")
+      whereClause.put("alias", "alias LIKE UPPER('%$value%')")
       field = value
     }
 
-  fun withAlias(value: String?): SearchKeyOrderInformationQueryBuilder {
+  fun withAlias(value: String?): OrderSearchQueryBuilder {
+    if (!isAlphanumericSpace(value ?: "")) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
+
     alias = value
     return this
   }
@@ -141,7 +153,9 @@ class SearchKeyOrderInformationQueryBuilder(
       """.trimIndent(),
     )
 
-    builder.append(whereClause.entries.joinToString(separator = " OR "))
+    // builder.append(whereClause.map{ "${it.key} LIKE '%${it.value}%'" }.joinToString(separator = " OR "))
+//    builder.append(whereClause.map { "${it.key}=${it.value}" }.joinToString(separator = " OR "))
+    builder.append(whereClause.values.joinToString(separator = " OR "))
 
     return AthenaOrderSearchQuery(builder.toString())
   }
