@@ -34,7 +34,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("first_name", "first_name=upper('$value')")
+      whereClause.put("first_name", "first_name LIKE UPPER('%$value%')")
       field = value
     }
 
@@ -49,7 +49,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("last_name", "last_name=upper('$value')")
+      whereClause.put("last_name", "last_name LIKE UPPER('%$value%')")
       field = value
     }
 
@@ -64,7 +64,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("alias", "alias=upper('$value')")
+      whereClause.put("alias", "alias LIKE UPPER('%$value%')")
       field = value
     }
 
