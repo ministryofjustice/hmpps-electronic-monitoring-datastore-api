@@ -44,7 +44,7 @@ abstract class IntegrationTestBase {
   internal fun setAuthorisationWithoutUsername(
     roles: List<String> = listOf("ROLE_EM_DATASTORE_GENERAL_RO"),
     scopes: List<String> = listOf("read"),
-  ): (HttpHeaders) -> Unit = setAuthorisation(username = "", scopes = scopes, roles= roles)
+  ): (HttpHeaders) -> Unit = setAuthorisation(username = "", scopes = scopes, roles = roles)
 
   protected fun stubPingWithResponse(status: Int) {
     hmppsAuth.stubHealthPing(status)
