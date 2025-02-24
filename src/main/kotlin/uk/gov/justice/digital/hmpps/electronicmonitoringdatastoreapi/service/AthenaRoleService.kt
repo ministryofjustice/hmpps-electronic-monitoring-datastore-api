@@ -8,13 +8,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 class AthenaRoleService {
   fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.DEV
 
-  fun getRoleFromAuthentication(authentication: Authentication): AthenaRole {
-    // TODO: Access passed_MFA which should be in the token, return NONE if so. Need to find it though.
-    // val passedMFA: Boolean = authentication.details.GET_THE_DATA
-    // if(!passedMFA) return AthenaRole.NONE
-
-    return enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.DEV
-  }
+  fun getRoleFromAuthentication(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.DEV
 }
 
 // Example user token:
