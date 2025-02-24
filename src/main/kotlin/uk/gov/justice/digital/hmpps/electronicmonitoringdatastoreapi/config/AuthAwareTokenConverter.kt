@@ -24,9 +24,9 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
 
   @Throws(AuthenticationException::class)
   private fun verifyPassedMFA(jwt: Jwt) {
-    val passedMFA = jwt.claims["passed_MFA"]
+    val passedMFA = jwt.claims["passed_MFA"] as Boolean?
 
-    if (passedMFA != "true") {
+    if (passedMFA != true) {
       throw InvalidBearerTokenException("Multi-factor authentication must have been used as part of your authentication")
     }
   }
