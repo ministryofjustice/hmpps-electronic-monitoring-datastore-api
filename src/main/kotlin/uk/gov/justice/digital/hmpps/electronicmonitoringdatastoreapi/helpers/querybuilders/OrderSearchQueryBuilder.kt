@@ -153,8 +153,6 @@ class OrderSearchQueryBuilder(
       """.trimIndent(),
     )
 
-    // builder.append(whereClause.map{ "${it.key} LIKE '%${it.value}%'" }.joinToString(separator = " OR "))
-//    builder.append(whereClause.map { "${it.key}=${it.value}" }.joinToString(separator = " OR "))
     builder.append(whereClause.values.joinToString(separator = " OR "))
 
     return AthenaOrderSearchQuery(builder.toString())
