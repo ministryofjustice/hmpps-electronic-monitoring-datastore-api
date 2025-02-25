@@ -11,6 +11,7 @@ services:
     # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
   athena:
     database: historic_api_mart_integration
+    output: fake_bucket
 
 CLIENT_ID: hmpps-electronic-monitoring-datastore-api
 CLIENT_SECRET: clientsecret

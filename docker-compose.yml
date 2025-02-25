@@ -14,6 +14,7 @@ services:
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       - SPRING_PROFILES_ACTIVE=local
       - ATHENA_DATABASE_NAME=test-database
+      - ATHENA_OUTPUT_BUCKET=fake-output-bucket-id
 
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
