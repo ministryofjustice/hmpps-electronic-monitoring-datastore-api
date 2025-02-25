@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
@@ -22,8 +23,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 @Component
 @Profile("!integration & !mocking")
 class EmDatastoreClient : EmDatastoreClientInterface {
-  private val outputBucket: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
+  @Value("\${services.athena.output}")
+  private val output: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
+
+  @Value("\${services.athena.database}")
   private val databaseName: String = "test_database"
   private val defaultRole: AthenaRole = AthenaRole.DEV
 
@@ -77,7 +81,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
 
       // The result configuration specifies where the results of the query should go.
       val resultConfiguration = ResultConfiguration.builder()
-        .outputLocation(outputBucket)
+        .outputLocation(output)
         .build()
 
       // TODO: Consider whether to enable the reuse of results - false by default
