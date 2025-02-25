@@ -59,5 +59,4 @@ services:
     url: ${HMPPS_AUTH_URL}
   athena:
     database: ${ATHENA_DATABASE_NAME}
-#    TODO: Pull output value from helm
-    output: s3://emds-test-athena-query-results-20240923095933297100000013
+    output: ${ATHENA_OUTPUT_BUCKET}
