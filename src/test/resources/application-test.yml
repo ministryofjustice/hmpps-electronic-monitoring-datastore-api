@@ -18,3 +18,4 @@ services:
     # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
   athena:
     database: totally-fake-database-name
+    output: totally-fake-output-bucket-name
