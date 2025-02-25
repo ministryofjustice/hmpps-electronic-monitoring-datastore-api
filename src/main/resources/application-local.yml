@@ -10,8 +10,12 @@ services:
     url: http://localhost:9090/auth
     # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
   athena:
-    database: historic_api_mart
-    output: s3://emds-test-athena-query-results-20240923095933297100000013
+    # Values for connecting to TEST Athena instance
+#    database: historic_api_mart
+#    output: s3://emds-test-athena-query-results-20240923095933297100000013
+    # Values for connecting to DEV Athena instance
+    database: test_database
+    output: s3://emds-dev-athena-query-results-20240917144028307600000004
 
 CLIENT_ID: hmpps-electronic-monitoring-datastore-api
 CLIENT_SECRET: clientsecret
