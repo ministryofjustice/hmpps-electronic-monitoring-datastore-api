@@ -1,11 +1,13 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 
 @Service
 class AthenaRoleService {
+
   fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.DEV
 
   fun getRoleFromAuthentication(authentication: Authentication): AthenaRole {
@@ -13,7 +15,21 @@ class AthenaRoleService {
     // val passedMFA: Boolean = authentication.details.GET_THE_DATA
     // if(!passedMFA) return AthenaRole.NONE
 
-    return enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.DEV
+    val authorities: Collection<GrantedAuthority> = authentication.authorities
+
+    val roles = mutableListOf<AthenaRole>()
+
+    for (grantedAuthority in authorities) {
+      roles.add(
+        enumValues<AthenaRole>()
+          .find { it.name == grantedAuthority.authority } ?: AthenaRole.NONE,
+      )
+    }
+
+    val topRole = roles
+      .return enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.NONE
+
+//    return enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.NONE
   }
 }
 
