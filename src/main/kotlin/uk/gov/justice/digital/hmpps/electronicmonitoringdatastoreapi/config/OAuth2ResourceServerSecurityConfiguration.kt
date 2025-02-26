@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
-import kotlin.Throws
 
 @Configuration
 @EnableWebSecurity
@@ -68,6 +67,8 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
     JwtGrantedAuthoritiesConverter()
 
   override fun convert(jwt: Jwt): AbstractAuthenticationToken {
+    validatePassedMFA(jwt)
+
     val principal = extractPrincipal(jwt)
     val authorities = extractAuthorities(jwt)
 
@@ -101,6 +102,15 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
     }
 
     return authorities.toSet()
+  }
+
+  @Throws(AuthenticationException::class)
+  private fun validatePassedMFA(jwt: Jwt) {
+    val passedMFA = jwt.claims["passed_mfa"] as Boolean?
+
+    if (passedMFA != true) {
+      throw InvalidBearerTokenException("MFA was '$passedMFA' which is not true")
+    }
   }
 
   companion object {
