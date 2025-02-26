@@ -11,7 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
-import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.JwtAuthorisationHelper
 
 @ExtendWith(HmppsAuthApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -44,7 +44,7 @@ abstract class IntegrationTestBase {
   internal fun setAuthorisationWithoutUsername(
     roles: List<String> = listOf("ROLE_EM_DATASTORE_GENERAL_RO"),
     scopes: List<String> = listOf("read"),
-  ): (HttpHeaders) -> Unit = setAuthorisation(username = "")
+  ): (HttpHeaders) -> Unit = setAuthorisation(username = "", scopes = scopes, roles= roles)
 
   protected fun stubPingWithResponse(status: Int) {
     hmppsAuth.stubHealthPing(status)
