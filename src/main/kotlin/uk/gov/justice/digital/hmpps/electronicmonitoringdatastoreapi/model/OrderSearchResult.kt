@@ -1,6 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
+import java.time.LocalDateTime
 
 data class OrderSearchResult(
   val dataType: String,
@@ -11,9 +13,9 @@ data class OrderSearchResult(
   val addressLine3: String,
   val addressPostcode: String,
   val alias: String?,
-  val dateOfBirth: String,
-  val orderStartDate: String,
-  val orderEndDate: String,
+  val dateOfBirth: LocalDateTime?,
+  val orderStartDate: LocalDateTime?,
+  val orderEndDate: LocalDateTime?,
 ) {
   constructor(dto: AthenaOrderSearchResultDTO) : this(
     dataType = "am",
@@ -24,8 +26,8 @@ data class OrderSearchResult(
     addressLine3 = dto.primaryAddressLine3,
     addressPostcode = dto.primaryAddressPostCode,
     alias = null,
-    dateOfBirth = dto.orderStartDate,
-    orderStartDate = dto.orderStartDate,
-    orderEndDate = dto.orderEndDate,
+    dateOfBirth = processDate(dto.orderStartDate),
+    orderStartDate = processDate(dto.orderStartDate),
+    orderEndDate = processDate(dto.orderStartDate),
   )
 }

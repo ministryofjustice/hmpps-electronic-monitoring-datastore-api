@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSuspensionOfVisitsDTO
 import java.time.LocalDateTime
 
@@ -11,9 +12,6 @@ data class SuspensionOfVisits(
   val suspensionOfVisitsStartTime: String?,
   val suspensionOfVisitsEndDate: LocalDateTime?,
 ) {
-  companion object {
-    fun processDate(date: String?): LocalDateTime? = if (!date.isNullOrEmpty()) LocalDateTime.parse("${date}T00:00:00") else null
-  }
 
   constructor(dto: AthenaSuspensionOfVisitsDTO) : this(
     legacySubjectId = dto.legacySubjectId,
