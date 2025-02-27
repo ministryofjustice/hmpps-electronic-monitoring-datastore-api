@@ -7,7 +7,7 @@ data class OrderSearchResult(
   val legacySubjectId: Long,
   val name: String,
   val addressLine1: String,
-  val addressLine2: String,
+  var addressLine2: String,
   val addressLine3: String,
   val addressPostcode: String,
   val alias: String?,

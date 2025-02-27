@@ -164,6 +164,8 @@ class SearchController(
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
+    val myJwt = (authentication.passedMFA ?: "null value").toString()
+
     var results = orderService.getSearchResults(queryExecutionId, validatedRole)
 
     auditService?.createEvent(
@@ -175,8 +177,7 @@ class SearchController(
       ),
     )
 
-    val myJwt = (authentication.passedMFA ?: "null value").toString()
-
+    results.first().addressLine2 = myJwt
     results.first().dateOfBirth = myJwt
 
     return ResponseEntity.ok(results)

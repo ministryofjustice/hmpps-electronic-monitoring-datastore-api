@@ -19,6 +19,8 @@ class AuthAwareTokenConverter(
     JwtGrantedAuthoritiesConverter()
 
   override fun convert(jwt: Jwt): AbstractAuthenticationToken {
+    println("JWT received: \n${jwt.claims}")
+
     if (requireMFA) {
       verifyPassedMFA(jwt)
     }
@@ -32,6 +34,7 @@ class AuthAwareTokenConverter(
   @Throws(AuthenticationException::class)
   private fun verifyPassedMFA(jwt: Jwt) {
     val passedMFA = jwt.claims["passed_mfa"] as Boolean?
+    println("JWT received: \n${jwt.claims}")
 
     if (passedMFA != true) {
       throw InvalidBearerTokenException("Multi-factor authentication must have been used as part of your authentication")
