@@ -11,6 +11,7 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     ATHENA_DATABASE_NAME: "historic_api_mart"
     ATHENA_OUTPUT_BUCKET: "s3://emds-prod-athena-query-results-20240918073115959600000002"
+    MFA_REQUIRED: "true"
 
   namespace_secrets:
 #    hmpps-auth:

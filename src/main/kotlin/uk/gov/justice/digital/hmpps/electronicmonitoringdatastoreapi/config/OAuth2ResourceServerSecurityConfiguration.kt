@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -17,7 +18,9 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint
 @EnableWebSecurity
 @EnableGlobalAuthentication
 @EnableMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
-class OAuth2ResourceServerSecurityConfiguration {
+class OAuth2ResourceServerSecurityConfiguration(
+  @Autowired private val authAwareTokenConverter: AuthAwareTokenConverter,
+) {
   @Bean
   @Throws(Exception::class)
   fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -38,9 +41,7 @@ class OAuth2ResourceServerSecurityConfiguration {
       .oauth2ResourceServer { oauth2ResourceServer ->
         oauth2ResourceServer.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
         oauth2ResourceServer.jwt { jwt ->
-          jwt.jwtAuthenticationConverter(
-            AuthAwareTokenConverter(),
-          )
+          jwt.jwtAuthenticationConverter(authAwareTokenConverter)
         }
       }
       .sessionManagement { sess: SessionManagementConfigurer<HttpSecurity?> ->

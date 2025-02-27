@@ -9,6 +9,7 @@ services:
   hmpps-auth:
     url: http://localhost:9090/auth
     # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+    mfa: false
   athena:
     database: historic_api_mart_integration
     output: fake_bucket

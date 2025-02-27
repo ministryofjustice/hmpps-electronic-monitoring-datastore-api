@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.AuthenticationException
@@ -8,13 +9,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
+import org.springframework.stereotype.Component
 
-class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
+@Component
+class AuthAwareTokenConverter(
+  @Value("\${services.hmpps-auth.mfa}") private val requireMFA: Boolean = true,
+) : Converter<Jwt, AbstractAuthenticationToken> {
   private val jwtGrantedAuthoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>> =
     JwtGrantedAuthoritiesConverter()
 
   override fun convert(jwt: Jwt): AbstractAuthenticationToken {
-    verifyPassedMFA(jwt)
+    if (requireMFA) {
+      verifyPassedMFA(jwt)
+    }
 
     val principal = extractPrincipal(jwt)
     val authorities = extractAuthorities(jwt)
