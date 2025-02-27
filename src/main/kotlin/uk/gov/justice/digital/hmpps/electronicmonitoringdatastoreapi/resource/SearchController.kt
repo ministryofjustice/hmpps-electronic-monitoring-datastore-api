@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
@@ -135,7 +136,7 @@ class SearchController(
 
   @PostMapping("/orders")
   fun searchOrders(
-    authentication: Authentication,
+    authentication: AuthAwareAuthenticationToken,
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
   ): ResponseEntity<QueryExecutionResponse> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)

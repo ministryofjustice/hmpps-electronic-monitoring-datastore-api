@@ -9,17 +9,22 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 
-class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
+class AuthAwareTokenConverter(
+  private val requireMFA: String = "true",
+) : Converter<Jwt, AbstractAuthenticationToken> {
   private val jwtGrantedAuthoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>> =
     JwtGrantedAuthoritiesConverter()
 
   override fun convert(jwt: Jwt): AbstractAuthenticationToken {
-    verifyPassedMFA(jwt)
+    if (requireMFA == "true") {
+      verifyPassedMFA(jwt)
+    }
 
+    val passedMFA = extractMFA(jwt)
     val principal = extractPrincipal(jwt)
     val authorities = extractAuthorities(jwt)
 
-    return AuthAwareAuthenticationToken(jwt, principal, authorities)
+    return AuthAwareAuthenticationToken(jwt, principal, authorities, passedMFA)
   }
 
   @Throws(AuthenticationException::class)
@@ -30,6 +35,9 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
       throw InvalidBearerTokenException("Multi-factor authentication must have been used as part of your authentication")
     }
   }
+
+  @Throws(AuthenticationException::class)
+  private fun extractMFA(jwt: Jwt): Boolean = jwt.claims["passed_mfa"] as Boolean? ?: false
 
   @Throws(AuthenticationException::class)
   private fun extractPrincipal(jwt: Jwt): String {
