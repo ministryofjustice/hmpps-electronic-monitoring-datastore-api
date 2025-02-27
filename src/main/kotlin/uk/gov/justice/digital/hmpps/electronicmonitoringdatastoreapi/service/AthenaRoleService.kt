@@ -6,9 +6,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 
 @Service
 class AthenaRoleService {
-  fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.DEV
+  fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.NONE
 
-  fun getRoleFromAuthenticationOld(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.DEV
+  fun getRoleFromAuthenticationOld(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.NONE
 
   fun getRoleFromAuthentication(authentication: Authentication): AthenaRole {
     val roleStrings: List<String> = (
@@ -17,13 +17,16 @@ class AthenaRoleService {
         as MutableList<String>
       )
 
-    val mappedRoles: List<AthenaRole> = roleStrings.map { roleString ->
-      enumValues<AthenaRole>()
-        .find { it.name == roleString } ?: AthenaRole.NONE
-    }
+    val mappedRoles: List<AthenaRole> = mapToOrderedUniqueRoles(roleStrings)
 
     return mappedRoles.firstOrNull() ?: AthenaRole.NONE
   }
+
+  fun mapToOrderedUniqueRoles(roleStrings: List<String>): List<AthenaRole> = roleStrings
+    .map { roleString ->
+      enumValues<AthenaRole>()
+        .find { it.name == roleString } ?: AthenaRole.NONE
+    }.toSet().sortedByDescending { it.priority }
 }
 
 // Example user token:
