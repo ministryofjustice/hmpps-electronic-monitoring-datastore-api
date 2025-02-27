@@ -8,7 +8,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 class AthenaRoleService {
   fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.DEV
 
-  fun getRoleFromAuthentication(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.DEV
+//  fun getRoleFromAuthentication(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.DEV
+  fun getRoleFromAuthentication(authentication: Authentication): AthenaRole {
+    val x = 3
+    return AthenaRole.NONE
+  }
 }
 
 // Example user token:
