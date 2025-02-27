@@ -18,12 +18,13 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint
 @EnableWebSecurity
 @EnableGlobalAuthentication
 @EnableMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
-class OAuth2ResourceServerSecurityConfiguration(
-  @Value("\${services.hmpps-auth.mfa}") private val requireMFA: String = "true",
-) {
+class OAuth2ResourceServerSecurityConfiguration {
   @Bean
   @Throws(Exception::class)
-  fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+  fun securityFilterChain(
+    http: HttpSecurity,
+    @Value("\${services.hmpps-auth.mfa}") requireMFA: String = "true",
+  ): SecurityFilterChain {
     http
       .csrf { csrf: CsrfConfigurer<HttpSecurity> -> csrf.disable() }
       .authorizeHttpRequests { auth ->
