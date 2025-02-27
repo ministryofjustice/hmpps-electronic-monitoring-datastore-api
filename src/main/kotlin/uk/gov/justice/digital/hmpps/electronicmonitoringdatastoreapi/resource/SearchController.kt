@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
@@ -158,12 +159,12 @@ class SearchController(
 
   @GetMapping("/orders/{queryExecutionId}")
   fun getSearchResults(
-    authentication: Authentication,
+    authentication: AuthAwareAuthenticationToken,
     @PathVariable(required = true) queryExecutionId: String,
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val results = orderService.getSearchResults(queryExecutionId, validatedRole)
+    var results = orderService.getSearchResults(queryExecutionId, validatedRole)
 
     auditService?.createEvent(
       authentication.name,
@@ -173,6 +174,10 @@ class SearchController(
         "rows" to results.count().toString(),
       ),
     )
+
+    val myJwt = (authentication.passedMFA ?: "null value").toString()
+
+    results.first().dateOfBirth = myJwt
 
     return ResponseEntity.ok(results)
   }

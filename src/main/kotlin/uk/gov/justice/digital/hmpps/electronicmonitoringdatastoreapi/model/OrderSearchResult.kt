@@ -11,7 +11,7 @@ data class OrderSearchResult(
   val addressLine3: String,
   val addressPostcode: String,
   val alias: String?,
-  val dateOfBirth: String,
+  var dateOfBirth: String,
   val orderStartDate: String,
   val orderEndDate: String,
 ) {

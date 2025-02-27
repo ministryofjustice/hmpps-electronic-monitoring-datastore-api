@@ -9,5 +9,6 @@ class AuthAwareAuthenticationToken(
   private val aPrincipal: String,
   authorities: Collection<GrantedAuthority>,
 ) : JwtAuthenticationToken(jwt, authorities, aPrincipal) {
+  val passedMFA: Boolean? = jwt.claims["passed_mfa"] as Boolean?
   override fun getPrincipal(): String = aPrincipal
 }

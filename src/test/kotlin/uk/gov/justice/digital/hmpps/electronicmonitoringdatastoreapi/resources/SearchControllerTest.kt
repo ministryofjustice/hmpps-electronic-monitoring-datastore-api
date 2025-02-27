@@ -9,9 +9,9 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
-import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
@@ -29,11 +29,11 @@ class SearchControllerTest {
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: SearchController
-  private lateinit var authentication: Authentication
+  private lateinit var authentication: AuthAwareAuthenticationToken
 
   @BeforeEach
   fun setup() {
-    authentication = mock(Authentication::class.java)
+    authentication = mock(AuthAwareAuthenticationToken::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = mock(OrderService::class.java)
     roleService = mock(AthenaRoleService::class.java)
