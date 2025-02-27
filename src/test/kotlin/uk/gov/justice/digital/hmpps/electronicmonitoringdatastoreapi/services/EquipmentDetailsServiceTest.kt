@@ -53,27 +53,27 @@ class EquipmentDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(equipmentDetailsRepository.getEquipmentDetails(orderId, AthenaRole.DEV))
+      Mockito.`when`(equipmentDetailsRepository.getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleEquipmentDetailsList)
     }
 
     @Test
     fun `calls getEquipmentDetails from order information repository`() {
-      service.getEquipmentDetails(orderId, AthenaRole.DEV)
+      service.getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(equipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(orderId, AthenaRole.DEV)
+      Mockito.verify(equipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns a list of EquipmentDetails when a response is received`() {
-      var result = service.getEquipmentDetails(orderId, AthenaRole.DEV)
+      var result = service.getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the EquipmentDetails when a response is received`() {
-      var result = service.getEquipmentDetails(orderId, AthenaRole.DEV)
+      var result = service.getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

@@ -37,8 +37,8 @@ class SearchControllerTest {
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = mock(OrderService::class.java)
     roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.DEV)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
+    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = mock(AuditService::class.java)
     controller = SearchController(orderService, roleService, auditService)
   }
@@ -114,7 +114,7 @@ class SearchControllerTest {
       val queryObject = AthenaStringQuery(queryString)
       val queryResponse = "fake query response"
 
-      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenReturn(queryResponse)
+      `when`(orderService.query(queryObject, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryResponse)
 
       val result = controller.queryAthena(authentication, queryObject, queryRole)
 
@@ -132,7 +132,7 @@ class SearchControllerTest {
       val queryObject = AthenaStringQuery(queryString)
       val errorMessage = "fake error message"
 
-      `when`(orderService.query(queryObject, AthenaRole.DEV)).thenThrow(NullPointerException(errorMessage))
+      `when`(orderService.query(queryObject, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenThrow(NullPointerException(errorMessage))
 
       val result = controller.queryAthena(authentication, queryObject, queryRole)
 
@@ -164,7 +164,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      `when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.DEV)).thenReturn(queryExecutionId)
+      `when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
 
       val result = controller.searchOrders(authentication, orderSearchCriteria)
 
@@ -195,7 +195,7 @@ class SearchControllerTest {
         ),
       )
 
-      `when`(orderService.getSearchResults(queryExecutionId, AthenaRole.DEV)).thenReturn(expectedResult)
+      `when`(orderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
       val result = controller.getSearchResults(authentication, queryExecutionId)
 

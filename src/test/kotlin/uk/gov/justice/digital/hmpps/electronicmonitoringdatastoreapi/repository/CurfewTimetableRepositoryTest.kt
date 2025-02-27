@@ -105,7 +105,7 @@ class CurfewTimetableRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getCurfewTimetable("123", AthenaRole.DEV)
+      repository.getCurfewTimetable("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -116,7 +116,7 @@ class CurfewTimetableRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getCurfewTimetable("123", AthenaRole.DEV)
+      val result = repository.getCurfewTimetable("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -127,7 +127,7 @@ class CurfewTimetableRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getCurfewTimetable("987", AthenaRole.DEV)
+      val result = repository.getCurfewTimetable("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)

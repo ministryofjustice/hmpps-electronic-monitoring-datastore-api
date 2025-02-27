@@ -54,27 +54,27 @@ class OrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(orderEventsRepository.getMonitoringEventsList(orderId, AthenaRole.DEV))
+      Mockito.`when`(orderEventsRepository.getMonitoringEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleMonitoringEventList)
     }
 
     @Test
     fun `calls getMonitoringEventsList from order information repository`() {
-      service.getMonitoringEvents(orderId, AthenaRole.DEV)
+      service.getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderEventsRepository, Mockito.times(1)).getMonitoringEventsList(orderId, AthenaRole.DEV)
+      Mockito.verify(orderEventsRepository, Mockito.times(1)).getMonitoringEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns MonitoringEventList when a response is received`() {
-      var result = service.getMonitoringEvents(orderId, AthenaRole.DEV)
+      var result = service.getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      var result = service.getMonitoringEvents(orderId, AthenaRole.DEV)
+      var result = service.getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
@@ -103,27 +103,27 @@ class OrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(orderEventsRepository.getIncidentEventsList(orderId, AthenaRole.DEV))
+      Mockito.`when`(orderEventsRepository.getIncidentEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleIncidentEventList)
     }
 
     @Test
     fun `calls getIncidentEventsList from order information repository`() {
-      service.getIncidentEvents(orderId, AthenaRole.DEV)
+      service.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderEventsRepository, Mockito.times(1)).getIncidentEventsList(orderId, AthenaRole.DEV)
+      Mockito.verify(orderEventsRepository, Mockito.times(1)).getIncidentEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns IncidentEventList when a response is received`() {
-      var result = service.getIncidentEvents(orderId, AthenaRole.DEV)
+      var result = service.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      var result = service.getIncidentEvents(orderId, AthenaRole.DEV)
+      var result = service.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
@@ -169,27 +169,27 @@ class OrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(orderEventsRepository.getViolationEventsList(orderId, AthenaRole.DEV))
+      Mockito.`when`(orderEventsRepository.getViolationEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleViolationEventList)
     }
 
     @Test
     fun `calls getViolationEventsList from order information repository`() {
-      service.getViolationEvents(orderId, AthenaRole.DEV)
+      service.getViolationEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderEventsRepository, Mockito.times(1)).getViolationEventsList(orderId, AthenaRole.DEV)
+      Mockito.verify(orderEventsRepository, Mockito.times(1)).getViolationEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns ViolationEventList when a response is received`() {
-      var result = service.getViolationEvents(orderId, AthenaRole.DEV)
+      var result = service.getViolationEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      var result = service.getViolationEvents(orderId, AthenaRole.DEV)
+      var result = service.getViolationEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
@@ -225,27 +225,27 @@ class OrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(orderEventsRepository.getContactEventsList(orderId, AthenaRole.DEV))
+      Mockito.`when`(orderEventsRepository.getContactEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleContactEventList)
     }
 
     @Test
     fun `calls getContactEventsList from order information repository`() {
-      service.getContactEvents(orderId, AthenaRole.DEV)
+      service.getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderEventsRepository, Mockito.times(1)).getContactEventsList(orderId, AthenaRole.DEV)
+      Mockito.verify(orderEventsRepository, Mockito.times(1)).getContactEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns ContactsEventList when a response is received`() {
-      var result = service.getContactEvents(orderId, AthenaRole.DEV)
+      var result = service.getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      var result = service.getContactEvents(orderId, AthenaRole.DEV)
+      var result = service.getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

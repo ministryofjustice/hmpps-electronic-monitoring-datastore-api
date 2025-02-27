@@ -29,7 +29,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
 
   @Value("\${services.athena.database}")
   private val databaseName: String = "test_database"
-  private val defaultRole: AthenaRole = AthenaRole.DEV
+  private val defaultRole: AthenaRole = AthenaRole.NONE
 
   private fun startClient(role: AthenaRole): AthenaClient {
     val credentialsProvider: AwsCredentialsProvider = EmDatastoreRoleProvider.Companion.getRole(role)

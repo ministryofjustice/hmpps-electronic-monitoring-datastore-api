@@ -32,7 +32,7 @@ class SuspensionOfVisitsControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     suspensionOfVisitsService = Mockito.mock(SuspensionOfVisitsService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = SuspensionOfVisitsController(suspensionOfVisitsService, roleService, auditService)
   }
@@ -53,14 +53,14 @@ class SuspensionOfVisitsControllerTest {
         ),
       )
 
-      Mockito.`when`(suspensionOfVisitsService.getSuspensionOfVisits(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+      Mockito.`when`(suspensionOfVisitsService.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
       val result = controller.getSuspensionOfVisits(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(suspensionOfVisitsService, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.DEV)
+      Mockito.verify(suspensionOfVisitsService, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }

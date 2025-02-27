@@ -44,27 +44,27 @@ class SuspensionOfVisitsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(suspensionOfVisitsRepository.getSuspensionOfVisits(orderId, AthenaRole.DEV))
+      Mockito.`when`(suspensionOfVisitsRepository.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleSuspensionOfVisits)
     }
 
     @Test
     fun `calls getSuspensionOfVisits from order information repository`() {
-      service.getSuspensionOfVisits(orderId, AthenaRole.DEV)
+      service.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(suspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.DEV)
+      Mockito.verify(suspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns a list of SuspensionOfVisits when a response is received`() {
-      var result = service.getSuspensionOfVisits(orderId, AthenaRole.DEV)
+      var result = service.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the CurfewTimetable when a response is received`() {
-      var result = service.getSuspensionOfVisits(orderId, AthenaRole.DEV)
+      var result = service.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

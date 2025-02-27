@@ -33,7 +33,7 @@ class EquipmentDetailsControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     equipmentDetailsService = Mockito.mock(EquipmentDetailsService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.DEV)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = EquipmentDetailsController(equipmentDetailsService, roleService, auditService)
   }
@@ -62,14 +62,14 @@ class EquipmentDetailsControllerTest {
         ),
       )
 
-      Mockito.`when`(equipmentDetailsService.getEquipmentDetails(orderId, AthenaRole.DEV)).thenReturn(expectedResult)
+      Mockito.`when`(equipmentDetailsService.getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
       val result = controller.getEquipmentDetails(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(equipmentDetailsService, Mockito.times(1)).getEquipmentDetails(orderId, AthenaRole.DEV)
+      Mockito.verify(equipmentDetailsService, Mockito.times(1)).getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }
