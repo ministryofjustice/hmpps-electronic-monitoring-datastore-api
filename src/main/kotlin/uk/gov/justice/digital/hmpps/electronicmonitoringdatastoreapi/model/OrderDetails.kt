@@ -67,7 +67,7 @@ data class OrderDetails(
     rangeRisk = dto.rangeRisk,
     reportRisk = dto.reportRisk,
     orderStartDate = processDate(dto.orderStartDate),
-    orderEndDate = processDate(dto.orderStartDate),
+    orderEndDate = processDate(dto.orderEndDate),
     orderType = dto.orderType,
     orderTypeDescription = dto.orderTypeDescription,
     orderTypeDetail = dto.orderTypeDetail,

@@ -28,6 +28,6 @@ data class OrderSearchResult(
     alias = null,
     dateOfBirth = processDate(dto.orderStartDate),
     orderStartDate = processDate(dto.orderStartDate),
-    orderEndDate = processDate(dto.orderStartDate),
+    orderEndDate = processDate(dto.orderEndDate),
   )
 }
