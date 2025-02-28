@@ -48,46 +48,6 @@ class OrderControllerTest {
   }
 
   @Nested
-  inner class GetSpecialsOrder {
-    @Test
-    fun `gets specials order information from order service `() {
-      val orderId = "1ab"
-      val expectedResult = OrderInformation(
-        keyOrderInformation = KeyOrderInformation(
-          specials = "NO",
-          legacySubjectId = "1234567",
-          legacyOrderId = "7654321-DIFFERENT ID",
-          name = "John Smith",
-          alias = "Zeno",
-          dateOfBirth = "01-02-1980",
-          address1 = "1 Primary Street",
-          address2 = "Sutton",
-          address3 = "London",
-          postcode = "ABC 123",
-          orderStartDate = "01-02-2012",
-          orderEndDate = "03-04-2013",
-        ),
-        subjectHistoryReport = SubjectHistoryReport(
-          reportUrl = "#",
-          name = "1234567",
-          createdOn = "01-02-2020",
-          time = "0900",
-        ),
-        documents = listOf<Document>(),
-      )
-
-      `when`(orderService.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
-
-      val result = controller.getSpecialsOrder(authentication, orderId)
-
-      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      Assertions.assertThat(result.body).isEqualTo(expectedResult)
-
-      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-  }
-
-  @Nested
   inner class GetOrderSummary {
     @Test
     fun `gets order information from order service`() {
