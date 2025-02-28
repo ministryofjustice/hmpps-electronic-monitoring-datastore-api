@@ -29,21 +29,18 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class SearchController(
   @Autowired val orderService: OrderService,
   val athenaRoleService: AthenaRoleService,
-
-  // TODO: Re-enable audit as @autowired once Cloud Platform in place
-  val auditService: AuditService? = null,
+  @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/confirmConnection")
   fun confirmConnection(
     authentication: Authentication,
   ): ResponseEntity<Map<String, String>> {
     try {
-//     TODO: Re-enable audit once Cloud Platform in place
-//       auditService.createEvent(
-//         authentication.principal.toString(),
-//         "CONFIRM_CONNECTION",
-//         mapOf("confirmConnection" to "true"),
-//       )
+      auditService.createEvent(
+        authentication.principal.toString(),
+        "CONFIRM_CONNECTION",
+        mapOf("confirmConnection" to "true"),
+      )
 
       val athenaAccess: Boolean = confirmAthenaAccess(authentication).body
       val message: String = if (athenaAccess) "Connection successful" else "API Connection successful, but no access to Athena"
@@ -142,7 +139,6 @@ class SearchController(
 
     val queryExecutionId = orderService.getQueryExecutionId(orderSearchCriteria, validatedRole)
 
-//    TODO: Error-handling for the audit service
     auditService?.createEvent(
       authentication.name,
       "SEARCH_ORDERS",

@@ -21,9 +21,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class CurfewTimetableController(
   @Autowired val curfewTimetableService: CurfewTimetableService,
   val athenaRoleService: AthenaRoleService,
-
-  // TODO: Re-enable audit as @autowired once Cloud Platform in place
-  val auditService: AuditService? = null,
+  @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getCurfewTimetable/{orderId}")
   fun getCurfewTimetable(

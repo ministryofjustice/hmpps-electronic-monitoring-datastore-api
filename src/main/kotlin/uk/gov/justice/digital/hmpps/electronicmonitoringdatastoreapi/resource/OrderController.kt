@@ -24,9 +24,7 @@ class OrderController(
   @Autowired val orderService: OrderService,
   val amOrderService: AmOrderService,
   val athenaRoleService: AthenaRoleService,
-
-  // TODO: Re-enable audit as @autowired once Cloud Platform in place
-  val auditService: AuditService? = null,
+  @Autowired val auditService: AuditService,
 ) {
 
   @GetMapping("/getMockOrderSummary/{orderId}")
