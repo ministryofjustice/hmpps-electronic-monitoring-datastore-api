@@ -24,7 +24,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ord
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO', 'ROLE_ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/search"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class SearchController(
   @Autowired val orderService: OrderService,
