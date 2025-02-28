@@ -57,27 +57,27 @@ class CurfewTimetableServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(orderId, AthenaRole.DEV))
+      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleCurfewTimetable)
     }
 
     @Test
     fun `calls getCurfewTimetable from order information repository`() {
-      service.getCurfewTimetable(orderId, AthenaRole.DEV)
+      service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.DEV)
+      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns a list of CurfewTimetable when a response is received`() {
-      var result = service.getCurfewTimetable(orderId, AthenaRole.DEV)
+      var result = service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the CurfewTimetable when a response is received`() {
-      var result = service.getCurfewTimetable(orderId, AthenaRole.DEV)
+      var result = service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

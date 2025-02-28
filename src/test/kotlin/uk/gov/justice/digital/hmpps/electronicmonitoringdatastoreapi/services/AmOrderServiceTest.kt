@@ -41,26 +41,26 @@ class AmOrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(amOrderDetailsRepository.getAmOrderDetails(orderId, AthenaRole.DEV))
+      `when`(amOrderDetailsRepository.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(blankOrderDetails)
     }
 
     @Test
     fun `calls getAmOrderDetails from order details repository`() {
-      service.getAmOrderDetails(orderId, AthenaRole.DEV)
-      Mockito.verify(amOrderDetailsRepository, times(1)).getAmOrderDetails(orderId, AthenaRole.DEV)
+      service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amOrderDetailsRepository, times(1)).getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns AmOrderDetails`() {
-      val result = service.getAmOrderDetails(orderId, AthenaRole.DEV)
+      val result = service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(AmOrderDetails::class.java)
     }
 
     @Test
     fun `returns correct details of the order`() {
-      val result = service.getAmOrderDetails(orderId, AthenaRole.DEV)
+      val result = service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("")

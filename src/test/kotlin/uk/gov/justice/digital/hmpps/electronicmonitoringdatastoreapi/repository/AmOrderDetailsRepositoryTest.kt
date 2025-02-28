@@ -76,7 +76,7 @@ class AmOrderDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getAmOrderDetails("123", AthenaRole.DEV)
+      repository.getAmOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -87,7 +87,7 @@ class AmOrderDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getAmOrderDetails("123", AthenaRole.DEV)
+      val result = repository.getAmOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(AthenaAmOrderDetailsDTO::class.java)
     }
@@ -99,7 +99,7 @@ class AmOrderDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getAmOrderDetails(orderId, AthenaRole.DEV)
+      val result = repository.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo(orderId)
@@ -110,7 +110,7 @@ class AmOrderDetailsRepositoryTest {
       val dangerousInput = "123 OR 1=1"
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-        repository.getAmOrderDetails(dangerousInput, AthenaRole.DEV)
+        repository.getAmOrderDetails(dangerousInput, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
       }.withMessage("Input contains illegal characters")
     }
   }

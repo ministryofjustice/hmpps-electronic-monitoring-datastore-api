@@ -15,7 +15,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.varCharValueColumn
 import java.util.UUID
 
 class OrderInformationRepositoryTest {
@@ -105,7 +104,7 @@ class OrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getKeyOrderInformation("123", AthenaRole.DEV)
+      repository.getKeyOrderInformation("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -116,7 +115,7 @@ class OrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getKeyOrderInformation("123", AthenaRole.DEV)
+      val result = repository.getKeyOrderInformation("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(AthenaKeyOrderInformationDTO::class.java)
     }
@@ -130,7 +129,7 @@ class OrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getKeyOrderInformation(orderId, AthenaRole.DEV)
+      val result = repository.getKeyOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacyOrderId).isEqualTo(orderId)
@@ -187,7 +186,7 @@ class OrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getSubjectHistoryReport("123", AthenaRole.DEV)
+      repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -198,7 +197,7 @@ class OrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSubjectHistoryReport("123", AthenaRole.DEV)
+      val result = repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(AthenaSubjectHistoryReportDTO::class.java)
     }
@@ -212,7 +211,7 @@ class OrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSubjectHistoryReport(orderId, AthenaRole.DEV)
+      val result = repository.getSubjectHistoryReport(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.name).isEqualTo(fullName)

@@ -52,27 +52,27 @@ class VisitDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(visitDetailsRepository.getVisitDetails(orderId, AthenaRole.DEV))
+      Mockito.`when`(visitDetailsRepository.getVisitDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleVisitDetails)
     }
 
     @Test
     fun `calls getVisitDetails from order information repository`() {
-      service.getVisitDetails(orderId, AthenaRole.DEV)
+      service.getVisitDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(visitDetailsRepository, Mockito.times(1)).getVisitDetails(orderId, AthenaRole.DEV)
+      Mockito.verify(visitDetailsRepository, Mockito.times(1)).getVisitDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns a list of VisitDetails when a response is received`() {
-      var result = service.getVisitDetails(orderId, AthenaRole.DEV)
+      var result = service.getVisitDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the VisitDetails when a response is received`() {
-      var result = service.getVisitDetails(orderId, AthenaRole.DEV)
+      var result = service.getVisitDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
