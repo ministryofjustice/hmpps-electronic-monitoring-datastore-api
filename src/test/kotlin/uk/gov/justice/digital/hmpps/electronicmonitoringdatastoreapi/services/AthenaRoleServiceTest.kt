@@ -28,6 +28,27 @@ class AthenaRoleServiceTest {
   }
 
   @Nested
+  inner class GetIamRole {
+    @Test
+    fun `retrieves IAM role for NONE Athena role`() {
+      val result: String = athenaRoleService.getIamRole(AthenaRole.NONE)
+      Assertions.assertThat(result).isEqualTo("")
+    }
+
+    @Test
+    fun `retrieves IAM role for GENERAL Athena role`() {
+      val result: String = athenaRoleService.getIamRole(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Assertions.assertThat(result).isEqualTo(generalRoleIamString)
+    }
+
+    @Test
+    fun `retrieves IAM role for RESTRICTED Athena role`() {
+      val result: String = athenaRoleService.getIamRole(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
+      Assertions.assertThat(result).isEqualTo(restrictedRoleIamString)
+    }
+  }
+
+  @Nested
   inner class MapToOrderedUniqueRoles {
     @Test
     fun `de-duplicates identical elements`() {
@@ -86,16 +107,16 @@ class AthenaRoleServiceTest {
     // when they have General, as an authority/claim, give them general
     @Test
     fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_GENERAL_RO with correct IAM role if this role is present`() {
-      val expectedRole = "arn:aws:iam::396913731313:role/cmt_read_emds_data_test"
       val auth = AuthenticationStub(
         name = "fake name",
         authorities = mutableListOf(AuthorityStub("ROLE_EM_DATASTORE_GENERAL_RO")),
       )
 
       val result: AthenaRole = athenaRoleService.getRoleFromAuthentication(auth)
+      val resolvedIamRole = athenaRoleService.getIamRole(result)
 
       Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Assertions.assertThat(result.iamRole).isEqualTo(expectedRole)
+      Assertions.assertThat(resolvedIamRole).isEqualTo(generalRoleIamString)
     }
 
     @Test
@@ -117,16 +138,16 @@ class AthenaRoleServiceTest {
     // when special, give them special not general
     @Test
     fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_RESTRICTED_RO if this role is present`() {
-      val expectedRole = "arn:aws:iam::396913731313:role/cmt_read_emds_data_test"
       val auth = AuthenticationStub(
         name = "fake name",
         authorities = mutableListOf(AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED_RO")),
       )
 
       val result: AthenaRole = athenaRoleService.getRoleFromAuthentication(auth)
+      val resolvedIamRole = athenaRoleService.getIamRole(result)
 
       Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
-      Assertions.assertThat(result.iamRole).isEqualTo(expectedRole)
+      Assertions.assertThat(resolvedIamRole).isEqualTo(restrictedRoleIamString)
     }
 
     @Test

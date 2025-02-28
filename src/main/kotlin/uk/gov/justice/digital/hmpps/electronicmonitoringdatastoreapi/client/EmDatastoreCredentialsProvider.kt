@@ -12,17 +12,17 @@ class EmDatastoreCredentialsProvider {
     const val SESSION_ID: String = "DataStoreApiSession"
     val region: Region = Region.EU_WEST_2
 
-    fun getRole(role: AthenaRole): AwsCredentialsProvider {
+    fun getCredentials(iamRole: String): AwsCredentialsProvider {
       val useLocalCredentials: Boolean = System.getenv("FLAG_USE_LOCAL_CREDS").toBoolean()
 
       return if (useLocalCredentials) {
         EnvironmentVariableCredentialsProvider.create()
       } else {
-        getModernisationPlatformCredentialsProvider(role)
+        getModernisationPlatformCredentialsProvider(iamRole)
       }
     }
 
-    fun getModernisationPlatformCredentialsProvider(role: AthenaRole): StsAssumeRoleCredentialsProvider {
+    fun getModernisationPlatformCredentialsProvider(iamRole: String): StsAssumeRoleCredentialsProvider {
       val stsClient = StsClient.builder()
         .credentialsProvider(DefaultCredentialsProvider.builder().build())
         .region(region)
@@ -31,7 +31,7 @@ class EmDatastoreCredentialsProvider {
       val credentialsProvider = StsAssumeRoleCredentialsProvider.builder()
         .stsClient(stsClient)
         .refreshRequest { builder ->
-          builder.roleArn(role.iamRole).roleSessionName(SESSION_ID)
+          builder.roleArn(iamRole).roleSessionName(SESSION_ID)
         }
         .build()
 

@@ -7,12 +7,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 
 @Service
 class AthenaRoleService(
-  @Value("\${services.athena-roles.restricted:uninitialised}") restrictedRole: String,
-  @Value("\${services.athena-roles.general:uninitialised}") generalRole: String,
+  /*  TODO: Currently the 'restricted' role is the same as the non-restricted role.
+   *    We will need to replace this with the IAM role that is allowed to access Specials data
+   *    This is dependent on the security being in place and approved for that change
+   * */
+  @Value("\${services.athena-roles.restricted:uninitialised}") private val restrictedRole: String,
+  @Value("\${services.athena-roles.general:uninitialised}") private val generalRole: String,
 ) {
   fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.NONE
-
-  fun getRoleFromAuthenticationOld(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.NONE
 
   fun getRoleFromAuthentication(authentication: Authentication): AthenaRole {
     val roleStrings: List<String> = (
@@ -31,6 +33,12 @@ class AthenaRoleService(
       enumValues<AthenaRole>()
         .find { it.name == roleString } ?: AthenaRole.NONE
     }.toSet().sortedByDescending { it.priority }
+
+  fun getIamRole(athenaRole: AthenaRole): String = when (athenaRole.name) {
+    "ROLE_EM_DATASTORE_RESTRICTED_RO" -> restrictedRole
+    "ROLE_EM_DATASTORE_GENERAL_RO" -> generalRole
+    else -> ""
+  }
 }
 
 // Example user token:
