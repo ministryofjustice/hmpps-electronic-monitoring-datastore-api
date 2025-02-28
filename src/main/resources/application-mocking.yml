@@ -13,6 +13,9 @@ services:
   athena:
     database: historic_api_mart_integration
     output: fake_bucket
+  athena-roles:
+    restricted: fakeIAM
+    general: fakeIAM2
 
 CLIENT_ID: hmpps-electronic-monitoring-datastore-api
 CLIENT_SECRET: clientsecret

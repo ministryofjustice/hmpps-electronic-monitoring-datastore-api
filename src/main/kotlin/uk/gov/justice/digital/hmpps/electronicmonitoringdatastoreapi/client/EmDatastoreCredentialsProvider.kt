@@ -7,7 +7,7 @@ import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.sts.StsClient
 import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
 
-class EmDatastoreRoleProvider {
+class EmDatastoreCredentialsProvider {
   companion object {
     const val SESSION_ID: String = "DataStoreApiSession"
     val region: Region = Region.EU_WEST_2

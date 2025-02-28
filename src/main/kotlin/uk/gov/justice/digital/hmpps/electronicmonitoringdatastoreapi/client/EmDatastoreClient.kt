@@ -32,7 +32,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
   private val defaultRole: AthenaRole = AthenaRole.NONE
 
   private fun startClient(role: AthenaRole): AthenaClient {
-    val credentialsProvider: AwsCredentialsProvider = EmDatastoreRoleProvider.Companion.getRole(role)
+    val credentialsProvider: AwsCredentialsProvider = EmDatastoreCredentialsProvider.Companion.getRole(role)
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)

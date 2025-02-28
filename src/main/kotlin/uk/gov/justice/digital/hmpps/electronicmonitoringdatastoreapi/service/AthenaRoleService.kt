@@ -1,11 +1,15 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 
 @Service
-class AthenaRoleService {
+class AthenaRoleService(
+  @Value("\${services.athena-roles.restricted:uninitialised}") restrictedRole: String,
+  @Value("\${services.athena-roles.general:uninitialised}") generalRole: String,
+) {
   fun fromString(name: String): AthenaRole = enumValues<AthenaRole>().find { it.name == name } ?: AthenaRole.NONE
 
   fun getRoleFromAuthenticationOld(authentication: Authentication): AthenaRole = enumValues<AthenaRole>().find { it.name == "TODO!" } ?: AthenaRole.NONE

@@ -11,10 +11,15 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.A
 
 class AthenaRoleServiceTest {
   private lateinit var athenaRoleService: AthenaRoleService
+  private val restrictedRoleIamString = "fake:iam:restricted"
+  private val generalRoleIamString = "fake:iam:restricted"
 
   @BeforeEach
   fun setUp() {
-    athenaRoleService = AthenaRoleService()
+    athenaRoleService = AthenaRoleService(
+      restrictedRoleIamString,
+      generalRoleIamString,
+    )
   }
 
   @Test
