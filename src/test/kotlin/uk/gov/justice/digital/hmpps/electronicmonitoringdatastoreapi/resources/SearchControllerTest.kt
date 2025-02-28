@@ -15,8 +15,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQueryResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
@@ -101,45 +99,6 @@ class SearchControllerTest {
 
       assertThat(result).isNotNull
       assertThat(result).isEqualTo(false)
-    }
-  }
-
-  @Nested
-  inner class QueryAthena {
-
-    @Test
-    fun `query orders from order service`() {
-      val queryString = "fake query string"
-      val queryRole = "fake-role"
-      val queryObject = AthenaStringQuery(queryString)
-      val queryResponse = "fake query response"
-
-      `when`(orderService.query(queryObject, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryResponse)
-
-      val result = controller.queryAthena(authentication, queryObject, queryRole)
-
-      assertThat(result.body).isInstanceOf(AthenaQueryResponse::class.java)
-      assertThat(result.body?.isErrored).isFalse
-      assertThat(result.body?.queryString).isEqualTo(queryString)
-      assertThat(result.body?.queryResponse).isEqualTo(queryResponse)
-      assertThat(result.body?.errorMessage).isNullOrEmpty()
-    }
-
-    @Test
-    fun `returns error response when orders service errors`() {
-      val queryString = "fake query string"
-      val queryRole = "fake-role"
-      val queryObject = AthenaStringQuery(queryString)
-      val errorMessage = "fake error message"
-
-      `when`(orderService.query(queryObject, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenThrow(NullPointerException(errorMessage))
-
-      val result = controller.queryAthena(authentication, queryObject, queryRole)
-
-      assertThat(result.body).isInstanceOf(AthenaQueryResponse::class.java)
-      assertThat(result.body?.isErrored).isTrue
-      assertThat(result.body?.queryString).isEqualTo(queryString)
-      assertThat(result.body?.errorMessage).isEqualTo(errorMessage)
     }
   }
 
