@@ -71,8 +71,8 @@ class SearchControllerTest {
 
       val result = controller.confirmAthenaAccess(authentication)
 
-      assertThat(result.body).isNotNull
-      assertThat(result.body).isEqualTo(true)
+      assertThat(result).isNotNull
+      assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -85,8 +85,8 @@ class SearchControllerTest {
 
       val result = controller.confirmAthenaAccess(authentication)
 
-      assertThat(result.body).isNotNull
-      assertThat(result.body).isEqualTo(true)
+      assertThat(result).isNotNull
+      assertThat(result).isEqualTo(true)
     }
 
     @Test
@@ -99,8 +99,8 @@ class SearchControllerTest {
 
       val result = controller.confirmAthenaAccess(authentication)
 
-      assertThat(result.body).isNotNull
-      assertThat(result.body).isEqualTo(false)
+      assertThat(result).isNotNull
+      assertThat(result).isEqualTo(false)
     }
   }
 

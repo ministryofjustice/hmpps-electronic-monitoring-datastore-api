@@ -42,7 +42,7 @@ class SearchController(
         mapOf("confirmConnection" to "true"),
       )
 
-      val athenaAccess: Boolean = confirmAthenaAccess(authentication).body
+      val athenaAccess: Boolean = confirmAthenaAccess(authentication)
       val message: String = if (athenaAccess) "Connection successful" else "API Connection successful, but no access to Athena"
 
       return ResponseEntity(
@@ -57,28 +57,14 @@ class SearchController(
     }
   }
 
-  @GetMapping("/testEndpoint")
-  fun confirmAthenaAccess(
-    authentication: Authentication,
-  ): ResponseEntity<Boolean> {
+  fun confirmAthenaAccess(authentication: Authentication): Boolean {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    var isAvailable: Boolean
-    try {
-      isAvailable = orderService.checkAvailability(validatedRole)
+    return try {
+      orderService.checkAvailability(validatedRole)
     } catch (ex: Exception) {
       throw ResponseStatusException(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex)
     }
-
-    auditService?.createEvent(
-      authentication.principal.toString(),
-      "CONFIRM_ATHENA_ACCESS",
-      mapOf(
-        "isAvailable" to isAvailable.toString(),
-      ),
-    )
-
-    return ResponseEntity.ok(isAvailable)
   }
 
   @PostMapping("/custom-query")
