@@ -24,9 +24,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class OrderEventsController(
   @Autowired val orderEventsService: OrderEventsService,
   val athenaRoleService: AthenaRoleService,
-
-  // TODO: Re-enable audit as @autowired once Cloud Platform in place
-  val auditService: AuditService? = null,
+  @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getMonitoringEvents/{orderId}")
   fun getMonitoringEvents(

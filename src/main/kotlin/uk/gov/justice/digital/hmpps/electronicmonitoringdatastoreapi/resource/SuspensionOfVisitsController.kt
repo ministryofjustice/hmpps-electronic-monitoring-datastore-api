@@ -20,9 +20,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class SuspensionOfVisitsController(
   @Autowired val suspensionOfVisitsService: SuspensionOfVisitsService,
   val athenaRoleService: AthenaRoleService,
-
-  // TODO: Re-enable audit as @autowired once Cloud Platform in place
-  val auditService: AuditService? = null,
+  @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getSuspensionOfVisits/{orderId}")
   fun getSuspensionOfVisits(

@@ -18,63 +18,17 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.Ord
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO', 'ROLE_ELECTRONIC_MONITORING_DATASTORE_API_SEARCH')")
+@PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class OrderController(
   @Autowired val orderService: OrderService,
   val amOrderService: AmOrderService,
   val athenaRoleService: AthenaRoleService,
-
-  // TODO: Re-enable audit as @autowired once Cloud Platform in place
-  val auditService: AuditService? = null,
+  @Autowired val auditService: AuditService,
 ) {
-
-  @GetMapping("/getMockOrderSummary/{orderId}")
-  fun getMockOrderSummary(
-    authentication: Authentication,
-    @PathVariable orderId: String,
-  ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = orderService.getOrderInformation(orderId, validatedRole)
-
-    auditService?.createEvent(
-      authentication.name,
-      "GET_MOCK_ORDER_SUMMARY",
-      mapOf("orderId" to orderId),
-    )
-
-    return ResponseEntity.ok(result)
-  }
-
-  // TODO: This is a temporary endpoint to validate code interacting with user claims
-  @PreAuthorize("hasRole('ROLE_EM_DATASTORE_RESTRICTED_RO') and hasRole('ROLE_EM_DATASTORE_GENERAL_RO')")
-  @GetMapping("/getOrderSummary/specials/{orderId}")
-  fun getSpecialsOrder(
-    authentication: Authentication,
-    @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = orderService.getOrderInformation(orderId, validatedRole)
-
-    auditService?.createEvent(
-      authentication.name,
-      "GET_SPECIALS_ORDER_SUMMARY",
-      mapOf("orderId" to orderId),
-    )
-
-    return ResponseEntity.ok(result)
-  }
 
   @GetMapping("/getOrderSummary/{orderId}")
   fun getOrderSummary(
-    authentication: Authentication,
-    @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<OrderInformation> = getOrder(authentication, orderId)
-
-  @GetMapping("/{orderId}")
-  fun getOrder(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<OrderInformation> {
