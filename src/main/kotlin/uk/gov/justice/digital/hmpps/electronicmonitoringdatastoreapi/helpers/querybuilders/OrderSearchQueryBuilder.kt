@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import org.apache.commons.lang3.StringUtils.isAlphanumericSpace
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
+import java.time.LocalDate
 
 // TODO: update to use PREPARED STATEMENTS instead of a plain SELECT: better injection protection.
 class OrderSearchQueryBuilder(
@@ -85,50 +86,28 @@ class OrderSearchQueryBuilder(
     return this
   }
 
-  var dobDay: String? = null
-    private set(value) {
-      if (value == null) {
-        return
-      }
+  fun withDob(day: String?, month: String?, year: String?): OrderSearchQueryBuilder {
+    val dobDay: String? = validateNumber(day, "date_of_birth_day")
+    val dobMonth: String? = validateNumber(month, "date_of_birth_month")
+    val dobYear: String? = validateNumber(year, "date_of_birth_year")
 
-      try {
-        value.toLong()
-      } catch (_: Exception) {
-        throw IllegalArgumentException("date_of_birth_day must be convertable to type Long")
-      }
-
-      field = value
+    if (!dobDay.isNullOrEmpty() && !dobMonth.isNullOrEmpty() && !dobYear.isNullOrEmpty()) {
+      val dateOfBirth = LocalDate.of(dobYear.toInt(), dobMonth.toInt(), dobDay.toInt())
+      whereClause.put("date_of_birth", "date_of_birth = DATE '$dateOfBirth'")
     }
+    return this
+  }
 
-  var dobMonth: String? = null
-    private set(value) {
-      if (value == null) {
-        return
-      }
-
+  private fun validateNumber(value: String?, field: String): String? {
+    if (!value.isNullOrEmpty()) {
       try {
-        value.toLong()
+        value.toInt()
       } catch (_: Exception) {
-        throw IllegalArgumentException("date_of_birth_month must be convertable to type Long")
+        throw IllegalArgumentException("$field must be convertable to type Int")
       }
-
-      field = value
     }
-
-  var dobYear: String? = null
-    private set(value) {
-      if (value == null) {
-        return
-      }
-
-      try {
-        value.toLong()
-      } catch (_: Exception) {
-        throw IllegalArgumentException("date_of_birth_year must be convertable to type Long")
-      }
-
-      field = value
-    }
+    return value
+  }
 
   fun build(): AthenaOrderSearchQuery {
     if (whereClause.isEmpty()) {
