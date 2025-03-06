@@ -120,10 +120,12 @@ class OrderSearchQueryBuilder(
         SELECT
           legacy_subject_id
           , full_name
+          , alias
           , primary_address_line_1
           , primary_address_line_2
           , primary_address_line_3
           , primary_address_post_code
+          , date_of_birth
           , order_start_date
           , order_end_date
         FROM
@@ -132,7 +134,7 @@ class OrderSearchQueryBuilder(
       """.trimIndent(),
     )
 
-    builder.append(whereClause.values.joinToString(separator = " OR "))
+    builder.append(whereClause.values.joinToString(separator = " AND "))
 
     return AthenaOrderSearchQuery(builder.toString())
   }
