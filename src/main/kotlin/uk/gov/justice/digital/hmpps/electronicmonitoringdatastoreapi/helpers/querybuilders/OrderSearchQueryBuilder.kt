@@ -12,7 +12,7 @@ class OrderSearchQueryBuilder(
 
   var legacySubjectId: String? = null
     private set(value) {
-      if (value == null) {
+      if (value.isNullOrEmpty()) {
         return
       }
 
