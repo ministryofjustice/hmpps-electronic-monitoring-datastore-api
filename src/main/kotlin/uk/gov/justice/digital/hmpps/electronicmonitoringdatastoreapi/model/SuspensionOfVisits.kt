@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class SuspensionOfVisits(
   val legacySubjectId: Int,
-  val suspensionOfVisits: String,
+  val suspensionOfVisits: String?,
   val suspensionOfVisitsRequestedDate: LocalDateTime?,
   val suspensionOfVisitsStartDate: LocalDateTime?,
   val suspensionOfVisitsStartTime: String?,
