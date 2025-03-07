@@ -4,18 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class AthenaOrderSearchResultDTO(
   val legacySubjectId: Long,
-  val fullName: String? = "",
-  val alias: String? = "",
+  val fullName: String?,
+  val alias: String?,
   @JsonProperty("primary_address_line_1")
-  val primaryAddressLine1: String? = "",
+  val primaryAddressLine1: String?,
   @JsonProperty("primary_address_line_2")
-  val primaryAddressLine2: String? = "",
+  val primaryAddressLine2: String?,
   @JsonProperty("primary_address_line_3")
-  val primaryAddressLine3: String? = "",
-  val primaryAddressPostCode: String? = "",
-  val dateOfBirth: String? = "",
-  val orderStartDate: String? = "",
-  val orderEndDate: String? = "",
+  val primaryAddressLine3: String?,
+  val primaryAddressPostCode: String?,
+  val dateOfBirth: String?,
+  val orderStartDate: String?,
+  val orderEndDate: String?,
 )
 
 data class AthenaOrderSearchResults(
