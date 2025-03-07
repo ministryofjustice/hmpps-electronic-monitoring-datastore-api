@@ -18,7 +18,7 @@ data class VisitDetails(
   val actualWorkStartDateTime: LocalDateTime,
   val actualWorkEndDateTime: LocalDateTime?,
   val visitNotes: String?,
-  val visitType: String,
+  val visitType: String?,
   val visitOutcome: String?,
 ) {
   companion object {
