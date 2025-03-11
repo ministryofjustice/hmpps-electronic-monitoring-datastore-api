@@ -1,6 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
+import java.time.LocalDateTime
 
 data class KeyOrderInformation(
   val specials: String,
@@ -8,13 +10,13 @@ data class KeyOrderInformation(
   val legacyOrderId: String,
   val name: String?,
   val alias: String?,
-  val dateOfBirth: String?,
+  val dateOfBirth: LocalDateTime?,
   val address1: String?,
   val address2: String?,
   val address3: String?,
   val postcode: String?,
-  val orderStartDate: String?,
-  val orderEndDate: String?,
+  val orderStartDate: LocalDateTime?,
+  val orderEndDate: LocalDateTime?,
 ) {
   constructor(dto: AthenaKeyOrderInformationDTO) : this (
     specials = "no",
@@ -22,13 +24,13 @@ data class KeyOrderInformation(
     legacyOrderId = dto.legacyOrderId,
     name = dto.name,
     alias = dto.alias,
-    dateOfBirth = dto.dateOfBirth,
+    dateOfBirth = processDate(dto.dateOfBirth),
     address1 = dto.address1,
     address2 = dto.address2,
     address3 = dto.address3,
     postcode = dto.postcode,
-    orderStartDate = dto.orderStartDate,
-    orderEndDate = dto.orderEndDate,
+    orderStartDate = processDate(dto.orderStartDate),
+    orderEndDate = processDate(dto.orderEndDate),
   )
 }
 

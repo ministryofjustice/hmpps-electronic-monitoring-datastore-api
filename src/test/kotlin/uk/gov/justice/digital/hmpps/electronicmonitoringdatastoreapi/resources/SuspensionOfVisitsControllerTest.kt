@@ -46,10 +46,10 @@ class SuspensionOfVisitsControllerTest {
         SuspensionOfVisits(
           legacySubjectId = 123,
           suspensionOfVisits = "Yes",
-          suspensionOfVisitsRequestedDate = LocalDateTime.parse("2020-04-04T00:00:00"),
-          suspensionOfVisitsStartDate = LocalDateTime.parse("2020-04-14T00:00:00"),
-          suspensionOfVisitsStartTime = "00:00:00",
-          suspensionOfVisitsEndDate = LocalDateTime.parse("2020-04-24T00:00:00"),
+          requestedDate = LocalDateTime.parse("2020-04-04T00:00:00"),
+          startDate = LocalDateTime.parse("2020-04-14T00:00:00"),
+          startTime = "00:00:00",
+          endDate = LocalDateTime.parse("2020-04-24T00:00:00"),
         ),
       )
 
