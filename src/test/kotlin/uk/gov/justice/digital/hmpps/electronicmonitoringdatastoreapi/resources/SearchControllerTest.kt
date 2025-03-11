@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.Se
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
@@ -148,9 +149,9 @@ class SearchControllerTest {
           addressLine3 = "Third line of address",
           addressPostcode = "A0000A",
           alias = null,
-          dateOfBirth = "01-01-1970",
-          orderStartDate = "08-02-2019",
-          orderEndDate = "08-02-2020",
+          dateOfBirth = LocalDateTime.parse("1970-01-01T00:00:00"),
+          orderStartDate = LocalDateTime.parse("2019-02-08T00:00:00"),
+          orderEndDate = LocalDateTime.parse("2020-02-08T00:00:00"),
         ),
       )
 

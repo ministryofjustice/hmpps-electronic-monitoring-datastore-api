@@ -1,6 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
+import java.time.LocalDateTime
 
 data class OrderDetails(
   val specials: String,
@@ -9,7 +11,7 @@ data class OrderDetails(
   val firstName: String? = "",
   val lastName: String? = "",
   val alias: String? = "",
-  val dateOfBirth: String? = "",
+  val dateOfBirth: LocalDateTime? = null,
   val adultOrChild: String? = "",
   val sex: String? = "",
   val contact: String? = "",
@@ -28,8 +30,8 @@ data class OrderDetails(
   val migratedRisk: String? = "",
   val rangeRisk: String? = "",
   val reportRisk: String? = "",
-  val orderStartDate: String? = "",
-  val orderEndDate: String? = "",
+  val orderStartDate: LocalDateTime? = null,
+  val orderEndDate: LocalDateTime? = null,
   val orderType: String? = "",
   val orderTypeDescription: String? = "",
   val orderTypeDetail: String? = "",
@@ -45,7 +47,7 @@ data class OrderDetails(
     firstName = dto.firstName,
     lastName = dto.lastName,
     alias = dto.alias,
-    dateOfBirth = dto.dateOfBirth,
+    dateOfBirth = processDate(dto.dateOfBirth),
     adultOrChild = dto.adultOrChild,
     sex = dto.sex,
     contact = dto.contact,
@@ -64,8 +66,8 @@ data class OrderDetails(
     migratedRisk = dto.migratedRisk,
     rangeRisk = dto.rangeRisk,
     reportRisk = dto.reportRisk,
-    orderStartDate = dto.orderStartDate,
-    orderEndDate = dto.orderEndDate,
+    orderStartDate = processDate(dto.orderStartDate),
+    orderEndDate = processDate(dto.orderEndDate),
     orderType = dto.orderType,
     orderTypeDescription = dto.orderTypeDescription,
     orderTypeDetail = dto.orderTypeDetail,

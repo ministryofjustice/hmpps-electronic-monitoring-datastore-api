@@ -30,7 +30,7 @@
       }, {
         "VarCharValue" : "ELLEN RIPLEY"
       }, {
-        "VarCharValue" : "01/01/1970"
+        "VarCharValue" : "1970-01-01"
       }, {
         "VarCharValue" : "address line 1"
       }, {
@@ -40,9 +40,9 @@
       }, {
         "VarCharValue" : "postcode"
       }, {
-        "VarCharValue" : "01/01/1970"
+        "VarCharValue" : "1970-01-01"
       }, {
-        "VarCharValue" : "01/01/1970"
+        "VarCharValue" : "1970-01-01"
       } ]
     }, {
       "Data" : [ {
@@ -52,7 +52,7 @@
       }, {
         "VarCharValue" : "JOHN BROWNLIE"
       }, {
-        "VarCharValue" : "01/01/1970"
+        "VarCharValue" : "1970-01-01"
       }, {
         "VarCharValue" : "address line 1"
       }, {
@@ -62,9 +62,9 @@
       }, {
         "VarCharValue" : "postcode"
       }, {
-        "VarCharValue" : "01/01/1970"
+        "VarCharValue" : "1970-01-01"
       }, {
-        "VarCharValue" : "01/01/1970"
+        "VarCharValue" : "1970-01-01"
       } ]
     } ],
     "ResultSetMetadata" : {

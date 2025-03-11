@@ -24,6 +24,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
@@ -59,13 +60,13 @@ class OrderControllerTest {
           legacyOrderId = "7654321-DIFFERENT ID",
           name = "John Smith",
           alias = "Zeno",
-          dateOfBirth = "01-02-1980",
+          dateOfBirth = LocalDateTime.parse("1980-02-01T00:00:00"),
           address1 = "1 Primary Street",
           address2 = "Sutton",
           address3 = "London",
           postcode = "ABC 123",
-          orderStartDate = "01-02-2012",
-          orderEndDate = "03-04-2013",
+          orderStartDate = LocalDateTime.parse("2012-02-01T00:00:00"),
+          orderEndDate = LocalDateTime.parse("2013-04-03T00:00:00"),
         ),
         subjectHistoryReport = SubjectHistoryReport(
           reportUrl = "#",

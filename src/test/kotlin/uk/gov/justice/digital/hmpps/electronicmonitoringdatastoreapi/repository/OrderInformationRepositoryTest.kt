@@ -47,13 +47,13 @@ class OrderInformationRepositoryTest {
           ${varCharValueColumn(subjectId)},
           ${varCharValueColumn(orderId)},
           ${varCharValueColumn(fullName)},
-          ${varCharValueColumn("01/01/1970")},
+          ${varCharValueColumn("1970-01-01")},
           ${varCharValueColumn("address line 1")},
           ${varCharValueColumn("address line 2")},
           ${varCharValueColumn("")},
           ${varCharValueColumn("postcode")},
-          ${varCharValueColumn("01/01/1970")},
-          ${varCharValueColumn("01/01/1970")}
+          ${varCharValueColumn("1970-01-01")},
+          ${varCharValueColumn("1970-01-01")}
         ]
       }
     """.trimIndent()
