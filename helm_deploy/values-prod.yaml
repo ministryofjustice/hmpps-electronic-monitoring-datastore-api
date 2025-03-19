@@ -2,6 +2,8 @@
 # Per environment values which override defaults in hmpps-electronic-monitoring-datastore-api/values.yaml
 
 generic-service:
+  serviceAccountName: "hmpps-em-datastore-prod-athena"
+
   ingress:
     host: electronic-monitoring-datastore-api.hmpps.service.justice.gov.uk
 
