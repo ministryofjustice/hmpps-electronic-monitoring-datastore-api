@@ -35,14 +35,12 @@ class SearchController(
       mapOf("confirmConnection" to "true"),
     )
 
-    var athenaAccess = false
-    try {
-      athenaAccess = orderService.checkAvailability()
-    } catch (_: Exception) {
-      return ResponseEntity.ok(mapOf("message" to "Error determining Athena access - potentially a logging/audit issue."))
+    var athenaAccess = orderService.checkAvailability()
+    val message = if (athenaAccess) {
+      "Connection successful"
+    } else {
+      "API Connection successful, but no access to Athena"
     }
-
-    val message = if (athenaAccess) "Connection successful" else "API Connection successful, but no access to Athena"
 
     return ResponseEntity(
       mapOf("message" to message),
