@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EquipmentDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.EquipmentDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -19,7 +18,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class EquipmentDetailsController(
   @Autowired val equipmentDetailsService: EquipmentDetailsService,
-  val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getEquipmentDetails/{orderId}")
@@ -27,11 +25,9 @@ class EquipmentDetailsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<EquipmentDetails>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = equipmentDetailsService.getEquipmentDetails(orderId, false)
 
-    val result = equipmentDetailsService.getEquipmentDetails(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_EQUIPMENT_DETAILS",
       mapOf("orderId" to orderId),

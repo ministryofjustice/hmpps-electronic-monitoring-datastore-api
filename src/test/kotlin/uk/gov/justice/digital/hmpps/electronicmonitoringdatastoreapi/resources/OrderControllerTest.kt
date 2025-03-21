@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
@@ -21,7 +20,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -31,7 +29,6 @@ import java.time.LocalDateTime
 class OrderControllerTest {
   private lateinit var orderService: OrderService
   private lateinit var amOrderService: AmOrderService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: OrderController
   private lateinit var authentication: Authentication
@@ -42,10 +39,8 @@ class OrderControllerTest {
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = mock(OrderService::class.java)
     amOrderService = mock(AmOrderService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = mock(AuditService::class.java)
-    controller = OrderController(orderService, amOrderService, roleService, auditService)
+    controller = OrderController(orderService, amOrderService, auditService)
   }
 
   @Nested
@@ -77,7 +72,7 @@ class OrderControllerTest {
         documents = listOf<Document>(),
       )
 
-      `when`(orderService.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderService.getOrderInformation(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getOrderSummary(authentication, orderId)
 
@@ -85,7 +80,7 @@ class OrderControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(OrderInformation::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderService, times(1)).getOrderInformation(orderId, false)
     }
   }
 
@@ -94,14 +89,14 @@ class OrderControllerTest {
     @Test
     fun `Returns the appropriate object type`() {
       val orderId = "1ab"
-      val expectedResult: OrderDetails = OrderDetails(
+      val expectedResult = OrderDetails(
         specials = "no",
         legacySubjectId = "",
         legacyOrderId = "",
         offenceRisk = false,
       )
 
-      `when`(orderService.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderService.getOrderDetails(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getOrderDetails(authentication, orderId)
 
@@ -113,21 +108,21 @@ class OrderControllerTest {
     @Test
     fun `gets order details from order service`() {
       val orderId = "1ab"
-      val expectedResult: OrderDetails = OrderDetails(
+      val expectedResult = OrderDetails(
         specials = "no",
         legacySubjectId = "",
         legacyOrderId = "",
         offenceRisk = false,
       )
 
-      `when`(orderService.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderService.getOrderDetails(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getOrderDetails(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderService, times(1)).getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderService, times(1)).getOrderDetails(orderId, false)
     }
   }
 
@@ -136,14 +131,14 @@ class OrderControllerTest {
     @Test
     fun `Returns the appropriate object type`() {
       val orderId = "1ab"
-      val expectedResult: AmOrderDetails = AmOrderDetails(
+      val expectedResult = AmOrderDetails(
         specials = "no",
         legacySubjectId = "",
         legacyOrderId = "",
         responsibleOrgDetailsPhoneNumber = "07777777777",
       )
 
-      `when`(amOrderService.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(amOrderService.getAmOrderDetails(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getAmOrderDetails(authentication, orderId)
 
@@ -155,21 +150,21 @@ class OrderControllerTest {
     @Test
     fun `gets order details from order service`() {
       val orderId = "1ab"
-      val expectedResult: AmOrderDetails = AmOrderDetails(
+      val expectedResult = AmOrderDetails(
         specials = "no",
         legacySubjectId = "",
         legacyOrderId = "",
         responsibleOrgDetailsPhoneNumber = "07777777777",
       )
 
-      `when`(amOrderService.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(amOrderService.getAmOrderDetails(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getAmOrderDetails(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(amOrderService, times(1)).getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amOrderService, times(1)).getAmOrderDetails(orderId, false)
     }
   }
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaAmOrderDetailsDTO
@@ -74,20 +74,20 @@ class AmOrderDetailsRepositoryTest {
     fun `getAmOrderDetails calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      repository.getAmOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getAmOrderDetails("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getAmOrderDetails returns an AthenaAmOrderDetailsDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getAmOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getAmOrderDetails("123", false)
 
       Assertions.assertThat(result).isInstanceOf(AthenaAmOrderDetailsDTO::class.java)
     }
@@ -97,9 +97,9 @@ class AmOrderDetailsRepositoryTest {
       val orderId = "expectedId"
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet(orderId))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getAmOrderDetails(orderId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo(orderId)
@@ -110,7 +110,7 @@ class AmOrderDetailsRepositoryTest {
       val dangerousInput = "123 OR 1=1"
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-        repository.getAmOrderDetails(dangerousInput, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+        repository.getAmOrderDetails(dangerousInput, false)
       }.withMessage("Input contains illegal characters")
     }
   }

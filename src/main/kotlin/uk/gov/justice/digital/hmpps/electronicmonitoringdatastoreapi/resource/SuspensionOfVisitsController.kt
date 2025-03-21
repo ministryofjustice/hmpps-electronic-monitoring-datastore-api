@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SuspensionOfVisits
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.SuspensionOfVisitsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -19,7 +18,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class SuspensionOfVisitsController(
   @Autowired val suspensionOfVisitsService: SuspensionOfVisitsService,
-  val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getSuspensionOfVisits/{orderId}")
@@ -27,11 +25,9 @@ class SuspensionOfVisitsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<SuspensionOfVisits>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = suspensionOfVisitsService.getSuspensionOfVisits(orderId, false)
 
-    val result = suspensionOfVisitsService.getSuspensionOfVisits(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_SUSPENSION_OF_VISITS",
       mapOf("orderId" to orderId),
