@@ -7,7 +7,8 @@ generic-service:
   serviceAccountName: "hmpps-em-datastore-dev-athena"
 
   ingress:
-    host: electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk
+    hosts:
+      - electronic-monitoring-datastore-api-dev.hmpps.service.justice.gov.uk
 
   env:
     # SENTRY_ENV: dev              # <== COMMENTED OUT to investigate failing build 20/12/2024
