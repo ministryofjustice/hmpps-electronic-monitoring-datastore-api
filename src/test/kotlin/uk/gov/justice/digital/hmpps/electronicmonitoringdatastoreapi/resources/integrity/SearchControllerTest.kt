@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resources
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resources.integrity
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -9,12 +9,10 @@ import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.SearchController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -23,7 +21,6 @@ import java.time.LocalDateTime
 @JsonTest
 class SearchControllerTest {
   private lateinit var orderService: OrderService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: SearchController
   private lateinit var authentication: Authentication
@@ -33,11 +30,8 @@ class SearchControllerTest {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = Mockito.mock(OrderService::class.java)
-    roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = SearchController(orderService, roleService, auditService)
+    controller = SearchController(orderService, auditService)
   }
 
   @Nested
@@ -61,7 +55,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      Mockito.`when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
+      Mockito.`when`(orderService.getQueryExecutionId(orderSearchCriteria)).thenReturn(queryExecutionId)
 
       val result = controller.searchOrders(authentication, orderSearchCriteria)
 
@@ -93,7 +87,7 @@ class SearchControllerTest {
         ),
       )
 
-      Mockito.`when`(orderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(orderService.getSearchResults(queryExecutionId)).thenReturn(expectedResult)
 
       val result = controller.getSearchResults(authentication, queryExecutionId)
 

@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resources
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resources.integrity
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -9,11 +9,9 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EquipmentDetail
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EquipmentDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.EquipmentDetailsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.EquipmentDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -22,7 +20,6 @@ import java.time.LocalDateTime
 @JsonTest
 class EquipmentDetailsControllerTest {
   private lateinit var equipmentDetailsService: EquipmentDetailsService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: EquipmentDetailsController
   private lateinit var authentication: Authentication
@@ -32,10 +29,8 @@ class EquipmentDetailsControllerTest {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     equipmentDetailsService = Mockito.mock(EquipmentDetailsService::class.java)
-    roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = EquipmentDetailsController(equipmentDetailsService, roleService, auditService)
+    controller = EquipmentDetailsController(equipmentDetailsService, auditService)
   }
 
   @Nested
@@ -62,14 +57,14 @@ class EquipmentDetailsControllerTest {
         ),
       )
 
-      Mockito.`when`(equipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(equipmentDetailsService.getEquipmentDetails(legacySubjectId)).thenReturn(expectedResult)
 
       val result = controller.getEquipmentDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(equipmentDetailsService, Mockito.times(1)).getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(equipmentDetailsService, Mockito.times(1)).getEquipmentDetails(legacySubjectId)
     }
   }
 }

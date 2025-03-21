@@ -8,7 +8,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaAmOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AmOrderDetailsRepository
@@ -41,26 +40,26 @@ class AmOrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(amOrderDetailsRepository.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(amOrderDetailsRepository.getAmOrderDetails(orderId, false))
         .thenReturn(blankOrderDetails)
     }
 
     @Test
     fun `calls getAmOrderDetails from order details repository`() {
-      service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Mockito.verify(amOrderDetailsRepository, times(1)).getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getAmOrderDetails(orderId, false)
+      Mockito.verify(amOrderDetailsRepository, times(1)).getAmOrderDetails(orderId, false)
     }
 
     @Test
     fun `returns AmOrderDetails`() {
-      val result = service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getAmOrderDetails(orderId, false)
 
       Assertions.assertThat(result).isInstanceOf(AmOrderDetails::class.java)
     }
 
     @Test
     fun `returns correct details of the order`() {
-      val result = service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getAmOrderDetails(orderId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("")

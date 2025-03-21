@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
@@ -15,8 +14,8 @@ import java.time.LocalDateTime
 class OrderEventsService(
   @Autowired val orderEventsRepository: OrderEventsRepository,
 ) {
-  fun getMonitoringEvents(legacySubjectId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
-    val result = orderEventsRepository.getMonitoringEventsList(legacySubjectId, role)
+  fun getMonitoringEvents(legacySubjectId: String, allowSpecials: Boolean = false): List<Event<MonitoringEventDetails>> {
+    val result = orderEventsRepository.getMonitoringEventsList(legacySubjectId, allowSpecials)
 
     return result.map { event ->
       Event<MonitoringEventDetails>(
@@ -29,8 +28,8 @@ class OrderEventsService(
     }
   }
 
-  fun getIncidentEvents(legacySubjectId: String, role: AthenaRole): List<Event<IncidentEventDetails>> {
-    val result = orderEventsRepository.getIncidentEventsList(legacySubjectId, role)
+  fun getIncidentEvents(legacySubjectId: String, allowSpecials: Boolean = false): List<Event<IncidentEventDetails>> {
+    val result = orderEventsRepository.getIncidentEventsList(legacySubjectId, allowSpecials)
 
     return result.map { event ->
       Event<IncidentEventDetails>(
@@ -43,8 +42,8 @@ class OrderEventsService(
     }
   }
 
-  fun getViolationEvents(legacySubjectId: String, role: AthenaRole): List<Event<ViolationEventDetails>> {
-    val result = orderEventsRepository.getViolationEventsList(legacySubjectId, role)
+  fun getViolationEvents(legacySubjectId: String, allowSpecials: Boolean = false): List<Event<ViolationEventDetails>> {
+    val result = orderEventsRepository.getViolationEventsList(legacySubjectId, allowSpecials)
 
     return result.map { event ->
       Event<ViolationEventDetails>(
@@ -57,8 +56,8 @@ class OrderEventsService(
     }
   }
 
-  fun getContactEvents(legacySubjectId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
-    val result = orderEventsRepository.getContactEventsList(legacySubjectId, role)
+  fun getContactEvents(legacySubjectId: String, allowSpecials: Boolean = false): List<Event<ContactEventDetails>> {
+    val result = orderEventsRepository.getContactEventsList(legacySubjectId, allowSpecials)
 
     return result.map { event ->
       Event<ContactEventDetails>(

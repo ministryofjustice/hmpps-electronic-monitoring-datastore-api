@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
@@ -23,9 +22,9 @@ class OrderService(
   @Autowired val orderInformationRepository: OrderInformationRepository,
   @Autowired val orderDetailsRepository: OrderDetailsRepository,
 ) {
-  fun checkAvailability(role: AthenaRole): Boolean {
+  fun checkAvailability(): Boolean {
     try {
-      searchRepository.listLegacyIds(role)
+      searchRepository.listLegacyIds(false)
     } catch (_: Exception) {
       return false
     }
@@ -33,21 +32,21 @@ class OrderService(
     return true
   }
 
-  fun query(athenaQuery: AthenaStringQuery, role: AthenaRole): String {
-    val result = searchRepository.runQuery(athenaQuery, role)
+  fun query(athenaQuery: AthenaStringQuery, allowSpecials: Boolean = false): String {
+    val result = searchRepository.runQuery(athenaQuery, allowSpecials)
 
     return result
   }
 
-  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String = searchRepository.searchOrders(criteria, role)
+  fun getQueryExecutionId(criteria: OrderSearchCriteria, allowSpecials: Boolean = false): String = searchRepository.searchOrders(criteria, allowSpecials)
 
-  fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<OrderSearchResult> {
-    val results = searchRepository.getSearchResults(queryExecutionId, role)
+  fun getSearchResults(queryExecutionId: String, allowSpecials: Boolean = false): List<OrderSearchResult> {
+    val results = searchRepository.getSearchResults(queryExecutionId, allowSpecials)
     return results.map { result -> OrderSearchResult(result) }
   }
 
-  fun getOrderInformation(legacySubjectId: String, role: AthenaRole): OrderInformation {
-    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(legacySubjectId, role)
+  fun getOrderInformation(legacySubjectId: String, allowSpecials: Boolean = false): OrderInformation {
+    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(legacySubjectId, allowSpecials)
     val parsedKeyOrderInformation = KeyOrderInformation(keyOrderInformation)
 
     val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()
@@ -65,8 +64,8 @@ class OrderService(
     )
   }
 
-  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): OrderDetails {
-    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(legacySubjectId, role)
+  fun getOrderDetails(legacySubjectId: String, allowSpecials: Boolean = false): OrderDetails {
+    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(legacySubjectId, allowSpecials)
     return OrderDetails(orderDetailsDTO)
   }
 }

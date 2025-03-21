@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.VisitDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.VisitDetailsAddress
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaVisitDetailsDTO
@@ -52,27 +51,27 @@ class VisitDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(visitDetailsRepository.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(visitDetailsRepository.getVisitDetails(legacySubjectId, false))
         .thenReturn(exampleVisitDetails)
     }
 
     @Test
     fun `calls getVisitDetails from order information repository`() {
-      service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getVisitDetails(legacySubjectId, false)
 
-      Mockito.verify(visitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(visitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, false)
     }
 
     @Test
     fun `returns a list of VisitDetails when a response is received`() {
-      var result = service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getVisitDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the VisitDetails when a response is received`() {
-      var result = service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getVisitDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.alcoholmonitoring
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -12,44 +12,43 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class DetailsController(
+class AlcoholMonitoringDetailsController(
   @Autowired val orderService: OrderService,
+  val amOrderService: AmOrderService,
   @Autowired val auditService: AuditService,
 ) {
 
   @Operation(
-    tags = ["Integrity orders"],
-    summary = "Get the details for an order",
+    tags = ["Alcohol monitoring orders"],
+    summary = "Get the details for an alcohol monitoring order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getOrderDetails/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/details",
+      "/orders/AM/getOrderDetails/{legacySubjectId}",
+      "/alcohol-monitoring/orders/{legacySubjectId}/details",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getDetails(
+  fun getAmOrderDetails(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<OrderDetails> {
-    val result = orderService.getOrderDetails(legacySubjectId, false)
+  ): ResponseEntity<AmOrderDetails> {
+    val result = amOrderService.getAmOrderDetails(legacySubjectId)
 
     auditService.createEvent(
       authentication.name,
-      "GET_ORDER_DETAILS",
-      mapOf(
-        "legacySubjectId" to legacySubjectId,
-        "restrictedOrdersIncluded" to false,
-      ),
+      "GET_ALCOHOL_MONITORING_ORDER_DETAILS",
+      mapOf("legacySubjectId" to legacySubjectId),
     )
 
     return ResponseEntity.ok(result)

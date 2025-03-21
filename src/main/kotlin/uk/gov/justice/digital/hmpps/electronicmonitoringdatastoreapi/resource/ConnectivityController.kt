@@ -10,14 +10,12 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 class ConnectivityController(
   @Autowired val orderService: OrderService,
-  val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
 
@@ -43,9 +41,7 @@ class ConnectivityController(
 
     var message = "API Connection successful"
     try {
-      val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-      if (!orderService.checkAvailability(validatedRole)) {
+      if (!orderService.checkAvailability()) {
         message = "API Connection successful, but no access to Athena"
       }
     } catch (_: Exception) {

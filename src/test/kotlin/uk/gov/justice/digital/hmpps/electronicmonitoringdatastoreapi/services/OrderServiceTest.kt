@@ -9,7 +9,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
@@ -48,18 +47,18 @@ class OrderServiceTest {
   inner class CheckAvailability {
     @Test
     fun `calls listLegacyIds from order repository`() {
-      `when`(searchRepository.listLegacyIds(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(listOf<String>())
+      `when`(searchRepository.listLegacyIds(false)).thenReturn(listOf<String>())
 
-      service.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.checkAvailability()
 
-      Mockito.verify(searchRepository, times(1)).listLegacyIds(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(searchRepository, times(1)).listLegacyIds(false)
     }
 
     @Test
     fun `confirms AWS athena is available if successful`() {
-      `when`(searchRepository.listLegacyIds(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(listOf<String>())
+      `when`(searchRepository.listLegacyIds(false)).thenReturn(listOf<String>())
 
-      val result = service.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.checkAvailability()
 
       Assertions.assertThat(result).isTrue
     }
@@ -68,9 +67,9 @@ class OrderServiceTest {
     fun `confirms AWS athena is unavailable if not successful`() {
       val errorMessage = "fake error message"
 
-      `when`(searchRepository.listLegacyIds(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenThrow(NullPointerException(errorMessage))
+      `when`(searchRepository.listLegacyIds(false)).thenThrow(NullPointerException(errorMessage))
 
-      val result = service.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.checkAvailability()
 
       Assertions.assertThat(result).isFalse
     }
@@ -82,18 +81,18 @@ class OrderServiceTest {
 
     @Test
     fun `passes query to order repository`() {
-      `when`(searchRepository.runQuery(athenaQuery, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn("Expected response")
+      `when`(searchRepository.runQuery(athenaQuery, false)).thenReturn("Expected response")
 
-      service.query(athenaQuery, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.query(athenaQuery, false)
 
-      Mockito.verify(searchRepository, times(1)).runQuery(athenaQuery, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(searchRepository, times(1)).runQuery(athenaQuery, false)
     }
 
     @Test
     fun `returns response from order repository`() {
-      `when`(searchRepository.runQuery(athenaQuery, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn("Expected response")
+      `when`(searchRepository.runQuery(athenaQuery, false)).thenReturn("Expected response")
 
-      val result = service.query(athenaQuery, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.query(athenaQuery, false)
 
       Assertions.assertThat(result).isEqualTo("Expected response")
     }
@@ -108,21 +107,21 @@ class OrderServiceTest {
 
     @Test
     fun `calls searchOrders from order repository`() {
-      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(searchRepository.searchOrders(orderSearchCriteria, false))
         .thenReturn("query-execution-id")
 
-      service.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getQueryExecutionId(orderSearchCriteria, false)
 
-      Mockito.verify(searchRepository, times(1)).searchOrders(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(searchRepository, times(1)).searchOrders(orderSearchCriteria, false)
     }
 
     @Test
     fun `returns a query execution ID`() {
       val expectedResult = "query-execution-id"
-      `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(searchRepository.searchOrders(orderSearchCriteria, false))
         .thenReturn("query-execution-id")
 
-      val result = service.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getQueryExecutionId(orderSearchCriteria, false)
 
       Assertions.assertThat(result).isEqualTo(expectedResult)
     }
@@ -134,20 +133,20 @@ class OrderServiceTest {
 
     @Test
     fun `calls searchOrders from order repository`() {
-      `when`(searchRepository.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(searchRepository.getSearchResults(queryExecutionId, false))
         .thenReturn(listOf<AthenaOrderSearchResultDTO>())
 
-      service.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getSearchResults(queryExecutionId, false)
 
-      Mockito.verify(searchRepository, times(1)).getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(searchRepository, times(1)).getSearchResults(queryExecutionId, false)
     }
 
     @Test
     fun `returns empty list when no results are returned`() {
-      `when`(searchRepository.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(searchRepository.getSearchResults(queryExecutionId, false))
         .thenReturn(listOf<AthenaOrderSearchResultDTO>())
 
-      val result = service.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getSearchResults(queryExecutionId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result.count()).isEqualTo(0)
@@ -155,7 +154,7 @@ class OrderServiceTest {
 
     @Test
     fun `returns list of order search results when results are returned`() {
-      `when`(searchRepository.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(searchRepository.getSearchResults(queryExecutionId, false))
         .thenReturn(
           listOf<AthenaOrderSearchResultDTO>(
             AthenaOrderSearchResultDTO(
@@ -172,7 +171,7 @@ class OrderServiceTest {
           ),
         )
 
-      val result = service.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getSearchResults(queryExecutionId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result.count()).isEqualTo(1)
@@ -209,47 +208,47 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(orderInformationRepository.getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderInformationRepository.getKeyOrderInformation(legacySubjectId, false))
         .thenReturn(blankKeyOrderInformation)
-      `when`(orderInformationRepository.getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderInformationRepository.getSubjectHistoryReport(legacySubjectId, false))
         .thenReturn(blankSubjectHistoryReport)
-      `when`(orderInformationRepository.getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderInformationRepository.getDocumentList(legacySubjectId, false))
         .thenReturn(blankDocumentList)
     }
 
     @Test
     fun `calls getKeyOrderInformation from order information repository`() {
-      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderInformation(legacySubjectId, false)
 
-      Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, false)
     }
 
     @Disabled("SubjectHistoryReport will no longer be used")
     @Test
     fun `calls getSubjectHistoryReport from order information repository`() {
-      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderInformation(legacySubjectId, false)
 
-      Mockito.verify(orderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, false)
     }
 
     @Disabled("We are not currently returning documents")
     @Test
     fun `calls getDocumentList from order information repository`() {
-      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderInformation(legacySubjectId, false)
 
-      Mockito.verify(orderInformationRepository, times(1)).getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderInformationRepository, times(1)).getDocumentList(legacySubjectId, false)
     }
 
     @Test
     fun `returns OrderInformation when a document is found`() {
-      val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderInformation(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(OrderInformation::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a document is found`() {
-      val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderInformation(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(legacySubjectId)
@@ -271,26 +270,26 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(orderDetailsRepository.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderDetailsRepository.getOrderDetails(legacySubjectId, false))
         .thenReturn(blankOrderDetails)
     }
 
     @Test
     fun `calls getOrderDetails from order details repository`() {
-      service.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Mockito.verify(orderDetailsRepository, times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderDetails(legacySubjectId, false)
+      Mockito.verify(orderDetailsRepository, times(1)).getOrderDetails(legacySubjectId, false)
     }
 
     @Test
     fun `returns OrderDetails`() {
-      val result = service.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(OrderDetails::class.java)
     }
 
     @Test
     fun `returns correct details of the order`() {
-      val result = service.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("")
