@@ -5,7 +5,8 @@ generic-service:
   serviceAccountName: "hmpps-em-datastore-prod-athena"
 
   ingress:
-    host: electronic-monitoring-datastore-api.hmpps.service.justice.gov.uk
+    hosts:
+      - electronic-monitoring-datastore-api.hmpps.service.justice.gov.uk
 
   env:
 #    SENTRY_ENV: prod
