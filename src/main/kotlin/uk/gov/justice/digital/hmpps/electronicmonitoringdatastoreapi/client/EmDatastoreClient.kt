@@ -18,21 +18,28 @@ import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 
 @Component
 @Profile("!integration & !mocking")
-class EmDatastoreClient(
-  private val athenaRoleService: AthenaRoleService,
-) : EmDatastoreClientInterface {
+class EmDatastoreClient : EmDatastoreClientInterface {
+
+  @Value("\${services.athena.roles.restricted}")
+  private val restrictedRole: String = "uninitialised"
+
+  @Value("\${services.athena.roles.general}")
+  private val generalRole: String = "uninitialised"
+
   @Value("\${services.athena.output}")
   private val output: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
+
+  @Value("\${services.athena.sleep}")
   private val sleepLength: Long = 1000
 
   @Value("\${services.athena.database}")
   private val databaseName: String = "test_database"
 
-  private fun startClient(iamRole: String): AthenaClient {
+  private fun startClient(allowSpecials: Boolean?): AthenaClient {
+    val iamRole = getIamRole(allowSpecials)
     val credentialsProvider: AwsCredentialsProvider = EmDatastoreCredentialsProvider.Companion.getCredentials(iamRole)
 
     return AthenaClient.builder()
@@ -42,20 +49,16 @@ class EmDatastoreClient(
   }
 
   override fun getQueryExecutionId(athenaQuery: AthenaQuery, allowSpecials: Boolean?): String {
-    val roleName = if (allowSpecials == true) AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO else AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
-    val iamRole: String = athenaRoleService.getIamRole(roleName)
+    val athenaClient = startClient(allowSpecials)
 
-    val athenaClient = startClient(iamRole)
-    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
+
     athenaClient.close()
     return queryExecutionId
   }
 
   override fun getQueryResult(queryExecutionId: String, allowSpecials: Boolean?): ResultSet {
-    val roleName = if (allowSpecials == true) AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO else AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
-    val iamRole: String = athenaRoleService.getIamRole(roleName)
-
-    val athenaClient = startClient(iamRole)
+    val athenaClient = startClient(allowSpecials)
 
     waitForQueryToComplete(athenaClient, queryExecutionId)
     val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
@@ -65,16 +68,12 @@ class EmDatastoreClient(
   }
 
   override fun getQueryResult(athenaQuery: AthenaQuery, allowSpecials: Boolean?): ResultSet {
-    val roleName = if (allowSpecials == true) AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO else AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
-    val iamRole: String = athenaRoleService.getIamRole(roleName)
-
-    val athenaClient = startClient(iamRole)
+    val athenaClient = startClient(allowSpecials)
 
     val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
 
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)
-
     val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
 
     athenaClient.close()
@@ -165,4 +164,6 @@ class EmDatastoreClient(
       throw e
     }
   }
+
+  private fun getIamRole(allowSpecials: Boolean?): String = if (allowSpecials == true) restrictedRole else generalRole
 }
