@@ -24,8 +24,17 @@ class InfoTest : IntegrationTestBase() {
     webTestClient.get().uri("/info")
       .exchange()
       .expectStatus().isOk
-      .expectBody().jsonPath("build.version").value<String> {
+      .expectBody()
+      .jsonPath("build.version").value<String> {
         assertThat(it).startsWith(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE))
       }
+  }
+
+  @Test
+  fun `Info page includes EM Datastore connection details`() {
+    webTestClient.get().uri("/info")
+      .exchange()
+      .expectBody()
+      .jsonPath("em-datastore.status").isEqualTo("DOWN")
   }
 }

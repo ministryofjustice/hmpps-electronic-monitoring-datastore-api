@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
@@ -89,7 +88,7 @@ class SearchControllerTest {
 
       Mockito.`when`(orderService.getSearchResults(queryExecutionId)).thenReturn(expectedResult)
 
-      val result = controller.getSearchResults(authentication, queryExecutionId)
+      val result = controller.startSearch(authentication, queryExecutionId)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)

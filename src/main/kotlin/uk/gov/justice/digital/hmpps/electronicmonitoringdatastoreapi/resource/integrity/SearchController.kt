@@ -42,22 +42,25 @@ class SearchController(
     authentication: Authentication,
     @Parameter(description = "The search criteria for the query", required = true)
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
-  ): ResponseEntity<QueryExecutionResponse> {
-    val queryExecutionId = orderService.getQueryExecutionId(orderSearchCriteria)
+  ): ResponseEntity<QueryExecutionResponse> = startSearch(orderSearchCriteria, authentication.name)
 
-    auditService.createEvent(
-      authentication.name,
-      "SEARCH_ORDERS",
-      mapOf(
-        "legacySubjectId" to orderSearchCriteria.legacySubjectId,
-        "searchType" to orderSearchCriteria.searchType,
-        "queryExecutionId" to queryExecutionId,
-        "restrictedOrdersIncluded" to false,
-      ),
-    )
-
-    return ResponseEntity.ok(QueryExecutionResponse(queryExecutionId))
-  }
+  @Operation(
+    tags = ["Integrity special orders"],
+    summary = "Get the monitoring events for an order",
+  )
+  @RequestMapping(
+    method = [RequestMethod.POST],
+    path = [
+      "/integrity/orders/specials",
+    ],
+    produces = [MediaType.APPLICATION_JSON_VALUE],
+  )
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  fun searchSpecialOrders(
+    authentication: Authentication,
+    @Parameter(description = "The search criteria for the query", required = true)
+    @RequestBody orderSearchCriteria: OrderSearchCriteria,
+  ): ResponseEntity<QueryExecutionResponse> = startSearch(orderSearchCriteria, authentication.name, true)
 
   @Operation(
     tags = ["Integrity orders"],
@@ -75,7 +78,7 @@ class SearchController(
     authentication: Authentication,
     @Parameter(description = "The query execution ID of the search job", required = true)
     @PathVariable(required = true) queryExecutionId: String,
-  ): ResponseEntity<List<OrderSearchResult>> = retrieveSearchResults(authentication, queryExecutionId)
+  ): ResponseEntity<List<OrderSearchResult>> = startSearch(queryExecutionId, authentication.name)
 
   @Operation(
     tags = ["Integrity orders"],
@@ -89,21 +92,56 @@ class SearchController(
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getSearchResults(
+  fun startSearch(
     authentication: Authentication,
     @Parameter(description = "The query execution ID of the search job", required = true)
     @RequestParam(name = "id", required = true) queryExecutionId: String,
-  ): ResponseEntity<List<OrderSearchResult>> = retrieveSearchResults(authentication, queryExecutionId)
+  ): ResponseEntity<List<OrderSearchResult>> = startSearch(queryExecutionId, authentication.name)
 
-  private fun retrieveSearchResults(authentication: Authentication, queryExecutionId: String): ResponseEntity<List<OrderSearchResult>> {
-    val results = orderService.getSearchResults(queryExecutionId)
+  @Operation(
+    tags = ["Integrity special orders"],
+    summary = "Get the search results for a previous job execution",
+  )
+  @RequestMapping(
+    method = [RequestMethod.GET],
+    path = [
+      "/integrity/orders/specials",
+    ],
+    produces = [MediaType.APPLICATION_JSON_VALUE],
+  )
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  fun getSpecialOrderSearchResults(
+    authentication: Authentication,
+    @Parameter(description = "The query execution ID of the search job", required = true)
+    @RequestParam(name = "id", required = true) queryExecutionId: String,
+  ): ResponseEntity<List<OrderSearchResult>> = startSearch(queryExecutionId, authentication.name, true)
+
+  private fun startSearch(orderSearchCriteria: OrderSearchCriteria, username: String, allowSpecials: Boolean = false): ResponseEntity<QueryExecutionResponse> {
+    val queryExecutionId = orderService.getQueryExecutionId(orderSearchCriteria, allowSpecials)
 
     auditService.createEvent(
-      authentication.name,
-      "RETRIEVE_SEARCH_RESULT",
+      username,
+      "SEARCH_ORDERS",
+      mapOf(
+        "legacySubjectId" to orderSearchCriteria.legacySubjectId,
+        "searchType" to orderSearchCriteria.searchType,
+        "includesSpecialOrders" to "$allowSpecials",
+        "queryExecutionId" to queryExecutionId,
+      ),
+    )
+
+    return ResponseEntity.ok(QueryExecutionResponse(queryExecutionId))
+  }
+
+  private fun startSearch(queryExecutionId: String, username: String, allowSpecials: Boolean = false): ResponseEntity<List<OrderSearchResult>> {
+    val results = orderService.getSearchResults(queryExecutionId, allowSpecials)
+
+    auditService.createEvent(
+      username,
+      "RETRIEVE_ORDERS_SEARCH_RESULT",
       mapOf(
         "executionId" to queryExecutionId,
-        "restrictedOrdersIncluded" to false,
+        "includesSpecialOrders" to "$allowSpecials",
         "rows" to results.count().toString(),
       ),
     )
