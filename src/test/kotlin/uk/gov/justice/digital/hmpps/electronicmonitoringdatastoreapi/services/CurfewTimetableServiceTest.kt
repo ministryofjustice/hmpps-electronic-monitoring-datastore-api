@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.CurfewTimetableRepository
@@ -57,27 +56,27 @@ class CurfewTimetableServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(orderId, false))
         .thenReturn(exampleCurfewTimetable)
     }
 
     @Test
     fun `calls getCurfewTimetable from order information repository`() {
-      service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getCurfewTimetable(orderId, false)
 
-      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(orderId, false)
     }
 
     @Test
     fun `returns a list of CurfewTimetable when a response is received`() {
-      var result = service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getCurfewTimetable(orderId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the CurfewTimetable when a response is received`() {
-      var result = service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getCurfewTimetable(orderId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

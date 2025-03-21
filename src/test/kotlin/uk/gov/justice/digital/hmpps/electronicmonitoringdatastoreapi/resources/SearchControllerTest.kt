@@ -7,16 +7,14 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -25,7 +23,6 @@ import java.time.LocalDateTime
 @JsonTest
 class SearchControllerTest {
   private lateinit var orderService: OrderService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: SearchController
   private lateinit var authentication: Authentication
@@ -35,71 +32,38 @@ class SearchControllerTest {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderService = mock(OrderService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = mock(AuditService::class.java)
-    controller = SearchController(orderService, roleService, auditService)
+    controller = SearchController(orderService, auditService)
   }
 
   @Nested
   inner class ConfirmAthenaAccess {
     @Test
-    fun `calls AthenaRoleService for role and OrderService for checkAvailability`() {
-      val expectedRole = AthenaRole.NONE
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
+    fun `responds with 'Connection successful' message when connection is established`() {
+      `when`(orderService.checkAvailability()).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
-      controller.confirmAthenaAccess(authentication)
+      val result = controller.confirmConnection(authentication)
 
-      Mockito.verify(roleService, Mockito.times(1))
-        .getRoleFromAuthentication(authentication)
-      Mockito.verify(orderService, Mockito.times(1))
-        .checkAvailability(expectedRole)
+      Mockito.verify(orderService, Mockito.times(1)).checkAvailability()
+
+      assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(mapOf("message" to "Connection successful"))
     }
 
     @Test
-    fun `Returns true when ROLE_EM_DATASTORE_GENERAL_RO role found from authentication object`() {
-      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
+    fun `responds with 'API Connection successful, but no access to Athena' message when connection is not established`() {
+      `when`(orderService.checkAvailability()).thenReturn(false)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
-      val result = controller.confirmAthenaAccess(authentication)
+      val result = controller.confirmConnection(authentication)
 
-      assertThat(result).isNotNull
-      assertThat(result).isEqualTo(true)
-    }
+      Mockito.verify(orderService, Mockito.times(1)).checkAvailability()
 
-    @Test
-    fun `Returns true when ROLE_EM_DATASTORE_RESTRICTED_RO role found from authentication object`() {
-      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
-      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
-
-      val result = controller.confirmAthenaAccess(authentication)
-
-      assertThat(result).isNotNull
-      assertThat(result).isEqualTo(true)
-    }
-
-    @Test
-    fun `Returns false when NONE role found from authentication object`() {
-      val expectedRole = AthenaRole.NONE
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(false)
-      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
-
-      val result = controller.confirmAthenaAccess(authentication)
-
-      assertThat(result).isNotNull
-      assertThat(result).isEqualTo(false)
+      assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      assertThat(result.body).isNotNull
+      assertThat(result.body).isEqualTo(mapOf("message" to "API Connection successful, but no access to Athena"))
     }
   }
 
@@ -124,7 +88,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      `when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
+      `when`(orderService.getQueryExecutionId(orderSearchCriteria, false)).thenReturn(queryExecutionId)
 
       val result = controller.searchOrders(authentication, orderSearchCriteria)
 
@@ -155,9 +119,9 @@ class SearchControllerTest {
         ),
       )
 
-      `when`(orderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderService.getSearchResults(queryExecutionId, false)).thenReturn(expectedResult)
 
-      val result = controller.getSearchResults(authentication, queryExecutionId)
+      val result = controller.getOrdersSearchResults(authentication, queryExecutionId)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)
