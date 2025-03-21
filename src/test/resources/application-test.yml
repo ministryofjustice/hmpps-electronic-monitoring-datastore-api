@@ -24,6 +24,6 @@ services:
   athena:
     database: totally-fake-database-name
     output: totally-fake-output-bucket-name
-  athena-roles:
-    restricted: fakeIAM
-    general: fakeIAM2
+    roles:
+      restricted: fakeIAM
+      general: fakeIAM2

@@ -17,9 +17,9 @@ services:
     # Values for connecting to DEV Athena instance
 #    database: test_database
 #    output: s3://emds-dev-athena-query-results-20240917144028307600000004
-  athena-roles:
-    restricted: fakeIAM
-    general: fakeIAM2
+    roles:
+      restricted: fakeIAM
+      general: fakeIAM2
 
 #CLIENT_ID: hmpps-electronic-monitoring-datastore-api
 #CLIENT_SECRET: clientsecret
