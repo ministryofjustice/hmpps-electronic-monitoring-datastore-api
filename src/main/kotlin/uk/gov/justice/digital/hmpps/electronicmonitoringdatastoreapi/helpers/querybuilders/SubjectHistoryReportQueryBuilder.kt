@@ -3,20 +3,19 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportQuery
 
 class SubjectHistoryReportQueryBuilder(
-  var databaseName: String? = null,
+  override var databaseName: String,
+) : SqlQueryBuilder(
+  databaseName,
+  "subject_history_report",
+  arrayOf(
+    "legacy_subject_id",
+    "legacy_order_id",
+  ),
 ) {
-  var legacySubjectId: String? = null
-
   fun withLegacySubjectId(subjectId: String): SubjectHistoryReportQueryBuilder {
-    legacySubjectId = subjectId
+    parameters["legacy_subject_id"] = subjectId
     return this
   }
 
-  fun build(): AthenaSubjectHistoryReportQuery = AthenaSubjectHistoryReportQuery(
-    """
-        SELECT
-           $legacySubjectId as legacy_order_id
-    """.trimIndent(),
-    arrayOf(),
-  )
+  fun build(): AthenaSubjectHistoryReportQuery = AthenaSubjectHistoryReportQuery(getSQL(), parameters.values.toTypedArray())
 }
