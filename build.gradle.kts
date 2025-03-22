@@ -18,6 +18,7 @@ dependencies {
   implementation("software.amazon.awssdk:sts:2.31.7")
   implementation("org.json:json:20250107")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
+  implementation("io.zeko:zeko-sql-builder:1.5.6")
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.4.2")
   testImplementation("org.wiremock:wiremock-standalone:3.12.1")
