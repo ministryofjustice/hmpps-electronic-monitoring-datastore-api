@@ -63,5 +63,6 @@ class OrderDetailsQueryBuilder(
       WHERE
         legacy_subject_id = $legacySubjectId
     """.trimIndent(),
+    arrayOf(),
   )
 }

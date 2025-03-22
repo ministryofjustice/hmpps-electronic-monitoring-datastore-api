@@ -53,5 +53,6 @@ class AmOrderDetailsQueryBuilder(
       WHERE
         legacy_subject_id=$legacySubjectId
     """.trimIndent(),
+    arrayOf(),
   )
 }

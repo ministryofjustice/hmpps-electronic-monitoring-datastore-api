@@ -12,5 +12,6 @@ class ListKeyOrderInformationQueryBuilder(
         FROM 
           $databaseName.order_details
     """.trimIndent(),
+    arrayOf(),
   )
 }

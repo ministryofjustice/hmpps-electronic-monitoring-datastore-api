@@ -17,5 +17,6 @@ class DocumentsQueryBuilder(
       SELECT
          $legacySubjectId as legacy_order_id
     """.trimIndent(),
+    arrayOf(),
   )
 }
