@@ -78,7 +78,7 @@ class OrderServiceTest {
 
   @Nested
   inner class Query {
-    val athenaQuery = AthenaStringQuery("fake query")
+    val athenaQuery = AthenaStringQuery("fake query", arrayOf())
 
     @Test
     fun `passes query to order repository`() {
@@ -117,7 +117,7 @@ class OrderServiceTest {
 
     @Test
     fun `returns a query execution ID`() {
-      val expectedResult: String = "query-execution-id"
+      val expectedResult = "query-execution-id"
       `when`(searchRepository.searchOrders(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn("query-execution-id")
 

@@ -136,6 +136,6 @@ class OrderSearchQueryBuilder(
 
     builder.append(whereClause.values.joinToString(separator = " AND "))
 
-    return AthenaOrderSearchQuery(builder.toString())
+    return AthenaOrderSearchQuery(builder.toString(), arrayOf())
   }
 }
