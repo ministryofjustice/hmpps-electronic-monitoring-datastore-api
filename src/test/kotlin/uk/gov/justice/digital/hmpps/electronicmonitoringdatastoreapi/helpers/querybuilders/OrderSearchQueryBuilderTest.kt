@@ -8,16 +8,17 @@ class OrderSearchQueryBuilderTest {
 
   val baseQuery: String = """
         SELECT 
-          legacy_subject_id
-          , full_name
-          , alias
-          , primary_address_line_1
-          , primary_address_line_2
-          , primary_address_line_3
-          , primary_address_post_code
-          , date_of_birth
-          , order_start_date
-          , order_end_date 
+          legacy_subject_id,
+          legacy_order_id,
+          full_name,
+          alias,
+          date_of_birth,
+          primary_address_line_1,
+          primary_address_line_2,
+          primary_address_line_3,
+          primary_address_post_code,
+          order_start_date,
+          order_end_date
         FROM 
           test_database.order_details
         WHERE 
@@ -29,7 +30,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            legacy_subject_id=$legacySubjectId
+            legacy_subject_id = ?
       """.trimIndent(),
     )
 
@@ -38,15 +39,16 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
   }
 
   @Test
   fun `returns valid SQL if only firstName is populated`() {
-    val firstName = "Steeevooooo"
+    val firstName = "Stevo"
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            first_name LIKE UPPER('%$firstName%')
+            first_name LIKE ?
       """.trimIndent(),
     )
 
@@ -55,17 +57,18 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('%$firstName%')"))
   }
 
   @Test
   fun `throws an error if firstName contains dangerous characters`() {
-    val dangerousInput: String = "Steve OR 1=1"
+    val dangerousInput = "Steve OR 1=1"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
       OrderSearchQueryBuilder("test_database")
         .withFirstName(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("first_name must only contain alphanumeric characters and spaces")
   }
 
   @Test
@@ -74,7 +77,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            last_name LIKE UPPER('%$lastName%')
+            last_name LIKE ?
       """.trimIndent(),
     )
 
@@ -83,17 +86,18 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('%$lastName%')"))
   }
 
   @Test
   fun `throws an error if LastName contains dangerous characters`() {
-    val dangerousInput: String = "Jobs OR 1=1"
+    val dangerousInput = "Jobs OR 1=1"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
       OrderSearchQueryBuilder("test_database")
         .withLastName(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("last_name must only contain alphanumeric characters and spaces")
   }
 
   @Test
@@ -102,7 +106,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            alias LIKE UPPER('%$alias%')
+            alias LIKE ?
       """.trimIndent(),
     )
 
@@ -111,17 +115,18 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('%$alias%')"))
   }
 
   @Test
   fun `throws an error if alias contains dangerous characters`() {
-    val dangerousInput: String = "Jobs OR 1=1"
+    val dangerousInput = "Jobs OR 1=1"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
       OrderSearchQueryBuilder("test_database")
         .withAlias(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("alias must only contain alphanumeric characters and spaces")
   }
 
   @Test
@@ -131,8 +136,8 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            legacy_subject_id=$legacySubjectId
-            AND alias LIKE UPPER('%$alias%')
+            legacy_subject_id = ?
+            AND alias LIKE ?
       """.trimIndent(),
     )
 
@@ -142,12 +147,13 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId, "UPPER('%$alias%')"))
   }
 
   @Test
   fun `Throws error if search criteria are null`() {
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder().build()
+      OrderSearchQueryBuilder("fake_database").build()
     }.withMessage("At least one search criteria must be populated")
   }
 
@@ -156,7 +162,7 @@ class OrderSearchQueryBuilderTest {
     val illegalLegacySubjectId = "fake-not a number"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder().withLegacySubjectId(illegalLegacySubjectId)
-    }.withMessage("Legacy_subject_id must be convertable to type Long")
+      OrderSearchQueryBuilder("test_database").withLegacySubjectId(illegalLegacySubjectId)
+    }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 }

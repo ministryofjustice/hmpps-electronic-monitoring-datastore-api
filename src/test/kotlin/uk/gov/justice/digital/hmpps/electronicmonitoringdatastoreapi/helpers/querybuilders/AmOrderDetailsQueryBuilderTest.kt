@@ -61,6 +61,6 @@ class AmOrderDetailsQueryBuilderTest {
       AmOrderDetailsQueryBuilder("test_database")
         .withLegacySubjectId(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 }
