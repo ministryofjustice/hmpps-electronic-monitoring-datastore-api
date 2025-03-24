@@ -3,15 +3,13 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
 class ListKeyOrderInformationQueryBuilder(
-  var databaseName: String? = null,
+  override val databaseName: String,
+) : SqlQueryBuilder(
+  databaseName,
+  "order_details",
+  arrayOf(
+    "legacy_subject_id",
+  ),
 ) {
-  fun build(): AthenaOrderSearchQuery = AthenaOrderSearchQuery(
-    """
-        SELECT 
-          legacy_subject_id
-        FROM 
-          $databaseName.order_details
-    """.trimIndent(),
-    arrayOf(),
-  )
+  fun build(): AthenaOrderSearchQuery = AthenaOrderSearchQuery(getSQL(), parameters.values.toTypedArray())
 }
