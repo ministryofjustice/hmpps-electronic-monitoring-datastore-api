@@ -46,24 +46,37 @@ class OrderDetailsQueryBuilderTest {
       FROM 
         fake_database.order_details
       WHERE 
+         legacy_subject_id = ?
   """.trimIndent()
 
   @Test
   fun `returns valid SQL if legacySubjectId is populated`() {
     val legacySubjectId = "111222333"
 
-    val expectedSQL = replaceWhitespace("$baseQuery legacy_subject_id = ?".trimIndent())
+    val expectedSQL = replaceWhitespace(baseQuery.trimIndent())
 
     val result = OrderDetailsQueryBuilder("fake_database")
       .withLegacySubjectId(legacySubjectId)
       .build()
 
     assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+    assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
   }
 
   @Test
-  fun `throws an error if input contains dangerous characters`() {
-    val dangerousInput = "12345 OR 1=1"
+  fun `throws an error if input contains SQL injection attack to show hidden records`() {
+    val dangerousInput = "12345 OR 1=1--"
+
+    assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+      OrderDetailsQueryBuilder("fake_database")
+        .withLegacySubjectId(dangerousInput)
+        .build()
+    }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
+  }
+
+  @Test
+  fun `throws an error if input contains SQL injection attack to join other tables`() {
+    val dangerousInput = "' UNION SELECT username, password FROM users--"
 
     assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
       OrderDetailsQueryBuilder("fake_database")
