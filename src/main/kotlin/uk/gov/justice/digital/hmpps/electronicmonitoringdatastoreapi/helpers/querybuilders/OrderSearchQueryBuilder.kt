@@ -23,6 +23,10 @@ class OrderSearchQueryBuilder(
         return
       }
 
+      if (!isAlphanumericSpace(value ?: "")) {
+        throw IllegalArgumentException("Input for legacy subject ID contains illegal characters")
+      }
+
       whereClause.put("legacy_subject_id", "CAST(legacy_subject_id AS VARCHAR)='$value'")
       field = value
     }
@@ -44,7 +48,7 @@ class OrderSearchQueryBuilder(
 
   fun withFirstName(value: String?): OrderSearchQueryBuilder {
     if (!isAlphanumericSpace(value ?: "")) {
-      throw IllegalArgumentException("Input contains illegal characters")
+      throw IllegalArgumentException("Input for first name contains illegal characters")
     }
     firstName = value
     return this
@@ -62,7 +66,7 @@ class OrderSearchQueryBuilder(
 
   fun withLastName(value: String?): OrderSearchQueryBuilder {
     if (!isAlphanumericSpace(value ?: "")) {
-      throw IllegalArgumentException("Input contains illegal characters")
+      throw IllegalArgumentException("Input for last name contains illegal characters")
     }
     lastName = value
     return this
@@ -80,7 +84,7 @@ class OrderSearchQueryBuilder(
 
   fun withAlias(value: String?): OrderSearchQueryBuilder {
     if (!isAlphanumericSpace(value ?: "")) {
-      throw IllegalArgumentException("Input contains illegal characters")
+      throw IllegalArgumentException("Input for alias contains illegal characters")
     }
 
     alias = value

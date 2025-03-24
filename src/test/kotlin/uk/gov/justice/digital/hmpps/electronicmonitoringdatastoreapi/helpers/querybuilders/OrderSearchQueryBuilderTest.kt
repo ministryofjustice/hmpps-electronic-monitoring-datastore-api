@@ -26,7 +26,7 @@ class OrderSearchQueryBuilderTest {
   @Test
   fun `returns valid SQL if only legacySubjectId is populated`() {
     val tableName = "integrity"
-    val legacySubjectId = "111222333"
+    val legacySubjectId = "ABC1234"
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """CAST(legacy_subject_id AS VARCHAR)='$legacySubjectId'""".trimIndent(),
@@ -38,6 +38,19 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+  }
+
+  @Test
+  fun `throws an error if legacySubjectId contains dangerous characters`() {
+    val tableName = "integrity"
+    val dangerousInput: String = "ABC1234 OR 1=1"
+
+    Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
+      OrderSearchQueryBuilder("test_database")
+        .withTableName(tableName)
+        .withLegacySubjectId(dangerousInput)
+        .build()
+    }.withMessage("Input for legacy subject ID contains illegal characters")
   }
 
   @Test
@@ -69,7 +82,7 @@ class OrderSearchQueryBuilderTest {
         .withTableName(tableName)
         .withFirstName(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("Input for first name contains illegal characters")
   }
 
   @Test
@@ -101,7 +114,7 @@ class OrderSearchQueryBuilderTest {
         .withTableName(tableName)
         .withLastName(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("Input for last name contains illegal characters")
   }
 
   @Test
@@ -133,7 +146,7 @@ class OrderSearchQueryBuilderTest {
         .withTableName(tableName)
         .withAlias(dangerousInput)
         .build()
-    }.withMessage("Input contains illegal characters")
+    }.withMessage("Input for alias contains illegal characters")
   }
 
   @Test
