@@ -14,7 +14,10 @@ open class SqlQueryBuilder(
     var query = Query()
       .fields(*fields)
       .from("$databaseName.$table")
-      .where(parameters.map { it.key.toString() eq it.value.toString() })
+
+    parameters.forEach {
+      query.where(it.key.toString() eq it.value.toString())
+    }
 
     return query.toSql()
   }

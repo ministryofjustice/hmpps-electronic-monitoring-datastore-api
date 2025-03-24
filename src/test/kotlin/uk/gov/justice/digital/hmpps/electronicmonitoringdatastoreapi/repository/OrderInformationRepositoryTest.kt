@@ -204,7 +204,7 @@ class OrderInformationRepositoryTest {
 
     @Test
     fun `getSubjectHistoryReport returns the first result from getQueryResult`() {
-      val orderId = UUID.randomUUID().toString()
+      val orderId = "ID0034"
       val fullName = "TEST NAME"
 
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet(fullName))

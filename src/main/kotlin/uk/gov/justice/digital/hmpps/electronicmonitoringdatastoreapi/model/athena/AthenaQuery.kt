@@ -7,78 +7,78 @@ abstract class AthenaQuery(
   open val parameters: Array<String>,
 )
 
-data class AthenaStringQuery(
+class AthenaStringQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaDocumentListQuery(
+class AthenaDocumentListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaKeyOrderInformationQuery(
+class AthenaKeyOrderInformationQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaOrderSearchQuery(
+class AthenaOrderSearchQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaSubjectHistoryReportQuery(
+class AthenaSubjectHistoryReportQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaOrderDetailsQuery(
+class AthenaOrderDetailsQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaMonitoringEventsListQuery(
+class AthenaMonitoringEventsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaIncidentEventsListQuery(
+class AthenaIncidentEventsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaContactEventsListQuery(
+class AthenaContactEventsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaServicesQuery(
+class AthenaServicesQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaSuspensionOfVisitsListQuery(
+class AthenaSuspensionOfVisitsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaEquipmentDetailsListQuery(
+class AthenaEquipmentDetailsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaVisitDetailsListQuery(
+class AthenaVisitDetailsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-data class AthenaViolationEventsListQuery(
+class AthenaViolationEventsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
 // AM Query types
-data class AthenaAmOrderDetailsQuery(
+class AthenaAmOrderDetailsQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)

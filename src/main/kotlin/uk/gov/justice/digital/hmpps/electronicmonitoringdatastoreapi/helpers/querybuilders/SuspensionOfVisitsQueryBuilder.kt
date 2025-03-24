@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
+import org.apache.commons.lang3.StringUtils.isAlphanumeric
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSuspensionOfVisitsListQuery
 
 class SuspensionOfVisitsQueryBuilder(
@@ -18,6 +19,10 @@ class SuspensionOfVisitsQueryBuilder(
   ),
 ) {
   fun withLegacySubjectId(subjectId: String): SuspensionOfVisitsQueryBuilder {
+    if (!isAlphanumeric(subjectId)) {
+      throw IllegalArgumentException("Input contains illegal characters")
+    }
+
     parameters["legacy_subject_id"] = subjectId
     return this
   }
