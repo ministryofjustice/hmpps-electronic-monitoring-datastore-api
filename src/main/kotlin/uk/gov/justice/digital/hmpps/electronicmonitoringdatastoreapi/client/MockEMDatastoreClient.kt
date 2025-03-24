@@ -96,7 +96,7 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       loadResponses()
     }
 
-    val query = stripWhitespace(athenaQuery.queryString)
+    val query = stripWhitespace("${athenaQuery.queryString}${athenaQuery.parameters.joinToString(",")}")
 
     val athenaResponse = responses[query]?.trimIndent()
     if (athenaResponse == null) {
@@ -104,7 +104,7 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
         """
           No response defined for query
           -------------
-          ${athenaQuery.queryString}
+          $query
           -------------
         """.trimIndent(),
       )
