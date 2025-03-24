@@ -21,6 +21,7 @@ class SearchRepository(
 ) {
   fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): String {
     val orderSearchQuery = OrderSearchQueryBuilder(athenaDatabase)
+      .withTableName(AthenaHelper.tableNameFromSearchType(criteria.searchType))
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)

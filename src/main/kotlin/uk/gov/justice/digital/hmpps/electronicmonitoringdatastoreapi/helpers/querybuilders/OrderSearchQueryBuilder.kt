@@ -10,19 +10,20 @@ class OrderSearchQueryBuilder(
 ) {
   private var whereClause = mutableMapOf<String, String>()
 
+  lateinit var tableName: String
+
+  fun withTableName(value: String): OrderSearchQueryBuilder {
+    tableName = value
+    return this
+  }
+
   var legacySubjectId: String? = null
     private set(value) {
       if (value.isNullOrEmpty()) {
         return
       }
 
-      try {
-        value.toLong()
-      } catch (_: Exception) {
-        throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
-      }
-
-      whereClause.put("legacy_subject_id", "legacy_subject_id=$value")
+      whereClause.put("legacy_subject_id", "CAST(legacy_subject_id AS VARCHAR)='$value'")
       field = value
     }
 
@@ -129,7 +130,7 @@ class OrderSearchQueryBuilder(
           , order_start_date
           , order_end_date
         FROM
-          $databaseName.order_details
+          $databaseName.$tableName
         WHERE 
       """.trimIndent(),
     )

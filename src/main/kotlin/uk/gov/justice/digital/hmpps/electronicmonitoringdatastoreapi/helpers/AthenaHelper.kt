@@ -114,5 +114,13 @@ class AthenaHelper {
         mapper.convertValue(row, T::class.java)
       }
     }
+
+    fun tableNameFromSearchType(searchType: String): String = when (searchType.lowercase()) {
+      "integrity" -> "order_details"
+//      TODO: Once the test database contains AM records, map search type "alcohol-monitoring" to athena table "am_order_details"
+      "alcohol-monitoring" -> "order_details"
+//      "alcohol-monitoring" -> "am_order_details"
+      else -> throw IllegalArgumentException("Unknown search type: $searchType")
+    }
   }
 }
