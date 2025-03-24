@@ -11,5 +11,5 @@ class ListKeyOrderInformationQueryBuilder(
     "legacy_subject_id",
   ),
 ) {
-  fun build(): AthenaOrderSearchQuery = AthenaOrderSearchQuery(getSQL(), parameters.values.toTypedArray())
+  fun build(): AthenaOrderSearchQuery = AthenaOrderSearchQuery(getSQL(), values.toTypedArray())
 }

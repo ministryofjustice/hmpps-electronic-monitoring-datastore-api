@@ -1,141 +1,98 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import org.apache.commons.lang3.StringUtils.isAlphanumericSpace
+import io.zeko.db.sql.dsl.eq
+import io.zeko.db.sql.dsl.like
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 import java.time.LocalDate
 
-// TODO: update to use PREPARED STATEMENTS instead of a plain SELECT: better injection protection.
 class OrderSearchQueryBuilder(
-  var databaseName: String? = null,
+  override val databaseName: String,
+) : SqlQueryBuilder(
+  databaseName,
+  "order_details",
+  arrayOf(
+    "legacy_subject_id",
+    "legacy_order_id",
+    "full_name",
+    "alias",
+    "date_of_birth",
+    "primary_address_line_1",
+    "primary_address_line_2",
+    "primary_address_line_3",
+    "primary_address_post_code",
+    "order_start_date",
+    "order_end_date",
+  ),
 ) {
-  private var whereClause = mutableMapOf<String, String>()
+  fun withLegacySubjectId(value: String?): OrderSearchQueryBuilder {
+    validateAlphanumeric(value, "legacy_subject_id")
 
-  var legacySubjectId: String? = null
-    private set(value) {
-      if (value.isNullOrEmpty()) {
-        return
-      }
-
-      try {
-        value.toLong()
-      } catch (_: Exception) {
-        throw IllegalArgumentException("Legacy_subject_id must be convertable to type Long")
-      }
-
-      whereClause.put("legacy_subject_id", "legacy_subject_id=$value")
-      field = value
+    if (value.isNullOrBlank()) {
+      return this
     }
 
-  fun withLegacySubjectId(value: String?): OrderSearchQueryBuilder {
-    legacySubjectId = value
+    values.add(value)
+    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq value)
     return this
   }
-
-  var firstName: String? = null
-    private set(value) {
-      if (value == null || value.trim().isEmpty()) {
-        return
-      }
-
-      whereClause.put("first_name", "first_name LIKE UPPER('%$value%')")
-      field = value
-    }
 
   fun withFirstName(value: String?): OrderSearchQueryBuilder {
-    if (!isAlphanumericSpace(value ?: "")) {
-      throw IllegalArgumentException("Input contains illegal characters")
+    validateAlphanumericSpace(value, "first_name")
+
+    if (value.isNullOrBlank()) {
+      return this
     }
-    firstName = value
+
+    values.add("UPPER('%$value%')")
+    whereClauses.put("first_name", "first_name" like "UPPER('%$value%')")
     return this
   }
-
-  var lastName: String? = null
-    private set(value) {
-      if (value == null || value.trim().isEmpty()) {
-        return
-      }
-
-      whereClause.put("last_name", "last_name LIKE UPPER('%$value%')")
-      field = value
-    }
 
   fun withLastName(value: String?): OrderSearchQueryBuilder {
-    if (!isAlphanumericSpace(value ?: "")) {
-      throw IllegalArgumentException("Input contains illegal characters")
+    validateAlphanumericSpace(value, "last_name")
+
+    if (value.isNullOrBlank()) {
+      return this
     }
-    lastName = value
+
+    values.add("UPPER('%$value%')")
+    whereClauses.put("last_name", "last_name" like "UPPER('%$value%')")
     return this
   }
 
-  var alias: String? = null
-    private set(value) {
-      if (value == null || value.trim().isEmpty()) {
-        return
-      }
-
-      whereClause.put("alias", "alias LIKE UPPER('%$value%')")
-      field = value
-    }
-
   fun withAlias(value: String?): OrderSearchQueryBuilder {
-    if (!isAlphanumericSpace(value ?: "")) {
-      throw IllegalArgumentException("Input contains illegal characters")
+    validateAlphanumericSpace(value, "alias")
+
+    if (value.isNullOrBlank()) {
+      return this
     }
 
-    alias = value
+    values.add("UPPER('%$value%')")
+    whereClauses.put("alias", "alias" like "UPPER('%$value%')")
     return this
   }
 
   fun withDob(day: String?, month: String?, year: String?): OrderSearchQueryBuilder {
-    val dobDay: String? = validateNumber(day, "date_of_birth_day")
-    val dobMonth: String? = validateNumber(month, "date_of_birth_month")
-    val dobYear: String? = validateNumber(year, "date_of_birth_year")
+    validateNumber(day, "date_of_birth_day")
+    validateNumber(month, "date_of_birth_month")
+    validateNumber(year, "date_of_birth_year")
 
-    if (!dobDay.isNullOrEmpty() && !dobMonth.isNullOrEmpty() && !dobYear.isNullOrEmpty()) {
-      val dateOfBirth = LocalDate.of(dobYear.toInt(), dobMonth.toInt(), dobDay.toInt())
-      whereClause.put("date_of_birth", "date_of_birth = DATE '$dateOfBirth'")
+    if (day.isNullOrBlank() || month.isNullOrBlank() || year.isNullOrBlank()) {
+      return this
     }
+
+    val dateOfBirth = LocalDate.of(year.toInt(), month.toInt(), day.toInt())
+    values.add("DATE '$dateOfBirth'")
+    whereClauses.put("date_of_birth", "date_of_birth" eq "DATE '$dateOfBirth'")
+
     return this
   }
 
-  private fun validateNumber(value: String?, field: String): String? {
-    if (!value.isNullOrEmpty()) {
-      try {
-        value.toInt()
-      } catch (_: Exception) {
-        throw IllegalArgumentException("$field must be convertable to type Int")
-      }
-    }
-    return value
-  }
-
   fun build(): AthenaOrderSearchQuery {
-    if (whereClause.isEmpty()) {
+    if (whereClauses.isEmpty()) {
       throw IllegalArgumentException("At least one search criteria must be populated")
     }
 
-    val builder: StringBuilder = StringBuilder()
-    builder.append(
-      """
-        SELECT
-          legacy_subject_id
-          , full_name
-          , alias
-          , primary_address_line_1
-          , primary_address_line_2
-          , primary_address_line_3
-          , primary_address_post_code
-          , date_of_birth
-          , order_start_date
-          , order_end_date
-        FROM
-          $databaseName.order_details
-        WHERE 
-      """.trimIndent(),
-    )
-
-    builder.append(whereClause.values.joinToString(separator = " AND "))
-
-    return AthenaOrderSearchQuery(builder.toString(), arrayOf())
+    return AthenaOrderSearchQuery(getSQL(), values.toTypedArray())
   }
 }

@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import org.apache.commons.lang3.StringUtils.isAlphanumeric
+import io.zeko.db.sql.dsl.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsQuery
 
 class OrderDetailsQueryBuilder(
@@ -45,13 +45,16 @@ class OrderDetailsQueryBuilder(
   ),
 ) {
   fun withLegacySubjectId(subjectId: String): OrderDetailsQueryBuilder {
-    if (!isAlphanumeric(subjectId)) {
-      throw IllegalArgumentException("Input contains illegal characters")
+    validateAlphanumeric(subjectId, "legacy_subject_id")
+
+    if (subjectId.isBlank()) {
+      return this
     }
 
-    parameters["legacy_subject_id"] = subjectId
+    values.add(subjectId)
+    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq subjectId)
     return this
   }
 
-  fun build(): AthenaOrderDetailsQuery = AthenaOrderDetailsQuery(getSQL(), parameters.values.toTypedArray())
+  fun build(): AthenaOrderDetailsQuery = AthenaOrderDetailsQuery(getSQL(), values.toTypedArray())
 }
