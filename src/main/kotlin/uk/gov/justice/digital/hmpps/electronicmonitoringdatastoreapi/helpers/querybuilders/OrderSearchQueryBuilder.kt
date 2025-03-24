@@ -27,7 +27,7 @@ class OrderSearchQueryBuilder(
         throw IllegalArgumentException("Input for legacy subject ID contains illegal characters")
       }
 
-      whereClause.put("legacy_subject_id", "CAST(legacy_subject_id AS VARCHAR)='$value'")
+      whereClause.put("legacy_subject_id", "UPPER(CAST(legacy_subject_id AS VARCHAR))=UPPER('$value')")
       field = value
     }
 
@@ -42,7 +42,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("first_name", "first_name LIKE UPPER('%$value%')")
+      whereClause.put("first_name", "UPPER(first_name) LIKE UPPER('%$value%')")
       field = value
     }
 
@@ -60,7 +60,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("last_name", "last_name LIKE UPPER('%$value%')")
+      whereClause.put("last_name", "UPPER(last_name) LIKE UPPER('%$value%')")
       field = value
     }
 
@@ -78,7 +78,7 @@ class OrderSearchQueryBuilder(
         return
       }
 
-      whereClause.put("alias", "alias LIKE UPPER('%$value%')")
+      whereClause.put("alias", "UPPER(alias) LIKE UPPER('%$value%')")
       field = value
     }
 
