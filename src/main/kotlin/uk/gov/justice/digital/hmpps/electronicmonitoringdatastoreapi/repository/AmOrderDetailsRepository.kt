@@ -19,7 +19,7 @@ class AmOrderDetailsRepository(
       throw IllegalArgumentException("Input contains illegal characters")
     }
 
-    val amOrderDetailsQuery: AthenaAmOrderDetailsQuery = AmOrderDetailsQueryBuilder()
+    val amOrderDetailsQuery: AthenaAmOrderDetailsQuery = AmOrderDetailsQueryBuilder("fake_database")
       .withLegacySubjectId(orderId)
       .build()
 
