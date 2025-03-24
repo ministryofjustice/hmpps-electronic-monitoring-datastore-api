@@ -15,7 +15,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
-import java.util.UUID
 
 class OrderInformationRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -122,7 +121,7 @@ class OrderInformationRepositoryTest {
 
     @Test
     fun `getKeyOrderInformation returns the first result from getQueryResult`() {
-      val orderId = UUID.randomUUID().toString()
+      val orderId = "orderId004"
       val fullName = "TEST NAME"
 
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet(orderId, fullName))
