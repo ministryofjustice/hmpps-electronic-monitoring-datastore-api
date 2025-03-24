@@ -102,6 +102,7 @@ class OrderServiceTest {
   @Nested
   inner class SearchOrders {
     private val orderSearchCriteria = OrderSearchCriteria(
+      searchType = "integrity",
       legacySubjectId = "fake-id",
     )
 

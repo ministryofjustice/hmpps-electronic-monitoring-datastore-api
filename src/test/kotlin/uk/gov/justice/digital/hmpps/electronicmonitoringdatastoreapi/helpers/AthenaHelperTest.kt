@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers
 
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
@@ -529,6 +530,41 @@ class AthenaHelperTest {
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
         .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
+    }
+  }
+
+  @Nested
+  inner class TableNameFromSearchType {
+    @Test
+    fun `assigns correct table for integrity data`() {
+      val searchType = "integrity"
+      val expectedTable = "order_details"
+
+      val actualTable = AthenaHelper.tableNameFromSearchType(searchType)
+
+      Assertions.assertThat(actualTable).isEqualTo(expectedTable)
+    }
+
+    @Test
+    fun `assigns correct table for alcohol monitoring data`() {
+      val searchType = "alcohol-monitoring"
+      // TODO: Set expected to "am_order_details" once that table is available in test
+      val expectedTable = "order_details"
+
+      val actualTable = AthenaHelper.tableNameFromSearchType(searchType)
+
+      Assertions.assertThat(actualTable).isEqualTo(expectedTable)
+    }
+
+    @Test
+    fun `fails with 401 when searchType is invalid`() {
+      val searchType = "invalid-type"
+
+      assertThatThrownBy {
+        AthenaHelper.tableNameFromSearchType(searchType)
+      }
+        .isInstanceOf(IllegalArgumentException::class.java)
+        .hasMessageContaining("Unknown search type: invalid-type")
     }
   }
 }
