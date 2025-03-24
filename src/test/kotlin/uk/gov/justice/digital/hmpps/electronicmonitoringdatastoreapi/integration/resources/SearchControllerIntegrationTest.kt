@@ -169,7 +169,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
         .jsonPath("$.length()").isEqualTo(6)
-        .jsonPath("$[0].name").isEqualTo("Amy Smith")
+        .jsonPath("$[0].firstName").isEqualTo("Amy")
     }
   }
 }

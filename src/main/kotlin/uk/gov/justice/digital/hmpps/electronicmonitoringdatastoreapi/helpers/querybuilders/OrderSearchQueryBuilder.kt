@@ -124,7 +124,8 @@ class OrderSearchQueryBuilder(
       """
         SELECT
           legacy_subject_id
-          , full_name
+          , first_name
+          , last_name
           , alias
           , primary_address_line_1
           , primary_address_line_2
