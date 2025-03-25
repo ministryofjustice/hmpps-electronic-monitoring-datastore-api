@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.VisitDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.VisitDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -19,7 +18,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class VisitDetailsController(
   @Autowired val visitDetailsService: VisitDetailsService,
-  val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getVisitDetails/{orderId}")
@@ -27,11 +25,9 @@ class VisitDetailsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<VisitDetails>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = visitDetailsService.getVisitDetails(orderId, false)
 
-    val result = visitDetailsService.getVisitDetails(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_VISIT_DETAILS",
       mapOf("orderId" to orderId),

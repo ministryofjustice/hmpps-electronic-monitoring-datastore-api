@@ -13,7 +13,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrd
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -23,7 +22,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 class OrderController(
   @Autowired val orderService: OrderService,
   val amOrderService: AmOrderService,
-  val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
 
@@ -32,11 +30,9 @@ class OrderController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<OrderInformation> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = orderService.getOrderInformation(orderId, false)
 
-    val result = orderService.getOrderInformation(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_ORDER_SUMMARY",
       mapOf("orderId" to orderId),
@@ -50,11 +46,9 @@ class OrderController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<OrderDetails> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = orderService.getOrderDetails(orderId, false)
 
-    val result = orderService.getOrderDetails(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_ORDER_DETAILS",
       mapOf("orderId" to orderId),
@@ -68,11 +62,9 @@ class OrderController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<AmOrderDetails> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = amOrderService.getAmOrderDetails(orderId, false)
 
-    val result = amOrderService.getAmOrderDetails(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_AM_ORDER_DETAILS",
       mapOf("orderId" to orderId),

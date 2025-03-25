@@ -11,14 +11,12 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderEventsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -27,7 +25,6 @@ import java.time.LocalDateTime
 @JsonTest
 class OrderEventsControllerTest {
   private lateinit var orderEventsService: OrderEventsService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: OrderEventsController
   private lateinit var authentication: Authentication
@@ -37,10 +34,8 @@ class OrderEventsControllerTest {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     orderEventsService = Mockito.mock(OrderEventsService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = OrderEventsController(orderEventsService, roleService, auditService)
+    controller = OrderEventsController(orderEventsService, auditService)
   }
 
   @Nested
@@ -61,14 +56,14 @@ class OrderEventsControllerTest {
         ),
       )
 
-      `when`(orderEventsService.getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderEventsService.getMonitoringEvents(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getMonitoringEvents(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderEventsService, Mockito.times(1)).getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderEventsService, Mockito.times(1)).getMonitoringEvents(orderId, false)
     }
   }
 
@@ -89,14 +84,14 @@ class OrderEventsControllerTest {
         ),
       )
 
-      `when`(orderEventsService.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderEventsService.getIncidentEvents(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getIncidentEvents(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderEventsService, Mockito.times(1)).getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderEventsService, Mockito.times(1)).getIncidentEvents(orderId, false)
     }
   }
 
@@ -132,14 +127,14 @@ class OrderEventsControllerTest {
         ),
       )
 
-      `when`(orderEventsService.getViolationEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderEventsService.getViolationEvents(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getViolationEvents(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderEventsService, Mockito.times(1)).getViolationEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderEventsService, Mockito.times(1)).getViolationEvents(orderId, false)
     }
   }
 
@@ -166,14 +161,14 @@ class OrderEventsControllerTest {
         ),
       )
 
-      `when`(orderEventsService.getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderEventsService.getContactEvents(orderId, false)).thenReturn(expectedResult)
 
       val result = controller.getContactEvents(authentication, orderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderEventsService, Mockito.times(1)).getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderEventsService, Mockito.times(1)).getContactEvents(orderId, false)
     }
   }
 }

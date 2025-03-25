@@ -14,7 +14,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
@@ -23,7 +22,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 @RequestMapping(value = ["/orders"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class OrderEventsController(
   @Autowired val orderEventsService: OrderEventsService,
-  val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
   @GetMapping("/getMonitoringEvents/{orderId}")
@@ -31,11 +29,9 @@ class OrderEventsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<Event<MonitoringEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = orderEventsService.getMonitoringEvents(orderId, false)
 
-    val result = orderEventsService.getMonitoringEvents(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_MONITORING_EVENTS",
       mapOf("orderId" to orderId),
@@ -49,11 +45,9 @@ class OrderEventsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<Event<IncidentEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = orderEventsService.getIncidentEvents(orderId, false)
 
-    val result = orderEventsService.getIncidentEvents(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_INCIDENT_EVENTS",
       mapOf("orderId" to orderId),
@@ -67,11 +61,9 @@ class OrderEventsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<Event<ViolationEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = orderEventsService.getViolationEvents(orderId, false)
 
-    val result = orderEventsService.getViolationEvents(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_VIOLATION_EVENTS",
       mapOf("orderId" to orderId),
@@ -85,11 +77,9 @@ class OrderEventsController(
     authentication: Authentication,
     @PathVariable(required = true) orderId: String,
   ): ResponseEntity<List<Event<ContactEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
+    val result = orderEventsService.getContactEvents(orderId, false)
 
-    val result = orderEventsService.getContactEvents(orderId, validatedRole)
-
-    auditService?.createEvent(
+    auditService.createEvent(
       authentication.name,
       "GET_CONTACT_EVENTS",
       mapOf("orderId" to orderId),

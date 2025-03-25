@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SuspensionOfVisits
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSuspensionOfVisitsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SuspensionOfVisitsRepository
@@ -44,27 +43,27 @@ class SuspensionOfVisitsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(suspensionOfVisitsRepository.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(suspensionOfVisitsRepository.getSuspensionOfVisits(orderId, false))
         .thenReturn(exampleSuspensionOfVisits)
     }
 
     @Test
     fun `calls getSuspensionOfVisits from order information repository`() {
-      service.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getSuspensionOfVisits(orderId, false)
 
-      Mockito.verify(suspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(suspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(orderId, false)
     }
 
     @Test
     fun `returns a list of SuspensionOfVisits when a response is received`() {
-      var result = service.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getSuspensionOfVisits(orderId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the CurfewTimetable when a response is received`() {
-      var result = service.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getSuspensionOfVisits(orderId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
