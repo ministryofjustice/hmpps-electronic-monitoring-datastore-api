@@ -51,7 +51,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
   override fun getQueryExecutionId(athenaQuery: AthenaQuery, allowSpecials: Boolean?): String {
     val athenaClient = startClient(allowSpecials)
 
-    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery.queryString)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
 
     athenaClient.close()
     return queryExecutionId
