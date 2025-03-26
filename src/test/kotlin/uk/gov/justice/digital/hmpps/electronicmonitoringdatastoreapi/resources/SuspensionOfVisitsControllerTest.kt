@@ -41,7 +41,7 @@ class SuspensionOfVisitsControllerTest {
   inner class GetSuspensionOfVisits {
     @Test
     fun `gets order information from order service`() {
-      val orderId = "1ab"
+      val legacySubjectId = "1ab"
       val expectedResult = listOf(
         SuspensionOfVisits(
           legacySubjectId = 123,
@@ -53,14 +53,14 @@ class SuspensionOfVisitsControllerTest {
         ),
       )
 
-      Mockito.`when`(suspensionOfVisitsService.getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(suspensionOfVisitsService.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getSuspensionOfVisits(authentication, orderId)
+      val result = controller.getSuspensionOfVisits(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(suspensionOfVisitsService, Mockito.times(1)).getSuspensionOfVisits(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(suspensionOfVisitsService, Mockito.times(1)).getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }

@@ -10,8 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 class SuspensionOfVisitsService(
   @Autowired val suspensionOfVisitsRepository: SuspensionOfVisitsRepository,
 ) {
-  fun getSuspensionOfVisits(orderId: String, role: AthenaRole): List<SuspensionOfVisits> {
-    val result = suspensionOfVisitsRepository.getSuspensionOfVisits(orderId, role)
+  fun getSuspensionOfVisits(legacySubjectId: String, role: AthenaRole): List<SuspensionOfVisits> {
+    val result = suspensionOfVisitsRepository.getSuspensionOfVisits(legacySubjectId, role)
 
     return result.map { item -> SuspensionOfVisits(item) }
   }

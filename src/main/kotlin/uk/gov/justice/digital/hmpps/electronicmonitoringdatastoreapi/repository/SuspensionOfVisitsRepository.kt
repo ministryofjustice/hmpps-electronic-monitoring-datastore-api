@@ -15,9 +15,9 @@ class SuspensionOfVisitsRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getSuspensionOfVisits(orderId: String, role: AthenaRole): List<AthenaSuspensionOfVisitsDTO> {
+  fun getSuspensionOfVisits(legacySubjectId: String, role: AthenaRole): List<AthenaSuspensionOfVisitsDTO> {
     val suspensionOfVisitsQuery = SuspensionOfVisitsQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(suspensionOfVisitsQuery, role)
