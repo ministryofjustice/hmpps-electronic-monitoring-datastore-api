@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class EquipmentDetailsControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /orders/{orderId}/equipment-details")
+  @DisplayName("GET /orders/{legacySubjectId}/equipment-details")
   inner class GetEquipmentDetails {
 
     @BeforeEach
@@ -44,7 +44,17 @@ class EquipmentDetailsControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should return OK with valid auth header, role`() {
+    fun `should return OK with valid auth header and role for accessing restricted orders`() {
+      webTestClient.get()
+        .uri("/orders/234/equipment-details")
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_RESTRICTED_RO")))
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
+
+    @Test
+    fun `should return OK with valid auth header and role for accessing general orders`() {
       webTestClient.get()
         .uri("/orders/234/equipment-details")
         .headers(setAuthorisation())

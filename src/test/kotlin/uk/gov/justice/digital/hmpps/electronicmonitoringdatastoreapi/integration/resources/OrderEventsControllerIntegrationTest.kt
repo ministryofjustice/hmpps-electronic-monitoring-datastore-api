@@ -9,41 +9,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 
 @ActiveProfiles("integration")
 class OrderEventsControllerIntegrationTest : ControllerIntegrationBase() {
-  @Nested
-  @DisplayName("GET /orders/getMonitoringEvents/{orderId}")
-  inner class GetMonitoringEvents {
-    val baseUri = "/orders/getMonitoringEvents"
-
-    @BeforeEach
-    fun setup() {
-      MockEmDatastoreClient.addResponseFile("successfulMonitoringEventsResponse")
-    }
-
-    @Test
-    fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
-    }
-
-    @Test
-    fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
-    }
-
-    @Test
-    fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_WRONG"))
-    }
-
-    @Test
-    fun `should return OK with valid auth header, role`() {
-      webTestClient.get()
-        .uri("$baseUri/234")
-        .headers(setAuthorisation())
-        .exchange()
-        .expectStatus()
-        .isOk
-    }
-  }
 
   @Nested
   @DisplayName("GET /orders/getIncidentEvents/{orderId}")

@@ -21,9 +21,9 @@ class OrderEventsRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getMonitoringEventsList(orderId: String, role: AthenaRole): List<AthenaMonitoringEventDTO> {
+  fun getMonitoringEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaMonitoringEventDTO> {
     val monitoringEventsQuery = MonitoringEventsQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, role)

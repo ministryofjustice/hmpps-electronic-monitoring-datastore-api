@@ -15,7 +15,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.OrderEventsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
@@ -41,35 +40,6 @@ class OrderEventsControllerTest {
     `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = OrderEventsController(orderEventsService, roleService, auditService)
-  }
-
-  @Nested
-  inner class GetMonitoringEvents {
-    @Test
-    fun `gets monitoring events from order events service`() {
-      val orderId = "1ab"
-      val expectedResult = listOf<Event<MonitoringEventDetails>>(
-        Event<MonitoringEventDetails>(
-          legacyOrderId = 123,
-          legacySubjectId = 1543,
-          type = "TEST_STATUS",
-          dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
-          details = MonitoringEventDetails(
-            type = "monitoring",
-            processedDateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 2),
-          ),
-        ),
-      )
-
-      `when`(orderEventsService.getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
-
-      val result = controller.getMonitoringEvents(authentication, orderId)
-
-      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      Assertions.assertThat(result.body).isEqualTo(expectedResult)
-
-      Mockito.verify(orderEventsService, Mockito.times(1)).getMonitoringEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
   }
 
   @Nested

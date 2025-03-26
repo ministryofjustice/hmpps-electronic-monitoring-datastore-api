@@ -15,8 +15,8 @@ import java.time.LocalDateTime
 class OrderEventsService(
   @Autowired val orderEventsRepository: OrderEventsRepository,
 ) {
-  fun getMonitoringEvents(orderId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
-    val result = orderEventsRepository.getMonitoringEventsList(orderId, role)
+  fun getMonitoringEvents(legacySubjectId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
+    val result = orderEventsRepository.getMonitoringEventsList(legacySubjectId, role)
 
     return result.map { event ->
       Event<MonitoringEventDetails>(
