@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -36,7 +36,7 @@ class DetailsController(
     method = [RequestMethod.GET],
     path = [
       "/orders/getOrderDetails/{legacySubjectId}",
-      "/orders/{legacySubjectId}/details",
+      "/integrity/orders/{legacySubjectId}/details",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )

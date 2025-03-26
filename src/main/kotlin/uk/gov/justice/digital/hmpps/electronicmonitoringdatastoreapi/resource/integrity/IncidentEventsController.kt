@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -13,43 +13,44 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EquipmentDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.EquipmentDetailsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class EquipmentDetailsController(
-  @Autowired val equipmentDetailsService: EquipmentDetailsService,
+class IncidentEventsController(
+  @Autowired val orderEventsService: OrderEventsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the equipment details for an order",
+    summary = "Get the incident events for an order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getEquipmentDetails/{legacySubjectId}",
-      "/orders/{legacySubjectId}/equipment-details",
+      "/orders/getIncidentEvents/{legacySubjectId}",
+      "/integrity/orders/{legacySubjectId}/incident-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getEquipmentDetails(
+  fun getIncidentEvents(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<EquipmentDetails>> {
+  ): ResponseEntity<List<Event<IncidentEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = equipmentDetailsService.getEquipmentDetails(legacySubjectId, validatedRole)
+    val result = orderEventsService.getIncidentEvents(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
-      "GET_EQUIPMENT_DETAILS",
+      "GET_INCIDENT_EVENTS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),

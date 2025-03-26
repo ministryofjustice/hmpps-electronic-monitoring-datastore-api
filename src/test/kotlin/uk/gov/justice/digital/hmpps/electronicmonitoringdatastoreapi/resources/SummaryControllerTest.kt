@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Docum
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SummaryController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.SummaryController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService

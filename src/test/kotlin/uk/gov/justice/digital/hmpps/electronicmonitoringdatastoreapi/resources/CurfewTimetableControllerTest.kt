@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.CurfewTimetableController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.CurfewTimetableController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService

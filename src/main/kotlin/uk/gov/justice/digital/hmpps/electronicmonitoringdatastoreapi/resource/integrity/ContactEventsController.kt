@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -13,44 +13,45 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.MonitoringEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class MonitoringEventsController(
+class ContactEventsController(
   @Autowired val orderEventsService: OrderEventsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
+
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the monitoring events for an order",
+    summary = "Get the contact events for an order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getMonitoringEvents/{legacySubjectId}",
-      "/orders/{legacySubjectId}/monitoring-events",
+      "/orders/getContactEvents/{legacySubjectId}",
+      "/integrity/orders/{legacySubjectId}/contact-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getMonitoringEvents(
+  fun getContactEvents(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<Event<MonitoringEventDetails>>> {
+  ): ResponseEntity<List<Event<ContactEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderEventsService.getMonitoringEvents(legacySubjectId, validatedRole)
+    val result = orderEventsService.getContactEvents(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
-      "GET_MONITORING_EVENTS",
+      "GET_CONTACT_EVENTS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),

@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -36,7 +36,7 @@ class SearchController(
     method = [RequestMethod.POST],
     path = [
       "/search/orders",
-      "/orders",
+      "/integrity/orders",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
@@ -89,7 +89,7 @@ class SearchController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders",
+      "/integrity/orders",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )

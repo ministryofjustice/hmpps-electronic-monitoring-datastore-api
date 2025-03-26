@@ -10,13 +10,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("POST /orders")
+  @DisplayName("POST /integrity/orders")
   inner class SearchOrders {
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
       webTestClient.post()
-        .uri("/orders")
+        .uri("/integrity/orders")
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -27,7 +27,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 403 when user has no required roles`() {
       webTestClient.post()
-        .uri("/orders")
+        .uri("/integrity/orders")
         .headers(setAuthorisation(roles = listOf()))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
@@ -39,7 +39,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 400 BAD REQUEST if empty body`() {
       webTestClient.post()
-        .uri("/orders")
+        .uri("/integrity/orders")
         .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
@@ -64,7 +64,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       )
 
       webTestClient.post()
-        .uri("/orders")
+        .uri("/integrity/orders")
         .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody)
@@ -85,7 +85,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
       webTestClient.get()
-        .uri("/orders?id=HT-12345")
+        .uri("/integrity/orders?id=HT-12345")
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -94,7 +94,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 403 when user has no required roles`() {
       webTestClient.get()
-        .uri("/orders?id=HT-12345")
+        .uri("/integrity/orders?id=HT-12345")
         .headers(setAuthorisation(roles = listOf()))
         .exchange()
         .expectStatus()
@@ -106,7 +106,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
 
       webTestClient.get()
-        .uri("/orders?id=HT-12345")
+        .uri("/integrity/orders?id=HT-12345")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -123,7 +123,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
 
       webTestClient.get()
-        .uri("/orders")
+        .uri("/integrity/orders")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()

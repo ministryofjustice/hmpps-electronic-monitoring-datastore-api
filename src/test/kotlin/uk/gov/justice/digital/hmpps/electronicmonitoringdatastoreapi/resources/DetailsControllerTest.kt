@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.DetailsController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.DetailsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService

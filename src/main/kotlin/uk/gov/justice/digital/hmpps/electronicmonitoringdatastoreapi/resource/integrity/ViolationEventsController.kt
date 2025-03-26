@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -13,43 +13,45 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class CurfewTimetableController(
-  @Autowired val curfewTimetableService: CurfewTimetableService,
+class ViolationEventsController(
+  @Autowired val orderEventsService: OrderEventsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
+
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the curfew timetable for an order",
+    summary = "Get the violation events for an order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getCurfewTimetable/{legacySubjectId}",
-      "/orders/{legacySubjectId}/curfew-timetable",
+      "/orders/getViolationEvents/{legacySubjectId}",
+      "/integrity/orders/{legacySubjectId}/violation-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getCurfewTimetable(
+  fun getViolationEvents(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<CurfewTimetable>> {
+  ): ResponseEntity<List<Event<ViolationEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = curfewTimetableService.getCurfewTimetable(legacySubjectId, validatedRole)
+    val result = orderEventsService.getViolationEvents(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
-      "GET_CURFEW_TIMETABLE",
+      "GET_VIOLATION_EVENTS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
