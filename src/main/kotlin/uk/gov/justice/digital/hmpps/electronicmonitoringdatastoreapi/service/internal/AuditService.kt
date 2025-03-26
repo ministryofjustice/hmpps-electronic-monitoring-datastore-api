@@ -21,7 +21,7 @@ class AuditService(
   fun createEvent(
     principal: String,
     what: String,
-    detail: Map<String, String?>,
+    detail: Map<String, Any?>,
   ) {
     auditSqsClient.sendMessage(
       SendMessageRequest.builder()

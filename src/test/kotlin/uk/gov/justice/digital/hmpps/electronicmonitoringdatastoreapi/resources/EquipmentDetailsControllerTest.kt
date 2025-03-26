@@ -42,7 +42,7 @@ class EquipmentDetailsControllerTest {
   inner class GetEquipmentDetails {
     @Test
     fun `gets order information from order service`() {
-      val orderId = "1ab"
+      val legacySubjectId = "1ab"
       val expectedResult = listOf<EquipmentDetails>(
         EquipmentDetails(
           legacySubjectId = 123,
@@ -62,14 +62,14 @@ class EquipmentDetailsControllerTest {
         ),
       )
 
-      Mockito.`when`(equipmentDetailsService.getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(equipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getEquipmentDetails(authentication, orderId)
+      val result = controller.getEquipmentDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(equipmentDetailsService, Mockito.times(1)).getEquipmentDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(equipmentDetailsService, Mockito.times(1)).getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }

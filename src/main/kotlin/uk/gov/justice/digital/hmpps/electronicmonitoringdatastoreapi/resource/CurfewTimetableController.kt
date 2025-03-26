@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
@@ -29,7 +30,7 @@ class CurfewTimetableController(
   )
   @RequestMapping(
     method = [RequestMethod.GET],
-    value = [
+    path = [
       "/orders/getCurfewTimetable/{legacySubjectId}",
       "/orders/{legacySubjectId}/curfew-timetable",
     ],
@@ -49,7 +50,10 @@ class CurfewTimetableController(
     auditService.createEvent(
       authentication.name,
       "GET_CURFEW_TIMETABLE",
-      mapOf("legacySubjectId" to legacySubjectId),
+      mapOf(
+        "legacySubjectId" to legacySubjectId,
+        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
+      ),
     )
 
     return ResponseEntity.ok(result)

@@ -10,8 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 class EquipmentDetailsService(
   @Autowired val equipmentDetailsRepository: EquipmentDetailsRepository,
 ) {
-  fun getEquipmentDetails(orderId: String, role: AthenaRole): List<EquipmentDetails> {
-    val result = equipmentDetailsRepository.getEquipmentDetails(orderId, role)
+  fun getEquipmentDetails(legacySubjectId: String, role: AthenaRole): List<EquipmentDetails> {
+    val result = equipmentDetailsRepository.getEquipmentDetails(legacySubjectId, role)
 
     return result.map { item -> EquipmentDetails(item) }
   }
