@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.security.core.Authentication
@@ -32,75 +30,14 @@ class SearchControllerTest {
 
   @BeforeEach
   fun setup() {
-    authentication = mock(Authentication::class.java)
-    `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    orderService = mock(OrderService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    auditService = mock(AuditService::class.java)
+    authentication = Mockito.mock(Authentication::class.java)
+    Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
+    orderService = Mockito.mock(OrderService::class.java)
+    roleService = Mockito.mock(AthenaRoleService::class.java)
+    Mockito.`when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    auditService = Mockito.mock(AuditService::class.java)
     controller = SearchController(orderService, roleService, auditService)
-  }
-
-  @Nested
-  inner class ConfirmAthenaAccess {
-    @Test
-    fun `calls AthenaRoleService for role and OrderService for checkAvailability`() {
-      val expectedRole = AthenaRole.NONE
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
-      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
-
-      controller.confirmAthenaAccess(authentication)
-
-      Mockito.verify(roleService, Mockito.times(1))
-        .getRoleFromAuthentication(authentication)
-      Mockito.verify(orderService, Mockito.times(1))
-        .checkAvailability(expectedRole)
-    }
-
-    @Test
-    fun `Returns true when ROLE_EM_DATASTORE_GENERAL_RO role found from authentication object`() {
-      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
-      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
-
-      val result = controller.confirmAthenaAccess(authentication)
-
-      assertThat(result).isNotNull
-      assertThat(result).isEqualTo(true)
-    }
-
-    @Test
-    fun `Returns true when ROLE_EM_DATASTORE_RESTRICTED_RO role found from authentication object`() {
-      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
-      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
-
-      val result = controller.confirmAthenaAccess(authentication)
-
-      assertThat(result).isNotNull
-      assertThat(result).isEqualTo(true)
-    }
-
-    @Test
-    fun `Returns false when NONE role found from authentication object`() {
-      val expectedRole = AthenaRole.NONE
-
-      `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(false)
-      `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
-
-      val result = controller.confirmAthenaAccess(authentication)
-
-      assertThat(result).isNotNull
-      assertThat(result).isEqualTo(false)
-    }
   }
 
   @Nested
@@ -124,7 +61,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      `when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
+      Mockito.`when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
 
       val result = controller.searchOrders(authentication, orderSearchCriteria)
 
@@ -155,7 +92,7 @@ class SearchControllerTest {
         ),
       )
 
-      `when`(orderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(orderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
       val result = controller.getSearchResults(authentication, queryExecutionId)
 
