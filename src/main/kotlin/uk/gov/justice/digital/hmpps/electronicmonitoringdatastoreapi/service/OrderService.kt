@@ -46,8 +46,8 @@ class OrderService(
     return results.map { result -> OrderSearchResult(result) }
   }
 
-  fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
-    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(orderId, role)
+  fun getOrderInformation(legacySubjectId: String, role: AthenaRole): OrderInformation {
+    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(legacySubjectId, role)
     val parsedKeyOrderInformation = KeyOrderInformation(keyOrderInformation)
 
     val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()

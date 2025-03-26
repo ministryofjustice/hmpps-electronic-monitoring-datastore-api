@@ -180,11 +180,11 @@ class OrderServiceTest {
 
   @Nested
   inner class GetOrderInformation {
-    val orderId = "fake-id"
+    val legacySubjectId = "fake-id"
 
     val blankKeyOrderInformation = AthenaKeyOrderInformationDTO(
       legacySubjectId = "",
-      legacyOrderId = orderId,
+      legacyOrderId = legacySubjectId,
       name = "TEST",
       alias = "",
       dateOfBirth = "",
@@ -207,50 +207,50 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(orderInformationRepository.getKeyOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderInformationRepository.getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(blankKeyOrderInformation)
-      `when`(orderInformationRepository.getSubjectHistoryReport(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderInformationRepository.getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(blankSubjectHistoryReport)
-      `when`(orderInformationRepository.getDocumentList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(orderInformationRepository.getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(blankDocumentList)
     }
 
     @Test
     fun `calls getKeyOrderInformation from order information repository`() {
-      service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Disabled("SubjectHistoryReport will no longer be used")
     @Test
     fun `calls getSubjectHistoryReport from order information repository`() {
-      service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderInformationRepository, times(1)).getSubjectHistoryReport(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Disabled("We are not currently returning documents")
     @Test
     fun `calls getDocumentList from order information repository`() {
-      service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderInformationRepository, times(1)).getDocumentList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderInformationRepository, times(1)).getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns OrderInformation when a document is found`() {
-      val result = service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(OrderInformation::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a document is found`() {
-      val result = service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(orderId)
+      Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(legacySubjectId)
       Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
       Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
       Assertions.assertThat(result.documents).isEmpty()
