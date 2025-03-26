@@ -10,15 +10,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("POST /search/orders")
+  @DisplayName("POST /orders")
   inner class SearchOrders {
-
-    private val baseUri: String = "/search/orders"
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
       webTestClient.post()
-        .uri(baseUri)
+        .uri("/orders")
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
         .exchange()
@@ -29,7 +27,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 403 when user has no required roles`() {
       webTestClient.post()
-        .uri(baseUri)
+        .uri("/orders")
         .headers(setAuthorisation(roles = listOf()))
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
@@ -41,7 +39,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 400 BAD REQUEST if empty body`() {
       webTestClient.post()
-        .uri(baseUri)
+        .uri("/orders")
         .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{}")
@@ -66,7 +64,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       )
 
       webTestClient.post()
-        .uri(baseUri)
+        .uri("/orders")
         .headers(setAuthorisation())
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(requestBody)
@@ -81,15 +79,13 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
   }
 
   @Nested
-  @DisplayName("GET /search/orders/queryExecutionId")
+  @DisplayName("GET /orders?id={queryExecutionId}")
   inner class GetSearchResults {
-
-    private val baseUri: String = "/search/orders/query-execution-id"
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
       webTestClient.get()
-        .uri(baseUri)
+        .uri("/orders?id=HT-12345")
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -98,7 +94,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should fail with 403 when user has no required roles`() {
       webTestClient.get()
-        .uri(baseUri)
+        .uri("/orders?id=HT-12345")
         .headers(setAuthorisation(roles = listOf()))
         .exchange()
         .expectStatus()
@@ -110,7 +106,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
 
       webTestClient.get()
-        .uri(baseUri)
+        .uri("/orders?id=HT-12345")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -120,6 +116,18 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .expectBody()
         .jsonPath("$.length()").isEqualTo(6)
         .jsonPath("$[0].name").isEqualTo("Amy Smith")
+    }
+
+    @Test
+    fun `should return 500 with missing query execution id`() {
+      MockEmDatastoreClient.addResponseFile("successfulOrderSearchResponse")
+
+      webTestClient.get()
+        .uri("/orders")
+        .headers(setAuthorisation())
+        .exchange()
+        .expectStatus()
+        .is5xxServerError
     }
   }
 }

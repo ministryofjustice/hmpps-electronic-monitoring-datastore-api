@@ -22,8 +22,8 @@ class ConnectivityController(
 ) {
 
   @Operation(
-    tags = ["Integrity orders"],
-    summary = "Get the contact events for an order",
+    tags = ["Connectivity"],
+    summary = "Test the connectivity with athena",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -58,4 +58,3 @@ class ConnectivityController(
     )
   }
 }
-
