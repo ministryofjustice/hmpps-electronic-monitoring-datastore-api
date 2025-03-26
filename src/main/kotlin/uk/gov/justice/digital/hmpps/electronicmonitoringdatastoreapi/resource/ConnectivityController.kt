@@ -1,6 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -10,8 +14,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ConnectionStatus
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
 class ConnectivityController(
@@ -21,7 +27,30 @@ class ConnectivityController(
 
   @Operation(
     tags = ["Connectivity"],
-    summary = "Test the connectivity with athena",
+    summary = "Confirm that a connection can be established with Athena",
+    responses = [
+      ApiResponse(
+        responseCode = "200",
+        description = "successful operation",
+        content = [Content(schema = Schema(implementation = ConnectionStatus::class))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "You are not authorized to view the resource",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Accessing the resource you were trying to reach is forbidden",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+    security = [
+      SecurityRequirement(
+        name = "hmpps-auth-token",
+        scopes = ["ROLE_EM_DATASTORE_GENERAL_RO", "ROLE_EM_DATASTORE_RESTRICTED_RO"],
+      ),
+    ],
   )
   @RequestMapping(
     method = [RequestMethod.GET],

@@ -35,7 +35,7 @@ class SearchControllerTest {
   }
 
   @Nested
-  inner class SearchOrders {
+  inner class SearchGeneralOrders {
     @Test
     fun `gets a query execution ID from order service`() {
       val orderSearchCriteria = OrderSearchCriteria(
@@ -83,10 +83,10 @@ class SearchControllerTest {
   }
 
   @Nested
-  inner class SearchSpecialOrders {
+  inner class SearchRestrictedOrders {
     @Test
-    fun `gets a specials query execution ID from order service`() {
-      val specialsOrderSearchCriteria = OrderSearchCriteria(
+    fun `gets a restricted query execution ID from order service`() {
+      val restrictedOrderSearchCriteria = OrderSearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
         firstName = "Martin",
@@ -97,23 +97,23 @@ class SearchControllerTest {
         dobYear = "1975",
       )
 
-      val queryExecutionId = "specials-query-execution-id"
+      val queryExecutionId = "restricted-query-execution-id"
 
       val expectedResult = QueryExecutionResponse(
         queryExecutionId = queryExecutionId,
       )
 
-      `when`(orderService.getQueryExecutionId(specialsOrderSearchCriteria, true)).thenReturn(queryExecutionId)
+      `when`(orderService.getQueryExecutionId(restrictedOrderSearchCriteria, true)).thenReturn(queryExecutionId)
 
-      val result = controller.searchSpecialsOrders(authentication, specialsOrderSearchCriteria)
+      val result = controller.searchRestrictedOrders(authentication, restrictedOrderSearchCriteria)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)
     }
 
     @Test
-    fun `passes on errors thrown when getting a specials query execution ID from order service`() {
-      val specialsOrderSearchCriteria = OrderSearchCriteria(
+    fun `passes on errors thrown when getting a restricted query execution ID from order service`() {
+      val restrictedOrderSearchCriteria = OrderSearchCriteria(
         searchType = "name",
         legacySubjectId = "12345",
         firstName = "Martin",
@@ -124,9 +124,9 @@ class SearchControllerTest {
         dobYear = "1975",
       )
 
-      `when`(orderService.getQueryExecutionId(specialsOrderSearchCriteria, true)).thenThrow(RuntimeException::class.java)
+      `when`(orderService.getQueryExecutionId(restrictedOrderSearchCriteria, true)).thenThrow(RuntimeException::class.java)
 
-      assertThrows<RuntimeException> { controller.searchSpecialsOrders(authentication, specialsOrderSearchCriteria) }
+      assertThrows<RuntimeException> { controller.searchRestrictedOrders(authentication, restrictedOrderSearchCriteria) }
     }
   }
 
@@ -174,8 +174,8 @@ class SearchControllerTest {
   @Nested
   inner class GetSpecialOrdersSearchResults {
     @Test
-    fun `retrieves a list of special orders from order service`() {
-      val queryExecutionId = "specials-query-execution-id"
+    fun `retrieves a list of restricted orders from order service`() {
+      val queryExecutionId = "restricted-query-execution-id"
 
       val expectedResult = listOf(
         OrderSearchResult(
@@ -195,19 +195,19 @@ class SearchControllerTest {
 
       `when`(orderService.getSearchResults(queryExecutionId, true)).thenReturn(expectedResult)
 
-      val result = controller.getSpecialOrdersSearchResults(authentication, queryExecutionId)
+      val result = controller.getRestrictedOrdersSearchResults(authentication, queryExecutionId)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)
     }
 
     @Test
-    fun `passes on errors thrown when retrieving a list of special orders from order service`() {
+    fun `passes on errors thrown when retrieving a list of restricted orders from order service`() {
       val queryExecutionId = "THROW ERROR"
 
       `when`(orderService.getSearchResults(queryExecutionId, true)).thenThrow(RuntimeException::class.java)
 
-      assertThrows<RuntimeException> { controller.getSpecialOrdersSearchResults(authentication, queryExecutionId) }
+      assertThrows<RuntimeException> { controller.getRestrictedOrdersSearchResults(authentication, queryExecutionId) }
     }
   }
 }

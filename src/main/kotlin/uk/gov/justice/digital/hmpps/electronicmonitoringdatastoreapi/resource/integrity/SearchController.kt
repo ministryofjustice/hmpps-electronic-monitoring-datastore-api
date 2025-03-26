@@ -2,6 +2,11 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.i
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.ArraySchema
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -18,6 +23,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
 class SearchController(
@@ -27,7 +33,30 @@ class SearchController(
 
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the monitoring events for an order",
+    summary = "Start a search for an Integrity Order using a set of search criteria",
+    responses = [
+      ApiResponse(
+        responseCode = "200",
+        description = "successful operation",
+        content = [Content(schema = Schema(implementation = QueryExecutionResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "You are not authorized to view the resource",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Accessing the resource you were trying to reach is forbidden",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+    security = [
+      SecurityRequirement(
+        name = "hmpps-auth-token",
+        scopes = ["ROLE_EM_DATASTORE_GENERAL_RO"],
+      ),
+    ],
   )
   @RequestMapping(
     method = [RequestMethod.POST],
@@ -36,27 +65,52 @@ class SearchController(
       "/integrity/orders",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
+    consumes = [MediaType.APPLICATION_JSON_VALUE],
   )
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun searchOrders(
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
+  fun searchGeneralOrders(
     authentication: Authentication,
     @Parameter(description = "The search criteria for the query", required = true)
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
   ): ResponseEntity<QueryExecutionResponse> = startSearch(orderSearchCriteria, authentication.name)
 
   @Operation(
-    tags = ["Integrity special orders"],
-    summary = "Get the monitoring events for an order",
+    tags = ["Integrity orders including restricted cases"],
+    summary = "Start a search for an Integrity Order using a set of search criteria and include restricted cases",
+    responses = [
+      ApiResponse(
+        responseCode = "200",
+        description = "successful operation",
+        content = [Content(schema = Schema(implementation = QueryExecutionResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "You are not authorized to view the resource",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Accessing the resource you were trying to reach is forbidden",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+    security = [
+      SecurityRequirement(
+        name = "hmpps-auth-token",
+        scopes = ["ROLE_EM_DATASTORE_RESTRICTED_RO"],
+      ),
+    ],
   )
   @RequestMapping(
     method = [RequestMethod.POST],
     path = [
-      "/integrity/orders/specials",
+      "/integrity/restricted/orders",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
+    consumes = [MediaType.APPLICATION_JSON_VALUE],
   )
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun searchSpecialOrders(
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  fun searchRestrictedOrders(
     authentication: Authentication,
     @Parameter(description = "The search criteria for the query", required = true)
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
@@ -64,7 +118,30 @@ class SearchController(
 
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the search results for a previous job execution",
+    summary = "Retrieve the Integrity Order search results for a set of search criteria",
+    responses = [
+      ApiResponse(
+        responseCode = "200",
+        description = "successful operation",
+        content = [Content(array = ArraySchema(schema = Schema(implementation = OrderSearchResult::class)))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "You are not authorized to view the resource",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Accessing the resource you were trying to reach is forbidden",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+    security = [
+      SecurityRequirement(
+        name = "hmpps-auth-token",
+        scopes = ["ROLE_EM_DATASTORE_GENERAL_RO"],
+      ),
+    ],
   )
   @RequestMapping(
     method = [RequestMethod.POST],
@@ -73,7 +150,7 @@ class SearchController(
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
   fun getSearchOrderResults(
     authentication: Authentication,
     @Parameter(description = "The query execution ID of the search job", required = true)
@@ -82,7 +159,30 @@ class SearchController(
 
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the search results for a previous job execution",
+    summary = "Retrieve the Integrity Order search results for a set of search criteria",
+    responses = [
+      ApiResponse(
+        responseCode = "200",
+        description = "successful operation",
+        content = [Content(array = ArraySchema(schema = Schema(implementation = OrderSearchResult::class)))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "You are not authorized to view the resource",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Accessing the resource you were trying to reach is forbidden",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+    security = [
+      SecurityRequirement(
+        name = "hmpps-auth-token",
+        scopes = ["ROLE_EM_DATASTORE_GENERAL_RO"],
+      ),
+    ],
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -91,7 +191,7 @@ class SearchController(
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
   fun startSearch(
     authentication: Authentication,
     @Parameter(description = "The query execution ID of the search job", required = true)
@@ -99,17 +199,40 @@ class SearchController(
   ): ResponseEntity<List<OrderSearchResult>> = startSearch(queryExecutionId, authentication.name)
 
   @Operation(
-    tags = ["Integrity special orders"],
-    summary = "Get the search results for a previous job execution",
+    tags = ["Integrity orders including restricted cases"],
+    summary = "Retrieve the Integrity Order search results for a set of search criteria that include restricted cases",
+    responses = [
+      ApiResponse(
+        responseCode = "200",
+        description = "successful operation",
+        content = [Content(array = ArraySchema(schema = Schema(implementation = OrderSearchResult::class)))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "You are not authorized to view the resource",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Accessing the resource you were trying to reach is forbidden",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+    security = [
+      SecurityRequirement(
+        name = "hmpps-auth-token",
+        scopes = ["ROLE_EM_DATASTORE_RESTRICTED_RO"],
+      ),
+    ],
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/integrity/orders/specials",
+      "/integrity/restricted/orders",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_RESTRICTED_RO')")
   fun getSpecialOrderSearchResults(
     authentication: Authentication,
     @Parameter(description = "The query execution ID of the search job", required = true)

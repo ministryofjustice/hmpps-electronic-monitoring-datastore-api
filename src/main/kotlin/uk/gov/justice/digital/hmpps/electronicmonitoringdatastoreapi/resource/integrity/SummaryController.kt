@@ -34,7 +34,7 @@ class SummaryController(
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
+  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO')")
   fun getSummary(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
