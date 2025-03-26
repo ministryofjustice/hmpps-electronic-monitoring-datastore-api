@@ -89,7 +89,7 @@ class OrderEventsServiceTest {
 
   @Nested
   inner class GetIncidentEvents {
-    val orderId = "fake-id"
+    val legacySubjectId = "fake-id"
 
     val exampleIncidentEventList = listOf<AthenaIncidentEventDTO>(
       AthenaIncidentEventDTO(
@@ -103,27 +103,27 @@ class OrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(orderEventsRepository.getIncidentEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(orderEventsRepository.getIncidentEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleIncidentEventList)
     }
 
     @Test
     fun `calls getIncidentEventsList from order information repository`() {
-      service.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(orderEventsRepository, Mockito.times(1)).getIncidentEventsList(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderEventsRepository, Mockito.times(1)).getIncidentEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns IncidentEventList when a response is received`() {
-      var result = service.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      var result = service.getIncidentEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

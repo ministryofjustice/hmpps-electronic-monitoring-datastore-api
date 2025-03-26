@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
@@ -21,25 +20,6 @@ class OrderEventsController(
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
-
-  @GetMapping("/orders/getIncidentEvents/{orderId}")
-  @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getIncidentEvents(
-    authentication: Authentication,
-    @PathVariable(required = true) orderId: String,
-  ): ResponseEntity<List<Event<IncidentEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = orderEventsService.getIncidentEvents(orderId, validatedRole)
-
-    auditService.createEvent(
-      authentication.name,
-      "GET_INCIDENT_EVENTS",
-      mapOf("orderId" to orderId),
-    )
-
-    return ResponseEntity.ok(result)
-  }
 
   @GetMapping("/orders/getViolationEvents/{orderId}")
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
