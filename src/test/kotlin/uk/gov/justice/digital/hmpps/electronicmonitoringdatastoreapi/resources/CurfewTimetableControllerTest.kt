@@ -41,10 +41,11 @@ class CurfewTimetableControllerTest {
   inner class GetCurfewTimetable {
     @Test
     fun `gets order information from order service`() {
-      val orderId = "1ab"
+      val legacySubjectId = "1ab"
       val expectedResult = listOf(
         CurfewTimetable(
           legacySubjectId = 123,
+          legacyOrderId = 123,
           serviceId = 1,
           serviceAddress1 = "",
           serviceAddress2 = "",
@@ -64,14 +65,14 @@ class CurfewTimetableControllerTest {
         ),
       )
 
-      Mockito.`when`(curfewTimetableService.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(curfewTimetableService.getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getCurfewTimetable(authentication, orderId)
+      val result = controller.getCurfewTimetable(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(curfewTimetableService, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(curfewTimetableService, Mockito.times(1)).getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }

@@ -10,8 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 class CurfewTimetableService(
   @Autowired val curfewTimetableRepository: CurfewTimetableRepository,
 ) {
-  fun getCurfewTimetable(orderId: String, role: AthenaRole): List<CurfewTimetable> {
-    val result = curfewTimetableRepository.getCurfewTimetable(orderId, role)
+  fun getCurfewTimetable(legacySubjectId: String, role: AthenaRole): List<CurfewTimetable> {
+    val result = curfewTimetableRepository.getCurfewTimetable(legacySubjectId, role)
 
     return result.map { item -> CurfewTimetable(item) }
   }

@@ -10,10 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /orders/getCurfewTimetable/{orderId}/curfew-timetable")
+  @DisplayName("GET /orders/{orderId}/curfew-timetable")
   inner class GetCurfewTimetable {
-    val baseUri = "/orders/getCurfewTimetable"
-
     @BeforeEach
     fun setup() {
       MockEmDatastoreClient.Companion.addResponseFile("successfulCurfewTimetableResponse")
@@ -21,23 +19,23 @@ class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
+      noAuthHeaderRespondsWithUnauthorizedTest("/orders/234/curfew-timetable")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/234/curfew-timetable")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("/orders/234/curfew-timetable", listOf("ROLE_WRONG"))
     }
 
     @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
-        .uri("$baseUri/2_4")
+        .uri("/orders/2_4/curfew-timetable")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -47,7 +45,7 @@ class CurfewTimetableControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return OK with valid auth header, role`() {
       webTestClient.get()
-        .uri("$baseUri/234")
+        .uri("/orders/234/curfew-timetable")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
