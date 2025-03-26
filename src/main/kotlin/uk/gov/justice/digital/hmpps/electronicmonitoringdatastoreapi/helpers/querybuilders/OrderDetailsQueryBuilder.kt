@@ -44,15 +44,15 @@ class OrderDetailsQueryBuilder(
     "responsible_organisation_details_region",
   ),
 ) {
-  fun withLegacySubjectId(subjectId: String): OrderDetailsQueryBuilder {
-    validateAlphanumeric(subjectId, "legacy_subject_id")
+  fun withLegacySubjectId(legacySubjectId: String): OrderDetailsQueryBuilder {
+    validateAlphanumeric(legacySubjectId, "legacy_subject_id")
 
-    if (subjectId.isBlank()) {
+    if (legacySubjectId.isBlank()) {
       return this
     }
 
-    values.add(subjectId)
-    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq subjectId)
+    values.add(legacySubjectId)
+    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq legacySubjectId)
     return this
   }
 

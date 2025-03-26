@@ -65,8 +65,8 @@ class OrderService(
     )
   }
 
-  fun getOrderDetails(orderId: String, role: AthenaRole): OrderDetails {
-    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
+  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): OrderDetails {
+    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(legacySubjectId, role)
     return OrderDetails(orderDetailsDTO)
   }
 }

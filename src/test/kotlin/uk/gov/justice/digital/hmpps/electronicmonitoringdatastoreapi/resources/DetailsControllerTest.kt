@@ -23,7 +23,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 
 @ActiveProfiles("test")
 @JsonTest
-class OrderControllerTest {
+class DetailsControllerTest {
   private lateinit var orderService: OrderService
   private lateinit var amOrderService: AmOrderService
   private lateinit var roleService: AthenaRoleService
@@ -47,7 +47,7 @@ class OrderControllerTest {
   inner class GetOrderDetails {
     @Test
     fun `Returns the appropriate object type`() {
-      val orderId = "1ab"
+      val legacySubjectId = "1ab"
       val expectedResult: OrderDetails = OrderDetails(
         specials = "no",
         legacySubjectId = "",
@@ -55,9 +55,9 @@ class OrderControllerTest {
         offenceRisk = false,
       )
 
-      `when`(orderService.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getOrderDetails(authentication, orderId)
+      val result = controller.getDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isNotNull
@@ -66,7 +66,7 @@ class OrderControllerTest {
 
     @Test
     fun `gets order details from order service`() {
-      val orderId = "1ab"
+      val legacySubjectId = "1ab"
       val expectedResult: OrderDetails = OrderDetails(
         specials = "no",
         legacySubjectId = "",
@@ -74,14 +74,14 @@ class OrderControllerTest {
         offenceRisk = false,
       )
 
-      `when`(orderService.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getOrderDetails(authentication, orderId)
+      val result = controller.getDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderService, times(1)).getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderService, times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 
