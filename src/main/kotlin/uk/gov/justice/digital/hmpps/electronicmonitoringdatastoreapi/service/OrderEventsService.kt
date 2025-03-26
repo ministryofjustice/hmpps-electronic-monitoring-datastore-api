@@ -57,8 +57,8 @@ class OrderEventsService(
     }
   }
 
-  fun getContactEvents(orderId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
-    val result = orderEventsRepository.getContactEventsList(orderId, role)
+  fun getContactEvents(legacySubjectId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
+    val result = orderEventsRepository.getContactEventsList(legacySubjectId, role)
 
     return result.map { event ->
       Event<ContactEventDetails>(

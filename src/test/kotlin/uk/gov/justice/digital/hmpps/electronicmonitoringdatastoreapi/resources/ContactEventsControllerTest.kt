@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
-class OrderEventsControllerTest {
+class ContactEventsControllerTest {
   private lateinit var orderEventsService: OrderEventsService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
@@ -44,7 +44,7 @@ class OrderEventsControllerTest {
   inner class GetContactEvents {
     @Test
     fun `gets contact events from order events service`() {
-      val orderId = "1ab"
+      val legacySubjectId = "1ab"
       val expectedResult = listOf<Event<ContactEventDetails>>(
         Event<ContactEventDetails>(
           legacyOrderId = 123,
@@ -63,14 +63,14 @@ class OrderEventsControllerTest {
         ),
       )
 
-      `when`(orderEventsService.getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(orderEventsService.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getContactEvents(authentication, orderId)
+      val result = controller.getContactEvents(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(orderEventsService, Mockito.times(1)).getContactEvents(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(orderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }

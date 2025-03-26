@@ -51,9 +51,9 @@ class OrderEventsRepository(
     return AthenaHelper.Companion.mapTo<AthenaViolationEventDTO>(athenaResponse)
   }
 
-  fun getContactEventsList(orderId: String, role: AthenaRole): List<AthenaContactEventDTO> {
+  fun getContactEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaContactEventDTO> {
     val contactEventsQuery = ContactEventsQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, role)
