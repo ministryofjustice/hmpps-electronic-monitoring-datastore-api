@@ -2,6 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>ministryofjustice/hmpps-renovate-config:jvm"],
   "prBodyTemplate": "{{{table}}}{{{notes}}}{{{warnings}}}{{{controls}}}",
+  "autoApprove": true,
+  "automerge": true,
+  "automergeStrategy": "rebase",
+  "automergeType": "pr",
   "packageRules": [
     {
       "matchManagers": ["gradle"],
