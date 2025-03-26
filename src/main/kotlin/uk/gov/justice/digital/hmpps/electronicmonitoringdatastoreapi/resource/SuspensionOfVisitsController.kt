@@ -27,7 +27,7 @@ class SuspensionOfVisitsController(
 
   @Operation(
     tags = ["Integrity orders"],
-    summary = "Get the contact events for an order",
+    summary = "Get the suspension of visits for an order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],

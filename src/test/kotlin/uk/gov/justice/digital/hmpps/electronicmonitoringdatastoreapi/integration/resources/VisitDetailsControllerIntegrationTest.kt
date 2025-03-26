@@ -10,9 +10,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class VisitDetailsControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /orders/getVisitDetails/{orderId}")
+  @DisplayName("GET /orders/{legacySubjectId}/visit-details")
   inner class GetVisitDetails {
-    val baseUri = "/orders/getVisitDetails"
 
     @BeforeEach
     fun setup() {
@@ -21,23 +20,43 @@ class VisitDetailsControllerIntegrationTest : ControllerIntegrationBase() {
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("$baseUri/234")
+      noAuthHeaderRespondsWithUnauthorizedTest("/orders/234/visit-details")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("$baseUri/234")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/234/visit-details")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("$baseUri/234", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("/orders/234/visit-details", listOf("ROLE_WRONG"))
     }
 
     @Test
-    fun `should return OK with valid auth header, role`() {
+    fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
-        .uri("$baseUri/234")
+        .uri("/orders/2_4/visit-details")
+        .headers(setAuthorisation())
+        .exchange()
+        .expectStatus()
+        .isBadRequest
+    }
+
+    @Test
+    fun `should return OK with valid auth header and role for accessing restricted orders`() {
+      webTestClient.get()
+        .uri("/orders/234/visit-details")
+        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_RESTRICTED_RO")))
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
+
+    @Test
+    fun `should return OK with valid auth header and role for accessing general orders`() {
+      webTestClient.get()
+        .uri("/orders/234/visit-details")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()

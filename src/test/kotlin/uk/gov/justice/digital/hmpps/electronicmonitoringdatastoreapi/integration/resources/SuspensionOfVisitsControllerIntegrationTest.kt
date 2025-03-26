@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 @ActiveProfiles("integration")
 class SuspensionOfVisitsControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /orders/{orderId}/suspension-of-visits")
+  @DisplayName("GET /orders/{legacySubjectId}/suspension-of-visits")
   inner class GetSuspensionOfVisits {
 
     @BeforeEach

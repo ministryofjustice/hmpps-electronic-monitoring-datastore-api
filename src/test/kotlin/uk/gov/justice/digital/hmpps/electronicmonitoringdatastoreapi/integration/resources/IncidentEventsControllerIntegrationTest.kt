@@ -11,7 +11,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockE
 class IncidentEventsControllerIntegrationTest : ControllerIntegrationBase() {
 
   @Nested
-  @DisplayName("GET /orders/{orderId}/incident-events")
+  @DisplayName("GET /orders/{legacySubjectId}/incident-events")
   inner class GetIncidentEvents {
 
     @BeforeEach
