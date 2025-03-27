@@ -252,7 +252,10 @@ class AthenaHelperTest {
             "VarCharValue": "legacy_subject_id"
           },
           {
-            "VarCharValue": "full_name"
+            "VarCharValue": "first_name"
+          },
+                    {
+            "VarCharValue": "last_name"
           },
           {
             "VarCharValue": "primary_address_line_1"
@@ -280,7 +283,10 @@ class AthenaHelperTest {
             "VarCharValue": "1253587"
           },
           {
-            "VarCharValue": "ELLEN RIPLY"
+            "VarCharValue": "ELLEN"
+          },
+          {
+            "VarCharValue": "RIPLY"
           },
           {
             "VarCharValue": "310 Lightbowne Road, Moston"
@@ -321,8 +327,20 @@ class AthenaHelperTest {
           "CatalogName": "hive",
           "SchemaName": "",
           "TableName": "",
-          "Name": "full_name",
-          "Label": "full_name",
+          "Name": "first_name",
+          "Label": "first_name",
+          "Type": "varchar",
+          "Precision": "2147483647",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "true"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "last_name",
+          "Label": "last_name",
           "Type": "varchar",
           "Precision": "2147483647",
           "Scale": "0",
@@ -410,7 +428,8 @@ class AthenaHelperTest {
       val expected: List<AthenaOrderSearchResultDTO> = listOf(
         AthenaOrderSearchResultDTO(
           legacySubjectId = 1253587,
-          fullName = "ELLEN RIPLY",
+          firstName = "ELLEN",
+          lastName = "RIPLY",
           primaryAddressLine1 = "310 Lightbowne Road, Moston",
           primaryAddressLine2 = "Moston",
           primaryAddressLine3 = "Manchester",

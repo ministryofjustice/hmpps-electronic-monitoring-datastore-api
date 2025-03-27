@@ -13,7 +13,8 @@ class OrderSearchQueryBuilder(
   arrayOf(
     "legacy_subject_id",
     "legacy_order_id",
-    "full_name",
+    "first_name",
+    "last_name",
     "alias",
     "date_of_birth",
     "primary_address_line_1",

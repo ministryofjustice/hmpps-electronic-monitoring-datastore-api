@@ -80,7 +80,8 @@ class SearchControllerTest {
         OrderSearchResult(
           dataType = "am",
           legacySubjectId = 12345,
-          name = "Amy Smith",
+          firstName = "Amy",
+          lastName = "Smith",
           addressLine1 = "First line of address",
           addressLine2 = "Second line of address",
           addressLine3 = "Third line of address",

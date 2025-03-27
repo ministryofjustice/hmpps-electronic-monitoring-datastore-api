@@ -7,7 +7,8 @@ import java.time.LocalDateTime
 data class OrderSearchResult(
   val dataType: String,
   val legacySubjectId: Long,
-  val name: String?,
+  val firstName: String?,
+  val lastName: String?,
   val alias: String?,
   val addressLine1: String?,
   val addressLine2: String?,
@@ -20,7 +21,8 @@ data class OrderSearchResult(
   constructor(dto: AthenaOrderSearchResultDTO) : this(
     dataType = "am",
     legacySubjectId = dto.legacySubjectId,
-    name = dto.fullName,
+    firstName = dto.firstName,
+    lastName = dto.lastName,
     alias = dto.alias,
     addressLine1 = dto.primaryAddressLine1,
     addressLine2 = dto.primaryAddressLine2,
