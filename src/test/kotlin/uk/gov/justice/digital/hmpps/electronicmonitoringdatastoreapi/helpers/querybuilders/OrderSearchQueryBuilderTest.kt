@@ -21,7 +21,7 @@ class OrderSearchQueryBuilderTest {
           order_start_date,
           order_end_date
         FROM 
-          test_database.order_details
+          test_database.test_table
         WHERE 
   """.trimIndent()
 
@@ -37,7 +37,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedParameters = arrayOf("UPPER('%111222333%')")
 
-    val result = OrderSearchQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withLegacySubjectId(legacySubjectId)
       .build()
 
@@ -55,7 +55,7 @@ class OrderSearchQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = OrderSearchQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withFirstName(firstName)
       .build()
 
@@ -68,7 +68,7 @@ class OrderSearchQueryBuilderTest {
     val dangerousInput = "Steve OR 1=1"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder("test_database")
+      OrderSearchQueryBuilder("test_database", "test_table")
         .withFirstName(dangerousInput)
         .build()
     }.withMessage("first_name must only contain alphanumeric characters and spaces")
@@ -84,7 +84,7 @@ class OrderSearchQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = OrderSearchQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withLastName(lastName)
       .build()
 
@@ -97,7 +97,7 @@ class OrderSearchQueryBuilderTest {
     val dangerousInput = "Jobs OR 1=1"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder("test_database")
+      OrderSearchQueryBuilder("test_database", "test_table")
         .withLastName(dangerousInput)
         .build()
     }.withMessage("last_name must only contain alphanumeric characters and spaces")
@@ -113,7 +113,7 @@ class OrderSearchQueryBuilderTest {
       """.trimIndent(),
     )
 
-    val result = OrderSearchQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withAlias(alias)
       .build()
 
@@ -126,7 +126,7 @@ class OrderSearchQueryBuilderTest {
     val dangerousInput = "Jobs OR 1=1"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder("test_database")
+      OrderSearchQueryBuilder("test_database", "test_table")
         .withAlias(dangerousInput)
         .build()
     }.withMessage("alias must only contain alphanumeric characters and spaces")
@@ -145,7 +145,7 @@ class OrderSearchQueryBuilderTest {
     )
     val expectedParameters = arrayOf("UPPER('%4%')", "UPPER('%The Big Apple%')")
 
-    val result = OrderSearchQueryBuilder("test_database")
+    val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withLegacySubjectId(legacySubjectId)
       .withAlias(alias)
       .build()
@@ -157,7 +157,7 @@ class OrderSearchQueryBuilderTest {
   @Test
   fun `Throws error if search criteria are null`() {
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder("fake_database").build()
+      OrderSearchQueryBuilder("fake_database", "test_table").build()
     }.withMessage("At least one search criteria must be populated")
   }
 
@@ -166,7 +166,7 @@ class OrderSearchQueryBuilderTest {
     val illegalLegacySubjectId = "fake-not a number"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      OrderSearchQueryBuilder("test_database").withLegacySubjectId(illegalLegacySubjectId)
+      OrderSearchQueryBuilder("test_database", "test_table").withLegacySubjectId(illegalLegacySubjectId)
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 }

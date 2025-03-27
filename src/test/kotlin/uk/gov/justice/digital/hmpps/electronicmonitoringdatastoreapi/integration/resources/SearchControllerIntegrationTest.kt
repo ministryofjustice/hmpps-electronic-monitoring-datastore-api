@@ -18,7 +18,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
       webTestClient.post()
         .uri("/integrity/orders")
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue("{}")
+        .bodyValue("""{ "searchType": "integrity" }""")
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -30,7 +30,7 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
         .uri("/integrity/orders")
         .headers(setAuthorisation(roles = listOf()))
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue("{}")
+        .bodyValue("""{ "searchType": "integrity" }""")
         .exchange()
         .expectStatus()
         .isForbidden
@@ -53,11 +53,61 @@ class SearchControllerIntegrationTest : ControllerIntegrationBase() {
     }
 
     @Test
-    fun `should return 200 with valid body`() {
+    fun `should return 400 with an invalid search type`() {
       MockEmDatastoreClient.addResponseFile("successfulGetQueryExecutionIdResponse")
 
       val requestBody = mapOf(
-        "searchType" to "name",
+        "searchType" to "invalid-type",
+        "legacySubjectId" to "12345",
+        "firstName" to "Amy",
+        "lastName" to "Smith",
+      )
+
+      webTestClient.post()
+        .uri("/integrity/orders")
+        .headers(setAuthorisation())
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(requestBody)
+        .exchange()
+        .expectStatus()
+        .isBadRequest
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON)
+        .expectBody()
+        .jsonPath("$.developerMessage").isEqualTo("Unknown search type: invalid-type")
+    }
+
+    @Test
+    fun `should return 200 with valid body and integrity search type`() {
+      MockEmDatastoreClient.addResponseFile("successfulGetQueryExecutionIdResponse")
+
+      val requestBody = mapOf(
+        "searchType" to "integrity",
+        "legacySubjectId" to "12345",
+        "firstName" to "Amy",
+        "lastName" to "Smith",
+      )
+
+      webTestClient.post()
+        .uri("/integrity/orders")
+        .headers(setAuthorisation())
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(requestBody)
+        .exchange()
+        .expectStatus()
+        .isOk
+        .expectHeader()
+        .contentType(MediaType.APPLICATION_JSON)
+        .expectBody()
+        .jsonPath("$.queryExecutionId").isEqualTo("query-execution-id")
+    }
+
+    @Test
+    fun `should return 200 with valid body and alcohol-monitoring search type`() {
+      MockEmDatastoreClient.addResponseFile("successfulGetQueryExecutionIdResponse")
+
+      val requestBody = mapOf(
+        "searchType" to "alcohol-monitoring",
         "legacySubjectId" to "12345",
         "firstName" to "Amy",
         "lastName" to "Smith",
