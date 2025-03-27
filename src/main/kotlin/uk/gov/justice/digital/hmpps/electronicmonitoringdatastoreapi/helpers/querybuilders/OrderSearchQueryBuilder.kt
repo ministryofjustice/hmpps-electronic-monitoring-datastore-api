@@ -32,8 +32,8 @@ class OrderSearchQueryBuilder(
       return this
     }
 
-    values.add(value)
-    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq value)
+    values.add("UPPER('%$value%')")
+    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq "UPPER('%$value%')")
     return this
   }
 
