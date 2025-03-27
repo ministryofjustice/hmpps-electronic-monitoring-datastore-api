@@ -20,7 +20,8 @@ class SearchRepository(
   var athenaDatabase: String = "unknown_database",
 ) {
   fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): String {
-    val orderSearchQuery = OrderSearchQueryBuilder(athenaDatabase)
+    val tableName = AthenaHelper.tableNameFromSearchType(criteria.searchType)
+    val orderSearchQuery = OrderSearchQueryBuilder(athenaDatabase, tableName)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)

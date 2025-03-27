@@ -114,5 +114,11 @@ class AthenaHelper {
         mapper.convertValue(row, T::class.java)
       }
     }
+
+    fun tableNameFromSearchType(searchType: String): String = when (searchType.lowercase()) {
+      "integrity" -> "order_details"
+      "alcohol-monitoring" -> "am_order_details"
+      else -> throw IllegalArgumentException("Unknown search type: $searchType")
+    }
   }
 }
