@@ -46,8 +46,8 @@ class OrderService(
     return results.map { result -> OrderSearchResult(result) }
   }
 
-  fun getOrderInformation(orderId: String, role: AthenaRole): OrderInformation {
-    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(orderId, role)
+  fun getOrderInformation(legacySubjectId: String, role: AthenaRole): OrderInformation {
+    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(legacySubjectId, role)
     val parsedKeyOrderInformation = KeyOrderInformation(keyOrderInformation)
 
     val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()
@@ -65,8 +65,8 @@ class OrderService(
     )
   }
 
-  fun getOrderDetails(orderId: String, role: AthenaRole): OrderDetails {
-    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(orderId, role)
+  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): OrderDetails {
+    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(legacySubjectId, role)
     return OrderDetails(orderDetailsDTO)
   }
 }

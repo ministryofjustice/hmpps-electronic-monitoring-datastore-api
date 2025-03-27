@@ -15,8 +15,8 @@ import java.time.LocalDateTime
 class OrderEventsService(
   @Autowired val orderEventsRepository: OrderEventsRepository,
 ) {
-  fun getMonitoringEvents(orderId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
-    val result = orderEventsRepository.getMonitoringEventsList(orderId, role)
+  fun getMonitoringEvents(legacySubjectId: String, role: AthenaRole): List<Event<MonitoringEventDetails>> {
+    val result = orderEventsRepository.getMonitoringEventsList(legacySubjectId, role)
 
     return result.map { event ->
       Event<MonitoringEventDetails>(
@@ -29,8 +29,8 @@ class OrderEventsService(
     }
   }
 
-  fun getIncidentEvents(orderId: String, role: AthenaRole): List<Event<IncidentEventDetails>> {
-    val result = orderEventsRepository.getIncidentEventsList(orderId, role)
+  fun getIncidentEvents(legacySubjectId: String, role: AthenaRole): List<Event<IncidentEventDetails>> {
+    val result = orderEventsRepository.getIncidentEventsList(legacySubjectId, role)
 
     return result.map { event ->
       Event<IncidentEventDetails>(
@@ -43,8 +43,8 @@ class OrderEventsService(
     }
   }
 
-  fun getViolationEvents(orderId: String, role: AthenaRole): List<Event<ViolationEventDetails>> {
-    val result = orderEventsRepository.getViolationEventsList(orderId, role)
+  fun getViolationEvents(legacySubjectId: String, role: AthenaRole): List<Event<ViolationEventDetails>> {
+    val result = orderEventsRepository.getViolationEventsList(legacySubjectId, role)
 
     return result.map { event ->
       Event<ViolationEventDetails>(
@@ -57,8 +57,8 @@ class OrderEventsService(
     }
   }
 
-  fun getContactEvents(orderId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
-    val result = orderEventsRepository.getContactEventsList(orderId, role)
+  fun getContactEvents(legacySubjectId: String, role: AthenaRole): List<Event<ContactEventDetails>> {
+    val result = orderEventsRepository.getContactEventsList(legacySubjectId, role)
 
     return result.map { event ->
       Event<ContactEventDetails>(

@@ -19,9 +19,9 @@ class OrderInformationRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getKeyOrderInformation(orderId: String, role: AthenaRole): AthenaKeyOrderInformationDTO {
+  fun getKeyOrderInformation(legacySubjectId: String, role: AthenaRole): AthenaKeyOrderInformationDTO {
     val keyOrderInformationQuery = KeyOrderInformationQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(keyOrderInformationQuery, role)

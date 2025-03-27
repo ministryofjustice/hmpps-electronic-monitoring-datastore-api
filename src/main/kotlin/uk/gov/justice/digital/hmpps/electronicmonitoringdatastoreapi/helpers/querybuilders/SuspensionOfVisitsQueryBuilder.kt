@@ -18,15 +18,15 @@ class SuspensionOfVisitsQueryBuilder(
     "suspension_of_visits_end_date",
   ),
 ) {
-  fun withLegacySubjectId(subjectId: String): SuspensionOfVisitsQueryBuilder {
-    validateAlphanumeric(subjectId, "legacy_subject_id")
+  fun withLegacySubjectId(legacySubjectId: String): SuspensionOfVisitsQueryBuilder {
+    validateAlphanumeric(legacySubjectId, "legacy_subject_id")
 
-    if (subjectId.isBlank()) {
+    if (legacySubjectId.isBlank()) {
       return this
     }
 
-    values.add(subjectId)
-    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq subjectId)
+    values.add(legacySubjectId)
+    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq legacySubjectId)
     return this
   }
 

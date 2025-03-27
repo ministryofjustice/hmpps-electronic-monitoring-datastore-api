@@ -121,18 +121,18 @@ class OrderInformationRepositoryTest {
 
     @Test
     fun `getKeyOrderInformation returns the first result from getQueryResult`() {
-      val orderId = "orderId004"
+      val legacySubjectId = "orderId004"
       val fullName = "TEST NAME"
 
-      val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet(orderId, fullName))
+      val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet(legacySubjectId, fullName))
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getKeyOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.legacyOrderId).isEqualTo(orderId)
-      Assertions.assertThat(result.legacySubjectId).isEqualTo(orderId)
+      Assertions.assertThat(result.legacyOrderId).isEqualTo(legacySubjectId)
+      Assertions.assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
       Assertions.assertThat(result.name).isEqualTo(fullName)
     }
   }

@@ -16,9 +16,9 @@ class OrderDetailsRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getOrderDetails(orderId: String, role: AthenaRole): AthenaOrderDetailsDTO {
+  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): AthenaOrderDetailsDTO {
     val orderDetailsQuery: AthenaOrderDetailsQuery = OrderDetailsQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(orderDetailsQuery, role)

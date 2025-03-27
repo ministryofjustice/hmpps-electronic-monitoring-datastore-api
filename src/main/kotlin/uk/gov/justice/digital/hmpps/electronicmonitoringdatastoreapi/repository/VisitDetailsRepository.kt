@@ -15,9 +15,9 @@ class VisitDetailsRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getVisitDetails(orderId: String, role: AthenaRole): List<AthenaVisitDetailsDTO> {
+  fun getVisitDetails(legacySubjectId: String, role: AthenaRole): List<AthenaVisitDetailsDTO> {
     val equipmentDetailsQuery = VisitDetailsQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(equipmentDetailsQuery, role)

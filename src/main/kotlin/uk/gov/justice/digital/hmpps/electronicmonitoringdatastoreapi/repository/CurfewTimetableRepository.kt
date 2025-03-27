@@ -15,9 +15,9 @@ class CurfewTimetableRepository(
   @Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getCurfewTimetable(orderId: String, role: AthenaRole): List<AthenaCurfewTimetableDTO> {
+  fun getCurfewTimetable(legacySubjectId: String, role: AthenaRole): List<AthenaCurfewTimetableDTO> {
     val servicesQuery = ServicesQueryBuilder(athenaDatabase)
-      .withLegacySubjectId(orderId)
+      .withLegacySubjectId(legacySubjectId)
       .build()
 
     val athenaResponse = athenaClient.getQueryResult(servicesQuery, role)

@@ -94,15 +94,15 @@ class OrderDetailsRepositoryTest {
 
     @Test
     fun `getOrderDetails returns the first result from getQueryResult`() {
-      val orderId = "expectedId"
-      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet(orderId))
+      val legacySubjectId = "expectedId"
+      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet(legacySubjectId))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.legacySubjectId).isEqualTo(orderId)
+      Assertions.assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
     }
   }
 }

@@ -29,11 +29,12 @@ class CurfewTimetableServiceTest {
 
   @Nested
   inner class GetCurfewTimetable {
-    val orderId = "fake-id"
+    val legacySubjectId = "fake-id"
 
     val exampleCurfewTimetable = listOf<AthenaCurfewTimetableDTO>(
       AthenaCurfewTimetableDTO(
         legacySubjectId = 123,
+        legacyOrderId = 123,
         serviceId = 333,
         serviceAddress1 = "",
         serviceAddress2 = "",
@@ -57,27 +58,27 @@ class CurfewTimetableServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(curfewTimetableRepository.getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
         .thenReturn(exampleCurfewTimetable)
     }
 
     @Test
     fun `calls getCurfewTimetable from order information repository`() {
-      service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(curfewTimetableRepository, Mockito.times(1)).getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
     fun `returns a list of CurfewTimetable when a response is received`() {
-      var result = service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the CurfewTimetable when a response is received`() {
-      var result = service.getCurfewTimetable(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      var result = service.getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
