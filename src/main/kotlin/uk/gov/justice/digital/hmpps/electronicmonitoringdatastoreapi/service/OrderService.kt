@@ -41,8 +41,8 @@ class OrderService(
 
   fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String = searchRepository.searchOrders(criteria, role)
 
-  fun getSearchResults(executionId: String, role: AthenaRole): List<OrderSearchResult> {
-    val results = searchRepository.getSearchResults(executionId, role)
+  fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<OrderSearchResult> {
+    val results = searchRepository.getSearchResults(queryExecutionId, role)
     return results.map { result -> OrderSearchResult(result) }
   }
 
