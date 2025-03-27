@@ -4,7 +4,8 @@
       {
         "Data": [
           { "VarCharValue": "legacy_subject_id" },
-          { "VarCharValue": "full_name" },
+          { "VarCharValue": "first_name" },
+          { "VarCharValue": "last_name" },
           { "VarCharValue": "primary_address_line_1" },
           { "VarCharValue": "primary_address_line_2" },
           { "VarCharValue": "primary_address_line_3" },
@@ -16,7 +17,8 @@
       {
         "Data": [
           { "VarCharValue": "1000000" },
-          { "VarCharValue": "Amy Smith" },
+          { "VarCharValue": "Amy" },
+          { "VarCharValue": "Smith" },
           { "VarCharValue": "address line 1" },
           { "VarCharValue": "address line 2" },
           { "VarCharValue": "" },
@@ -28,7 +30,8 @@
       {
         "Data": [
           { "VarCharValue": "2000000" },
-          { "VarCharValue": "Bill Smith" },
+          { "VarCharValue": "Bill" },
+          { "VarCharValue": "Smith" },
           { "VarCharValue": "address line 1" },
           { "VarCharValue": "address line 2" },
           { "VarCharValue": "" },
@@ -40,7 +43,8 @@
       {
         "Data": [
           { "VarCharValue": "3000000" },
-          { "VarCharValue": "Claire Smith" },
+          { "VarCharValue": "Claire" },
+          { "VarCharValue": "Smith" },
           { "VarCharValue": "address line 1" },
           { "VarCharValue": "address line 2" },
           { "VarCharValue": "" },
@@ -52,7 +56,8 @@
       {
         "Data": [
           { "VarCharValue": "8000000" },
-          { "VarCharValue": "Daniel Smith" },
+          { "VarCharValue": "Daniel" },
+          { "VarCharValue": "Smith" },
           { "VarCharValue": "address line 1" },
           { "VarCharValue": "address line 2" },
           { "VarCharValue": "" },
@@ -64,7 +69,8 @@
       {
         "Data": [
           { "VarCharValue": "30000" },
-          { "VarCharValue": "Emma Smith" },
+          { "VarCharValue": "Emma" },
+          { "VarCharValue": "Smith" },
           { "VarCharValue": "address line 1" },
           { "VarCharValue": "address line 2" },
           { "VarCharValue": "" },
@@ -76,7 +82,8 @@
       {
         "Data": [
           { "VarCharValue": "4000000" },
-          { "VarCharValue": "Fred Smith" },
+          { "VarCharValue": "Fred" },
+          { "VarCharValue": "Smith" },
           { "VarCharValue": "address line 1" },
           { "VarCharValue": "address line 2" },
           { "VarCharValue": "" },
@@ -104,8 +111,20 @@
           "CatalogName": "hive",
           "SchemaName": "",
           "TableName": "",
-          "Name": "full_name",
-          "Label": "full_name",
+          "Name": "first_name",
+          "Label": "first_name",
+          "Type": "varchar",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": true
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "last_name",
+          "Label": "last_name",
           "Type": "varchar",
           "Precision": 2147483647,
           "Scale": 0,

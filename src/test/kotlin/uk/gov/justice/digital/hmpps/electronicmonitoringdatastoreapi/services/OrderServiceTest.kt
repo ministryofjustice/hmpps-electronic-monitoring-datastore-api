@@ -159,7 +159,8 @@ class OrderServiceTest {
           listOf<AthenaOrderSearchResultDTO>(
             AthenaOrderSearchResultDTO(
               legacySubjectId = 1,
-              fullName = "",
+              firstName = "",
+              lastName = "",
               primaryAddressLine1 = "",
               primaryAddressLine2 = "",
               primaryAddressLine3 = "",

@@ -10,7 +10,8 @@ class OrderSearchQueryBuilderTest {
         SELECT 
           legacy_subject_id,
           legacy_order_id,
-          full_name,
+          first_name,
+          last_name,
           alias,
           date_of_birth,
           primary_address_line_1,
@@ -34,12 +35,14 @@ class OrderSearchQueryBuilderTest {
       """.trimIndent(),
     )
 
+    val expectedParameters = arrayOf("UPPER('%111222333%')")
+
     val result = OrderSearchQueryBuilder("test_database")
       .withLegacySubjectId(legacySubjectId)
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
-    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
+    Assertions.assertThat(result.parameters).isEqualTo(expectedParameters)
   }
 
   @Test
@@ -140,6 +143,7 @@ class OrderSearchQueryBuilderTest {
             AND alias LIKE ?
       """.trimIndent(),
     )
+    val expectedParameters = arrayOf("UPPER('%4%')", "UPPER('%The Big Apple%')")
 
     val result = OrderSearchQueryBuilder("test_database")
       .withLegacySubjectId(legacySubjectId)
@@ -147,7 +151,7 @@ class OrderSearchQueryBuilderTest {
       .build()
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
-    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId, "UPPER('%$alias%')"))
+    Assertions.assertThat(result.parameters).isEqualTo(expectedParameters)
   }
 
   @Test
