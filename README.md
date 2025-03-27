@@ -137,7 +137,7 @@ For debugging, it's useful to be able to run these queries ourselves. To do this
 3. Get details for the service pod that you can use to query AWS: `kubectl get pods`. One should have a name indicating it's a service account similar to `hmpps-em-datastore-dev-athena-service-pod-#Z###ZZZ##-Z####`.
 4. Ssh into this service pod: `kubectl exec --stdin --tty YOUR_SERVICE_POD_NAME_FROM_THE_PREV_STEP -- /bin/bash`
    > Confirm you've signed in correctly by running `aws sts get-caller-identity` - this should return a response with an ARN matching the pattern `arn:aws:sts::############:assumed-role/cloud-platform-irsa-abc123xyz-live/botocore-session-##########` 
-5. Confirm the Role ARN you require from [here](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/AthenaRole.kt)
+5. Confirm the Role ARN you require from [here](helm_deploy/values-dev.yaml)
 6. Assume this role ([AWS docs](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sts/assume-role.html)): `aws sts assume-role --role-arn YOUR_ATHENA_ROLE_ARN --role-session-name cli-session`
    > This will return AWS credentials including  a SessionToken, which will last around an hour
 7. Open your local AWS credentials file: `nano ~/.aws/credentials`Add a section to your local .aws credentials file:
