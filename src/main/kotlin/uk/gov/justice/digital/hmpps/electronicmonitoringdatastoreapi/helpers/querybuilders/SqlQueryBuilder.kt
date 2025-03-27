@@ -7,8 +7,8 @@ import org.apache.commons.lang3.StringUtils.isAlphanumericSpace
 
 open class SqlQueryBuilder(
   open val databaseName: String,
-  val table: String,
-  val fields: Array<String>,
+  open val tableName: String,
+  private val fields: Array<String>,
 ) {
   protected val whereClauses: MutableMap<String, QueryBlock> = mutableMapOf<String, QueryBlock>()
   protected val values: MutableList<String> = mutableListOf<String>()
@@ -47,9 +47,9 @@ open class SqlQueryBuilder(
   }
 
   protected fun getSQL(): String {
-    var query = Query()
+    val query = Query()
       .fields(*fields)
-      .from("$databaseName.$table")
+      .from("$databaseName.$tableName")
 
     whereClauses.forEach {
       query.where(it.value)

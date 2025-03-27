@@ -7,9 +7,10 @@ import java.time.LocalDate
 
 class OrderSearchQueryBuilder(
   override val databaseName: String,
+  tableName: String,
 ) : SqlQueryBuilder(
   databaseName,
-  "order_details",
+  tableName,
   arrayOf(
     "legacy_subject_id",
     "legacy_order_id",
