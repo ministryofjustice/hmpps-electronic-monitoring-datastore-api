@@ -104,7 +104,7 @@ class EmDatastoreClient(
         .queryExecutionContext(queryExecutionContext)
 
       if (query.parameters.isNotEmpty()) {
-        // startQueryExecutionRequest.executionParameters(*query.parameters)
+        startQueryExecutionRequest.executionParameters(*query.parameters)
       }
 
       startQueryExecutionRequest.resultConfiguration(resultConfiguration)
