@@ -31,11 +31,11 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            legacy_subject_id = ?
+            UPPER(CAST(legacy_subject_id as varchar)) = ?
       """.trimIndent(),
     )
 
-    val expectedParameters = arrayOf("UPPER('%111222333%')")
+    val expectedParameters = arrayOf("UPPER('111222333')")
 
     val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withLegacySubjectId(legacySubjectId)
@@ -139,11 +139,11 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            legacy_subject_id = ?
+            UPPER(CAST(legacy_subject_id as varchar)) = ?
             AND alias LIKE ?
       """.trimIndent(),
     )
-    val expectedParameters = arrayOf("UPPER('%4%')", "UPPER('%The Big Apple%')")
+    val expectedParameters = arrayOf("UPPER('4')", "UPPER('%The Big Apple%')")
 
     val result = OrderSearchQueryBuilder("test_database", "test_table")
       .withLegacySubjectId(legacySubjectId)

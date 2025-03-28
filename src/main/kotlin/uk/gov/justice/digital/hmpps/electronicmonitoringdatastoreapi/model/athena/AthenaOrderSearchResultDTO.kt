@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athe
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class AthenaOrderSearchResultDTO(
-  val legacySubjectId: Long,
+  val legacySubjectId: String,
   val legacyOrderId: String? = "",
   val firstName: String? = "",
   val lastName: String? = "",

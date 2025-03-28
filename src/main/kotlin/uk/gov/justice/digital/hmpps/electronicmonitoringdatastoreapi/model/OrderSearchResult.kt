@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class OrderSearchResult(
   val dataType: String,
-  val legacySubjectId: Long,
+  val legacySubjectId: String,
   val firstName: String?,
   val lastName: String?,
   val alias: String?,
