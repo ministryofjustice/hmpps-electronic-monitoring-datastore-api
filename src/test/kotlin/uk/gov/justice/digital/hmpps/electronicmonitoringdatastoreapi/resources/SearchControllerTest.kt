@@ -79,7 +79,7 @@ class SearchControllerTest {
       val expectedResult = listOf(
         OrderSearchResult(
           dataType = "am",
-          legacySubjectId = 12345,
+          legacySubjectId = "12345",
           firstName = "Amy",
           lastName = "Smith",
           addressLine1 = "First line of address",

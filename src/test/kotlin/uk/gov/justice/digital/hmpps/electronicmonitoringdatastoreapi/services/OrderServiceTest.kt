@@ -159,7 +159,7 @@ class OrderServiceTest {
         .thenReturn(
           listOf<AthenaOrderSearchResultDTO>(
             AthenaOrderSearchResultDTO(
-              legacySubjectId = 1,
+              legacySubjectId = "1",
               firstName = "",
               lastName = "",
               primaryAddressLine1 = "",

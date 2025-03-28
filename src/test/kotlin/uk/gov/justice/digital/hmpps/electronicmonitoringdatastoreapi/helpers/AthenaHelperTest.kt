@@ -428,7 +428,7 @@ class AthenaHelperTest {
 
       val expected: List<AthenaOrderSearchResultDTO> = listOf(
         AthenaOrderSearchResultDTO(
-          legacySubjectId = 1253587,
+          legacySubjectId = "1253587",
           firstName = "ELLEN",
           lastName = "RIPLY",
           primaryAddressLine1 = "310 Lightbowne Road, Moston",
