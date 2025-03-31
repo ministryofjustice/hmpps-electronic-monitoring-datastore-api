@@ -9,62 +9,62 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AmOrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaAmOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AmOrderDetailsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmOrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderInformationDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmOrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderInformationService
 
 class AmOrderInformationServiceTest {
-  private lateinit var amOrderDetailsRepository: AmOrderDetailsRepository
-  private lateinit var service: AmOrderService
+  private lateinit var amOrderInformationRepository: AmOrderInformationRepository
+  private lateinit var service: AmOrderInformationService
 
   @BeforeEach
   fun setup() {
-    amOrderDetailsRepository = mock(AmOrderDetailsRepository::class.java)
-    service = AmOrderService(amOrderDetailsRepository)
+    amOrderInformationRepository = mock(AmOrderInformationRepository::class.java)
+    service = AmOrderInformationService(amOrderInformationRepository)
   }
 
   @Test
-  fun `AmOrderService can be instantiated`() {
+  fun `AmOrderInformationService can be instantiated`() {
     Assertions.assertThat(service).isNotNull()
   }
 
   @Nested
-  inner class GetOrderDetails {
+  inner class GetOrderInformation {
     val orderId = "fake-id"
 
-    val blankOrderDetails = AthenaAmOrderDetailsDTO(
-      legacySubjectId = "",
-      legacyOrderId = "",
-      responsibleOrgDetailsPhoneNumber = "",
+    val orderInformationData = AthenaAmOrderInformationDTO(
+      legacySubjectId = "123",
+      legacyOrderId = "321",
+      firstName = "testFirstName",
     )
 
     @BeforeEach
     fun setup() {
-      `when`(amOrderDetailsRepository.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
-        .thenReturn(blankOrderDetails)
+      `when`(amOrderInformationRepository.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+        .thenReturn(orderInformationData)
     }
 
     @Test
-    fun `calls getAmOrderDetails from order details repository`() {
-      service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Mockito.verify(amOrderDetailsRepository, times(1)).getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    fun `calls getAmOrderInformation from order information repository`() {
+      service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amOrderInformationRepository, times(1)).getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
 
     @Test
-    fun `returns AmOrderDetails`() {
-      val result = service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    fun `returns AmOrderInformation`() {
+      val result = service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
-      Assertions.assertThat(result).isInstanceOf(AmOrderDetails::class.java)
+      Assertions.assertThat(result).isInstanceOf(AmOrderInformation::class.java)
     }
 
     @Test
-    fun `returns correct details of the order`() {
-      val result = service.getAmOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    fun `returns correct information of the order`() {
+      val result = service.getOrderInformation(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.legacySubjectId).isEqualTo("")
-      Assertions.assertThat(result.specials).isEqualTo("no")
+      Assertions.assertThat(result.legacySubjectId).isEqualTo("123")
+      Assertions.assertThat(result.firstName).isEqualTo("testFirstName")
     }
   }
 }
