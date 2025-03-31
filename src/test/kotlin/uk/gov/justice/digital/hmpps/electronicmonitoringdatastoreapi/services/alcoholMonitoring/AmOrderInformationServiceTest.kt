@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services.alcoholMonitoring
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AmOrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AmOrderService
 
-class AmOrderServiceTest {
+class AmOrderInformationServiceTest {
   private lateinit var amOrderDetailsRepository: AmOrderDetailsRepository
   private lateinit var service: AmOrderService
 
