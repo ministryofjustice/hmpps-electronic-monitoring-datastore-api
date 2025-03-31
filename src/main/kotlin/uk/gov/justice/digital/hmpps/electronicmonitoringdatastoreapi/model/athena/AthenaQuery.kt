@@ -78,6 +78,11 @@ class AthenaViolationEventsListQuery(
 ) : AthenaQuery(queryString, parameters)
 
 // AM Query types
+class AthenaAmOrderInformationQuery(
+  override val queryString: String,
+  override val parameters: Array<String>,
+) : AthenaQuery(queryString, parameters)
+
 class AthenaAmOrderDetailsQuery(
   override val queryString: String,
   override val parameters: Array<String>,
