@@ -49,7 +49,7 @@ class AmOrderInformationController(
 
     auditService.createEvent(
       authentication.name,
-      "GET_ORDER_SUMMARY",
+      "GET_ALCOHOL_MONITORING_ORDER_INFORMATION",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
