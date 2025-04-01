@@ -40,7 +40,10 @@ class AmOrderInformationController(
   fun getOrderInformation(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Input contains illegal characters - legacy subject ID may only contain letters and numbers")
+    @Pattern(
+      regexp = "^[a-zA-Z0-9]+$",
+      message = "Input contains illegal characters - legacy subject ID may only contain letters and numbers",
+    )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<AmOrderInformation> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
