@@ -16,11 +16,11 @@ class VisitDetailsRepository(
   var athenaDatabase: String = "unknown_database",
 ) {
   fun getVisitDetails(legacySubjectId: String, role: AthenaRole): List<AthenaVisitDetailsDTO> {
-    val equipmentDetailsQuery = VisitDetailsQueryBuilder(athenaDatabase)
+    val visitDetailsQuery = VisitDetailsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(equipmentDetailsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(visitDetailsQuery, role)
 
     return AthenaHelper.Companion.mapTo<AthenaVisitDetailsDTO>(athenaResponse)
   }
