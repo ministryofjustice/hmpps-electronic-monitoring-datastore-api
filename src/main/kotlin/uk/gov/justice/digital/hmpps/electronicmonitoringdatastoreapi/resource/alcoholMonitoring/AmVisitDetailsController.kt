@@ -13,31 +13,30 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmOrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmVisitDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderDetailsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmVisitDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class AmOrderDetailsController(
-  @Autowired val orderDetailsService: AmOrderDetailsService,
+class AmVisitDetailsController(
+  @Autowired val amVisitDetailsService: AmVisitDetailsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
-
   @Operation(
     tags = ["Alcohol monitoring orders"],
-    summary = "Get the details for an order",
+    summary = "Get the visit details for an order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/alcohol-monitoring/{legacySubjectId}/details",
+      "/alcohol-monitoring/{legacySubjectId}/visit-details",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getOrderDetails(
+  fun getVisitDetails(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(
@@ -45,14 +44,14 @@ class AmOrderDetailsController(
       message = "Input contains illegal characters - legacy subject ID may only contain letters and numbers",
     )
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<AmOrderDetails> {
+  ): ResponseEntity<List<AmVisitDetails>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderDetailsService.getOrderDetails(legacySubjectId, validatedRole)
+    val result = amVisitDetailsService.getVisitDetails(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
-      "GET_ALCOHOL_MONITORING_ORDER_DETAILS",
+      "GET_ALCOHOL_MONITORING_VISIT_DETAILS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
