@@ -1,0 +1,328 @@
+{
+  "ResultSet": {
+    "Rows": [ {
+        "Data": [ {
+            "VarCharValue": "legacy_subject_id"
+          }, {
+            "VarCharValue": "legacy_order_id"
+          }, {
+            "VarCharValue": "visit_id"
+          }, {
+            "VarCharValue": "visit_type"
+          }, {
+            "VarCharValue": "visit_attempt"
+          }, {
+            "VarCharValue": "date_visit_raised"
+          }, {
+            "VarCharValue": "visit_address"
+          }, {
+            "VarCharValue": "visit_notes"
+          }, {
+            "VarCharValue": "visit_outcome"
+          }, {
+            "VarCharValue": "actual_work_start_date"
+          }, {
+            "VarCharValue": "actual_work_start_time"
+          }, {
+            "VarCharValue": "actual_work_end_date"
+          }, {
+            "VarCharValue": "actual_work_end_time"
+          }, {
+            "VarCharValue": "visit_rejection_reason"
+          }, {
+            "VarCharValue": "visit_rejection_description"
+          }, {
+            "VarCharValue": "visit_cancel_reason"
+          }, {
+            "VarCharValue": "visit_cancel_description"
+          }
+        ]
+      }, {
+        "Data": [ {
+            "VarCharValue": "333"
+          }, {
+            "VarCharValue": "666"
+          }, {
+            "VarCharValue": "999"
+          }, {
+            "VarCharValue": "Community"
+          }, {
+            "VarCharValue": "Attempt 7"
+          }, {
+            "VarCharValue": "2011-02-04"
+          }, {
+            "VarCharValue": "9 Cloud Lane CL0 3DS"
+          }, {
+            "VarCharValue": "Notes about the visit"
+          }, {
+            "VarCharValue": "Visit outcome"
+          }, {
+            "VarCharValue": "2011-02-05"
+          }, {
+            "VarCharValue": "12:00:15"
+          }, {
+            "VarCharValue": "2011-02-05"
+          }, {
+            "VarCharValue": "12:34:29"
+          }, {
+            "VarCharValue": ""
+          }, {
+            "VarCharValue": ""
+          }, {
+            "VarCharValue": ""
+          }, {
+            "VarCharValue": ""
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "333"
+          }, {
+            "VarCharValue": "666"
+          }, {
+            "VarCharValue": "1000"
+          }, {
+            "VarCharValue": "Community"
+          }, {
+            "VarCharValue": "Attempt 8"
+          }, {
+            "VarCharValue": "2011-02-05"
+          }, {
+            "VarCharValue": "9 Cloud Lane CL0 3DS"
+          }, {
+            "VarCharValue": "Notes about the visit"
+          }, {
+            "VarCharValue": "Visit outcome"
+          }, {
+            "VarCharValue": "2011-02-06"
+          }, {
+            "VarCharValue": "16:20:00"
+          }, {
+            "VarCharValue": "2011-02-06"
+          }, {
+            "VarCharValue": "17:09:45"
+          }, {
+            "VarCharValue": ""
+          }, {
+            "VarCharValue": ""
+          }, {
+            "VarCharValue": ""
+          }, {
+            "VarCharValue": ""
+          }
+        ]
+      }
+    ],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_subject_id",
+          "Name": "legacy_subject_id",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_order_id",
+          "Name": "legacy_order_id",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_id",
+          "Name": "visit_id",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_type",
+          "Name": "visit_type",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_attempt",
+          "Name": "visit_attempt",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "date_visit_raised",
+          "Name": "date_visit_raised",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_address",
+          "Name": "visit_address",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_notes",
+          "Name": "visit_notes",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_outcome",
+          "Name": "visit_outcome",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "actual_work_start_date",
+          "Name": "actual_work_start_date",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "actual_work_start_time",
+          "Name": "actual_work_start_time",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "actual_work_end_date",
+          "Name": "actual_work_end_date",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "actual_work_end_time",
+          "Name": "actual_work_end_time",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_rejection_reason",
+          "Name": "visit_rejection_reason",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_rejection_description",
+          "Name": "visit_rejection_description",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_cancel_reason",
+          "Name": "visit_cancel_reason",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "visit_cancel_description",
+          "Name": "visit_cancel_description",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar",
+          "Nullable" : "UNKNOWN"
+        }
+      ]
+    }
+  },
+  "UpdateCount": 0
+}

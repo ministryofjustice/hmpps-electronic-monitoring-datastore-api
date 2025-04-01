@@ -24,7 +24,7 @@ class VisitDetailsRepositoryTest {
   }
 
   @Test
-  fun `OrderSuspensionOfVisitsRepository can be instantiated`() {
+  fun `VisitDetailsRepository can be instantiated`() {
     val sut = VisitDetailsRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }

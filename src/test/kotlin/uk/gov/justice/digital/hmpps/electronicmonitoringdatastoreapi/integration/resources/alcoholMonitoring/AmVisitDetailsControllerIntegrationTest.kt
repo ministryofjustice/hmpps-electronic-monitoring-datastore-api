@@ -9,34 +9,35 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
 
 @ActiveProfiles("integration")
-class AmInformationControllerIntegrationTest : ControllerIntegrationBase() {
+class AmVisitDetailsControllerIntegrationTest : ControllerIntegrationBase() {
   @Nested
-  @DisplayName("GET /alcohol-monitoring/{legacySubjectId}/information")
-  inner class GetInformation {
+  @DisplayName("GET /alcohol-monitoring/{legacySubjectId}/visit-details")
+  inner class GetVisitDetails {
+
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.Companion.addResponseFile("successfulAmOrderInformationResponse")
+      MockEmDatastoreClient.Companion.addResponseFile("successfulAmVisitDetailsResponse")
     }
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("/alcohol-monitoring/234/information")
+      noAuthHeaderRespondsWithUnauthorizedTest("/alcohol-monitoring/234/visit-details")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("/alcohol-monitoring/234/information")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/alcohol-monitoring/234/visit-details")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/alcohol-monitoring/234/information", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("/alcohol-monitoring/234/visit-details", listOf("ROLE_WRONG"))
     }
 
     @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
-        .uri("/alcohol-monitoring/2_4/information")
+        .uri("/alcohol-monitoring/2_4/visit-details")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
@@ -46,7 +47,7 @@ class AmInformationControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return OK with valid auth header and role for accessing restricted orders`() {
       webTestClient.get()
-        .uri("/alcohol-monitoring/234/information")
+        .uri("/alcohol-monitoring/234/visit-details")
         .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_RESTRICTED_RO")))
         .exchange()
         .expectStatus()
@@ -56,7 +57,7 @@ class AmInformationControllerIntegrationTest : ControllerIntegrationBase() {
     @Test
     fun `should return OK with valid auth header and role for accessing general orders`() {
       webTestClient.get()
-        .uri("/alcohol-monitoring/234/information")
+        .uri("/alcohol-monitoring/234/visit-details")
         .headers(setAuthorisation())
         .exchange()
         .expectStatus()
