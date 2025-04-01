@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.alcoholMonitoring
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -13,44 +13,46 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class DetailsController(
-  @Autowired val orderService: OrderService,
+class AmOrderDetailsController(
+  @Autowired val orderDetailsService: AmOrderDetailsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
 
   @Operation(
-    tags = ["Integrity orders"],
+    tags = ["Alcohol monitoring orders"],
     summary = "Get the details for an order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getOrderDetails/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/details",
+      "/alcohol-monitoring/{legacySubjectId}/details",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getDetails(
+  fun getOrderDetails(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
-    @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
+    @Pattern(
+      regexp = "^[0-9]+$",
+      message = "Input contains illegal characters - legacy subject ID may only contain letters and numbers",
+    )
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<OrderDetails> {
+  ): ResponseEntity<AmOrderDetails> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderService.getOrderDetails(legacySubjectId, validatedRole)
+    val result = orderDetailsService.getOrderDetails(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
-      "GET_ORDER_DETAILS",
+      "GET_ALCOHOL_MONITORING_ORDER_DETAILS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
