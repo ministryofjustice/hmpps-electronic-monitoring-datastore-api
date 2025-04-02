@@ -88,6 +88,11 @@ class AthenaAmOrderInformationQuery(
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
+class AthenaAmServicesListQuery(
+  override val queryString: String,
+  override val parameters: Array<String>,
+) : AthenaQuery(queryString, parameters)
+
 class AthenaAmVisitDetailsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
