@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoh
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmOrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderInformationService
+import java.time.LocalDateTime
 
 class AmOrderInformationServiceTest {
   private lateinit var amOrderInformationRepository: AmOrderInformationRepository
@@ -36,7 +37,16 @@ class AmOrderInformationServiceTest {
     val orderInformationData = AthenaAmOrderInformationDTO(
       legacySubjectId = "123",
       legacyOrderId = "321",
-      firstName = "testFirstName",
+      firstName = "John",
+      lastName = "Smith",
+      alias = "Zeno",
+      dateOfBirth = "1980-02-01",
+      address1 = "1 Primary Street",
+      address2 = "Sutton",
+      address3 = "London",
+      postcode = "ABC 123",
+      orderStartDate = "2012-02-01",
+      orderEndDate = "2013-04-03",
     )
 
     @BeforeEach
@@ -64,7 +74,8 @@ class AmOrderInformationServiceTest {
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("123")
-      Assertions.assertThat(result.firstName).isEqualTo("testFirstName")
+      Assertions.assertThat(result.firstName).isEqualTo("John")
+      Assertions.assertThat(result.dateOfBirth).isEqualTo(LocalDateTime.parse("1980-02-01T00:00:00"))
     }
   }
 }

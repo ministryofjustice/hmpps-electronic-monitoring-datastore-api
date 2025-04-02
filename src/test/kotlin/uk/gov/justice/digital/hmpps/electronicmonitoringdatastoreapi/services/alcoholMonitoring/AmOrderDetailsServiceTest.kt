@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoh
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmOrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderDetailsService
+import java.time.LocalDateTime
 
 class AmOrderDetailsServiceTest {
   private lateinit var amOrderDetailsRepository: AmOrderDetailsRepository
@@ -35,8 +36,27 @@ class AmOrderDetailsServiceTest {
 
     val orderDetailsData = AthenaAmOrderDetailsDTO(
       legacySubjectId = "AA2020",
-      legacyOrderId = "222",
-      firstName = "testFirstName",
+      firstName = "John",
+      lastName = "Smith",
+      alias = "Zeno",
+      dateOfBirth = "1980-02-01",
+      sex = "Sex",
+      specialInstructions = "Special instructions",
+      phoneNumber = "09876543210",
+      address1 = "1 Primary Street",
+      address2 = "Sutton",
+      address3 = "London",
+      postcode = "ABC 123",
+      legacyOrderId = "1234567",
+      orderStartDate = "2012-02-01",
+      orderEndDate = "2013-04-03",
+      enforceableCondition = "Enforceable condition",
+      orderType = "Community",
+      orderTypeDescription = "",
+      orderEndOutcome = "",
+      responsibleOrganisationPhoneNumber = "01234567890",
+      responsibleOrganisationEmail = "a@b.c",
+      tagAtSource = "",
     )
 
     @BeforeEach
@@ -64,7 +84,8 @@ class AmOrderDetailsServiceTest {
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("AA2020")
-      Assertions.assertThat(result.firstName).isEqualTo("testFirstName")
+      Assertions.assertThat(result.firstName).isEqualTo("John")
+      Assertions.assertThat(result.orderEndDate).isEqualTo(LocalDateTime.parse("2013-04-03T00:00:00"))
     }
   }
 }
