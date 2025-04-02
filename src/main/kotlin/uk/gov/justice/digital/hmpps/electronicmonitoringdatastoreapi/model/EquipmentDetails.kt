@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaEquipmentDetailsDTO
 import java.time.LocalDateTime
 
@@ -16,14 +17,6 @@ data class EquipmentDetails(
   val pid: EquipmentDetail?,
   val hmu: EquipmentDetail?,
 ) {
-  companion object {
-    fun nullableLocalDateTime(date: String?, time: String?): LocalDateTime? = if (!date.isNullOrBlank()) {
-      LocalDateTime.parse("${date}T${time ?: "00:00:00"}")
-    } else {
-      null
-    }
-  }
-
   constructor(dto: AthenaEquipmentDetailsDTO) : this(
     legacySubjectId = dto.legacySubjectId,
     legacyOrderId = dto.legacyOrderId,
