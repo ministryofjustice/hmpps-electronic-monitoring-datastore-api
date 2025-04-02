@@ -40,7 +40,7 @@ class AmVisitDetailsControllerTest {
   @Nested
   inner class GetVisitDetails {
     @Test
-    fun `gets order information from order service`() {
+    fun `gets visit details from visit details service`() {
       val legacyOrderId = "1ab"
       val expectedResult = listOf(
         AmVisitDetails(
