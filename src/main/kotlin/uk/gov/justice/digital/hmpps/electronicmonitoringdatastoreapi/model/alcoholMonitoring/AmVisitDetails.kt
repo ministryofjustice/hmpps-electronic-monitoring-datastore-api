@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmVisitDetailsDTO
 import java.time.LocalDateTime
 
@@ -20,13 +21,6 @@ data class AmVisitDetails(
   val visitCancelReason: String?,
   val visitCancelDescription: String?,
 ) {
-  companion object {
-    fun nullableLocalDateTime(date: String?, time: String? = "00:00:00"): LocalDateTime? = if (!date.isNullOrBlank()) {
-      LocalDateTime.parse("${date}T$time")
-    } else {
-      null
-    }
-  }
 
   constructor(dto: AthenaAmVisitDetailsDTO) : this(
     legacySubjectId = dto.legacySubjectId,

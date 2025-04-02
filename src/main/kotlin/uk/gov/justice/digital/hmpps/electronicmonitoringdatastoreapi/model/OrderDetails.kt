@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
 import java.time.LocalDateTime
 
@@ -47,7 +47,7 @@ data class OrderDetails(
     firstName = dto.firstName,
     lastName = dto.lastName,
     alias = dto.alias,
-    dateOfBirth = processDate(dto.dateOfBirth),
+    dateOfBirth = nullableLocalDateTime(dto.dateOfBirth),
     adultOrChild = dto.adultOrChild,
     sex = dto.sex,
     contact = dto.contact,
@@ -66,8 +66,8 @@ data class OrderDetails(
     migratedRisk = dto.migratedRisk,
     rangeRisk = dto.rangeRisk,
     reportRisk = dto.reportRisk,
-    orderStartDate = processDate(dto.orderStartDate),
-    orderEndDate = processDate(dto.orderEndDate),
+    orderStartDate = nullableLocalDateTime(dto.orderStartDate),
+    orderEndDate = nullableLocalDateTime(dto.orderEndDate),
     orderType = dto.orderType,
     orderTypeDescription = dto.orderTypeDescription,
     orderTypeDetail = dto.orderTypeDetail,

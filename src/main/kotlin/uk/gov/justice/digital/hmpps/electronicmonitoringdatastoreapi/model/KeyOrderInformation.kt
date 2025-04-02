@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
 import java.time.LocalDateTime
 
@@ -24,24 +24,12 @@ data class KeyOrderInformation(
     legacyOrderId = dto.legacyOrderId,
     name = dto.name,
     alias = dto.alias,
-    dateOfBirth = processDate(dto.dateOfBirth),
+    dateOfBirth = nullableLocalDateTime(dto.dateOfBirth),
     address1 = dto.address1,
     address2 = dto.address2,
     address3 = dto.address3,
     postcode = dto.postcode,
-    orderStartDate = processDate(dto.orderStartDate),
-    orderEndDate = processDate(dto.orderEndDate),
+    orderStartDate = nullableLocalDateTime(dto.orderStartDate),
+    orderEndDate = nullableLocalDateTime(dto.orderEndDate),
   )
 }
-
-// legacy_subject_id
-//              , legacy_order_id
-//              , full_name
-//              , alias
-//              , date_of_birth
-//              , primary_address_line_1
-//              , primary_address_line_2
-//              , primary_address_line_3
-//              , primary_address_post_code
-//              , order_start_date
-//              , order_end_date

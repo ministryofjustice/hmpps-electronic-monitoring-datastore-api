@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSuspensionOfVisitsDTO
 import java.time.LocalDateTime
 
@@ -16,9 +16,9 @@ data class SuspensionOfVisits(
   constructor(dto: AthenaSuspensionOfVisitsDTO) : this(
     legacySubjectId = dto.legacySubjectId,
     suspensionOfVisits = dto.suspensionOfVisits,
-    requestedDate = processDate(dto.suspensionOfVisitsRequestedDate),
-    startDate = processDate(dto.suspensionOfVisitsStartDate),
+    requestedDate = nullableLocalDateTime(dto.suspensionOfVisitsRequestedDate),
+    startDate = nullableLocalDateTime(dto.suspensionOfVisitsStartDate),
     startTime = dto.suspensionOfVisitsStartTime,
-    endDate = processDate(dto.suspensionOfVisitsEndDate),
+    endDate = nullableLocalDateTime(dto.suspensionOfVisitsEndDate),
   )
 }

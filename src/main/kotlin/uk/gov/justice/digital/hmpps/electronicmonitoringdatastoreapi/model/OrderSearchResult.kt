@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.processDate
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 import java.time.LocalDateTime
 
@@ -28,8 +28,8 @@ data class OrderSearchResult(
     addressLine2 = dto.primaryAddressLine2,
     addressLine3 = dto.primaryAddressLine3,
     addressPostcode = dto.primaryAddressPostCode,
-    dateOfBirth = processDate(dto.dateOfBirth),
-    orderStartDate = processDate(dto.orderStartDate),
-    orderEndDate = processDate(dto.orderEndDate),
+    dateOfBirth = nullableLocalDateTime(dto.dateOfBirth),
+    orderStartDate = nullableLocalDateTime(dto.orderStartDate),
+    orderEndDate = nullableLocalDateTime(dto.orderEndDate),
   )
 }
