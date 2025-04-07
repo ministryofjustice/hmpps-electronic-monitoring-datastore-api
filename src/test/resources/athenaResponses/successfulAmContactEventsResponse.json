@@ -1,0 +1,317 @@
+{
+  "ResultSet": {
+    "Rows": [
+      {
+        "Data": [
+          {
+            "VarCharValue": "legacy_subject_id"
+          },
+          {
+            "VarCharValue": "legacy_order_id"
+          },
+          {
+            "VarCharValue": "contact_date"
+          },
+          {
+            "VarCharValue": "contact_time"
+          },
+          {
+            "VarCharValue": "inbound_or_outbound"
+          },
+          {
+            "VarCharValue": "from_to"
+          },
+          {
+            "VarCharValue": "channel"
+          },
+          {
+            "VarCharValue": "subject_consent_withdrawn"
+          },
+          {
+            "VarCharValue": "call_outcome"
+          },
+          {
+            "VarCharValue": "statement"
+          },
+          {
+            "VarCharValue": "reason_for_contact"
+          },
+          {
+            "VarCharValue": "outcome_of_contact"
+          },
+          {
+            "VarCharValue": "visit_required"
+          },
+          {
+            "VarCharValue": "visit_id"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "1234"
+          },
+          {
+            "VarCharValue": "5678"
+          },
+          {
+            "VarCharValue": "2001-01-01"
+          },
+          {
+            "VarCharValue": "01:01:01"
+          },
+          {
+            "VarCharValue": "Inbound"
+          },
+          {
+            "VarCharValue": "Probation"
+          },
+          {
+            "VarCharValue": "Call"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "Test outcome"
+          },
+          {
+            "VarCharValue": "Test statement"
+          },
+          {
+            "VarCharValue": "Test reason for contact"
+          },
+          {
+            "VarCharValue": "Test outcome of contact"
+          },
+          {
+            "VarCharValue": "No"
+          },
+          {
+            "VarCharValue": "V1234"
+          }
+        ]
+      },
+      {
+        "Data": [
+          {
+            "VarCharValue": "4321"
+          },
+          {
+            "VarCharValue": "8765"
+          },
+          {
+            "VarCharValue": "2002-02-02"
+          },
+          {
+            "VarCharValue": "02:02:02"
+          },
+          {
+            "VarCharValue": "Outbound"
+          },
+          {
+            "VarCharValue": "Probation"
+          },
+          {
+            "VarCharValue": "Call"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "Test outcome"
+          },
+          {
+            "VarCharValue": "Test statement"
+          },
+          {
+            "VarCharValue": "Test reason for contact"
+          },
+          {
+            "VarCharValue": "Test outcome of contact"
+          },
+          {
+            "VarCharValue": "Yes"
+          },
+          {
+            "VarCharValue": "V4321"
+          }
+        ]
+      }
+    ],
+    "ResultSetMetadata": {
+      "ColumnInfo": [
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_subject_id",
+          "Name": "legacy_subject_id",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "legacy_order_id",
+          "Name": "legacy_order_id",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "contact_date",
+          "Name": "contact_date",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "contact_time",
+          "Name": "contact_time",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "inbound_or_outbound",
+          "Name": "inbound_or_outbound",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "from_to",
+          "Name": "from_to",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "channel",
+          "Name": "channel",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "subject_consent_withdrawn",
+          "Name": "subject_consent_withdrawn",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": false,
+          "CatalogName": "hive",
+          "Label": "call_outcome",
+          "Name": "call_outcome",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "statement",
+          "Name": "statement",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "reason_for_contact",
+          "Name": "reason_for_contact",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "outcome_of_contact",
+          "Name": "outcome_of_contact",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "visit_required",
+          "Name": "visit_required",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        },
+        {
+          "CaseSensitive": true,
+          "CatalogName": "hive",
+          "Label": "visit_id",
+          "Name": "visit_id",
+          "Nullable": "UNKNOWN",
+          "Precision": 2147483647,
+          "Scale": 0,
+          "SchemaName": "",
+          "TableName": "",
+          "Type": "varchar"
+        }
+      ]
+    }
+  },
+  "UpdateCount": 0
+}
