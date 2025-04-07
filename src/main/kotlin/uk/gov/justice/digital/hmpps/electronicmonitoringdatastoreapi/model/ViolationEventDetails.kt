@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaViolationEventDTO
 import java.time.LocalDateTime
 
@@ -21,13 +22,6 @@ data class ViolationEventDetails(
   val subjectLetterSentDate: LocalDateTime?,
   val warningLetterSentDateTime: LocalDateTime?,
 ) : EventDetails() {
-  companion object {
-    private fun asNullableDateTime(date: String?, time: String?): LocalDateTime? = if (date != null) {
-      LocalDateTime.parse("${date}T${time ?: "00:00:00"}")
-    } else {
-      null
-    }
-  }
 
   constructor(dto: AthenaViolationEventDTO) : this (
     enforcementReason = dto.enforcementReason,
@@ -35,16 +29,16 @@ data class ViolationEventDetails(
     breachDetails = dto.breachDetails,
     breachEnforcementOutcome = dto.breachEnforcementOutcome,
     agencyAction = dto.agencyAction,
-    breachDateTime = asNullableDateTime(dto.breachDate, dto.breachTime),
-    breachIdentifiedDateTime = asNullableDateTime(dto.breachIdentifiedDate, dto.breachIdentifiedTime),
-    authorityFirstNotifiedDateTime = asNullableDateTime(dto.authorityFirstNotifiedDate, dto.authorityFirstNotifiedTime),
-    agencyResponseDate = asNullableDateTime(dto.agencyResponseDate, null),
-    breachPackRequestedDate = asNullableDateTime(dto.breachPackRequestedDate, null),
-    breachPackSentDate = asNullableDateTime(dto.breachPackSentDate, null),
-    section9Date = asNullableDateTime(dto.section9Date, null),
-    hearingDate = asNullableDateTime(dto.hearingDate, null),
-    summonsServedDate = asNullableDateTime(dto.summonsServedDate, null),
-    subjectLetterSentDate = asNullableDateTime(dto.subjectLetterSentDate, null),
-    warningLetterSentDateTime = asNullableDateTime(dto.warningLetterSentDate, dto.warningLetterSentTime),
+    breachDateTime = nullableLocalDateTime(dto.breachDate, dto.breachTime),
+    breachIdentifiedDateTime = nullableLocalDateTime(dto.breachIdentifiedDate, dto.breachIdentifiedTime),
+    authorityFirstNotifiedDateTime = nullableLocalDateTime(dto.authorityFirstNotifiedDate, dto.authorityFirstNotifiedTime),
+    agencyResponseDate = nullableLocalDateTime(dto.agencyResponseDate, null),
+    breachPackRequestedDate = nullableLocalDateTime(dto.breachPackRequestedDate, null),
+    breachPackSentDate = nullableLocalDateTime(dto.breachPackSentDate, null),
+    section9Date = nullableLocalDateTime(dto.section9Date, null),
+    hearingDate = nullableLocalDateTime(dto.hearingDate, null),
+    summonsServedDate = nullableLocalDateTime(dto.summonsServedDate, null),
+    subjectLetterSentDate = nullableLocalDateTime(dto.subjectLetterSentDate, null),
+    warningLetterSentDateTime = nullableLocalDateTime(dto.warningLetterSentDate, dto.warningLetterSentTime),
   )
 }
