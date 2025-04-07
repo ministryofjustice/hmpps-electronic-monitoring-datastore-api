@@ -14,7 +14,7 @@ data class AmEquipmentDetails(
   val deviceInstalledDateTime: LocalDateTime?,
   val deviceRemovedDateTime: LocalDateTime?,
   val hmuInstallDateTime: LocalDateTime?,
-  val hmuUninstallDateTime: LocalDateTime?,
+  val hmuRemovedDateTime: LocalDateTime?,
 ) {
 
   constructor(dto: AthenaAmEquipmentDetailsDTO) : this(
@@ -27,6 +27,6 @@ data class AmEquipmentDetails(
     deviceInstalledDateTime = nullableLocalDateTime(dto.dateDeviceInstalled, dto.timeDeviceInstalled),
     deviceRemovedDateTime = nullableLocalDateTime(dto.dateDeviceRemoved, dto.timeDeviceRemoved),
     hmuInstallDateTime = nullableLocalDateTime(dto.hmuInstallDate, dto.hmuInstallTime),
-    hmuUninstallDateTime = nullableLocalDateTime(dto.hmuUninstallDate, dto.hmuUninstallTime),
+    hmuRemovedDateTime = nullableLocalDateTime(dto.hmuRemovedDate, dto.hmuRemovedTime),
   )
 }

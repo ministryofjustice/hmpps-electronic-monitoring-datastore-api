@@ -13,6 +13,6 @@ data class AthenaAmEquipmentDetailsDTO(
   val timeDeviceRemoved: String?,
   val hmuInstallDate: String?,
   val hmuInstallTime: String?,
-  val hmuUninstallDate: String?,
-  val hmuUninstallTime: String?,
+  val hmuRemovedDate: String?,
+  val hmuRemovedTime: String?,
 )

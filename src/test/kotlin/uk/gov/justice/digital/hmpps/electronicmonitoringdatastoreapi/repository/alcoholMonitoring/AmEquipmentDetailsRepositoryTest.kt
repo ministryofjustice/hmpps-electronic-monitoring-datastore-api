@@ -45,8 +45,8 @@ class AmEquipmentDetailsRepositoryTest {
         "time_device_removed",
         "hmu_install_date",
         "hmu_install_time",
-        "hmu_uninstall_date",
-        "hmu_uninstall_time",
+        "hmu_removed_date",
+        "hmu_removed_time",
       ),
       rows = arrayOf(
         arrayOf(
