@@ -34,8 +34,8 @@ class EquipmentDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           pid = null,
           hmu = null,
         ),
@@ -65,8 +65,8 @@ class EquipmentDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           pid = EquipmentDetail(
             id = "pidId",
             equipmentCategoryDescription = "pidEquipmentCategoryDescription",
@@ -101,8 +101,8 @@ class EquipmentDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           pid = null,
           hmu = EquipmentDetail(
             id = "hmu_id",
@@ -137,8 +137,8 @@ class EquipmentDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           pid = EquipmentDetail(
             id = "pid_id",
             equipmentCategoryDescription = null,
@@ -178,8 +178,8 @@ class EquipmentDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           pid = EquipmentDetail(
             id = "pid_id",
             equipmentCategoryDescription = null,

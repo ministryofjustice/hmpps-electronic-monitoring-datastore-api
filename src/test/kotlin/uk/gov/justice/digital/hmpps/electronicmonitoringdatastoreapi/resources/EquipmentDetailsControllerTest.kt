@@ -45,8 +45,8 @@ class EquipmentDetailsControllerTest {
       val legacySubjectId = "1ab"
       val expectedResult = listOf<EquipmentDetails>(
         EquipmentDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 456,
+          legacySubjectId = "123",
+          legacyOrderId = "456",
           pid = EquipmentDetail(
             id = "123X",
             equipmentCategoryDescription = "TEST_PID_CATEGORY",

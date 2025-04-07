@@ -44,8 +44,8 @@ class CurfewTimetableControllerTest {
       val legacySubjectId = "1ab"
       val expectedResult = listOf(
         CurfewTimetable(
-          legacySubjectId = 123,
-          legacyOrderId = 123,
+          legacySubjectId = "123",
+          legacyOrderId = "123",
           serviceId = 1,
           serviceAddress1 = "",
           serviceAddress2 = "",

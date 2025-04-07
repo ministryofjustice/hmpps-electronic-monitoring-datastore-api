@@ -45,8 +45,8 @@ class VisitDetailsControllerTest {
       val legacyOrderId = "1ab"
       val expectedResult = listOf<VisitDetails>(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "3 My street",
             addressLine2 = "My town",

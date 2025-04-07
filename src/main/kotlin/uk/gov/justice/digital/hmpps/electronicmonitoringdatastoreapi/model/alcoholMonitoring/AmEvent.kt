@@ -1,8 +1,8 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring
 
 import java.time.LocalDateTime
 
-data class Event<T : EventDetails>(
+data class AmEvent<T : AmEventDetails>(
   val legacyOrderId: String,
   val legacySubjectId: String,
   val type: String,
@@ -10,4 +10,4 @@ data class Event<T : EventDetails>(
   val details: T,
 )
 
-abstract class EventDetails
+abstract class AmEventDetails

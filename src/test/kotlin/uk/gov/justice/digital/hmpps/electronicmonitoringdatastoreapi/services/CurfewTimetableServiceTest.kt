@@ -84,7 +84,7 @@ class CurfewTimetableServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(CurfewTimetable::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
     }
   }

@@ -70,7 +70,7 @@ class SuspensionOfVisitsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(SuspensionOfVisits::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().suspensionOfVisits).isEqualTo("Yes")
     }
   }

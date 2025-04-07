@@ -4,8 +4,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import java.time.LocalDateTime
 
 data class CurfewTimetable(
-  val legacySubjectId: Int,
-  val legacyOrderId: Int,
+  val legacySubjectId: String,
+  val legacyOrderId: String,
   val serviceId: Int,
   val serviceAddress1: String?,
   val serviceAddress2: String?,
@@ -24,8 +24,8 @@ data class CurfewTimetable(
   val sunday: Int,
 ) {
   constructor(dto: AthenaCurfewTimetableDTO) : this (
-    legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
+    legacySubjectId = dto.legacySubjectId.toString(),
+    legacyOrderId = dto.legacyOrderId.toString(),
     serviceId = dto.serviceId,
     serviceAddress1 = dto.serviceAddress1,
     serviceAddress2 = dto.serviceAddress2,

@@ -13,8 +13,8 @@ data class VisitDetailsAddress(
 )
 
 data class VisitDetails(
-  val legacySubjectId: Int,
-  val legacyOrderId: Int,
+  val legacySubjectId: String,
+  val legacyOrderId: String,
   val address: VisitDetailsAddress?,
   val actualWorkStartDateTime: LocalDateTime,
   val actualWorkEndDateTime: LocalDateTime?,
@@ -24,8 +24,8 @@ data class VisitDetails(
 ) {
 
   constructor(dto: AthenaVisitDetailsDTO) : this(
-    legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
+    legacySubjectId = dto.legacySubjectId.toString(),
+    legacyOrderId = dto.legacyOrderId.toString(),
     address = if (
       !dto.address1.isNullOrEmpty() ||
       !dto.address2.isNullOrEmpty() ||
