@@ -5,7 +5,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import java.time.LocalDateTime
 
 data class SuspensionOfVisits(
-  val legacySubjectId: Int,
+  val legacySubjectId: String,
   val suspensionOfVisits: String?,
   val requestedDate: LocalDateTime?,
   val startDate: LocalDateTime?,
@@ -14,7 +14,7 @@ data class SuspensionOfVisits(
 ) {
 
   constructor(dto: AthenaSuspensionOfVisitsDTO) : this(
-    legacySubjectId = dto.legacySubjectId,
+    legacySubjectId = dto.legacySubjectId.toString(),
     suspensionOfVisits = dto.suspensionOfVisits,
     requestedDate = nullableLocalDateTime(dto.suspensionOfVisitsRequestedDate),
     startDate = nullableLocalDateTime(dto.suspensionOfVisitsStartDate),

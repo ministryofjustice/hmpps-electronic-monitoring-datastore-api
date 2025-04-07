@@ -47,8 +47,8 @@ class ContactEventsControllerTest {
       val legacySubjectId = "1ab"
       val expectedResult = listOf<Event<ContactEventDetails>>(
         Event<ContactEventDetails>(
-          legacyOrderId = 123,
-          legacySubjectId = 1543,
+          legacyOrderId = "123",
+          legacySubjectId = "1543",
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = ContactEventDetails(

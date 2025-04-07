@@ -45,8 +45,8 @@ class MonitoringEventsControllerTest {
       val legacySubjectId = "1ab"
       val expectedResult = listOf<Event<MonitoringEventDetails>>(
         Event<MonitoringEventDetails>(
-          legacyOrderId = 123,
-          legacySubjectId = 1543,
+          legacyOrderId = "123",
+          legacySubjectId = "1543",
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
           details = MonitoringEventDetails(

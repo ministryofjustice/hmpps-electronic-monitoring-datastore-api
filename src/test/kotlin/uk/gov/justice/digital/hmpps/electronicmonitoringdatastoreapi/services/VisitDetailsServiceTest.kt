@@ -78,7 +78,7 @@ class VisitDetailsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(VisitDetails::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().address).isInstanceOf(VisitDetailsAddress::class.java)
       Assertions.assertThat(result.first().visitType).isEqualTo("TEST_VISIT_TYPE")
     }

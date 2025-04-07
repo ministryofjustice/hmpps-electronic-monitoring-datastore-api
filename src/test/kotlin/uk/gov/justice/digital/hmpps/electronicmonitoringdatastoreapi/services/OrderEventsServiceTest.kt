@@ -80,7 +80,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(MonitoringEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_EVENT")
@@ -129,7 +129,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(IncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_VIOLATION")
@@ -195,7 +195,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(ViolationEventDetails::class.java)
       Assertions.assertThat(result.first().details.breachDetails).isEqualTo("TEST_BREACH")
@@ -251,7 +251,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(123)
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(ContactEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_CONTACT")

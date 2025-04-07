@@ -12,14 +12,14 @@ data class EquipmentDetail(
 )
 
 data class EquipmentDetails(
-  val legacySubjectId: Int,
-  val legacyOrderId: Int,
+  val legacySubjectId: String,
+  val legacyOrderId: String,
   val pid: EquipmentDetail?,
   val hmu: EquipmentDetail?,
 ) {
   constructor(dto: AthenaEquipmentDetailsDTO) : this(
-    legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
+    legacySubjectId = dto.legacySubjectId.toString(),
+    legacyOrderId = dto.legacyOrderId.toString(),
     pid = if (!dto.pidId.isNullOrEmpty()) {
       EquipmentDetail(
         id = dto.pidId,

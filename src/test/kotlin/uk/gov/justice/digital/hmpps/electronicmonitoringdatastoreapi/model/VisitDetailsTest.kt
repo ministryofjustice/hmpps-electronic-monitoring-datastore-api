@@ -31,8 +31,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -71,8 +71,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = null,
           actualWorkStartDateTime = LocalDateTime.parse("2020-02-20T02:02:02"),
           actualWorkEndDateTime = null,
@@ -105,8 +105,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = null,
           actualWorkStartDateTime = LocalDateTime.parse("2020-02-20T02:02:02"),
           actualWorkEndDateTime = LocalDateTime.parse("3030-03-30T03:03:03"),
@@ -139,8 +139,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -179,8 +179,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -219,8 +219,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -259,8 +259,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = null,
             addressLine2 = null,
@@ -299,8 +299,8 @@ class VisitDetailsTest {
 
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address line 1",
             addressLine2 = null,
