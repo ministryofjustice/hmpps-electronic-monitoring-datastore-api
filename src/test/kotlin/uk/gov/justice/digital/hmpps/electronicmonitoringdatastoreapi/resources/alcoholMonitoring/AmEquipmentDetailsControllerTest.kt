@@ -53,7 +53,7 @@ class AmEquipmentDetailsControllerTest {
           deviceInstalledDateTime = LocalDateTime.parse("2001-01-01T01:10:10"),
           deviceRemovedDateTime = LocalDateTime.parse("2002-02-02T02:20:20"),
           hmuInstallDateTime = null,
-          hmuUninstallDateTime = null,
+          hmuRemovedDateTime = null,
         ),
       )
 

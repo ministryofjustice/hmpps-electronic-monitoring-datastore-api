@@ -26,9 +26,9 @@
           }, {
             "VarCharValue": "hmu_install_time"
           }, {
-            "VarCharValue": "hmu_uninstall_date"
+            "VarCharValue": "hmu_removed_date"
           }, {
-            "VarCharValue": "hmu_uninstall_time"
+            "VarCharValue": "hmu_removed_time"
           }
         ]
       }, {
@@ -243,8 +243,8 @@
         {
           "CaseSensitive": false,
           "CatalogName": "hive",
-          "Label": "hmu_uninstall_date",
-          "Name": "hmu_uninstall_date",
+          "Label": "hmu_removed_date",
+          "Name": "hmu_removed_date",
           "Precision": 2147483647,
           "Scale": 0,
           "SchemaName": "",
@@ -255,8 +255,8 @@
         {
           "CaseSensitive": false,
           "CatalogName": "hive",
-          "Label": "hmu_uninstall_time",
-          "Name": "hmu_uninstall_time",
+          "Label": "hmu_removed_time",
+          "Name": "hmu_removed_time",
           "Precision": 2147483647,
           "Scale": 0,
           "SchemaName": "",

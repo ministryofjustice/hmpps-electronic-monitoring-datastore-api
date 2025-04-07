@@ -46,8 +46,8 @@ class AmEquipmentDetailsServiceTest {
         timeDeviceRemoved = "02:20:20",
         hmuInstallDate = null,
         hmuInstallTime = null,
-        hmuUninstallDate = null,
-        hmuUninstallTime = null,
+        hmuRemovedDate = null,
+        hmuRemovedTime = null,
       ),
       AthenaAmEquipmentDetailsDTO(
         legacySubjectId = "123",
@@ -62,8 +62,8 @@ class AmEquipmentDetailsServiceTest {
         timeDeviceRemoved = null,
         hmuInstallDate = "2003-03-03",
         hmuInstallTime = "03:30:30",
-        hmuUninstallDate = "2004-04-04",
-        hmuUninstallTime = "04:40:40",
+        hmuRemovedDate = "2004-04-04",
+        hmuRemovedTime = "04:40:40",
       ),
     )
 
@@ -110,12 +110,12 @@ class AmEquipmentDetailsServiceTest {
       Assertions.assertThat(result.first().deviceInstalledDateTime).isEqualTo(LocalDateTime.parse("2001-01-01T01:10:10"))
       Assertions.assertThat(result.first().deviceRemovedDateTime).isEqualTo(LocalDateTime.parse("2002-02-02T02:20:20"))
       Assertions.assertThat(result.first().hmuInstallDateTime).isNull()
-      Assertions.assertThat(result.first().hmuUninstallDateTime).isNull()
+      Assertions.assertThat(result.first().hmuRemovedDateTime).isNull()
 
       Assertions.assertThat(result[1].deviceInstalledDateTime).isNull()
       Assertions.assertThat(result[1].deviceRemovedDateTime).isNull()
       Assertions.assertThat(result[1].hmuInstallDateTime).isEqualTo(LocalDateTime.parse("2003-03-03T03:30:30"))
-      Assertions.assertThat(result[1].hmuUninstallDateTime).isEqualTo(LocalDateTime.parse("2004-04-04T04:40:40"))
+      Assertions.assertThat(result[1].hmuRemovedDateTime).isEqualTo(LocalDateTime.parse("2004-04-04T04:40:40"))
     }
   }
 }
