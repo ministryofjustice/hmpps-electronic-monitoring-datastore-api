@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaContactEventDTO
 import java.time.LocalDateTime
 
@@ -12,13 +13,6 @@ data class ContactEventDetails(
   val userName: String?,
   val modifiedDateTime: LocalDateTime?,
 ) : EventDetails() {
-  companion object {
-    private fun asNullableDateTime(date: String?, time: String?): LocalDateTime? = if (date != null) {
-      LocalDateTime.parse("${date}T${time ?: "00:00:00"}")
-    } else {
-      null
-    }
-  }
 
   constructor(dto: AthenaContactEventDTO) : this (
     outcome = dto.outcome,
@@ -27,6 +21,6 @@ data class ContactEventDetails(
     channel = dto.channel,
     userId = dto.userId,
     userName = dto.userName,
-    modifiedDateTime = asNullableDateTime(dto.modifiedDate, dto.modifiedTime),
+    modifiedDateTime = nullableLocalDateTime(dto.modifiedDate, dto.modifiedTime),
   )
 }
