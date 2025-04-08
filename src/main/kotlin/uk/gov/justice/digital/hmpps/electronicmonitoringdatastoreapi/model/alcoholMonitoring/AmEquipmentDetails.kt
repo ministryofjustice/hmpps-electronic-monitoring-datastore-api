@@ -6,7 +6,6 @@ import java.time.LocalDateTime
 
 data class AmEquipmentDetails(
   val legacySubjectId: String,
-  val legacyOrderId: String,
   val deviceType: String?,
   val deviceSerialNumber: String?,
   val deviceAddressType: String?,
@@ -19,7 +18,6 @@ data class AmEquipmentDetails(
 
   constructor(dto: AthenaAmEquipmentDetailsDTO) : this(
     legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
     deviceType = dto.deviceType,
     deviceSerialNumber = dto.deviceSerialNumber,
     deviceAddressType = dto.deviceAddressType,

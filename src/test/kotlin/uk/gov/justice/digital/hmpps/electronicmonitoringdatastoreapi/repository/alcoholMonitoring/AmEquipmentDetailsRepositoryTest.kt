@@ -34,7 +34,6 @@ class AmEquipmentDetailsRepositoryTest {
     private fun amEquipmentDetailsResultSet(firstId: String = "123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "device_type",
         "device_serial_number",
         "device_address_type",
@@ -51,7 +50,6 @@ class AmEquipmentDetailsRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
-          firstId,
           "tag",
           "111",
           "primary",
@@ -67,7 +65,6 @@ class AmEquipmentDetailsRepositoryTest {
         ),
         arrayOf(
           "456",
-          "654",
           "hmu",
           "222",
           "primary",
