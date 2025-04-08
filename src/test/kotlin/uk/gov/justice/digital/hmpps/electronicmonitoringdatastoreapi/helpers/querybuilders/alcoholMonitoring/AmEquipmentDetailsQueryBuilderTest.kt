@@ -20,8 +20,8 @@ class AmEquipmentDetailsQueryBuilderTest {
         time_device_removed,
         hmu_install_date,
         hmu_install_time,
-        hmu_uninstall_date,
-        hmu_uninstall_time
+        hmu_removed_date,
+        hmu_removed_time
       FROM 
         fake_database.am_equipment_details
       WHERE 
