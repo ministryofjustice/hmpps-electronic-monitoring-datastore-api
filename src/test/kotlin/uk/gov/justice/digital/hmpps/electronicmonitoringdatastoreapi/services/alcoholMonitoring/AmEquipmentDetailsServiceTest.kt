@@ -35,7 +35,6 @@ class AmEquipmentDetailsServiceTest {
     private val exampleEquipmentDetails = listOf(
       AthenaAmEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         deviceType = "tag",
         deviceSerialNumber = "740",
         deviceAddressType = "secondary",
@@ -51,7 +50,6 @@ class AmEquipmentDetailsServiceTest {
       ),
       AthenaAmEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         deviceType = "hmu",
         deviceSerialNumber = "740",
         deviceAddressType = "tertiary",

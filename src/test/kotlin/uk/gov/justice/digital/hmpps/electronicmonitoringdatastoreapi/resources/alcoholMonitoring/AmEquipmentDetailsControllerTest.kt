@@ -45,7 +45,6 @@ class AmEquipmentDetailsControllerTest {
       val expectedResult = listOf(
         AmEquipmentDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           deviceType = "tag",
           deviceSerialNumber = "740",
           deviceAddressType = "secondary",

@@ -4,8 +4,6 @@
         "Data": [ {
             "VarCharValue": "legacy_subject_id"
           }, {
-            "VarCharValue": "legacy_order_id"
-          }, {
             "VarCharValue": "device_type"
           }, {
             "VarCharValue": "device_serial_number"
@@ -35,8 +33,6 @@
         "Data": [ {
             "VarCharValue": "333"
           }, {
-            "VarCharValue": "555"
-          }, {
             "VarCharValue": "tag"
           }, {
             "VarCharValue": "777"
@@ -65,8 +61,6 @@
       {
         "Data": [ {
             "VarCharValue": "222"
-          }, {
-            "VarCharValue": "444"
           }, {
             "VarCharValue": "hmu"
           }, {
@@ -101,18 +95,6 @@
           "CatalogName": "hive",
           "Label": "legacy_subject_id",
           "Name": "legacy_subject_id",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "SchemaName": "",
-          "TableName": "",
-          "Type": "varchar",
-          "Nullable" : "UNKNOWN"
-        },
-        {
-          "CaseSensitive": false,
-          "CatalogName": "hive",
-          "Label": "legacy_order_id",
-          "Name": "legacy_order_id",
           "Precision": 2147483647,
           "Scale": 0,
           "SchemaName": "",

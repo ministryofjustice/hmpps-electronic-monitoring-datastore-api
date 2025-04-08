@@ -12,7 +12,6 @@ class AmEquipmentDetailsQueryBuilder(
   "am_equipment_details",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "device_type",
     "device_serial_number",
     "device_address_type",
@@ -23,8 +22,8 @@ class AmEquipmentDetailsQueryBuilder(
     "time_device_removed",
     "hmu_install_date",
     "hmu_install_time",
-    "hmu_uninstall_date",
-    "hmu_uninstall_time",
+    "hmu_removed_date",
+    "hmu_removed_time",
   ),
 ) {
   fun withLegacySubjectId(legacySubjectId: String): AmEquipmentDetailsQueryBuilder {

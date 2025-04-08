@@ -10,7 +10,6 @@ class AmEquipmentDetailsQueryBuilderTest {
   val baseQuery: String = """
       SELECT
         legacy_subject_id,
-        legacy_order_id,
         device_type,
         device_serial_number,
         device_address_type,
