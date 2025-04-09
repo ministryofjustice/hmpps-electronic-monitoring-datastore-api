@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -47,7 +47,7 @@ class AmContactEventsController(
       message = "Input contains illegal characters - legacy subject ID may only contain letters and numbers",
     )
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<Event<AmContactEventDetails>>> {
+  ): ResponseEntity<List<AmEvent<AmContactEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
     val result = amOrderEventsService.getContactEvents(legacySubjectId, validatedRole)
