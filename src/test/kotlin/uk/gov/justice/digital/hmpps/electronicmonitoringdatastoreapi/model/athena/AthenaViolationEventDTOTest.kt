@@ -71,8 +71,8 @@ class AthenaViolationEventDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaViolationEventDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           enforcementReason = "TEST_ENFORCEMENT_REASON",
           investigationOutcomeReason = "TEST_OUTCOME_REASON",
           breachDetails = "some details",
@@ -133,8 +133,8 @@ class AthenaViolationEventDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaViolationEventDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           enforcementReason = null,
           investigationOutcomeReason = null,
           breachDetails = null,

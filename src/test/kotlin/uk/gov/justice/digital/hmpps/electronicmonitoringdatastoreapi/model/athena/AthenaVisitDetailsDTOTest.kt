@@ -52,8 +52,8 @@ class AthenaVisitDetailsDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",
@@ -96,8 +96,8 @@ class AthenaVisitDetailsDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address1 = null,
           address2 = null,
           address3 = null,
@@ -140,8 +140,8 @@ class AthenaVisitDetailsDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",
@@ -184,8 +184,8 @@ class AthenaVisitDetailsDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",
@@ -228,8 +228,8 @@ class AthenaVisitDetailsDTOTest {
 
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
-          legacySubjectId = 123,
-          legacyOrderId = 321,
+          legacySubjectId = "123",
+          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",

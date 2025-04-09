@@ -36,6 +36,7 @@ class SuspensionOfVisitsRepositoryTest {
     fun suspensionOfVisitsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
+        "legacy_order_id",
         "suspension_of_visits",
         "suspension_of_visits_requested_date",
         "suspension_of_visits_start_date",
@@ -45,6 +46,7 @@ class SuspensionOfVisitsRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
+          firstId,
           "Yes",
           "2024-02-02T02:02:02",
           "2024-02-02",
@@ -53,6 +55,7 @@ class SuspensionOfVisitsRepositoryTest {
         ),
         arrayOf(
           "123456789",
+          "987654321",
           "No",
           "2024-02-02T02:02:02",
           "2024-02-02",
@@ -65,6 +68,7 @@ class SuspensionOfVisitsRepositoryTest {
     fun suspensionOfVisitsNoStartResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
+        "legacy_order_id",
         "suspension_of_visits",
         "suspension_of_visits_requested_date",
         "suspension_of_visits_start_date",
@@ -73,6 +77,7 @@ class SuspensionOfVisitsRepositoryTest {
       ),
       rows = arrayOf(
         arrayOf(
+          firstId,
           firstId,
           "Yes",
           "2024-02-02T02:02:02",
@@ -117,7 +122,7 @@ class SuspensionOfVisitsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(2)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaSuspensionOfVisitsDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
     }
 
     @Test
@@ -132,7 +137,7 @@ class SuspensionOfVisitsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaSuspensionOfVisitsDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
     }
   }
 }

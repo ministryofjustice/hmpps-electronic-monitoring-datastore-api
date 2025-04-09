@@ -40,8 +40,8 @@ class OrderEventsServiceTest {
 
     val exampleMonitoringEventList = listOf<AthenaMonitoringEventDTO>(
       AthenaMonitoringEventDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 123,
+        legacySubjectId = "123",
+        legacyOrderId = "123",
         eventType = "TEST_EVENT",
         eventDate = "2022-10-10",
         eventTime = "13:00:05",
@@ -93,8 +93,8 @@ class OrderEventsServiceTest {
 
     val exampleIncidentEventList = listOf<AthenaIncidentEventDTO>(
       AthenaIncidentEventDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 123,
+        legacySubjectId = "123",
+        legacyOrderId = "123",
         violationAlertType = "TEST_VIOLATION",
         violationAlertDate = "2019-06-24",
         violationAlertTime = "05:38:23",
@@ -142,8 +142,8 @@ class OrderEventsServiceTest {
 
     val exampleViolationEventList = listOf<AthenaViolationEventDTO>(
       AthenaViolationEventDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 123,
+        legacySubjectId = "123",
+        legacyOrderId = "123",
         enforcementReason = "TEST_REASON",
         investigationOutcomeReason = "TEST_OUTCOME",
         breachDetails = "TEST_BREACH",
@@ -208,8 +208,8 @@ class OrderEventsServiceTest {
 
     val exampleContactEventList = listOf<AthenaContactEventDTO>(
       AthenaContactEventDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 123,
+        legacySubjectId = "123",
+        legacyOrderId = "123",
         outcome = "Mr silly laughed out loud",
         contactType = "TEST_CONTACT",
         reason = "A silly reason",

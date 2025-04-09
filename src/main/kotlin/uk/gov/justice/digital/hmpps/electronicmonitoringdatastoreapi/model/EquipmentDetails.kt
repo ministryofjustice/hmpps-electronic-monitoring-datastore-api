@@ -18,8 +18,8 @@ data class EquipmentDetails(
   val hmu: EquipmentDetail?,
 ) {
   constructor(dto: AthenaEquipmentDetailsDTO) : this(
-    legacySubjectId = dto.legacySubjectId.toString(),
-    legacyOrderId = dto.legacyOrderId.toString(),
+    legacySubjectId = dto.legacySubjectId,
+    legacyOrderId = dto.legacyOrderId,
     pid = if (!dto.pidId.isNullOrEmpty()) {
       EquipmentDetail(
         id = dto.pidId,
