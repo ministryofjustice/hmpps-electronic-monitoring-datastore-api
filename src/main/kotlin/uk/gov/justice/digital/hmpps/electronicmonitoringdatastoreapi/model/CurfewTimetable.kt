@@ -24,8 +24,8 @@ data class CurfewTimetable(
   val sunday: Int,
 ) {
   constructor(dto: AthenaCurfewTimetableDTO) : this (
-    legacySubjectId = dto.legacySubjectId.toString(),
-    legacyOrderId = dto.legacyOrderId.toString(),
+    legacySubjectId = dto.legacySubjectId,
+    legacyOrderId = dto.legacyOrderId,
     serviceId = dto.serviceId,
     serviceAddress1 = dto.serviceAddress1,
     serviceAddress2 = dto.serviceAddress2,

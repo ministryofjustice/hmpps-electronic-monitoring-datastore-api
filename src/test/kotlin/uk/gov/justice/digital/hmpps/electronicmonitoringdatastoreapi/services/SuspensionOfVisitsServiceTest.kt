@@ -33,8 +33,8 @@ class SuspensionOfVisitsServiceTest {
 
     val exampleSuspensionOfVisits = listOf<AthenaSuspensionOfVisitsDTO>(
       AthenaSuspensionOfVisitsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 456,
+        legacySubjectId = "123",
+        legacyOrderId = "456",
         suspensionOfVisits = "Yes",
         suspensionOfVisitsRequestedDate = "2023-03-03",
         suspensionOfVisitsStartDate = "2023-04-04",

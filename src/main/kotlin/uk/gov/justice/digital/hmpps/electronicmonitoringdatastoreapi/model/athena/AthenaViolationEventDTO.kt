@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
 data class AthenaViolationEventDTO(
-  val legacySubjectId: Int,
-  val legacyOrderId: Int,
+  val legacySubjectId: String,
+  val legacyOrderId: String,
   val enforcementReason: String?,
   val investigationOutcomeReason: String?,
   val breachDetails: String?,

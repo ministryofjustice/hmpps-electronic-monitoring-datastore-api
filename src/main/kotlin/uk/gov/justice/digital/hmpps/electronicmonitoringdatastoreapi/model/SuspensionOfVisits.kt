@@ -15,8 +15,8 @@ data class SuspensionOfVisits(
 ) {
 
   constructor(dto: AthenaSuspensionOfVisitsDTO) : this(
-    legacySubjectId = dto.legacySubjectId.toString(),
-    legacyOrderId = dto.legacyOrderId.toString(),
+    legacySubjectId = dto.legacySubjectId,
+    legacyOrderId = dto.legacyOrderId,
     suspensionOfVisits = dto.suspensionOfVisits,
     requestedDate = nullableLocalDateTime(dto.suspensionOfVisitsRequestedDate),
     startDate = nullableLocalDateTime(dto.suspensionOfVisitsStartDate),

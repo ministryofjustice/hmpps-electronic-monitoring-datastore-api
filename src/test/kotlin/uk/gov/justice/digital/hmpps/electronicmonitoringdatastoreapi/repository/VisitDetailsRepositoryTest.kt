@@ -115,7 +115,7 @@ class VisitDetailsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(2)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaVisitDetailsDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
     }
   }
 }
