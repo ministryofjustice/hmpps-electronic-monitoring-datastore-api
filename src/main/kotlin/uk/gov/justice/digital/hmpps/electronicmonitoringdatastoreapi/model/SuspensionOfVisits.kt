@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 
 data class SuspensionOfVisits(
   val legacySubjectId: String,
+  val legacyOrderId: String,
   val suspensionOfVisits: String?,
   val requestedDate: LocalDateTime?,
   val startDate: LocalDateTime?,
@@ -15,6 +16,7 @@ data class SuspensionOfVisits(
 
   constructor(dto: AthenaSuspensionOfVisitsDTO) : this(
     legacySubjectId = dto.legacySubjectId.toString(),
+    legacyOrderId = dto.legacyOrderId.toString(),
     suspensionOfVisits = dto.suspensionOfVisits,
     requestedDate = nullableLocalDateTime(dto.suspensionOfVisitsRequestedDate),
     startDate = nullableLocalDateTime(dto.suspensionOfVisitsStartDate),
