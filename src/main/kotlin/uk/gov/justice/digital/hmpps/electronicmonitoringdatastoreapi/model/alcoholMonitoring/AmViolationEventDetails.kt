@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmViolationEventDTO
 import java.time.LocalDateTime
 
@@ -18,7 +17,7 @@ data class AmViolationEventDetails(
   val dateResolved: LocalDateTime?,
   val openClosed: String?,
   val visitRequired: String?,
-) : EventDetails() {
+) : AmEventDetails() {
 
   constructor(dto: AthenaAmViolationEventDTO) : this (
     enforcementId = dto.enforcementId,

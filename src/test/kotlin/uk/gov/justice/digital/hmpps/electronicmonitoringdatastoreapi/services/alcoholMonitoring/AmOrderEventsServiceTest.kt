@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmIncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmContactEventDTO
@@ -74,7 +74,7 @@ class AmOrderEventsServiceTest {
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(Event::class.java)
+        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
       }
     }
 
@@ -94,7 +94,7 @@ class AmOrderEventsServiceTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
 
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(AmContactEventDetails::class.java)
@@ -143,7 +143,7 @@ class AmOrderEventsServiceTest {
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(Event::class.java)
+        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
       }
     }
 
@@ -163,7 +163,7 @@ class AmOrderEventsServiceTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
 
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(AmIncidentEventDetails::class.java)
@@ -216,7 +216,7 @@ class AmOrderEventsServiceTest {
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(Event::class.java)
+        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
       }
     }
 
@@ -236,7 +236,7 @@ class AmOrderEventsServiceTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
 
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
+      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(AmViolationEventDetails::class.java)
