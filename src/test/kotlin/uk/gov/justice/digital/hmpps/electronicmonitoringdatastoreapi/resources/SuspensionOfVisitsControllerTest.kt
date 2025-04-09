@@ -45,6 +45,7 @@ class SuspensionOfVisitsControllerTest {
       val expectedResult = listOf(
         SuspensionOfVisits(
           legacySubjectId = "123",
+          legacyOrderId = "456",
           suspensionOfVisits = "Yes",
           requestedDate = LocalDateTime.parse("2020-04-04T00:00:00"),
           startDate = LocalDateTime.parse("2020-04-14T00:00:00"),

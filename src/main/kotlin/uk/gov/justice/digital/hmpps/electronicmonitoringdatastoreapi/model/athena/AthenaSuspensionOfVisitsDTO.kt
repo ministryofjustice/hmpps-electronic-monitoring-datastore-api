@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athe
 
 data class AthenaSuspensionOfVisitsDTO(
   val legacySubjectId: Int,
+  val legacyOrderId: Int,
   val suspensionOfVisits: String?,
   val suspensionOfVisitsRequestedDate: String?,
   val suspensionOfVisitsStartDate: String?,
