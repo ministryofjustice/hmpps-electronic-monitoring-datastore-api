@@ -106,8 +106,8 @@ class OrderEventsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(2)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaMonitoringEventDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().eventType).isEqualTo("TEST_EVENT")
     }
   }
@@ -174,8 +174,8 @@ class OrderEventsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(2)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaIncidentEventDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().violationAlertType).isEqualTo("TEST_ALERT")
     }
   }
@@ -293,8 +293,8 @@ class OrderEventsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(2)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaViolationEventDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().investigationOutcomeReason).isEqualTo("TEST_OUTCOME_REASON")
     }
   }
@@ -379,8 +379,8 @@ class OrderEventsRepositoryTest {
       Assertions.assertThat(result.size).isEqualTo(2)
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaContactEventDTO::class.java)
-      Assertions.assertThat(result.first().legacySubjectId).isEqualTo(987)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo(987)
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
+      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().contactType).isEqualTo("TEST_CONTACT")
     }
   }

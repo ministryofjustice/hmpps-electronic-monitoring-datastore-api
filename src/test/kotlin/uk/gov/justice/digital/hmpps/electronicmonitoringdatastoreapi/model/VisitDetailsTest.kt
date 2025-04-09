@@ -12,8 +12,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped with all attributes`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -52,8 +52,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped with the minimum details`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = null,
         address2 = null,
         address3 = null,
@@ -86,8 +86,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped without any address details`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = null,
         address2 = null,
         address3 = null,
@@ -120,8 +120,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped without any visit notes`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -160,8 +160,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped without any visit outcome`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -200,8 +200,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped without any end date`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -240,8 +240,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped without a complete address`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = null,
         address2 = null,
         address3 = null,
@@ -280,8 +280,8 @@ class VisitDetailsTest {
     @Test
     fun `VisitDetails can be mapped without a postcode`() {
       val athenaDto = AthenaVisitDetailsDTO(
-        legacySubjectId = 123,
-        legacyOrderId = 321,
+        legacySubjectId = "123",
+        legacyOrderId = "321",
         address1 = "address line 1",
         address2 = null,
         address3 = null,

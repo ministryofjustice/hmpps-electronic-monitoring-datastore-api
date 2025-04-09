@@ -143,28 +143,28 @@
     "ResultSetMetadata": {
       "ColumnInfo": [
         {
-          "CaseSensitive": false,
+          "CaseSensitive": true,
           "CatalogName": "hive",
           "Label": "legacy_subject_id",
           "Name": "legacy_subject_id",
           "Nullable": "UNKNOWN",
-          "Precision": 19,
+          "Precision": 2147483647,
           "Scale": 0,
           "SchemaName": "",
           "TableName": "",
-          "Type": "bigint"
+          "Type": "varchar"
         },
         {
-          "CaseSensitive": false,
+          "CaseSensitive": true,
           "CatalogName": "hive",
           "Label": "legacy_order_id",
           "Name": "legacy_order_id",
           "Nullable": "UNKNOWN",
-          "Precision": 19,
+          "Precision": 2147483647,
           "Scale": 0,
           "SchemaName": "",
           "TableName": "",
-          "Type": "bigint"
+          "Type": "varchar"
         },
         {
           "CaseSensitive": false,

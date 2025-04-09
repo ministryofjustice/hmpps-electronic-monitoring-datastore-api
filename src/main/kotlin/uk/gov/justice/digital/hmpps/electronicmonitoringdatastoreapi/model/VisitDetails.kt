@@ -24,8 +24,8 @@ data class VisitDetails(
 ) {
 
   constructor(dto: AthenaVisitDetailsDTO) : this(
-    legacySubjectId = dto.legacySubjectId.toString(),
-    legacyOrderId = dto.legacyOrderId.toString(),
+    legacySubjectId = dto.legacySubjectId,
+    legacyOrderId = dto.legacyOrderId,
     address = if (
       !dto.address1.isNullOrEmpty() ||
       !dto.address2.isNullOrEmpty() ||
