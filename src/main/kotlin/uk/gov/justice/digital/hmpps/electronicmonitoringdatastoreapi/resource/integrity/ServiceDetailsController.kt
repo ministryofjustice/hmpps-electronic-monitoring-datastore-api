@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ServiceDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.ServiceDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
-class CurfewTimetableController(
-  @Autowired val curfewTimetableService: CurfewTimetableService,
+class ServiceDetailsController(
+  @Autowired val serviceDetailsService: ServiceDetailsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
@@ -31,25 +31,24 @@ class CurfewTimetableController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getCurfewTimetable/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/curfew-timetable",
+      "/integrity/orders/{legacySubjectId}/service-details",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
   @PreAuthorize("hasAnyAuthority('ROLE_EM_DATASTORE_GENERAL_RO', 'ROLE_EM_DATASTORE_RESTRICTED_RO')")
-  fun getCurfewTimetable(
+  fun getServiceDetails(
     authentication: Authentication,
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<CurfewTimetable>> {
+  ): ResponseEntity<List<ServiceDetails>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = curfewTimetableService.getCurfewTimetable(legacySubjectId, validatedRole)
+    val result = serviceDetailsService.getServiceDetails(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
-      "GET_CURFEW_TIMETABLE",
+      "GET_SERVICE_DETAILS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
         "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),

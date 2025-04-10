@@ -10,28 +10,28 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServiceDetailsDTO
 
-class CurfewTimetableRepositoryTest {
+class ServiceDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
-  private lateinit var repository: CurfewTimetableRepository
+  private lateinit var repository: ServiceDetailsRepository
 
   @BeforeEach
   fun setup() {
     emDatastoreClient = Mockito.mock(EmDatastoreClient::class.java)
-    repository = CurfewTimetableRepository(emDatastoreClient)
+    repository = ServiceDetailsRepository(emDatastoreClient)
   }
 
   @Test
-  fun `CurfewTimetableRepository can be instantiated`() {
-    val sut = CurfewTimetableRepository(Mockito.mock(EmDatastoreClient::class.java))
+  fun `ServiceDetailsRepository can be instantiated`() {
+    val sut = ServiceDetailsRepository(Mockito.mock(EmDatastoreClient::class.java))
     Assertions.assertThat(sut).isNotNull()
   }
 
   @Nested
   inner class GetServicesList {
-    fun servicesResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
+    fun serviceDetailsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
         "service_id",
@@ -101,38 +101,41 @@ class CurfewTimetableRepositoryTest {
 
     @Test
     fun `getServicesList passes correct query to getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(servicesResultSet())
+      val resultSet = AthenaHelper.Companion.resultSetFromJson(serviceDetailsResultSet())
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getCurfewTimetable("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getServiceDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
 
     @Test
     fun `getServicesList returns an AthenaServicesListDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(servicesResultSet())
+      val resultSet = AthenaHelper.Companion.resultSetFromJson(serviceDetailsResultSet())
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getCurfewTimetable("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getServiceDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Assertions.assertThat(result).allSatisfy {
+        Assertions.assertThat(it).isInstanceOf(AthenaServiceDetailsDTO::class.java)
+      }
     }
 
     @Test
     fun `getServicesList returns all the results from getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(servicesResultSet("987"))
+      val resultSet = AthenaHelper.Companion.resultSetFromJson(serviceDetailsResultSet("987"))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getCurfewTimetable("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getServiceDetails("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
 
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaCurfewTimetableDTO::class.java)
+      Assertions.assertThat(result.first()).isInstanceOf(AthenaServiceDetailsDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
       Assertions.assertThat(result.first().serviceId).isEqualTo(333)
     }

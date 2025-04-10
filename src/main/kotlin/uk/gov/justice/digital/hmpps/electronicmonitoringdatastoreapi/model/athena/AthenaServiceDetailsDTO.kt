@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
-data class AthenaCurfewTimetableDTO(
+data class AthenaServiceDetailsDTO(
   val legacySubjectId: String,
   val serviceId: Int,
   val serviceAddress1: String?,

@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ServicesQueryBuilderTest {
+class ServiceDetailsQueryBuilderTest {
 
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
 
@@ -40,7 +40,7 @@ class ServicesQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(baseQuery.trimIndent())
 
-    val result = ServicesQueryBuilder("fake_database")
+    val result = ServiceDetailsQueryBuilder("fake_database")
       .withLegacySubjectId(legacySubjectId)
       .build()
 
@@ -53,7 +53,7 @@ class ServicesQueryBuilderTest {
     val dangerousInput = "12345 OR 1=1--"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      ServicesQueryBuilder("fake_database")
+      ServiceDetailsQueryBuilder("fake_database")
         .withLegacySubjectId(dangerousInput)
         .build()
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
@@ -64,7 +64,7 @@ class ServicesQueryBuilderTest {
     val dangerousInput = "' UNION SELECT username, password FROM users--"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      ServicesQueryBuilder("fake_database")
+      ServiceDetailsQueryBuilder("fake_database")
         .withLegacySubjectId(dangerousInput)
         .build()
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")

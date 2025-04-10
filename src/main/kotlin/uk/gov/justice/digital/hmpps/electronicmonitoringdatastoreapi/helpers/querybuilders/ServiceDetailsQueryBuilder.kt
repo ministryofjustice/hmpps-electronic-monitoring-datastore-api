@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
 import io.zeko.db.sql.dsl.eq
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServicesQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServiceDetailsQuery
 
-class ServicesQueryBuilder(
+class ServiceDetailsQueryBuilder(
   override var databaseName: String,
 ) : SqlQueryBuilder(
   databaseName,
@@ -30,7 +30,7 @@ class ServicesQueryBuilder(
     "sunday",
   ),
 ) {
-  fun withLegacySubjectId(legacySubjectId: String): ServicesQueryBuilder {
+  fun withLegacySubjectId(legacySubjectId: String): ServiceDetailsQueryBuilder {
     validateAlphanumeric(legacySubjectId, "legacy_subject_id")
 
     if (legacySubjectId.isBlank()) {
@@ -42,5 +42,5 @@ class ServicesQueryBuilder(
     return this
   }
 
-  fun build(): AthenaServicesQuery = AthenaServicesQuery(getSQL(), values.toTypedArray())
+  fun build(): AthenaServiceDetailsQuery = AthenaServiceDetailsQuery(getSQL(), values.toTypedArray())
 }
