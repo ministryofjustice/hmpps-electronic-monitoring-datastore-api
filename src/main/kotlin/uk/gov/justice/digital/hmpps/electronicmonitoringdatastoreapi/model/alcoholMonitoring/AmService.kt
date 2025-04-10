@@ -6,7 +6,6 @@ import java.time.LocalDateTime
 
 data class AmService(
   val legacySubjectId: String,
-  val legacyOrderId: String,
   val serviceStartDate: LocalDateTime?,
   val serviceEndDate: LocalDateTime?,
   val serviceAddress: String?,
@@ -18,7 +17,6 @@ data class AmService(
 
   constructor(dto: AthenaAmServiceDTO) : this(
     legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
     serviceStartDate = nullableLocalDateTime(dto.serviceStartDate),
     serviceEndDate = nullableLocalDateTime(dto.serviceEndDate),
     serviceAddress = dto.serviceAddress,

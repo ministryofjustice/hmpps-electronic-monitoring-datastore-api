@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.DocumentsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.KeyOrderInformationQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.OrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SubjectHistoryReportQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationDTO
@@ -20,7 +20,7 @@ class OrderInformationRepository(
   var athenaDatabase: String = "unknown_database",
 ) {
   fun getKeyOrderInformation(legacySubjectId: String, role: AthenaRole): AthenaKeyOrderInformationDTO {
-    val keyOrderInformationQuery = KeyOrderInformationQueryBuilder(athenaDatabase)
+    val keyOrderInformationQuery = OrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 

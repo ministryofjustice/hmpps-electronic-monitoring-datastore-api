@@ -45,7 +45,6 @@ class AmServicesControllerTest {
       val expectedResult = listOf(
         AmService(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           serviceStartDate = LocalDateTime.parse("2001-01-01T00:00:00"),
           serviceEndDate = LocalDateTime.parse("2002-02-02T00:00:00"),
           serviceAddress = "service address",

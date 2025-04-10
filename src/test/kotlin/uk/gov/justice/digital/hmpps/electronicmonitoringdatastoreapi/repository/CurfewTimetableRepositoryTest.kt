@@ -34,7 +34,6 @@ class CurfewTimetableRepositoryTest {
     fun servicesResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "service_id",
         "service_address_1",
         "service_address_2",
@@ -57,7 +56,6 @@ class CurfewTimetableRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
-          firstId,
           "333",
           "service_address_1",
           "service_address_2",
@@ -79,7 +77,6 @@ class CurfewTimetableRepositoryTest {
         ),
         arrayOf(
           "123456789",
-          "987654321",
           "444",
           "service_address_1",
           "service_address_2",

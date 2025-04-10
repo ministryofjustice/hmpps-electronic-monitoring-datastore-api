@@ -11,7 +11,6 @@ class VisitDetailsQueryBuilder(
   "visit_details",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "address_1",
     "address_2",
     "address_3",

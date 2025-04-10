@@ -14,7 +14,7 @@ class SummaryControllerIntegrationTest : ControllerIntegrationBase() {
   inner class GetSummary {
     @BeforeEach
     fun setup() {
-      MockEmDatastoreClient.Companion.addResponseFile("successfulKeyOrderInformationResponse")
+      MockEmDatastoreClient.Companion.addResponseFile("successfulOrderInformationResponse")
       MockEmDatastoreClient.Companion.addResponseFile("successfulSubjectHistoryReportResponse")
       MockEmDatastoreClient.Companion.addResponseFile("successfulDocumentListResponse")
     }

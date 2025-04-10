@@ -34,7 +34,6 @@ class VisitDetailsRepositoryTest {
     fun visitDetailsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "address_1",
         "address_2",
         "address_3",
@@ -50,7 +49,6 @@ class VisitDetailsRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
-          firstId,
           "address_1",
           "address_2",
           "address_3",
@@ -65,7 +63,6 @@ class VisitDetailsRepositoryTest {
         ),
         arrayOf(
           "123456789",
-          "987654321",
           "address_1",
           "address_2",
           "address_3",

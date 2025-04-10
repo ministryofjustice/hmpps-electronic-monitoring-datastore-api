@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 
 data class AmOrderDetails(
   val legacySubjectId: String,
+  val legacyOrderId: String?,
   val firstName: String?,
   val lastName: String?,
   val alias: String?,
@@ -17,7 +18,6 @@ data class AmOrderDetails(
   val address2: String?,
   val address3: String?,
   val postcode: String?,
-  val legacyOrderId: String?,
   val orderStartDate: LocalDateTime?,
   val orderEndDate: LocalDateTime?,
   val enforceableCondition: String?,
@@ -30,6 +30,7 @@ data class AmOrderDetails(
 ) {
   constructor(dto: AthenaAmOrderDetailsDTO) : this (
     legacySubjectId = dto.legacySubjectId,
+    legacyOrderId = dto.legacyOrderId,
     firstName = dto.firstName,
     lastName = dto.lastName,
     alias = dto.alias,
@@ -41,7 +42,6 @@ data class AmOrderDetails(
     address2 = dto.address2,
     address3 = dto.address3,
     postcode = dto.postcode,
-    legacyOrderId = dto.legacyOrderId,
     orderStartDate = nullableLocalDateTime(dto.orderStartDate),
     orderEndDate = nullableLocalDateTime(dto.orderEndDate),
     orderType = dto.orderType,

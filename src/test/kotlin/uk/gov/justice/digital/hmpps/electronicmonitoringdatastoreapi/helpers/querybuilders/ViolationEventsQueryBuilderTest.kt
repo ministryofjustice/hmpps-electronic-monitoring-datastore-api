@@ -10,7 +10,6 @@ class ViolationEventsQueryBuilderTest {
   val baseQuery: String = """
       SELECT 
         legacy_subject_id, 
-        legacy_order_id, 
         enforcement_reason, 
         investigation_outcome_reason, 
         breach_details, 

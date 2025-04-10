@@ -20,7 +20,6 @@ class OrderEventsService(
 
     return result.map { event ->
       Event<MonitoringEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "monitoring",
         dateTime = LocalDateTime.parse("${event.eventDate}T${event.eventTime}"),
@@ -34,7 +33,6 @@ class OrderEventsService(
 
     return result.map { event ->
       Event<IncidentEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "incident",
         dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
@@ -48,7 +46,6 @@ class OrderEventsService(
 
     return result.map { event ->
       Event<ViolationEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "violation",
         dateTime = LocalDateTime.parse("${event.breachDate}T${event.breachTime}"),
@@ -62,7 +59,6 @@ class OrderEventsService(
 
     return result.map { event ->
       Event<ContactEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "contact",
         dateTime = LocalDateTime.parse("${event.contactDate}T${event.contactTime}"),

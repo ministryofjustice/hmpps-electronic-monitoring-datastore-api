@@ -13,7 +13,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped with all attributes`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -32,7 +31,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -53,7 +51,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped with the minimum details`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = null,
         address2 = null,
         address3 = null,
@@ -72,7 +69,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = null,
           actualWorkStartDateTime = LocalDateTime.parse("2020-02-20T02:02:02"),
           actualWorkEndDateTime = null,
@@ -87,7 +83,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped without any address details`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = null,
         address2 = null,
         address3 = null,
@@ -106,7 +101,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = null,
           actualWorkStartDateTime = LocalDateTime.parse("2020-02-20T02:02:02"),
           actualWorkEndDateTime = LocalDateTime.parse("3030-03-30T03:03:03"),
@@ -121,7 +115,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped without any visit notes`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -140,7 +133,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -161,7 +153,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped without any visit outcome`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -180,7 +171,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -201,7 +191,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped without any end date`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = "address_1",
         address2 = "address_2",
         address3 = "address_3",
@@ -220,7 +209,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address_1",
             addressLine2 = "address_2",
@@ -241,7 +229,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped without a complete address`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = null,
         address2 = null,
         address3 = null,
@@ -260,7 +247,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = null,
             addressLine2 = null,
@@ -281,7 +267,6 @@ class VisitDetailsTest {
     fun `VisitDetails can be mapped without a postcode`() {
       val athenaDto = AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = "address line 1",
         address2 = null,
         address3 = null,
@@ -300,7 +285,6 @@ class VisitDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         VisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address = VisitDetailsAddress(
             addressLine1 = "address line 1",
             addressLine2 = null,

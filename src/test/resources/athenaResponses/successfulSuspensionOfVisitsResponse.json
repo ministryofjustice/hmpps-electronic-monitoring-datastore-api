@@ -19,18 +19,6 @@
         {
           "CaseSensitive": true,
           "CatalogName": "hive",
-          "Label": "legacy_order_id",
-          "Name": "legacy_order_id",
-          "Nullable": "UNKNOWN",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "SchemaName": "",
-          "TableName": "",
-          "Type": "varchar"
-        },
-        {
-          "CaseSensitive": true,
-          "CatalogName": "hive",
           "Label": "suspension_of_visits",
           "Name": "suspension_of_visits",
           "Nullable": "UNKNOWN",
@@ -119,9 +107,6 @@
             "VarCharValue": "1356796"
           },
           {
-            "VarCharValue": "8548204"
-          },
-          {
             "VarCharValue": "Yes"
           },
           {
@@ -142,9 +127,6 @@
         "Data": [
           {
             "VarCharValue": "1356796"
-          },
-          {
-            "VarCharValue": "8548204"
           },
           {
             "VarCharValue": "Yes"
@@ -169,9 +151,6 @@
             "VarCharValue": "1356796"
           },
           {
-            "VarCharValue": "8548204"
-          },
-          {
             "VarCharValue": "Yes"
           },
           {
@@ -192,9 +171,6 @@
         "Data": [
           {
             "VarCharValue": "1356796"
-          },
-          {
-            "VarCharValue": "8548204"
           },
           {
             "VarCharValue": "Yes"
@@ -219,9 +195,6 @@
             "VarCharValue": "1356796"
           },
           {
-            "VarCharValue": "8548204"
-          },
-          {
             "VarCharValue": "Yes"
           },
           {
@@ -242,9 +215,6 @@
         "Data": [
           {
             "VarCharValue": "1356796"
-          },
-          {
-            "VarCharValue": "8548204"
           },
           {
             "VarCharValue": "Yes"
@@ -269,9 +239,6 @@
             "VarCharValue": "1356796"
           },
           {
-            "VarCharValue": "8548204"
-          },
-          {
             "VarCharValue": "Yes"
           },
           {
@@ -288,9 +255,6 @@
         "Data": [
           {
             "VarCharValue": "1356796"
-          },
-          {
-            "VarCharValue": "8548204"
           },
           {
             "VarCharValue": "Yes"
@@ -315,9 +279,6 @@
             "VarCharValue": "1356796"
           },
           {
-            "VarCharValue": "8548204"
-          },
-          {
             "VarCharValue": "Yes"
           },
           {
@@ -338,9 +299,6 @@
         "Data": [
           {
             "VarCharValue": "1356796"
-          },
-          {
-            "VarCharValue": "8548204"
           },
           {
             "VarCharValue": "Yes"

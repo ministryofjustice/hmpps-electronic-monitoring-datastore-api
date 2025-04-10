@@ -10,6 +10,7 @@ class AmOrderDetailsQueryBuilderTest {
   val baseQuery: String = """
       SELECT 
         legacy_subject_id, 
+        legacy_order_id, 
         first_name,
         last_name,
         alias,
@@ -21,7 +22,6 @@ class AmOrderDetailsQueryBuilderTest {
         primary_address_line_2,
         primary_address_line_3,
         primary_address_post_code,
-        legacy_order_id, 
         order_start_date,
         order_end_date,
         enforceable_condition,

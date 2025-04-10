@@ -17,7 +17,7 @@ class AthenaDocumentListQuery(
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-class AthenaKeyOrderInformationQuery(
+class AthenaOrderInformationQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)

@@ -10,7 +10,6 @@ class ContactEventsQueryBuilder(
   "contact_history",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "outcome",
     "contact_type",
     "reason",

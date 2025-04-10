@@ -12,7 +12,6 @@ class AmVisitDetailsQueryBuilder(
   "am_visit_details",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "visit_id",
     "visit_type",
     "visit_attempt",

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class AthenaAmOrderInformationDTO(
   val legacySubjectId: String,
-  val legacyOrderId: String,
+  val legacyOrderId: String?,
   val firstName: String?,
   val lastName: String?,
   val alias: String?,

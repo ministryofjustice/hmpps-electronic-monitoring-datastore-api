@@ -5,7 +5,6 @@ import java.time.LocalDateTime
 
 data class CurfewTimetable(
   val legacySubjectId: String,
-  val legacyOrderId: String,
   val serviceId: Int,
   val serviceAddress1: String?,
   val serviceAddress2: String?,
@@ -25,7 +24,6 @@ data class CurfewTimetable(
 ) {
   constructor(dto: AthenaCurfewTimetableDTO) : this (
     legacySubjectId = dto.legacySubjectId,
-    legacyOrderId = dto.legacyOrderId,
     serviceId = dto.serviceId,
     serviceAddress1 = dto.serviceAddress1,
     serviceAddress2 = dto.serviceAddress2,

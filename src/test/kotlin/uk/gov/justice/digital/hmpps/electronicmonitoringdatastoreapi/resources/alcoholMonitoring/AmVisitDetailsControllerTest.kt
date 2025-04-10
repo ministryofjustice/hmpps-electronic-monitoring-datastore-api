@@ -45,7 +45,6 @@ class AmVisitDetailsControllerTest {
       val expectedResult = listOf(
         AmVisitDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           visitId = "300",
           visitType = "visit type",
           visitAttempt = "attempt 1",

@@ -20,7 +20,6 @@ class AmOrderEventsService(
 
     return result.map { event ->
       AmEvent<AmIncidentEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "am-incident",
         dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
@@ -34,7 +33,6 @@ class AmOrderEventsService(
 
     return result.map { event ->
       AmEvent<AmViolationEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "am-violation",
         dateTime = LocalDateTime.parse("${event.nonComplianceDate}T${event.nonComplianceTime}"),
@@ -48,7 +46,6 @@ class AmOrderEventsService(
 
     return result.map { event ->
       AmEvent<AmContactEventDetails>(
-        legacyOrderId = event.legacyOrderId.toString(),
         legacySubjectId = event.legacySubjectId.toString(),
         type = "am-contact",
         dateTime = LocalDateTime.parse("${event.contactDate}T${event.contactTime}"),

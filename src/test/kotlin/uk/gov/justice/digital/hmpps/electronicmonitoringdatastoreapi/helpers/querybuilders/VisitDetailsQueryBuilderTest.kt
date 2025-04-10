@@ -10,7 +10,6 @@ class VisitDetailsQueryBuilderTest {
   val baseQuery: String = """
       SELECT
         legacy_subject_id,
-        legacy_order_id,
         address_1,
         address_2,
         address_3,

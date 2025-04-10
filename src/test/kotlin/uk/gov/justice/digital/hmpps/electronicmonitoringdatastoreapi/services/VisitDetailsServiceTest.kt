@@ -35,7 +35,6 @@ class VisitDetailsServiceTest {
     val exampleVisitDetails = listOf<AthenaVisitDetailsDTO>(
       AthenaVisitDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         address1 = "address_line_1",
         address2 = "address_line_2",
         address3 = "address_line_3",

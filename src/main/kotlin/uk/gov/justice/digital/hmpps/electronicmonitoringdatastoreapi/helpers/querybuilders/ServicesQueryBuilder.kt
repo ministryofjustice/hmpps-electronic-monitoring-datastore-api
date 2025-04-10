@@ -10,7 +10,6 @@ class ServicesQueryBuilder(
   "services",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "service_id",
     "service_address_1",
     "service_address_2",

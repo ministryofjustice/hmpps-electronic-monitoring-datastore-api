@@ -45,7 +45,6 @@ class ViolationEventsControllerTest {
       val legacySubjectId = "1ab"
       val expectedResult = listOf<Event<ViolationEventDetails>>(
         Event<ViolationEventDetails>(
-          legacyOrderId = "123",
           legacySubjectId = "1543",
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class KeyOrderInformation(
   val specials: String,
   val legacySubjectId: String,
-  val legacyOrderId: String,
+  val legacyOrderId: String?,
   val name: String?,
   val alias: String?,
   val dateOfBirth: LocalDateTime?,

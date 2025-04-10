@@ -47,7 +47,6 @@ class AmIncidentEventsControllerTest {
       val legacySubjectId = "1ab"
       val expectedResult = listOf(
         AmEvent(
-          legacyOrderId = "123",
           legacySubjectId = "1543",
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2001, 1, 1, 1, 1, 1),
