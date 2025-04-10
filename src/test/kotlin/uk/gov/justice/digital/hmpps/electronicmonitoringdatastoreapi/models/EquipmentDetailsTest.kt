@@ -15,7 +15,6 @@ class EquipmentDetailsTest {
     fun `AthenaEquipmentDetailsDto can be mapped without any equipment details`() {
       val athenaDto = AthenaEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         hmuId = null,
         hmuEquipmentCategoryDescription = null,
         hmuInstallDate = null,
@@ -35,7 +34,6 @@ class EquipmentDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           pid = null,
           hmu = null,
         ),
@@ -46,7 +44,6 @@ class EquipmentDetailsTest {
     fun `AthenaEquipmentDetailsDto can be mapped without any home monitoring unit equipment details`() {
       val athenaDto = AthenaEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         hmuId = null,
         hmuEquipmentCategoryDescription = null,
         hmuInstallDate = null,
@@ -66,7 +63,6 @@ class EquipmentDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           pid = EquipmentDetail(
             id = "pidId",
             equipmentCategoryDescription = "pidEquipmentCategoryDescription",
@@ -82,7 +78,6 @@ class EquipmentDetailsTest {
     fun `AthenaEquipmentDetailsDto can be mapped without any personal equipment details`() {
       val athenaDto = AthenaEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = "hmu_equipment_category_description",
         hmuInstallDate = "2020-02-02",
@@ -102,7 +97,6 @@ class EquipmentDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           pid = null,
           hmu = EquipmentDetail(
             id = "hmu_id",
@@ -118,7 +112,6 @@ class EquipmentDetailsTest {
     fun `AthenaEquipmentDetailsDto can be mapped with just equipment ids`() {
       val athenaDto = AthenaEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = null,
         hmuInstallDate = null,
@@ -138,7 +131,6 @@ class EquipmentDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           pid = EquipmentDetail(
             id = "pid_id",
             equipmentCategoryDescription = null,
@@ -159,7 +151,6 @@ class EquipmentDetailsTest {
     fun `AthenaEquipmentDetailsDto can be mapped with no times`() {
       val athenaDto = AthenaEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = null,
         hmuInstallDate = "2021-02-02",
@@ -179,7 +170,6 @@ class EquipmentDetailsTest {
       Assertions.assertThat(model).isEqualTo(
         EquipmentDetails(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           pid = EquipmentDetail(
             id = "pid_id",
             equipmentCategoryDescription = null,

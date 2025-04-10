@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 // TODO: Check which fields are nullable
 data class AthenaOrderDetailsDTO(
   val legacySubjectId: String,
-  val legacyOrderId: String,
+  val legacyOrderId: String?,
   val firstName: String? = "",
   val lastName: String? = "",
   val alias: String? = "",

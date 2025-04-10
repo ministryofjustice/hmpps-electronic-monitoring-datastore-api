@@ -10,7 +10,6 @@ class AmContactEventsQueryBuilderTest {
   val baseQuery: String = """
       SELECT
         legacy_subject_id,
-        legacy_order_id,
         contact_date,
         contact_time,
         inbound_or_outbound,

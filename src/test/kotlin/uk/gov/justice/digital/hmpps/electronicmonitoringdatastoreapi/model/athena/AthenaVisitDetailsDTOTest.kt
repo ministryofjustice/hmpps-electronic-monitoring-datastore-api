@@ -11,7 +11,6 @@ class AthenaVisitDetailsDTOTest {
   inner class Construct {
     val columnNames = arrayOf<String>(
       "legacy_subject_id",
-      "legacy_order_id",
       "address_1",
       "address_2",
       "address_3",
@@ -32,7 +31,6 @@ class AthenaVisitDetailsDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "address_1",
             "address_2",
             "address_3",
@@ -53,7 +51,6 @@ class AthenaVisitDetailsDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",
@@ -76,7 +73,6 @@ class AthenaVisitDetailsDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "",
             "",
             "",
@@ -97,7 +93,6 @@ class AthenaVisitDetailsDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address1 = null,
           address2 = null,
           address3 = null,
@@ -120,7 +115,6 @@ class AthenaVisitDetailsDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "address_1",
             "address_2",
             "address_3",
@@ -141,7 +135,6 @@ class AthenaVisitDetailsDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",
@@ -164,7 +157,6 @@ class AthenaVisitDetailsDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "address_1",
             "address_2",
             "address_3",
@@ -185,7 +177,6 @@ class AthenaVisitDetailsDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",
@@ -208,7 +199,6 @@ class AthenaVisitDetailsDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "address_1",
             "address_2",
             "address_3",
@@ -229,7 +219,6 @@ class AthenaVisitDetailsDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaVisitDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           address1 = "address_1",
           address2 = "address_2",
           address3 = "address_3",

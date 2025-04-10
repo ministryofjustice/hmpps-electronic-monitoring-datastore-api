@@ -35,7 +35,6 @@ class EquipmentDetailsServiceTest {
     val exampleEquipmentDetailsList = listOf<AthenaEquipmentDetailsDTO>(
       AthenaEquipmentDetailsDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         hmuId = "123X",
         hmuEquipmentCategoryDescription = "TEST_HMU_CATEGORY",
         hmuInstallDate = "2020-02-02",

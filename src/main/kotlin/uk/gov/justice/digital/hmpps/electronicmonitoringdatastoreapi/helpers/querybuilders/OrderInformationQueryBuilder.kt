@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
 import io.zeko.db.sql.dsl.eq
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaKeyOrderInformationQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderInformationQuery
 
-class KeyOrderInformationQueryBuilder(
+class OrderInformationQueryBuilder(
   override val databaseName: String,
 ) : SqlQueryBuilder(
   databaseName,
@@ -22,7 +22,7 @@ class KeyOrderInformationQueryBuilder(
     "order_end_date",
   ),
 ) {
-  fun withLegacySubjectId(legacySubjectId: String): KeyOrderInformationQueryBuilder {
+  fun withLegacySubjectId(legacySubjectId: String): OrderInformationQueryBuilder {
     validateAlphanumeric(legacySubjectId, "legacy_subject_id")
 
     if (legacySubjectId.isBlank()) {
@@ -34,5 +34,5 @@ class KeyOrderInformationQueryBuilder(
     return this
   }
 
-  fun build(): AthenaKeyOrderInformationQuery = AthenaKeyOrderInformationQuery(getSQL(), values.toTypedArray())
+  fun build(): AthenaOrderInformationQuery = AthenaOrderInformationQuery(getSQL(), values.toTypedArray())
 }

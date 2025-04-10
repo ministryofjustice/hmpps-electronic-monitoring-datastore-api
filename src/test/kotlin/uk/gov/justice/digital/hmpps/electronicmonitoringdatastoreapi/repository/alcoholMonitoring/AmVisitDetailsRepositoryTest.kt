@@ -34,7 +34,6 @@ class AmVisitDetailsRepositoryTest {
     private fun amVisitDetailsResultSet(firstId: String = "987") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "visit_id",
         "visit_type",
         "visit_attempt",
@@ -55,7 +54,6 @@ class AmVisitDetailsRepositoryTest {
         arrayOf(
           firstId,
           firstId,
-          firstId,
           "visit type",
           "attempt 1",
           "2001-01-01",
@@ -72,7 +70,6 @@ class AmVisitDetailsRepositoryTest {
           "cancel description",
         ),
         arrayOf(
-          "987",
           "987",
           "123",
           "community",

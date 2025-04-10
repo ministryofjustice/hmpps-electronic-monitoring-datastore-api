@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class OrderDetails(
   val specials: String,
   val legacySubjectId: String,
-  val legacyOrderId: String,
+  val legacyOrderId: String?,
   val firstName: String? = "",
   val lastName: String? = "",
   val alias: String? = "",

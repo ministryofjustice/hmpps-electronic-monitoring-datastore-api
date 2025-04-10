@@ -36,7 +36,6 @@ class AmOrderEventsRepositoryTest {
     fun amIncidentEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "violation_alert_id",
         "violation_alert_date",
         "violation_alert_time",
@@ -50,7 +49,6 @@ class AmOrderEventsRepositoryTest {
       ),
       rows = arrayOf(
         arrayOf(
-          firstId,
           firstId,
           firstId,
           "2001-01-01",
@@ -117,7 +115,6 @@ class AmOrderEventsRepositoryTest {
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaAmIncidentEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().violationAlertType).isEqualTo("TEST_ALERT_1")
     }
   }
@@ -127,7 +124,6 @@ class AmOrderEventsRepositoryTest {
     fun amContactEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "contact_date",
         "contact_time",
         "inbound_or_outbound",
@@ -144,7 +140,6 @@ class AmOrderEventsRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
-          firstId,
           "2001-01-01",
           "01:01:01",
           "Inbound",
@@ -158,7 +153,6 @@ class AmOrderEventsRepositoryTest {
           "1234567",
         ),
         arrayOf(
-          "123456789",
           "123456789",
           "2002-02-02",
           "02:02:02",
@@ -213,7 +207,6 @@ class AmOrderEventsRepositoryTest {
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaAmContactEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().inboundOrOutbound).isEqualTo("Inbound")
       Assertions.assertThat(result.first().channel).isEqualTo("Call")
     }
@@ -224,7 +217,6 @@ class AmOrderEventsRepositoryTest {
     fun amViolationEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "enforcement_id",
         "non_compliance_reason",
         "non_compliance_date",
@@ -244,7 +236,6 @@ class AmOrderEventsRepositoryTest {
         arrayOf(
           firstId,
           firstId,
-          firstId,
           "Noncompliance reason",
           "2001-01-01",
           "01:01:01",
@@ -260,7 +251,6 @@ class AmOrderEventsRepositoryTest {
           "No",
         ),
         arrayOf(
-          "123456789",
           "123456789",
           "123456789",
           "Noncompliance reason",
@@ -318,7 +308,6 @@ class AmOrderEventsRepositoryTest {
 
       Assertions.assertThat(result.first()).isInstanceOf(AthenaAmViolationEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("987")
       Assertions.assertThat(result.first().violationAlertId).isEqualTo("V123")
       Assertions.assertThat(result.first().nonComplianceDate).isEqualTo("2001-01-01")
     }

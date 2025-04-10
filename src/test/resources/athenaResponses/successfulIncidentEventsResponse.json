@@ -7,9 +7,6 @@
             "VarCharValue": "legacy_subject_id"
           },
           {
-            "VarCharValue": "legacy_order_id"
-          },
-          {
             "VarCharValue": "violation_alert_type"
           },
           {
@@ -24,9 +21,6 @@
         "Data": [
           {
             "VarCharValue": "1401253"
-          },
-          {
-            "VarCharValue": "1391815"
           },
           {
             "VarCharValue": "Installation Successful"
@@ -45,9 +39,6 @@
             "VarCharValue": "1401253"
           },
           {
-            "VarCharValue": "1391815"
-          },
-          {
             "VarCharValue": "PID Tamper"
           },
           {
@@ -62,9 +53,6 @@
         "Data": [
           {
             "VarCharValue": "1401253"
-          },
-          {
-            "VarCharValue": "1391815"
           },
           {
             "VarCharValue": "Force Dial"
@@ -85,18 +73,6 @@
           "CatalogName": "hive",
           "Label": "legacy_subject_id",
           "Name": "legacy_subject_id",
-          "Nullable": "UNKNOWN",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "SchemaName": "",
-          "TableName": "",
-          "Type": "varchar"
-        },
-        {
-          "CaseSensitive": true,
-          "CatalogName": "hive",
-          "Label": "legacy_order_id",
-          "Name": "legacy_order_id",
           "Nullable": "UNKNOWN",
           "Precision": 2147483647,
           "Scale": 0,

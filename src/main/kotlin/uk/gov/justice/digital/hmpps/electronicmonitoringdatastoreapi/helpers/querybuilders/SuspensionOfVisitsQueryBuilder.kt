@@ -10,7 +10,6 @@ class SuspensionOfVisitsQueryBuilder(
   "suspension_of_visits",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "suspension_of_visits",
     "suspension_of_visits_requested_date",
     "suspension_of_visits_start_date",

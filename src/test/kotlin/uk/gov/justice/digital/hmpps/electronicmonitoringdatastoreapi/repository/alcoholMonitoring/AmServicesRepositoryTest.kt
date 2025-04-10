@@ -34,7 +34,6 @@ class AmServicesRepositoryTest {
     private fun amServicesResultSet(firstId: String = "987") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "service_start_date",
         "service_end_date",
         "service_address",
@@ -46,7 +45,6 @@ class AmServicesRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
-          firstId,
           "2001-01-01",
           "2002-02-02",
           "service address 1",
@@ -57,7 +55,6 @@ class AmServicesRepositoryTest {
         ),
         arrayOf(
           "123",
-          "456",
           "2001-01-01",
           "2002-02-02",
           "service address 2",

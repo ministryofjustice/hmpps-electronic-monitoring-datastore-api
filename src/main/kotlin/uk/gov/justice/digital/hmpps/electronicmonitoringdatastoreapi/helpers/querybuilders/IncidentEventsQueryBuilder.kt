@@ -10,7 +10,6 @@ class IncidentEventsQueryBuilder(
   "incident",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "violation_alert_type",
     "violation_alert_date",
     "violation_alert_time",

@@ -10,7 +10,6 @@ class AmIncidentEventsQueryBuilderTest {
   val baseQuery: String = """
       SELECT
         legacy_subject_id,
-        legacy_order_id,
         violation_alert_id,
         violation_alert_date,
         violation_alert_time,

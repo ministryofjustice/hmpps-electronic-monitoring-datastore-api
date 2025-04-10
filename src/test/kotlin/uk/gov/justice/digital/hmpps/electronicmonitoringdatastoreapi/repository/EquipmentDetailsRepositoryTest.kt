@@ -34,7 +34,6 @@ class EquipmentDetailsRepositoryTest {
     fun equipmentDetailsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
-        "legacy_order_id",
         "hmu_id",
         "hmu_equipment_category_description",
         "hmu_install_date",
@@ -51,7 +50,6 @@ class EquipmentDetailsRepositoryTest {
       rows = arrayOf(
         arrayOf(
           firstId,
-          firstId,
           "123456789X",
           "TEST_HMU_CATEGORY",
           "2024-02-02",
@@ -66,7 +64,6 @@ class EquipmentDetailsRepositoryTest {
           "03:03:03",
         ),
         arrayOf(
-          "123456789",
           "123456789",
           "987654321Y",
           "TEST_HMU_CATEGORY",

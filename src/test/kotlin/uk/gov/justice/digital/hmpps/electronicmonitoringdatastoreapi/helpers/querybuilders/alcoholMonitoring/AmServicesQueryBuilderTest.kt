@@ -10,7 +10,6 @@ class AmServicesQueryBuilderTest {
   val baseQuery: String = """
       SELECT
         legacy_subject_id,
-        legacy_order_id,
         service_start_date,
         service_end_date,
         service_address,

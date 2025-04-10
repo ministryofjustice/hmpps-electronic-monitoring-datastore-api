@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athe
 
 data class AthenaAmVisitDetailsDTO(
   val legacySubjectId: String,
-  val legacyOrderId: String,
   val visitId: String?,
   val visitType: String?,
   val visitAttempt: String?,

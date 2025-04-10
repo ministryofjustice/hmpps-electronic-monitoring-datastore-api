@@ -13,7 +13,6 @@ class OrderSearchQueryBuilder(
   tableName,
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "first_name",
     "last_name",
     "alias",

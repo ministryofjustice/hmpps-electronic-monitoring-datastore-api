@@ -34,7 +34,6 @@ class CurfewTimetableServiceTest {
     val exampleCurfewTimetable = listOf<AthenaCurfewTimetableDTO>(
       AthenaCurfewTimetableDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         serviceId = 333,
         serviceAddress1 = "",
         serviceAddress2 = "",

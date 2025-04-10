@@ -39,7 +39,6 @@ class AmOrderEventsServiceTest {
     val exampleContactEventList = listOf(
       AthenaAmContactEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         contactDate = "2001-01-01",
         contactTime = "01:01:01",
         inboundOrOutbound = "INBOUND",
@@ -95,7 +94,7 @@ class AmOrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(AmContactEventDetails::class.java)
       Assertions.assertThat(result.first().details.channel).isEqualTo("TEST_CHANNEL")
@@ -110,7 +109,6 @@ class AmOrderEventsServiceTest {
     val exampleAmIncidentEventList = listOf(
       AthenaAmIncidentEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         violationAlertId = "V123",
         violationAlertDate = "2001-01-01",
         violationAlertTime = "01:01:01",
@@ -164,7 +162,7 @@ class AmOrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(AmIncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.violationAlertType).isEqualTo("TEST_ALERT_TYPE")
@@ -179,7 +177,6 @@ class AmOrderEventsServiceTest {
     val exampleViolationEventList = listOf(
       AthenaAmViolationEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         enforcementId = "E123",
         nonComplianceReason = "TEST_REASON",
         nonComplianceDate = "2001-01-01",
@@ -237,7 +234,7 @@ class AmOrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(AmViolationEventDetails::class.java)
       Assertions.assertThat(result.first().details.nonComplianceReason).isEqualTo("TEST_REASON")

@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ListKeyOrderInformationQueryBuilderTest {
+class ListOrderInformationQueryBuilderTest {
 
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
 

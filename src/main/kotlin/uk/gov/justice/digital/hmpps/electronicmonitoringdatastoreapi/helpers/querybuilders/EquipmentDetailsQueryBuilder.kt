@@ -10,7 +10,6 @@ class EquipmentDetailsQueryBuilder(
   "equipment_details",
   arrayOf(
     "legacy_subject_id",
-    "legacy_order_id",
     "hmu_id",
     "hmu_equipment_category_description",
     "hmu_install_date",

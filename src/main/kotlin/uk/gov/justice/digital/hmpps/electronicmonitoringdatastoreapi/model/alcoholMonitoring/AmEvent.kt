@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alco
 import java.time.LocalDateTime
 
 data class AmEvent<T : AmEventDetails>(
-  val legacyOrderId: String,
   val legacySubjectId: String,
   val type: String,
   val dateTime: LocalDateTime,

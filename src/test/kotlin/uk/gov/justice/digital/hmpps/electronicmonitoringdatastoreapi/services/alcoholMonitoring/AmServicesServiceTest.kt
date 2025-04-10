@@ -35,7 +35,6 @@ class AmServicesServiceTest {
     private val exampleServices = listOf(
       AthenaAmServiceDTO(
         legacySubjectId = "123",
-        legacyOrderId = "321",
         serviceStartDate = "2001-01-01",
         serviceEndDate = "2002-02-02",
         serviceAddress = "service address",

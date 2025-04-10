@@ -4,6 +4,8 @@
       "Data" : [ {
         "VarCharValue" : "legacy_subject_id"
       }, {
+        "VarCharValue" : "legacy_order_id"
+      }, {
         "VarCharValue" : "first_name"
       }, {
         "VarCharValue" : "last_name"
@@ -23,8 +25,6 @@
         "VarCharValue" : "primary_address_line_3"
       }, {
         "VarCharValue" : "primary_address_post_code"
-      }, {
-        "VarCharValue" : "legacy_order_id"
       }, {
         "VarCharValue" : "order_start_date"
       }, {
@@ -48,6 +48,8 @@
       "Data" : [ {
         "VarCharValue" : "1253587"
       }, {
+        "VarCharValue" : "987654321"
+      }, {
         "VarCharValue" : "ELLEN"
       }, {
         "VarCharValue" : "RIPLEY"
@@ -57,8 +59,6 @@
         "VarCharValue" : "female"
       }, {
         "VarCharValue" : "test instructions"
-      }, {
-        "VarCharValue" : "987654321"
       }, {
         "VarCharValue" : "address line 1"
       }, {
@@ -96,6 +96,17 @@
         "TableName" : "",
         "Name" : "legacy_subject_id",
         "Label" : "legacy_subject_id",
+        "Type" : "varchar",
+        "Precision" : 2147483647,
+        "Scale" : 0,
+        "Nullable" : "UNKNOWN",
+        "CaseSensitive" : true
+      }, {
+        "CatalogName" : "hive",
+        "SchemaName" : "",
+        "TableName" : "",
+        "Name" : "legacy_order_id",
+        "Label" : "legacy_order_id",
         "Type" : "varchar",
         "Precision" : 2147483647,
         "Scale" : 0,
@@ -212,17 +223,6 @@
         "Nullable" : "UNKNOWN",
         "CaseSensitive" : true
       }, {
-          "CatalogName" : "hive",
-          "SchemaName" : "",
-          "TableName" : "",
-          "Name" : "legacy_order_id",
-          "Label" : "legacy_order_id",
-          "Type" : "varchar",
-          "Precision" : 2147483647,
-          "Scale" : 0,
-          "Nullable" : "UNKNOWN",
-          "CaseSensitive" : true
-        }, {
         "CatalogName" : "hive",
         "SchemaName" : "",
         "TableName" : "",

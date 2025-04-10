@@ -41,7 +41,6 @@ class OrderEventsServiceTest {
     val exampleMonitoringEventList = listOf<AthenaMonitoringEventDTO>(
       AthenaMonitoringEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         eventType = "TEST_EVENT",
         eventDate = "2022-10-10",
         eventTime = "13:00:05",
@@ -80,7 +79,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(MonitoringEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_EVENT")
@@ -94,7 +93,6 @@ class OrderEventsServiceTest {
     val exampleIncidentEventList = listOf<AthenaIncidentEventDTO>(
       AthenaIncidentEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         violationAlertType = "TEST_VIOLATION",
         violationAlertDate = "2019-06-24",
         violationAlertTime = "05:38:23",
@@ -129,7 +127,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(IncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_VIOLATION")
@@ -143,7 +141,6 @@ class OrderEventsServiceTest {
     val exampleViolationEventList = listOf<AthenaViolationEventDTO>(
       AthenaViolationEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         enforcementReason = "TEST_REASON",
         investigationOutcomeReason = "TEST_OUTCOME",
         breachDetails = "TEST_BREACH",
@@ -195,7 +192,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(ViolationEventDetails::class.java)
       Assertions.assertThat(result.first().details.breachDetails).isEqualTo("TEST_BREACH")
@@ -209,7 +206,6 @@ class OrderEventsServiceTest {
     val exampleContactEventList = listOf<AthenaContactEventDTO>(
       AthenaContactEventDTO(
         legacySubjectId = "123",
-        legacyOrderId = "123",
         outcome = "Mr silly laughed out loud",
         contactType = "TEST_CONTACT",
         reason = "A silly reason",
@@ -251,7 +247,7 @@ class OrderEventsServiceTest {
       Assertions.assertThat(result.size).isEqualTo(1)
 
       Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
-      Assertions.assertThat(result.first().legacyOrderId).isEqualTo("123")
+      Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
 
       Assertions.assertThat(result.first().details).isInstanceOf(ContactEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_CONTACT")

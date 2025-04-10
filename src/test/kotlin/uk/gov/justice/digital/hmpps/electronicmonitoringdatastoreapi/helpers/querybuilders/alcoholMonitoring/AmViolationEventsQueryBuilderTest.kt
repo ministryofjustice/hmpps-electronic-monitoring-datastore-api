@@ -10,7 +10,6 @@ class AmViolationEventsQueryBuilderTest {
   val baseQuery: String = """
       SELECT
         legacy_subject_id,
-        legacy_order_id,
         enforcement_id,
         non_compliance_reason,
         non_compliance_date,

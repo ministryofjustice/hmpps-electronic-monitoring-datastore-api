@@ -12,7 +12,6 @@ class AthenaViolationEventDTOTest {
   inner class Construct {
     val columnNames = arrayOf<String>(
       "legacy_subject_id",
-      "legacy_order_id",
       "enforcement_reason",
       "investigation_outcome_reason",
       "breach_details",
@@ -42,7 +41,6 @@ class AthenaViolationEventDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "TEST_ENFORCEMENT_REASON",
             "TEST_OUTCOME_REASON",
             "some details",
@@ -72,7 +70,6 @@ class AthenaViolationEventDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaViolationEventDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           enforcementReason = "TEST_ENFORCEMENT_REASON",
           investigationOutcomeReason = "TEST_OUTCOME_REASON",
           breachDetails = "some details",
@@ -104,7 +101,6 @@ class AthenaViolationEventDTOTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "",
             "",
             "",
@@ -134,7 +130,6 @@ class AthenaViolationEventDTOTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaViolationEventDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           enforcementReason = null,
           investigationOutcomeReason = null,
           breachDetails = null,

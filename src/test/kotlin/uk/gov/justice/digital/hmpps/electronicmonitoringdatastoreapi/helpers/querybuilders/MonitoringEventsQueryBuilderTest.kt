@@ -10,7 +10,6 @@ class MonitoringEventsQueryBuilderTest {
   val baseQuery: String = """
       SELECT 
         legacy_subject_id, 
-        legacy_order_id, 
         event_type, 
         event_date, 
         event_time, 

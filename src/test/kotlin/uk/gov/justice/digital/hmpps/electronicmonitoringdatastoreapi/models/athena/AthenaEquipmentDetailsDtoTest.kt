@@ -12,7 +12,6 @@ class AthenaEquipmentDetailsDtoTest {
   inner class Construct {
     val columnNames = arrayOf<String>(
       "legacy_subject_id",
-      "legacy_order_id",
       "hmu_id",
       "hmu_equipment_category_description",
       "hmu_install_date",
@@ -34,7 +33,6 @@ class AthenaEquipmentDetailsDtoTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "",
             "",
             "",
@@ -56,7 +54,6 @@ class AthenaEquipmentDetailsDtoTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaEquipmentDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           hmuId = null,
           hmuEquipmentCategoryDescription = null,
           hmuInstallDate = null,
@@ -80,7 +77,6 @@ class AthenaEquipmentDetailsDtoTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "",
             "",
             "",
@@ -102,7 +98,6 @@ class AthenaEquipmentDetailsDtoTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaEquipmentDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           hmuId = null,
           hmuEquipmentCategoryDescription = null,
           hmuInstallDate = null,
@@ -126,7 +121,6 @@ class AthenaEquipmentDetailsDtoTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "hmu_id",
             "hmu_equipment_category_description",
             "hmu_install_date",
@@ -148,7 +142,6 @@ class AthenaEquipmentDetailsDtoTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaEquipmentDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           hmuId = "hmu_id",
           hmuEquipmentCategoryDescription = "hmu_equipment_category_description",
           hmuInstallDate = "hmu_install_date",
@@ -172,7 +165,6 @@ class AthenaEquipmentDetailsDtoTest {
         rows = arrayOf(
           arrayOf<String>(
             "123",
-            "321",
             "hmu_id",
             "",
             "",
@@ -194,7 +186,6 @@ class AthenaEquipmentDetailsDtoTest {
       Assertions.assertThat(dto.first()).isEqualTo(
         AthenaEquipmentDetailsDTO(
           legacySubjectId = "123",
-          legacyOrderId = "321",
           hmuId = "hmu_id",
           hmuEquipmentCategoryDescription = null,
           hmuInstallDate = null,

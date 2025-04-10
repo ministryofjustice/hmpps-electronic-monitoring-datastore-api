@@ -4,8 +4,6 @@
         "Data": [ {
             "VarCharValue": "legacy_subject_id"
           }, {
-            "VarCharValue": "legacy_order_id"
-          }, {
             "VarCharValue": "visit_id"
           }, {
             "VarCharValue": "visit_type"
@@ -40,8 +38,6 @@
       }, {
         "Data": [ {
             "VarCharValue": "333"
-          }, {
-            "VarCharValue": "666"
           }, {
             "VarCharValue": "999"
           }, {
@@ -79,8 +75,6 @@
         "Data": [
           {
             "VarCharValue": "333"
-          }, {
-            "VarCharValue": "666"
           }, {
             "VarCharValue": "1000"
           }, {
@@ -122,18 +116,6 @@
           "CatalogName": "hive",
           "Label": "legacy_subject_id",
           "Name": "legacy_subject_id",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "SchemaName": "",
-          "TableName": "",
-          "Type": "varchar",
-          "Nullable" : "UNKNOWN"
-        },
-        {
-          "CaseSensitive": false,
-          "CatalogName": "hive",
-          "Label": "legacy_order_id",
-          "Name": "legacy_order_id",
           "Precision": 2147483647,
           "Scale": 0,
           "SchemaName": "",

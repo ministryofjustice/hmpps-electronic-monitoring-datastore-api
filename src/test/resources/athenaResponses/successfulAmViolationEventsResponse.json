@@ -7,9 +7,6 @@
             "VarCharValue": "legacy_subject_id"
           },
           {
-            "VarCharValue": "legacy_order_id"
-          },
-          {
             "VarCharValue": "enforcement_id"
           },
           {
@@ -59,9 +56,6 @@
             "VarCharValue": "1234"
           },
           {
-            "VarCharValue": "5678"
-          },
-          {
             "VarCharValue": "E001"
           },
           {
@@ -109,9 +103,6 @@
         "Data": [
           {
             "VarCharValue": "4321"
-          },
-          {
-            "VarCharValue": "8765"
           },
           {
             "VarCharValue": "E002"
@@ -165,18 +156,6 @@
           "CatalogName": "hive",
           "Label": "legacy_subject_id",
           "Name": "legacy_subject_id",
-          "Nullable": "UNKNOWN",
-          "Precision": 2147483647,
-          "Scale": 0,
-          "SchemaName": "",
-          "TableName": "",
-          "Type": "varchar"
-        },
-        {
-          "CaseSensitive": false,
-          "CatalogName": "hive",
-          "Label": "legacy_order_id",
-          "Name": "legacy_order_id",
           "Nullable": "UNKNOWN",
           "Precision": 2147483647,
           "Scale": 0,

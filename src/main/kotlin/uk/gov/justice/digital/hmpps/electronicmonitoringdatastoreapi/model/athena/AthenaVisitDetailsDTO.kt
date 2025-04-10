@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athe
 
 data class AthenaVisitDetailsDTO(
   val legacySubjectId: String,
-  val legacyOrderId: String,
   val address1: String?,
   val address2: String?,
   val address3: String?,
