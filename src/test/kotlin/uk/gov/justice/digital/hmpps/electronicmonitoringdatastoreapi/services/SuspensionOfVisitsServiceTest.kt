@@ -63,7 +63,7 @@ class SuspensionOfVisitsServiceTest {
     }
 
     @Test
-    fun `returns correct details of the CurfewTimetable when a response is received`() {
+    fun `returns correct details of the suspension of visits when a response is received`() {
       var result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull

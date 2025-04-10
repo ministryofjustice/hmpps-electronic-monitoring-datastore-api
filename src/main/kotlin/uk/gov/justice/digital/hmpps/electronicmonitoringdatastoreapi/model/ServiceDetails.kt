@@ -1,9 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaCurfewTimetableDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaServiceDetailsDTO
 import java.time.LocalDateTime
 
-data class CurfewTimetable(
+data class ServiceDetails(
   val legacySubjectId: String,
   val serviceId: Int,
   val serviceAddress1: String?,
@@ -22,7 +22,7 @@ data class CurfewTimetable(
   val saturday: Int,
   val sunday: Int,
 ) {
-  constructor(dto: AthenaCurfewTimetableDTO) : this (
+  constructor(dto: AthenaServiceDetailsDTO) : this (
     legacySubjectId = dto.legacySubjectId,
     serviceId = dto.serviceId,
     serviceAddress1 = dto.serviceAddress1,

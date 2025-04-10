@@ -52,7 +52,7 @@ class AthenaContactEventsListQuery(
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
-class AthenaServicesQuery(
+class AthenaServiceDetailsQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)

@@ -10,40 +10,40 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.CurfewTimetable
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.CurfewTimetableController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ServiceDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.ServiceDetailsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.CurfewTimetableService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.ServiceDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
-class CurfewTimetableControllerTest {
-  private lateinit var curfewTimetableService: CurfewTimetableService
+class ServiceDetailsControllerTest {
+  private lateinit var serviceDetailsService: ServiceDetailsService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
-  private lateinit var controller: CurfewTimetableController
+  private lateinit var controller: ServiceDetailsController
   private lateinit var authentication: Authentication
 
   @BeforeEach
   fun setup() {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    curfewTimetableService = Mockito.mock(CurfewTimetableService::class.java)
+    serviceDetailsService = Mockito.mock(ServiceDetailsService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
     Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = CurfewTimetableController(curfewTimetableService, roleService, auditService)
+    controller = ServiceDetailsController(serviceDetailsService, roleService, auditService)
   }
 
   @Nested
-  inner class GetCurfewTimetable {
+  inner class GetServiceDetails {
     @Test
     fun `gets order information from order service`() {
       val legacySubjectId = "1ab"
       val expectedResult = listOf(
-        CurfewTimetable(
+        ServiceDetails(
           legacySubjectId = "123",
           serviceId = 1,
           serviceAddress1 = "",
@@ -64,14 +64,14 @@ class CurfewTimetableControllerTest {
         ),
       )
 
-      Mockito.`when`(curfewTimetableService.getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(serviceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
 
-      val result = controller.getCurfewTimetable(authentication, legacySubjectId)
+      val result = controller.getServiceDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(curfewTimetableService, Mockito.times(1)).getCurfewTimetable(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(serviceDetailsService, Mockito.times(1)).getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     }
   }
 }
