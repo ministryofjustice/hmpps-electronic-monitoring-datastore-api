@@ -3,9 +3,9 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EquipmentDetail
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EquipmentDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaEquipmentDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetail
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityEquipmentDetailsDTO
 import java.time.LocalDateTime
 
 class EquipmentDetailsTest {
@@ -13,7 +13,7 @@ class EquipmentDetailsTest {
   inner class Construct {
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped without any equipment details`() {
-      val athenaDto = AthenaEquipmentDetailsDTO(
+      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
         legacySubjectId = "123",
         hmuId = null,
         hmuEquipmentCategoryDescription = null,
@@ -29,10 +29,10 @@ class EquipmentDetailsTest {
         timeDeviceRemoved = null,
       )
 
-      val model = EquipmentDetails(athenaDto)
+      val model = IntegrityEquipmentDetails(athenaDto)
 
       Assertions.assertThat(model).isEqualTo(
-        EquipmentDetails(
+        IntegrityEquipmentDetails(
           legacySubjectId = "123",
           pid = null,
           hmu = null,
@@ -42,7 +42,7 @@ class EquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped without any home monitoring unit equipment details`() {
-      val athenaDto = AthenaEquipmentDetailsDTO(
+      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
         legacySubjectId = "123",
         hmuId = null,
         hmuEquipmentCategoryDescription = null,
@@ -58,12 +58,12 @@ class EquipmentDetailsTest {
         timeDeviceRemoved = "03:03:03",
       )
 
-      val model = EquipmentDetails(athenaDto)
+      val model = IntegrityEquipmentDetails(athenaDto)
 
       Assertions.assertThat(model).isEqualTo(
-        EquipmentDetails(
+        IntegrityEquipmentDetails(
           legacySubjectId = "123",
-          pid = EquipmentDetail(
+          pid = IntegrityEquipmentDetail(
             id = "pidId",
             equipmentCategoryDescription = "pidEquipmentCategoryDescription",
             installedDateTime = LocalDateTime.parse("2020-02-02T02:02:02"),
@@ -76,7 +76,7 @@ class EquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped without any personal equipment details`() {
-      val athenaDto = AthenaEquipmentDetailsDTO(
+      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
         legacySubjectId = "123",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = "hmu_equipment_category_description",
@@ -92,13 +92,13 @@ class EquipmentDetailsTest {
         timeDeviceRemoved = null,
       )
 
-      val model = EquipmentDetails(athenaDto)
+      val model = IntegrityEquipmentDetails(athenaDto)
 
       Assertions.assertThat(model).isEqualTo(
-        EquipmentDetails(
+        IntegrityEquipmentDetails(
           legacySubjectId = "123",
           pid = null,
-          hmu = EquipmentDetail(
+          hmu = IntegrityEquipmentDetail(
             id = "hmu_id",
             equipmentCategoryDescription = "hmu_equipment_category_description",
             installedDateTime = LocalDateTime.parse("2020-02-02T02:02:02"),
@@ -110,7 +110,7 @@ class EquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped with just equipment ids`() {
-      val athenaDto = AthenaEquipmentDetailsDTO(
+      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
         legacySubjectId = "123",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = null,
@@ -126,18 +126,18 @@ class EquipmentDetailsTest {
         timeDeviceRemoved = null,
       )
 
-      val model = EquipmentDetails(athenaDto)
+      val model = IntegrityEquipmentDetails(athenaDto)
 
       Assertions.assertThat(model).isEqualTo(
-        EquipmentDetails(
+        IntegrityEquipmentDetails(
           legacySubjectId = "123",
-          pid = EquipmentDetail(
+          pid = IntegrityEquipmentDetail(
             id = "pid_id",
             equipmentCategoryDescription = null,
             installedDateTime = null,
             removedDateTime = null,
           ),
-          hmu = EquipmentDetail(
+          hmu = IntegrityEquipmentDetail(
             id = "hmu_id",
             equipmentCategoryDescription = null,
             installedDateTime = null,
@@ -149,7 +149,7 @@ class EquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped with no times`() {
-      val athenaDto = AthenaEquipmentDetailsDTO(
+      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
         legacySubjectId = "123",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = null,
@@ -165,18 +165,18 @@ class EquipmentDetailsTest {
         timeDeviceRemoved = null,
       )
 
-      val model = EquipmentDetails(athenaDto)
+      val model = IntegrityEquipmentDetails(athenaDto)
 
       Assertions.assertThat(model).isEqualTo(
-        EquipmentDetails(
+        IntegrityEquipmentDetails(
           legacySubjectId = "123",
-          pid = EquipmentDetail(
+          pid = IntegrityEquipmentDetail(
             id = "pid_id",
             equipmentCategoryDescription = null,
             installedDateTime = LocalDateTime.parse("2021-02-02T00:00:00"),
             removedDateTime = LocalDateTime.parse("2022-02-02T00:00:00"),
           ),
-          hmu = EquipmentDetail(
+          hmu = IntegrityEquipmentDetail(
             id = "hmu_id",
             equipmentCategoryDescription = null,
             installedDateTime = LocalDateTime.parse("2021-02-02T00:00:00"),

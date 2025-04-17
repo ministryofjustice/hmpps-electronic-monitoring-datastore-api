@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ViolationEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 class ViolationEventsController(
-  @Autowired val orderEventsService: OrderEventsService,
+  @Autowired val integrityOrderEventsService: IntegrityOrderEventsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
@@ -33,8 +33,7 @@ class ViolationEventsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getViolationEvents/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/violation-events",
+      "/orders/integrity/{legacySubjectId}/violation-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
@@ -44,10 +43,10 @@ class ViolationEventsController(
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<Event<ViolationEventDetails>>> {
+  ): ResponseEntity<List<Event<IntegrityViolationEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderEventsService.getViolationEvents(legacySubjectId, validatedRole)
+    val result = integrityOrderEventsService.getViolationEvents(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,

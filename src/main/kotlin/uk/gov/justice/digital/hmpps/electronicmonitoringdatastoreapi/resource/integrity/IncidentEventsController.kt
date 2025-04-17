@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IncidentEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 class IncidentEventsController(
-  @Autowired val orderEventsService: OrderEventsService,
+  @Autowired val integrityOrderEventsService: IntegrityOrderEventsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
@@ -32,8 +32,7 @@ class IncidentEventsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getIncidentEvents/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/incident-events",
+      "/orders/integrity/{legacySubjectId}/incident-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
@@ -46,7 +45,7 @@ class IncidentEventsController(
   ): ResponseEntity<List<Event<IncidentEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderEventsService.getIncidentEvents(legacySubjectId, validatedRole)
+    val result = integrityOrderEventsService.getIncidentEvents(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,

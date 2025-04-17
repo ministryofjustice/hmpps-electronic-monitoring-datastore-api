@@ -48,7 +48,7 @@ class AuthTest : IntegrationTestBase() {
   @Test
   fun `Providing JWT without right role return 403`() {
     webTestClient.get()
-      .uri("/orders/getOrderSummary/123")
+      .uri("/orders/integrity/123")
       .headers(setAuthorisation(roles = emptyList<String>()))
       .exchange()
       .expectStatus()

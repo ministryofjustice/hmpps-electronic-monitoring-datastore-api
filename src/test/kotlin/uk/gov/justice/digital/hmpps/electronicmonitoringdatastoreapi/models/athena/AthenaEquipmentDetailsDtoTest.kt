@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaEquipmentDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityEquipmentDetailsDTO
 
 class AthenaEquipmentDetailsDtoTest {
   @Nested
@@ -49,10 +49,10 @@ class AthenaEquipmentDetailsDtoTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaEquipmentDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaEquipmentDetailsDTO(
+        AthenaIntegrityEquipmentDetailsDTO(
           legacySubjectId = "123",
           hmuId = null,
           hmuEquipmentCategoryDescription = null,
@@ -93,10 +93,10 @@ class AthenaEquipmentDetailsDtoTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaEquipmentDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaEquipmentDetailsDTO(
+        AthenaIntegrityEquipmentDetailsDTO(
           legacySubjectId = "123",
           hmuId = null,
           hmuEquipmentCategoryDescription = null,
@@ -137,10 +137,10 @@ class AthenaEquipmentDetailsDtoTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaEquipmentDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaEquipmentDetailsDTO(
+        AthenaIntegrityEquipmentDetailsDTO(
           legacySubjectId = "123",
           hmuId = "hmu_id",
           hmuEquipmentCategoryDescription = "hmu_equipment_category_description",
@@ -181,10 +181,10 @@ class AthenaEquipmentDetailsDtoTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaEquipmentDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaEquipmentDetailsDTO(
+        AthenaIntegrityEquipmentDetailsDTO(
           legacySubjectId = "123",
           hmuId = "hmu_id",
           hmuEquipmentCategoryDescription = null,

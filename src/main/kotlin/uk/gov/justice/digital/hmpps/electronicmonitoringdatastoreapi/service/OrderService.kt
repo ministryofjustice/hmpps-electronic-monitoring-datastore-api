@@ -3,25 +3,25 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Document
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.KeyOrderInformation
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityDocument
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityKeyOrderInformation
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SubjectHistoryReport
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegritySubjectHistoryReport
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderDetailsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.OrderInformationRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SearchRepository
 import kotlin.String
 
 @Service
 class OrderService(
   @Autowired val searchRepository: SearchRepository,
-  @Autowired val orderInformationRepository: OrderInformationRepository,
-  @Autowired val orderDetailsRepository: OrderDetailsRepository,
+  @Autowired val integrityOrderInformationRepository: IntegrityOrderInformationRepository,
+  @Autowired val integrityOrderDetailsRepository: IntegrityOrderDetailsRepository,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
     try {
@@ -46,11 +46,11 @@ class OrderService(
     return results.map { result -> OrderSearchResult(result) }
   }
 
-  fun getOrderInformation(legacySubjectId: String, role: AthenaRole): OrderInformation {
-    val keyOrderInformation = orderInformationRepository.getKeyOrderInformation(legacySubjectId, role)
-    val parsedKeyOrderInformation = KeyOrderInformation(keyOrderInformation)
+  fun getOrderInformation(legacySubjectId: String, role: AthenaRole): IntegrityOrderInformation {
+    val keyOrderInformation = integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, role)
+    val parsedIntegrityKeyOrderInformation = IntegrityKeyOrderInformation(keyOrderInformation)
 
-    val emptyHistoryReport: SubjectHistoryReport = SubjectHistoryReport.createEmpty()
+    val emptyHistoryReport: IntegritySubjectHistoryReport = IntegritySubjectHistoryReport.createEmpty()
 //    val subjectHistoryReport = orderInformationRepository.getSubjectHistoryReport(orderId, role)
 //    val parsedSubjectHistoryReport = parseSubjectHistoryReport(subjectHistoryReport)
 
@@ -58,15 +58,15 @@ class OrderService(
 //    val parsedDocumentList = parseDocumentList(documentList)
 
     // Put it together
-    return OrderInformation(
-      keyOrderInformation = parsedKeyOrderInformation,
-      subjectHistoryReport = emptyHistoryReport,
-      documents = listOf<Document>(),
+    return IntegrityOrderInformation(
+      integrityKeyOrderInformation = parsedIntegrityKeyOrderInformation,
+      integritySubjectHistoryReport = emptyHistoryReport,
+      integrityDocuments = listOf<IntegrityDocument>(),
     )
   }
 
-  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): OrderDetails {
-    val orderDetailsDTO: AthenaOrderDetailsDTO = orderDetailsRepository.getOrderDetails(legacySubjectId, role)
-    return OrderDetails(orderDetailsDTO)
+  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): IntegrityOrderDetails {
+    val orderDetailsDTO: AthenaIntegrityOrderDetailsDTO = integrityOrderDetailsRepository.getOrderDetails(legacySubjectId, role)
+    return IntegrityOrderDetails(orderDetailsDTO)
   }
 }
