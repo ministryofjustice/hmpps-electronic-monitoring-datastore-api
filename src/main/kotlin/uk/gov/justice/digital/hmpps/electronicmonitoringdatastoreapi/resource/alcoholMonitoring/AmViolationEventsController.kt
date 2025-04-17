@@ -33,8 +33,7 @@ class AmViolationEventsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getViolationEvents/{legacySubjectId}",
-      "/alcohol-monitoring/{legacySubjectId}/violation-events",
+      "/orders/alcohol-monitoring/{legacySubjectId}/violation-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )

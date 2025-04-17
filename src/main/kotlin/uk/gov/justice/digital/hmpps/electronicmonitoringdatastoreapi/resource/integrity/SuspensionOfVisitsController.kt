@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.SuspensionOfVisits
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegritySuspensionOfVisits
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.SuspensionOfVisitsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegritySuspensionOfVisitsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 class SuspensionOfVisitsController(
-  @Autowired val suspensionOfVisitsService: SuspensionOfVisitsService,
+  @Autowired val integritySuspensionOfVisitsService: IntegritySuspensionOfVisitsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
@@ -32,8 +32,7 @@ class SuspensionOfVisitsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getSuspensionOfVisits/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/suspension-of-visits",
+      "/orders/integrity/{legacySubjectId}/suspension-of-visits",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
@@ -43,10 +42,10 @@ class SuspensionOfVisitsController(
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<SuspensionOfVisits>> {
+  ): ResponseEntity<List<IntegritySuspensionOfVisits>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = suspensionOfVisitsService.getSuspensionOfVisits(legacySubjectId, validatedRole)
+    val result = integritySuspensionOfVisitsService.getSuspensionOfVisits(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,

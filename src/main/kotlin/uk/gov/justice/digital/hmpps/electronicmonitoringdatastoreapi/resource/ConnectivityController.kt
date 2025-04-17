@@ -28,7 +28,6 @@ class ConnectivityController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/search/confirmConnection",
       "/test",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
