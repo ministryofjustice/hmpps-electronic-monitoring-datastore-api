@@ -31,7 +31,7 @@ class AmEquipmentDetailsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/alcohol-monitoring/{legacySubjectId}/equipment-details",
+      "/orders/alcohol-monitoring/{legacySubjectId}/equipment-details",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )

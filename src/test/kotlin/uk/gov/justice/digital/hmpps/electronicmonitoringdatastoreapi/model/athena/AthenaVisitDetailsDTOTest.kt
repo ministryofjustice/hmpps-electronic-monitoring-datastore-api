@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityVisitDetailsDTO
 
 class AthenaVisitDetailsDTOTest {
   @Nested
@@ -46,10 +47,10 @@ class AthenaVisitDetailsDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaVisitDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaVisitDetailsDTO(
+        AthenaIntegrityVisitDetailsDTO(
           legacySubjectId = "123",
           address1 = "address_1",
           address2 = "address_2",
@@ -88,10 +89,10 @@ class AthenaVisitDetailsDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaVisitDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaVisitDetailsDTO(
+        AthenaIntegrityVisitDetailsDTO(
           legacySubjectId = "123",
           address1 = null,
           address2 = null,
@@ -130,10 +131,10 @@ class AthenaVisitDetailsDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaVisitDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaVisitDetailsDTO(
+        AthenaIntegrityVisitDetailsDTO(
           legacySubjectId = "123",
           address1 = "address_1",
           address2 = "address_2",
@@ -172,10 +173,10 @@ class AthenaVisitDetailsDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaVisitDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaVisitDetailsDTO(
+        AthenaIntegrityVisitDetailsDTO(
           legacySubjectId = "123",
           address1 = "address_1",
           address2 = "address_2",
@@ -214,10 +215,10 @@ class AthenaVisitDetailsDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaVisitDetailsDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaVisitDetailsDTO(
+        AthenaIntegrityVisitDetailsDTO(
           legacySubjectId = "123",
           address1 = "address_1",
           address2 = "address_2",
