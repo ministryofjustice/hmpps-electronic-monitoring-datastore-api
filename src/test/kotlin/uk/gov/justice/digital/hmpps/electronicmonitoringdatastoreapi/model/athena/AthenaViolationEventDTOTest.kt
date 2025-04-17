@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityViolationEventDTO
 
 class AthenaViolationEventDTOTest {
 
@@ -65,10 +66,10 @@ class AthenaViolationEventDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaViolationEventDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaViolationEventDTO(
+        AthenaIntegrityViolationEventDTO(
           legacySubjectId = "123",
           enforcementReason = "TEST_ENFORCEMENT_REASON",
           investigationOutcomeReason = "TEST_OUTCOME_REASON",
@@ -125,10 +126,10 @@ class AthenaViolationEventDTOTest {
         ),
       ).build()
       val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
-      val dto = AthenaHelper.Companion.mapTo<AthenaViolationEventDTO>(athenaResponse)
+      val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
-        AthenaViolationEventDTO(
+        AthenaIntegrityViolationEventDTO(
           legacySubjectId = "123",
           enforcementReason = null,
           investigationOutcomeReason = null,

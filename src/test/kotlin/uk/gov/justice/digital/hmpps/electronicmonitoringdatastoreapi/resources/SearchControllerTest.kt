@@ -13,7 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.SearchController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -63,7 +63,7 @@ class SearchControllerTest {
 
       Mockito.`when`(orderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
 
-      val result = controller.searchOrders(authentication, orderSearchCriteria)
+      val result = controller.executeSearch(authentication, orderSearchCriteria)
 
       assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)

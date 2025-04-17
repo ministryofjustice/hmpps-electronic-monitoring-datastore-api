@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.ContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderEventsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @RestController
 class ContactEventsController(
-  @Autowired val orderEventsService: OrderEventsService,
+  @Autowired val integrityOrderEventsService: IntegrityOrderEventsService,
   val athenaRoleService: AthenaRoleService,
   @Autowired val auditService: AuditService,
 ) {
@@ -33,8 +33,7 @@ class ContactEventsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/getContactEvents/{legacySubjectId}",
-      "/integrity/orders/{legacySubjectId}/contact-events",
+      "/orders/integrity/{legacySubjectId}/contact-events",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
@@ -44,10 +43,10 @@ class ContactEventsController(
     @Parameter(description = "The legacy subject ID of the order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
-  ): ResponseEntity<List<Event<ContactEventDetails>>> {
+  ): ResponseEntity<List<Event<IntegrityContactEventDetails>>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderEventsService.getContactEvents(legacySubjectId, validatedRole)
+    val result = integrityOrderEventsService.getContactEvents(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
