@@ -252,10 +252,10 @@ class OrderServiceTest {
       val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.integrityKeyOrderInformation.legacyOrderId).isEqualTo(legacySubjectId)
-      Assertions.assertThat(result.integrityKeyOrderInformation.name).isEqualTo("TEST")
-      Assertions.assertThat(result.integritySubjectHistoryReport.name).isEqualTo("")
-      Assertions.assertThat(result.integrityDocuments).isEmpty()
+      Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(legacySubjectId)
+      Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
+      Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
+      Assertions.assertThat(result.documents).isEmpty()
     }
   }
 

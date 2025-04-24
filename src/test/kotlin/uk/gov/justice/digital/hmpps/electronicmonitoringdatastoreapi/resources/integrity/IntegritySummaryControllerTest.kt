@@ -46,7 +46,7 @@ class IntegritySummaryControllerTest {
     fun `gets summary from order service`() {
       val legacySubjectId = "1ab"
       val expectedResult = IntegrityOrderInformation(
-        integrityKeyOrderInformation = IntegrityKeyOrderInformation(
+        keyOrderInformation = IntegrityKeyOrderInformation(
           specials = "NO",
           legacySubjectId = "1234567",
           legacyOrderId = "7654321-DIFFERENT ID",
@@ -60,13 +60,13 @@ class IntegritySummaryControllerTest {
           orderStartDate = LocalDateTime.parse("2012-02-01T00:00:00"),
           orderEndDate = LocalDateTime.parse("2013-04-03T00:00:00"),
         ),
-        integritySubjectHistoryReport = IntegritySubjectHistoryReport(
+        subjectHistoryReport = IntegritySubjectHistoryReport(
           reportUrl = "#",
           name = "1234567",
           createdOn = "01-02-2020",
           time = "0900",
         ),
-        integrityDocuments = listOf<IntegrityDocument>(),
+        documents = listOf<IntegrityDocument>(),
       )
 
       Mockito.`when`(orderService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
