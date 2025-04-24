@@ -59,9 +59,9 @@ class OrderService(
 
     // Put it together
     return IntegrityOrderInformation(
-      integrityKeyOrderInformation = parsedIntegrityKeyOrderInformation,
-      integritySubjectHistoryReport = emptyHistoryReport,
-      integrityDocuments = listOf<IntegrityDocument>(),
+      keyOrderInformation = parsedIntegrityKeyOrderInformation,
+      subjectHistoryReport = emptyHistoryReport,
+      documents = listOf<IntegrityDocument>(),
     )
   }
 
