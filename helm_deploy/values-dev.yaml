@@ -18,6 +18,11 @@ generic-service:
     ATHENA_OUTPUT_BUCKET: "s3://emds-test-athena-query-results-20240923095933297100000013"
     MFA_REQUIRED: "false"
 
+  namespace_secrets:
+    hmpps-electronic-monitoring-datastore-dev-athena-roles:
+      ATHENA_GENERAL_IAM_ROLE: "general_role_arn"
+      ATHENA_SPECIALS_IAM_ROLE: "specials_role_arn"
+
   #                                  <== COMMENTED OUT to investigate failing build 20/12/2024
   # namespace_secrets:
   #   hmpps-auth:
