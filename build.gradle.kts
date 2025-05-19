@@ -16,7 +16,7 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
   implementation("software.amazon.awssdk:athena:2.31.36")
   implementation("software.amazon.awssdk:sts:2.31.36")
-  implementation("org.json:json:20250107")
+  implementation("org.json:json:20250517")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.19.0")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.19.0")
   implementation("com.fasterxml.jackson.core:jackson-core:2.19.0")
