@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.resources.ControllerIntegrationBase
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
 
@@ -13,7 +15,7 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
 
   @Nested
   @DisplayName("GET /orders/integrity/{legacySubjectId}/contact-events")
-  inner class GetContactEvents {
+  inner class GetIntegrityGeneralContactEvents {
 
     @BeforeEach
     fun setup() {
@@ -36,10 +38,65 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
     }
 
     @Test
+    fun `should return 403 forbidden if general role in authorization header`() {
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/contact-events", listOf(ROLE_EM_DATASTORE_RESTRICTED__RO))
+    }
+
+    @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
         .uri("/orders/integrity/2_4/contact-events")
-        .headers(setAuthorisation())
+        .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_GENERAL__RO)))
+        .exchange()
+        .expectStatus()
+        .isBadRequest
+    }
+
+    @Test
+    fun `should return OK with valid auth header and role for accessing general orders`() {
+      webTestClient.get()
+        .uri("/orders/integrity/234/contact-events")
+        .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_GENERAL__RO)))
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /orders/integrity/restricted/{legacySubjectId}/contact-events")
+  inner class GetIntegrityRestrictedContactEvents {
+
+    @BeforeEach
+    fun setup() {
+      MockEmDatastoreClient.addResponseFile("successfulContactEventsResponse")
+    }
+
+    @Test
+    fun `should return 401 unauthorized if no authorization header`() {
+      noAuthHeaderRespondsWithUnauthorizedTest("/orders/integrity/restricted/234/contact-events")
+    }
+
+    @Test
+    fun `should return 403 forbidden if no role in authorization header`() {
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/integrity/restricted/234/contact-events")
+    }
+
+    @Test
+    fun `should return 403 forbidden if wrong role in authorization header`() {
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/restricted/234/contact-events", listOf("ROLE_WRONG"))
+    }
+
+    @Test
+    fun `should return 403 forbidden if general role in authorization header`() {
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/restricted/234/contact-events", listOf(ROLE_EM_DATASTORE_GENERAL__RO))
+    }
+
+    @Test
+    fun `should throw a Bad Request exception if the URL param format is invalid`() {
+      webTestClient.get()
+        .uri("/orders/integrity/restricted/2_4/contact-events")
+        .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
         .exchange()
         .expectStatus()
         .isBadRequest
@@ -48,18 +105,8 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
     @Test
     fun `should return OK with valid auth header and role for accessing restricted orders`() {
       webTestClient.get()
-        .uri("/orders/integrity/234/contact-events")
-        .headers(setAuthorisation(roles = listOf("ROLE_EM_DATASTORE_RESTRICTED_RO")))
-        .exchange()
-        .expectStatus()
-        .isOk
-    }
-
-    @Test
-    fun `should return OK with valid auth header and role for accessing general orders`() {
-      webTestClient.get()
-        .uri("/orders/integrity/234/contact-events")
-        .headers(setAuthorisation())
+        .uri("/orders/integrity/restricted/234/contact-events")
+        .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
         .exchange()
         .expectStatus()
         .isOk
