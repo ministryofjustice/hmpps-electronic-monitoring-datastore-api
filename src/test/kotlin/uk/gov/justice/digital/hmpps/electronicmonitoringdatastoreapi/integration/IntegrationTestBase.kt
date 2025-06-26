@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockEmDatastoreClient
@@ -31,7 +32,7 @@ abstract class IntegrationTestBase {
 
   internal fun setAuthorisation(
     username: String? = "AUTH_ADM",
-    roles: List<String> = listOf("ROLE_EM_DATASTORE_GENERAL_RO"),
+    roles: List<String> = listOf(ROLE_EM_DATASTORE_GENERAL__RO),
     scopes: List<String> = listOf("read"),
   ): (
     HttpHeaders,
@@ -42,7 +43,7 @@ abstract class IntegrationTestBase {
   )
 
   internal fun setAuthorisationWithoutUsername(
-    roles: List<String> = listOf("ROLE_EM_DATASTORE_GENERAL_RO"),
+    roles: List<String> = listOf(ROLE_EM_DATASTORE_GENERAL__RO),
     scopes: List<String> = listOf("read"),
   ): (HttpHeaders) -> Unit = setAuthorisation(username = "", scopes = scopes, roles = roles)
 
