@@ -7,7 +7,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityDocument
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityKeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
@@ -18,10 +17,10 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.
 import kotlin.String
 
 @Service
-class OrderService(
-  @Autowired val searchRepository: SearchRepository,
-  @Autowired val integrityOrderInformationRepository: IntegrityOrderInformationRepository,
-  @Autowired val integrityOrderDetailsRepository: IntegrityOrderDetailsRepository,
+class IntegrityOrderService(
+  @field:Autowired val searchRepository: SearchRepository,
+  @field:Autowired val integrityOrderInformationRepository: IntegrityOrderInformationRepository,
+  @field:Autowired val integrityOrderDetailsRepository: IntegrityOrderDetailsRepository,
 ) {
   fun checkAvailability(role: AthenaRole): Boolean {
     try {
@@ -61,7 +60,7 @@ class OrderService(
     return IntegrityOrderInformation(
       keyOrderInformation = parsedIntegrityKeyOrderInformation,
       subjectHistoryReport = emptyHistoryReport,
-      documents = listOf<IntegrityDocument>(),
+      documents = listOf(),
     )
   }
 
