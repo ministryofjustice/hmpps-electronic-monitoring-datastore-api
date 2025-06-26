@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.3"
   kotlin("plugin.spring") version "2.2.20"
@@ -14,6 +16,7 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.5.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+
   implementation("software.amazon.awssdk:athena:2.35.7")
   implementation("software.amazon.awssdk:sts:2.35.7")
   implementation("org.json:json:20250517")
@@ -35,8 +38,25 @@ kotlin {
 }
 
 tasks {
+  register<Test>("unitTest") {
+    filter {
+      excludeTestsMatching("uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration*")
+    }
+  }
+
+  register<Test>("integrationTest") {
+    description = "Runs the integration tests, make sure that dependencies are available first by running `make serve`."
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["main"].output + configurations["testRuntimeClasspath"] + sourceSets["test"].output
+    filter {
+      includeTestsMatching("uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration*")
+    }
+  }
+
   withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_21
+    }
   }
 
   withType<Test> {
@@ -51,5 +71,9 @@ tasks {
     classDirectories.setFrom(fileTree(projectDir) { include("build/classes/kotlin/main/**") })
     sourceDirectories.setFrom(files("src/main/kotlin"))
     executionData.setFrom(files("build/jacoco/test.exec"))
+  }
+
+  testlogger {
+    theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
   }
 }
