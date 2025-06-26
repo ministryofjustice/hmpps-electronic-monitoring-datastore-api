@@ -27,14 +27,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = TAG_SEARCHING_ORDERS)
 @RestController
 class SearchController(
-  @field:Autowired val orderService: OrderService,
+  @field:Autowired val integrityOrderService: IntegrityOrderService,
   val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
@@ -86,7 +86,7 @@ class SearchController(
   ): ResponseEntity<QueryExecutionResponse> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val queryExecutionId = orderService.getQueryExecutionId(orderSearchCriteria, validatedRole)
+    val queryExecutionId = integrityOrderService.getQueryExecutionId(orderSearchCriteria, validatedRole)
 
     auditService.createEvent(
       authentication.name,
@@ -149,7 +149,7 @@ class SearchController(
   ): ResponseEntity<List<OrderSearchResult>> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val results = orderService.getSearchResults(queryExecutionId, validatedRole)
+    val results = integrityOrderService.getSearchResults(queryExecutionId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
