@@ -16,9 +16,9 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 
 @RestController
 class ConnectivityController(
-  @Autowired val orderService: OrderService,
+  @field:Autowired val orderService: OrderService,
   val athenaRoleService: AthenaRoleService,
-  @Autowired val auditService: AuditService,
+  @field:Autowired val auditService: AuditService,
 ) {
 
   @Operation(
