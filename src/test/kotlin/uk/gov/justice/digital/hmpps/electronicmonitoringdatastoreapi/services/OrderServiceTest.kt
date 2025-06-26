@@ -23,20 +23,20 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integ
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SearchRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderInformationRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
 
 class OrderServiceTest {
   private lateinit var searchRepository: SearchRepository
   private lateinit var integrityOrderInformationRepository: IntegrityOrderInformationRepository
   private lateinit var integrityOrderDetailsRepository: IntegrityOrderDetailsRepository
-  private lateinit var service: OrderService
+  private lateinit var service: IntegrityOrderService
 
   @BeforeEach
   fun setup() {
     searchRepository = mock(SearchRepository::class.java)
     integrityOrderInformationRepository = mock(IntegrityOrderInformationRepository::class.java)
     integrityOrderDetailsRepository = mock(IntegrityOrderDetailsRepository::class.java)
-    service = OrderService(searchRepository, integrityOrderInformationRepository, integrityOrderDetailsRepository)
+    service = IntegrityOrderService(searchRepository, integrityOrderInformationRepository, integrityOrderDetailsRepository)
   }
 
   @Test
