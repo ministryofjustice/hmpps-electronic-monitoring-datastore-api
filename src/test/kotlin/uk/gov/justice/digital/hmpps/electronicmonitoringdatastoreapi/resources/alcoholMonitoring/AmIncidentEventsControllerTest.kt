@@ -37,7 +37,7 @@ class AmIncidentEventsControllerTest {
     roleService = mock(AthenaRoleService::class.java)
     `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = AmIncidentEventsController(amOrderEventsService, roleService, auditService)
+    controller = AmIncidentEventsController(amOrderEventsService, auditService)
   }
 
   @Nested

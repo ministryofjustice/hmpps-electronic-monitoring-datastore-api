@@ -34,7 +34,7 @@ class AmOrderInformationControllerTest {
     roleService = Mockito.mock(AthenaRoleService::class.java)
     Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    amOrderInformationController = AmOrderInformationController(amOrderInformationService, roleService, auditService)
+    amOrderInformationController = AmOrderInformationController(amOrderInformationService, auditService)
   }
 
   @Nested
