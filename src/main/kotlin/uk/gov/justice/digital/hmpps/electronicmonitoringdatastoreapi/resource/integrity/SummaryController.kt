@@ -20,22 +20,23 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_GENERAL_ORDERS
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
 class SummaryController(
-  @field:Autowired val orderService: OrderService,
+  @field:Autowired val integrityOrderService: IntegrityOrderService,
   val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
 
   @Operation(
-    tags = ["Integrity orders"],
+    tags = [TAG_INTEGRITY_GENERAL_ORDERS],
     summary = "Get the summary for an order",
   )
   @RequestMapping(
@@ -83,7 +84,7 @@ class SummaryController(
   ): ResponseEntity<IntegrityOrderInformation> {
     val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
 
-    val result = orderService.getOrderInformation(legacySubjectId, validatedRole)
+    val result = integrityOrderService.getOrderInformation(legacySubjectId, validatedRole)
 
     auditService.createEvent(
       authentication.name,
