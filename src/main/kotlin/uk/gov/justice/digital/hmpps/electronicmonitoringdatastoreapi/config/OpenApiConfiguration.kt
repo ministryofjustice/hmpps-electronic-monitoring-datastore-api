@@ -19,6 +19,7 @@ const val TAG_SEARCHING_ORDERS = "Searching orders"
 const val TAG_ALCOHOL_ORDERS = "Alcohol monitoring orders"
 const val TAG_INTEGRITY_GENERAL_ORDERS = "Integrity general monitoring orders"
 const val TAG_INTEGRITY_RESTRICTED_ORDERS = "Integrity restricted monitoring orders"
+const val TAG_CONNECTIVITY = "Connectivity"
 
 const val ROLE_EM_DATASTORE_GENERAL__RO = "ROLE_EM_DATASTORE_GENERAL_RO"
 const val ROLE_EM_DATASTORE_RESTRICTED__RO = "ROLE_EM_DATASTORE_RESTRICTED_RO"
