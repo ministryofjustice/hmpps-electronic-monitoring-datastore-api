@@ -15,13 +15,13 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.ConnectivityController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @ActiveProfiles("test")
 @JsonTest
 class ConnectivityControllerTest {
-  private lateinit var orderService: OrderService
+  private lateinit var integrityOrderService: IntegrityOrderService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: ConnectivityController
@@ -31,12 +31,12 @@ class ConnectivityControllerTest {
   fun setup() {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    orderService = mock(OrderService::class.java)
+    integrityOrderService = mock(IntegrityOrderService::class.java)
     roleService = mock(AthenaRoleService::class.java)
     `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = mock(AuditService::class.java)
-    controller = ConnectivityController(orderService, roleService, auditService)
+    controller = ConnectivityController(integrityOrderService, roleService, auditService)
   }
 
   @Nested
@@ -46,14 +46,14 @@ class ConnectivityControllerTest {
       val expectedRole = AthenaRole.NONE
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
+      `when`(integrityOrderService.checkAvailability(AthenaRole.NONE)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       controller.test(authentication)
 
       Mockito.verify(roleService, Mockito.times(1))
         .getRoleFromAuthentication(authentication)
-      Mockito.verify(orderService, Mockito.times(1))
+      Mockito.verify(integrityOrderService, Mockito.times(1))
         .checkAvailability(expectedRole)
     }
 
@@ -62,7 +62,7 @@ class ConnectivityControllerTest {
       val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
+      `when`(integrityOrderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.test(authentication)
@@ -76,7 +76,7 @@ class ConnectivityControllerTest {
       val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
+      `when`(integrityOrderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.test(authentication)
@@ -90,7 +90,7 @@ class ConnectivityControllerTest {
       val expectedRole = AthenaRole.NONE
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(orderService.checkAvailability(AthenaRole.NONE)).thenReturn(false)
+      `when`(integrityOrderService.checkAvailability(AthenaRole.NONE)).thenReturn(false)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.test(authentication)
