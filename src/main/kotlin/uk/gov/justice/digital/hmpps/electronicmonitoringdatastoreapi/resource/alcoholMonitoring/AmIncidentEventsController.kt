@@ -25,7 +25,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmIncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -34,7 +33,6 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 @RestController
 class AmIncidentEventsController(
   @param:Autowired private val amOrderEventsService: AmOrderEventsService,
-  private val athenaRoleService: AthenaRoleService,
   @param:Autowired private val auditService: AuditService,
 ) {
 
@@ -87,16 +85,14 @@ class AmIncidentEventsController(
     )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<List<AmEvent<AmIncidentEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = amOrderEventsService.getIncidentEvents(legacySubjectId, validatedRole)
+    val result = amOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
 
     auditService.createEvent(
       authentication.name,
       "GET_ALCOHOL_MONITORING_INCIDENT_EVENTS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
+        "restrictedOrdersIncluded" to false,
       ),
     )
 
