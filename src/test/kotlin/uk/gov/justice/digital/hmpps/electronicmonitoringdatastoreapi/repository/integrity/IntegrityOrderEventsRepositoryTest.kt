@@ -75,7 +75,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -86,7 +86,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -97,7 +97,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getMonitoringEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getMonitoringEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -139,7 +139,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -150,7 +150,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -161,7 +161,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getIncidentEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getIncidentEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -254,7 +254,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getViolationEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getViolationEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -265,7 +265,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getViolationEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getViolationEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -276,7 +276,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getViolationEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getViolationEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -336,7 +336,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getContactEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getContactEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -347,7 +347,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getContactEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getContactEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -358,7 +358,7 @@ class IntegrityOrderEventsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getContactEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getContactEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)

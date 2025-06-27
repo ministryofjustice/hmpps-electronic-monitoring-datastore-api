@@ -21,22 +21,22 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_GENERAL_ORDERS
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_RESTRICTED_ORDERS
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityEquipmentDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
-class EquipmentDetailsController(
+class IntegrityEquipmentDetailsController(
   @field:Autowired val integrityEquipmentDetailsService: IntegrityEquipmentDetailsService,
-  val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
+
   @Operation(
     tags = [TAG_INTEGRITY_GENERAL_ORDERS],
-    summary = "Get the equipment details for an order",
+    summary = "Get the equipment details for an integrity general order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -73,24 +73,83 @@ class EquipmentDetailsController(
       ),
     ],
   )
-  @SecurityRequirement(name = TOKEN_HMPPS_AUTH, scopes = [ROLE_EM_DATASTORE_GENERAL__RO, ROLE_EM_DATASTORE_RESTRICTED__RO])
-  @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_GENERAL__RO', '$ROLE_EM_DATASTORE_RESTRICTED__RO')")
-  fun getEquipmentDetails(
+  @SecurityRequirement(name = TOKEN_HMPPS_AUTH, scopes = [ROLE_EM_DATASTORE_GENERAL__RO])
+  @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_GENERAL__RO')")
+  fun getGeneralEquipmentDetails(
     authentication: Authentication,
-    @Parameter(description = "The legacy subject ID of the order", required = true)
+    @Parameter(description = "The legacy subject ID of the integrity general order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<List<IntegrityEquipmentDetails>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = integrityEquipmentDetailsService.getEquipmentDetails(legacySubjectId, validatedRole)
+    val result = integrityEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
     auditService.createEvent(
       authentication.name,
-      "GET_EQUIPMENT_DETAILS",
+      "GET_GENERAL_INTEGRITY_EQUIPMENT_DETAILS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
+        "restrictedOrdersIncluded" to false,
+      ),
+    )
+
+    return ResponseEntity.ok(result)
+  }
+
+  @Operation(
+    tags = [TAG_INTEGRITY_RESTRICTED_ORDERS],
+    summary = "Get the equipment details for an integrity restricted order",
+  )
+  @RequestMapping(
+    method = [RequestMethod.GET],
+    path = [
+      "/orders/integrity/restricted/{legacySubjectId}/equipment-details",
+    ],
+    produces = [MediaType.APPLICATION_JSON_VALUE],
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "OK",
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "Bad request - invalid input data.",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized - requires a valid OAuth2 token",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden - requires an appropriate role",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "500",
+        description = "Internal Server Error - An unexpected error occurred.",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @SecurityRequirement(name = TOKEN_HMPPS_AUTH, scopes = [ROLE_EM_DATASTORE_RESTRICTED__RO])
+  @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_RESTRICTED__RO')")
+  fun getRestrictedEquipmentDetails(
+    authentication: Authentication,
+    @Parameter(description = "The legacy subject ID of the integrity restricted order", required = true)
+    @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
+    @PathVariable legacySubjectId: String,
+  ): ResponseEntity<List<IntegrityEquipmentDetails>> {
+    val result = integrityEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
+
+    auditService.createEvent(
+      authentication.name,
+      "GET_RESTRICTED_INTEGRITY_EQUIPMENT_DETAILS",
+      mapOf(
+        "legacySubjectId" to legacySubjectId,
+        "restrictedOrdersIncluded" to true,
       ),
     )
 

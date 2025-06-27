@@ -85,7 +85,7 @@ class AmIncidentEventsController(
     )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<List<AmEvent<AmIncidentEventDetails>>> {
-    val result = amOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    val result = amOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
     auditService.createEvent(
       authentication.name,

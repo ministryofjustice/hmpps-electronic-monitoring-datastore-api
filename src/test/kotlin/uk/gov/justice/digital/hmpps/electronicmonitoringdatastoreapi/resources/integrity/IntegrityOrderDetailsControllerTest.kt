@@ -71,7 +71,7 @@ class IntegrityOrderDetailsControllerTest {
         responsibleOrganisationDetailsRegion = "",
       )
 
-      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
 
       val result = controller.getGeneralOrderDetails(authentication, legacySubjectId)
 
@@ -79,7 +79,7 @@ class IntegrityOrderDetailsControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
   }
 
@@ -121,7 +121,7 @@ class IntegrityOrderDetailsControllerTest {
         responsibleOrganisationDetailsRegion = "",
       )
 
-      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)).thenReturn(expectedResult)
 
       val result = controller.getRestrictedOrderDetails(authentication, legacySubjectId)
 
@@ -129,7 +129,7 @@ class IntegrityOrderDetailsControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
+      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
     }
   }
 }
