@@ -9,13 +9,11 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityDocument
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityKeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegritySubjectHistoryReport
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.SummaryController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityOrderInformationController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -24,9 +22,8 @@ import java.time.LocalDateTime
 @JsonTest
 class IntegritySummaryControllerTest {
   private lateinit var integrityOrderService: IntegrityOrderService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
-  private lateinit var controller: SummaryController
+  private lateinit var controller: IntegrityOrderInformationController
   private lateinit var authentication: Authentication
 
   @BeforeEach
@@ -34,10 +31,8 @@ class IntegritySummaryControllerTest {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityOrderService = Mockito.mock(IntegrityOrderService::class.java)
-    roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = SummaryController(integrityOrderService, roleService, auditService)
+    controller = IntegrityOrderInformationController(integrityOrderService, auditService)
   }
 
   @Nested
@@ -69,7 +64,7 @@ class IntegritySummaryControllerTest {
         documents = listOf<IntegrityDocument>(),
       )
 
-      Mockito.`when`(integrityOrderService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderService.getOrderInformation(legacySubjectId, false)).thenReturn(expectedResult)
 
       val result = controller.getSummary(authentication, legacySubjectId)
 
@@ -77,7 +72,7 @@ class IntegritySummaryControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderInformation::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderService, Mockito.times(1)).getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderService, Mockito.times(1)).getOrderInformation(legacySubjectId, false)
     }
   }
 }
