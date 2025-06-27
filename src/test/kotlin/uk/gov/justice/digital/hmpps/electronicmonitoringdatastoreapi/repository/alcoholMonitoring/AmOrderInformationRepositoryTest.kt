@@ -11,7 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
 
@@ -103,18 +103,18 @@ class AmOrderInformationRepositoryTest {
     fun `getOrderInformation calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderInformationResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       repository.getOrderInformation("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getOrderInformation returns an AthenaAmOrderInformationDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderInformationResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getOrderInformation("123")
 
@@ -129,7 +129,7 @@ class AmOrderInformationRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(amOrderInformationResultSet(legacySubjectId, firstName, lastName))
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getOrderInformation(legacySubjectId)
 

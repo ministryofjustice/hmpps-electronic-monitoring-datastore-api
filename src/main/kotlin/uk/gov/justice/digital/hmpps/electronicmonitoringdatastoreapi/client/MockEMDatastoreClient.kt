@@ -1,17 +1,22 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import java.io.File
 import kotlin.io.readText
 
 @Component
 @Profile("mocking")
 class MockEMDatastoreClient : EmDatastoreClientInterface {
+
+  @Value($$"${services.athena.database}")
+  private val databaseName: String = "test_database"
+
   private companion object {
     private const val MOCKS_RESOURCE_PATH = "./src/main/resources/mockAthenaResponses"
 
@@ -43,8 +48,10 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       .trimIndent()
   }
 
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, restricted: Boolean): String {
-    if (athenaQuery.queryString == "THROW ERROR") {
+  override fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean): String {
+    val query = athenaQuery.build(databaseName)
+
+    if (query.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
 
@@ -52,15 +59,15 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       loadResponses()
     }
 
-    val query = stripWhitespace(athenaQuery.queryString)
+    val finalQuery = stripWhitespace(query.queryString)
 
-    val athenaResponse = responses[query]?.trimIndent()
+    val athenaResponse = responses[finalQuery]?.trimIndent()
     if (athenaResponse == null) {
       log.info(
         """
           No response defined for query
           -------------
-          ${athenaQuery.queryString}
+          $finalQuery
           -------------
         """.trimIndent(),
       )
@@ -87,8 +94,10 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
     return AthenaHelper.resultSetFromJson(athenaResponse)
   }
 
-  override fun getQueryResult(athenaQuery: AthenaQuery, restricted: Boolean): ResultSet {
-    if (athenaQuery.queryString == "THROW ERROR") {
+  override fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean): ResultSet {
+    val query = athenaQuery.build(databaseName)
+
+    if (query.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
 
@@ -96,15 +105,15 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       loadResponses()
     }
 
-    val query = stripWhitespace("${athenaQuery.queryString}${athenaQuery.parameters.joinToString(",")}")
+    val finalQuery = stripWhitespace("${query.queryString}${query.parameters.joinToString(",")}")
 
-    val athenaResponse = responses[query]?.trimIndent()
+    val athenaResponse = responses[finalQuery]?.trimIndent()
     if (athenaResponse == null) {
       log.info(
         """
           No response defined for query
           -------------
-          $query
+          $finalQuery
           -------------
         """.trimIndent(),
       )

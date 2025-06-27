@@ -9,8 +9,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmContactEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmIncidentEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmViolationEventDTO
@@ -81,18 +81,18 @@ class AmOrderEventsRepositoryTest {
     fun `getIncidentEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amIncidentEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       repository.getIncidentEventsList("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getIncidentEventsList returns a list of AthenaIncidentEventDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amIncidentEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getIncidentEventsList("123")
 
@@ -106,7 +106,7 @@ class AmOrderEventsRepositoryTest {
     fun `getIncidentEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amIncidentEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getIncidentEventsList("987")
 
@@ -173,18 +173,18 @@ class AmOrderEventsRepositoryTest {
     fun `getContactEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amContactEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       repository.getContactEventsList("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getContactEventsList returns a list of AthenaContactEventDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amContactEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getContactEventsList("123")
 
@@ -198,7 +198,7 @@ class AmOrderEventsRepositoryTest {
     fun `getContactEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amContactEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getContactEventsList("987")
 
@@ -274,18 +274,18 @@ class AmOrderEventsRepositoryTest {
     fun `getViolationEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amViolationEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       repository.getViolationEventsList("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getViolationEventsList returns a list of AthenaViolationEventDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amViolationEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getViolationEventsList("123")
 
@@ -299,7 +299,7 @@ class AmOrderEventsRepositoryTest {
     fun `getViolationEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amViolationEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getViolationEventsList("987")
 
