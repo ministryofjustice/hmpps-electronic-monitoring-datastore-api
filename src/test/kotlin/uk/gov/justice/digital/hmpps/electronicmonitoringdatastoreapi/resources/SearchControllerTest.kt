@@ -61,7 +61,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      Mockito.`when`(integrityOrderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(queryExecutionId)
+      Mockito.`when`(integrityOrderService.getQueryExecutionId(orderSearchCriteria, false)).thenReturn(queryExecutionId)
 
       val result = controller.executeSearch(authentication, orderSearchCriteria)
 
