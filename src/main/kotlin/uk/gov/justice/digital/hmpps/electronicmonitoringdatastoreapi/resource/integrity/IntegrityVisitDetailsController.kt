@@ -17,26 +17,23 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_ORDERS
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityVisitDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
-class VisitDetailsController(
+class IntegrityVisitDetailsController(
   @field:Autowired val integrityVisitDetailsService: IntegrityVisitDetailsService,
-  val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
   @Operation(
     tags = [TAG_INTEGRITY_ORDERS],
-    summary = "Get the visit details for an order",
+    summary = "Get the visit details for an integrity order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -74,23 +71,23 @@ class VisitDetailsController(
     ],
   )
   @SecurityRequirement(name = TOKEN_HMPPS_AUTH, scopes = [ROLE_EM_DATASTORE_GENERAL__RO, ROLE_EM_DATASTORE_RESTRICTED__RO])
-  @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_GENERAL__RO', '$ROLE_EM_DATASTORE_RESTRICTED__RO')")
+  @PreAuthorize("( hasAuthority('$ROLE_EM_DATASTORE_GENERAL__RO') and #restricted == false ) or ( hasAuthority('$ROLE_EM_DATASTORE_RESTRICTED__RO') )")
   fun getVisitDetails(
     authentication: Authentication,
-    @Parameter(description = "The legacy subject ID of the order", required = true)
+    @Parameter(description = "The legacy subject ID of the integrity order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
+    @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
+    restricted: Boolean = false,
   ): ResponseEntity<List<IntegrityVisitDetails>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = integrityVisitDetailsService.getVisitDetails(legacySubjectId, validatedRole)
+    val result = integrityVisitDetailsService.getVisitDetails(legacySubjectId, restricted)
 
     auditService.createEvent(
       authentication.name,
-      "GET_VISIT_DETAILS",
+      "GET_INTEGRITY_VISIT_DETAILS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
+        "restrictedOrdersIncluded" to restricted,
       ),
     )
 
