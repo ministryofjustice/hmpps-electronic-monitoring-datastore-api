@@ -8,7 +8,10 @@ import org.mockito.Mockito
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityOrderDetailsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
@@ -34,6 +37,15 @@ class IntegrityOrderDetailsControllerTest {
 
   @Nested
   inner class GetIntegrityGeneralOrderDetails {
+    @BeforeEach
+    fun setup() {
+      Mockito.`when`(authentication.authorities).thenReturn(
+        listOf(
+          SimpleGrantedAuthority(ROLE_EM_DATASTORE_GENERAL__RO),
+        ),
+      )
+    }
+
     @Test
     fun `gets general order details from order details service`() {
       val legacySubjectId = "2gt"
@@ -84,6 +96,15 @@ class IntegrityOrderDetailsControllerTest {
 
   @Nested
   inner class GetIntegrityRestrictedOrderDetails {
+    @BeforeEach
+    fun setup() {
+      Mockito.`when`(authentication.authorities).thenReturn(
+        listOf(
+          SimpleGrantedAuthority(ROLE_EM_DATASTORE_RESTRICTED__RO),
+        ),
+      )
+    }
+
     @Test
     fun `gets restricted order details from order details service`() {
       val legacySubjectId = "2gt"
