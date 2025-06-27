@@ -209,7 +209,7 @@ class OrderServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      `when`(integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, false))
         .thenReturn(blankKeyOrderInformation)
       `when`(integrityOrderInformationRepository.getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(blankSubjectHistoryReport)
@@ -219,15 +219,15 @@ class OrderServiceTest {
 
     @Test
     fun `calls getKeyOrderInformation from order information repository`() {
-      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getOrderInformation(legacySubjectId, false)
 
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, false)
     }
 
     @Disabled("SubjectHistoryReport will no longer be used")
     @Test
     fun `calls getSubjectHistoryReport from order information repository`() {
-      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getOrderInformation(legacySubjectId, false)
 
       Mockito.verify(integrityOrderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
@@ -235,21 +235,21 @@ class OrderServiceTest {
     @Disabled("We are not currently returning documents")
     @Test
     fun `calls getDocumentList from order information repository`() {
-      service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getOrderInformation(legacySubjectId, false)
 
       Mockito.verify(integrityOrderInformationRepository, times(1)).getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns OrderInformation when a document is found`() {
-      val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getOrderInformation(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(IntegrityOrderInformation::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a document is found`() {
-      val result = service.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getOrderInformation(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(legacySubjectId)
