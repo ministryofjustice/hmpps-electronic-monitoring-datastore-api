@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity.IntegrityContactEventsQueryBuilder
@@ -40,12 +39,12 @@ class IntegrityOrderEventsRepository(
     return AthenaHelper.Companion.mapTo<AthenaIntegrityIncidentEventDTO>(athenaResponse)
   }
 
-  fun getViolationEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityViolationEventDTO> {
+  fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityViolationEventDTO> {
     val violationEventsQuery = IntegrityViolationEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, restricted)
 
     return AthenaHelper.Companion.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
   }
