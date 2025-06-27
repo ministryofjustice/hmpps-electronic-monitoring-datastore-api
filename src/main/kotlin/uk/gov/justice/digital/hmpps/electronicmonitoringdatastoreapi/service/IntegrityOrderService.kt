@@ -6,7 +6,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.Athe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityKeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
@@ -38,7 +37,7 @@ class IntegrityOrderService(
     return result
   }
 
-  fun getQueryExecutionId(criteria: OrderSearchCriteria, role: AthenaRole): String = searchRepository.searchOrders(criteria, role)
+  fun getQueryExecutionId(criteria: OrderSearchCriteria, restricted: Boolean): String = searchRepository.searchOrders(criteria, restricted)
 
   fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<OrderSearchResult> {
     val results = searchRepository.getSearchResults(queryExecutionId, role)
@@ -64,8 +63,8 @@ class IntegrityOrderService(
     )
   }
 
-  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): IntegrityOrderDetails {
-    val orderDetailsDTO: AthenaIntegrityOrderDetailsDTO = integrityOrderDetailsRepository.getOrderDetails(legacySubjectId, role)
+  fun getOrderDetails(legacySubjectId: String, restricted: Boolean): IntegrityOrderDetails {
+    val orderDetailsDTO = integrityOrderDetailsRepository.getOrderDetails(legacySubjectId, restricted)
     return IntegrityOrderDetails(orderDetailsDTO)
   }
 }
