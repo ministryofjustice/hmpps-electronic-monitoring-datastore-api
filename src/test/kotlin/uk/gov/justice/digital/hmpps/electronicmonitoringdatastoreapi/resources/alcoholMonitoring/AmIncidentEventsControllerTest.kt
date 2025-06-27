@@ -11,11 +11,9 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmIncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.alcoholMonitoring.AmIncidentEventsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -24,7 +22,6 @@ import java.time.LocalDateTime
 @JsonTest
 class AmIncidentEventsControllerTest {
   private lateinit var amOrderEventsService: AmOrderEventsService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: AmIncidentEventsController
   private lateinit var authentication: Authentication
@@ -34,8 +31,6 @@ class AmIncidentEventsControllerTest {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     amOrderEventsService = Mockito.mock(AmOrderEventsService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = AmIncidentEventsController(amOrderEventsService, auditService)
   }
@@ -64,14 +59,14 @@ class AmIncidentEventsControllerTest {
         ),
       )
 
-      `when`(amOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
+      `when`(amOrderEventsService.getIncidentEvents(legacySubjectId)).thenReturn(expectedResult)
 
       val result = controller.getIncidentEvents(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(amOrderEventsService, Mockito.times(1)).getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(amOrderEventsService, Mockito.times(1)).getIncidentEvents(legacySubjectId)
     }
   }
 }
