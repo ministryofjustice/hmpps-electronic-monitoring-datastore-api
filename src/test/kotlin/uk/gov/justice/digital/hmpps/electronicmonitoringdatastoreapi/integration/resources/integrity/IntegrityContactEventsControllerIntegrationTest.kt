@@ -38,11 +38,6 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
     }
 
     @Test
-    fun `should return 403 forbidden if general role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/contact-events", listOf(ROLE_EM_DATASTORE_RESTRICTED__RO))
-    }
-
-    @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
         .uri("/orders/integrity/2_4/contact-events")
@@ -61,10 +56,20 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
         .expectStatus()
         .isOk
     }
+
+    @Test
+    fun `should return OK with valid auth header and role for accessing restricted orders`() {
+      webTestClient.get()
+        .uri("/orders/integrity/234/contact-events")
+        .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
   }
 
   @Nested
-  @DisplayName("GET /orders/integrity/restricted/{legacySubjectId}/contact-events")
+  @DisplayName("GET /orders/integrity/{legacySubjectId}/contact-events?restricted=true")
   inner class GetIntegrityRestrictedContactEvents {
 
     @BeforeEach
@@ -74,28 +79,28 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("/orders/integrity/restricted/234/contact-events")
+      noAuthHeaderRespondsWithUnauthorizedTest("/orders/integrity/234/contact-events?restricted=true")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/integrity/restricted/234/contact-events")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/integrity/234/contact-events?restricted=true")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/integrity/restricted/234/contact-events", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/contact-events?restricted=true", listOf("ROLE_WRONG"))
     }
 
     @Test
     fun `should return 403 forbidden if general role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/integrity/restricted/234/contact-events", listOf(ROLE_EM_DATASTORE_GENERAL__RO))
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/contact-events?restricted=true", listOf(ROLE_EM_DATASTORE_GENERAL__RO))
     }
 
     @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
-        .uri("/orders/integrity/restricted/2_4/contact-events")
+        .uri("/orders/integrity/2_4/contact-events?restricted=true")
         .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
         .exchange()
         .expectStatus()
@@ -105,7 +110,7 @@ class IntegrityContactEventsControllerIntegrationTest : ControllerIntegrationBas
     @Test
     fun `should return OK with valid auth header and role for accessing restricted orders`() {
       webTestClient.get()
-        .uri("/orders/integrity/restricted/234/contact-events")
+        .uri("/orders/integrity/234/contact-events?restricted=true")
         .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
         .exchange()
         .expectStatus()

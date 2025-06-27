@@ -51,12 +51,12 @@ class IntegrityOrderEventsRepository(
     return AthenaHelper.Companion.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
   }
 
-  fun getContactEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityContactEventDTO> {
+  fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityContactEventDTO> {
     val contactEventsQuery = IntegrityContactEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, restricted)
 
     return AthenaHelper.Companion.mapTo<AthenaIntegrityContactEventDTO>(athenaResponse)
   }

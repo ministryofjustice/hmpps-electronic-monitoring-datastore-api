@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityContactEventsController
@@ -58,14 +57,14 @@ class IntegrityContactEventsControllerTest {
         ),
       )
 
-      `when`(integrityOrderEventsService.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
+      `when`(integrityOrderEventsService.getContactEvents(legacySubjectId, false)).thenReturn(expectedResult)
 
-      val result = controller.getGeneralContactEvents(authentication, legacySubjectId)
+      val result = controller.getContactEvents(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(integrityOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId, false)
     }
   }
 
@@ -91,14 +90,14 @@ class IntegrityContactEventsControllerTest {
         ),
       )
 
-      `when`(integrityOrderEventsService.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)).thenReturn(expectedResult)
+      `when`(integrityOrderEventsService.getContactEvents(legacySubjectId, true)).thenReturn(expectedResult)
 
-      val result = controller.getRestrictedContactEvents(authentication, legacySubjectId)
+      val result = controller.getContactEvents(authentication, legacySubjectId, true)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(integrityOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
+      Mockito.verify(integrityOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId, true)
     }
   }
 }

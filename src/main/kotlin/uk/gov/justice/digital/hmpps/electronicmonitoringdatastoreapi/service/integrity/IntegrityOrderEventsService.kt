@@ -54,8 +54,8 @@ class IntegrityOrderEventsService(
     }
   }
 
-  fun getContactEvents(legacySubjectId: String, role: AthenaRole): List<Event<IntegrityContactEventDetails>> {
-    val result = integrityOrderEventsRepository.getContactEventsList(legacySubjectId, role)
+  fun getContactEvents(legacySubjectId: String, restricted: Boolean): List<Event<IntegrityContactEventDetails>> {
+    val result = integrityOrderEventsRepository.getContactEventsList(legacySubjectId, restricted)
 
     return result.map { event ->
       Event(

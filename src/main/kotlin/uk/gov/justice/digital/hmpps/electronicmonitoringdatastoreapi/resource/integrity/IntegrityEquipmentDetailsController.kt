@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_GENERAL_ORDERS
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_RESTRICTED_ORDERS
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_ORDERS
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityEquipmentDetailsService
@@ -35,7 +34,7 @@ class IntegrityEquipmentDetailsController(
 ) {
 
   @Operation(
-    tags = [TAG_INTEGRITY_GENERAL_ORDERS],
+    tags = [TAG_INTEGRITY_ORDERS],
     summary = "Get the equipment details for an integrity general order",
   )
   @RequestMapping(
@@ -96,7 +95,7 @@ class IntegrityEquipmentDetailsController(
   }
 
   @Operation(
-    tags = [TAG_INTEGRITY_RESTRICTED_ORDERS],
+    tags = [TAG_INTEGRITY_ORDERS],
     summary = "Get the equipment details for an integrity restricted order",
   )
   @RequestMapping(
