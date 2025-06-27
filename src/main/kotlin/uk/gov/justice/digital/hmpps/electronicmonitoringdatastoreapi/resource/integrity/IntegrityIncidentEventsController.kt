@@ -30,14 +30,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
-class IncidentEventsController(
+class IntegrityIncidentEventsController(
   @field:Autowired val integrityOrderEventsService: IntegrityOrderEventsService,
-  val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
   @Operation(
     tags = [TAG_INTEGRITY_ORDERS],
-    summary = "Get the incident events for an order",
+    summary = "Get the incident events for an integrity order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -78,20 +77,20 @@ class IncidentEventsController(
   @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_GENERAL__RO', '$ROLE_EM_DATASTORE_RESTRICTED__RO')")
   fun getIncidentEvents(
     authentication: Authentication,
-    @Parameter(description = "The legacy subject ID of the order", required = true)
+    @Parameter(description = "The legacy subject ID of the integrity order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
+    @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
+    restricted: Boolean = false,
   ): ResponseEntity<List<Event<IncidentEventDetails>>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = integrityOrderEventsService.getIncidentEvents(legacySubjectId, validatedRole)
+    val result = integrityOrderEventsService.getIncidentEvents(legacySubjectId, restricted)
 
     auditService.createEvent(
       authentication.name,
-      "GET_INCIDENT_EVENTS",
+      "GET_INTEGRITY_INCIDENT_EVENTS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
+        "restrictedOrdersIncluded" to restricted,
       ),
     )
 

@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IncidentEventsController
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityIncidentEventsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -24,7 +24,7 @@ class IntegrityIncidentEventsControllerTest {
   private lateinit var integrityOrderEventsService: IntegrityOrderEventsService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
-  private lateinit var controller: IncidentEventsController
+  private lateinit var controller: IntegrityIncidentEventsController
   private lateinit var authentication: Authentication
 
   @BeforeEach
@@ -35,7 +35,7 @@ class IntegrityIncidentEventsControllerTest {
     roleService = Mockito.mock(AthenaRoleService::class.java)
     Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = IncidentEventsController(integrityOrderEventsService, roleService, auditService)
+    controller = IntegrityIncidentEventsController(integrityOrderEventsService, auditService)
   }
 
   @Nested
@@ -54,7 +54,7 @@ class IntegrityIncidentEventsControllerTest {
         ),
       )
 
-      Mockito.`when`(integrityOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderEventsService.getIncidentEvents(legacySubjectId, false)).thenReturn(expectedResult)
 
       val result = controller.getIncidentEvents(authentication, legacySubjectId)
 
@@ -62,7 +62,7 @@ class IntegrityIncidentEventsControllerTest {
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
       Mockito.verify(integrityOrderEventsService, Mockito.times(1))
-        .getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+        .getIncidentEvents(legacySubjectId, false)
     }
   }
 }

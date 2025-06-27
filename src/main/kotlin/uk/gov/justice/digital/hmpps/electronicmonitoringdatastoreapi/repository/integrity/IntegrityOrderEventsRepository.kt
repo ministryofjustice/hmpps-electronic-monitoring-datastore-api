@@ -20,22 +20,22 @@ class IntegrityOrderEventsRepository(
   @param:Value($$"${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getMonitoringEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityMonitoringEventDTO> {
+  fun getMonitoringEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityMonitoringEventDTO> {
     val monitoringEventsQuery = IntegrityMonitoringEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, restricted)
 
     return AthenaHelper.Companion.mapTo<AthenaIntegrityMonitoringEventDTO>(athenaResponse)
   }
 
-  fun getIncidentEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityIncidentEventDTO> {
+  fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityIncidentEventDTO> {
     val incidentEventsQuery = IntegrityIncidentEventsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, restricted)
 
     return AthenaHelper.Companion.mapTo<AthenaIntegrityIncidentEventDTO>(athenaResponse)
   }

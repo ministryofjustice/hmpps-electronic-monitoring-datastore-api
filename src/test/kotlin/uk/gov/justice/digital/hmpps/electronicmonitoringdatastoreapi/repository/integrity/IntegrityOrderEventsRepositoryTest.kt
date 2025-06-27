@@ -74,20 +74,20 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getMonitoringEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(monitoringEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      repository.getMonitoringEventsList("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getMonitoringEventsList returns an AthenaMonitoringEventListDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(monitoringEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getMonitoringEventsList("123", false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -96,9 +96,9 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getMonitoringEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(monitoringEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getMonitoringEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getMonitoringEventsList("987", false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -138,20 +138,20 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getIncidentEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(incidentEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      repository.getIncidentEventsList("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getIncidentEventsList returns an AthenaIncidentEventListDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(incidentEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getIncidentEventsList("123", false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -160,9 +160,9 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getIncidentEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(incidentEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getIncidentEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getIncidentEventsList("987", false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
