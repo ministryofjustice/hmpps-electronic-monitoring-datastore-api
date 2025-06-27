@@ -47,20 +47,20 @@ class AmServiceDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amServiceDetailsRepository.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amServiceDetailsRepository.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(exampleServices)
     }
 
     @Test
     fun `calls getServices from amServicesRepository`() {
-      amServiceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      amServiceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
-      Mockito.verify(amServiceDetailsRepository, Mockito.times(1)).getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amServiceDetailsRepository, Mockito.times(1)).getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns a list of AmService when a response is received`() {
-      val result = amServiceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amServiceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -70,7 +70,7 @@ class AmServiceDetailsServiceTest {
 
     @Test
     fun `returns correct details of the AmService when a response is received`() {
-      val result = amServiceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amServiceDetailsService.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
