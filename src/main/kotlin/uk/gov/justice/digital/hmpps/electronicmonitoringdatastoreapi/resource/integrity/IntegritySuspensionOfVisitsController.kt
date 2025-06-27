@@ -17,27 +17,24 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_ORDERS
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegritySuspensionOfVisits
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegritySuspensionOfVisitsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
-class SuspensionOfVisitsController(
+class IntegritySuspensionOfVisitsController(
   @field:Autowired val integritySuspensionOfVisitsService: IntegritySuspensionOfVisitsService,
-  val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
 
   @Operation(
     tags = [TAG_INTEGRITY_ORDERS],
-    summary = "Get the suspension of visits for an order",
+    summary = "Get the suspension of visits for an integrity order",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -75,23 +72,23 @@ class SuspensionOfVisitsController(
     ],
   )
   @SecurityRequirement(name = TOKEN_HMPPS_AUTH, scopes = [ROLE_EM_DATASTORE_GENERAL__RO, ROLE_EM_DATASTORE_RESTRICTED__RO])
-  @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_GENERAL__RO', '$ROLE_EM_DATASTORE_RESTRICTED__RO')")
+  @PreAuthorize("( hasAuthority('$ROLE_EM_DATASTORE_GENERAL__RO') and #restricted == false ) or ( hasAuthority('$ROLE_EM_DATASTORE_RESTRICTED__RO') )")
   fun getSuspensionOfVisits(
     authentication: Authentication,
-    @Parameter(description = "The legacy subject ID of the order", required = true)
+    @Parameter(description = "The legacy subject ID of the integrity order", required = true)
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
+    @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
+    restricted: Boolean = false,
   ): ResponseEntity<List<IntegritySuspensionOfVisits>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val result = integritySuspensionOfVisitsService.getSuspensionOfVisits(legacySubjectId, validatedRole)
+    val result = integritySuspensionOfVisitsService.getSuspensionOfVisits(legacySubjectId, restricted)
 
     auditService.createEvent(
       authentication.name,
-      "GET_SUSPENSION_OF_VISITS",
+      "GET_INTEGRITY_SUSPENSION_OF_VISITS",
       mapOf(
         "legacySubjectId" to legacySubjectId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
+        "restrictedOrdersIncluded" to restricted,
       ),
     )
 
