@@ -10,7 +10,10 @@ import org.mockito.Mockito.`when`
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityContactEventsController
@@ -37,6 +40,15 @@ class IntegrityContactEventsControllerTest {
 
   @Nested
   inner class GetIntegrityGeneralContactEvents {
+    @BeforeEach
+    fun setup() {
+      `when`(authentication.authorities).thenReturn(
+        listOf(
+          SimpleGrantedAuthority(ROLE_EM_DATASTORE_GENERAL__RO),
+        ),
+      )
+    }
+
     @Test
     fun `gets contact events from integrity general contact events service`() {
       val legacySubjectId = "1ab"
@@ -70,6 +82,15 @@ class IntegrityContactEventsControllerTest {
 
   @Nested
   inner class GetIntegrityRestrictedContactEvents {
+    @BeforeEach
+    fun setup() {
+      `when`(authentication.authorities).thenReturn(
+        listOf(
+          SimpleGrantedAuthority(ROLE_EM_DATASTORE_RESTRICTED__RO),
+        ),
+      )
+    }
+
     @Test
     fun `gets contact events from integrity restricted contact events service`() {
       val legacySubjectId = "1ab"

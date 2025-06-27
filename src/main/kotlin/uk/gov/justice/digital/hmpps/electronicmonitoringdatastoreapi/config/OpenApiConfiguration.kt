@@ -15,10 +15,10 @@ import org.springframework.http.HttpHeaders
 
 const val TOKEN_HMPPS_AUTH = "hmpps-auth-token"
 
-const val TAG_SEARCHING_ORDERS = "Searching orders"
+const val TAG_SEARCHING_ORDERS = "Search orders"
 const val TAG_ALCOHOL_ORDERS = "Alcohol monitoring orders"
 const val TAG_INTEGRITY_ORDERS = "Integrity monitoring orders"
-const val TAG_CONNECTIVITY = "Connectivity"
+const val TAG_CONNECTIVITY = "Connection testing"
 
 const val ROLE_EM_DATASTORE_GENERAL__RO = "ROLE_EM_DATASTORE_GENERAL_RO"
 const val ROLE_EM_DATASTORE_RESTRICTED__RO = "ROLE_EM_DATASTORE_RESTRICTED_RO"
@@ -94,13 +94,14 @@ class OpenApiConfiguration {
 
   private fun apiTags(): List<Tag> = listOf(
     Tag()
+      .name(TAG_SEARCHING_ORDERS),
+    Tag()
+      .name(TAG_INTEGRITY_ORDERS)
+      .description("Provides access to Integrity monitoring order information."),
+    Tag()
       .name(TAG_ALCOHOL_ORDERS)
       .description("Provides access to Alcohol monitoring order information."),
     Tag()
-      .name(TAG_INTEGRITY_ORDERS)
-      .description("Provides access to Integrity general monitoring order information."),
-    Tag()
-      .name(TAG_INTEGRITY_ORDERS)
-      .description("Provides access to Integrity restricted monitoring order information."),
+      .name(TAG_CONNECTIVITY),
   )
 }
