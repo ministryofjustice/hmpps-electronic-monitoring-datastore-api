@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityEquipmentDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetail
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetails
@@ -32,7 +31,7 @@ class IntegrityEquipmentDetailsServiceTest {
   inner class GetEquipmentDetails {
     val legacySubjectId = "fake-id"
 
-    val exampleEquipmentDetailsList = listOf<AthenaIntegrityEquipmentDetailsDTO>(
+    val exampleEquipmentDetailsList = listOf(
       AthenaIntegrityEquipmentDetailsDTO(
         legacySubjectId = "123",
         hmuId = "123X",
@@ -52,27 +51,27 @@ class IntegrityEquipmentDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      Mockito.`when`(integrityEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, false))
         .thenReturn(exampleEquipmentDetailsList)
     }
 
     @Test
     fun `calls getEquipmentDetails from order information repository`() {
-      service.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getEquipmentDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId, false)
     }
 
     @Test
     fun `returns a list of EquipmentDetails when a response is received`() {
-      val result = service.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getEquipmentDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the EquipmentDetails when a response is received`() {
-      val result = service.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getEquipmentDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
