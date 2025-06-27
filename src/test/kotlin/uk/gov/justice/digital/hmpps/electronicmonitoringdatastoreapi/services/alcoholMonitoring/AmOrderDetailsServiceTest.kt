@@ -61,26 +61,26 @@ class AmOrderDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(amOrderDetailsRepository.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(amOrderDetailsRepository.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(orderDetailsData)
     }
 
     @Test
     fun `calls getAmOrderDetails from order details repository`() {
-      service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Mockito.verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns AmOrderDetails`() {
-      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(AmOrderDetails::class.java)
     }
 
     @Test
     fun `returns correct details of the order`() {
-      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("AA2020")

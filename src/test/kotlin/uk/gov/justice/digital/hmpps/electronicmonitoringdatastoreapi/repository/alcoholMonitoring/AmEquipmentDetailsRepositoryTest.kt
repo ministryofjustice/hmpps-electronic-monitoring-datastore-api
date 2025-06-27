@@ -87,7 +87,7 @@ class AmEquipmentDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -98,7 +98,7 @@ class AmEquipmentDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -112,7 +112,7 @@ class AmEquipmentDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = amEquipmentDetailsRepository.getEquipmentDetails("000", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amEquipmentDetailsRepository.getEquipmentDetails("000", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
