@@ -4,9 +4,9 @@ import io.zeko.db.sql.Query
 import io.zeko.db.sql.QueryBlock
 import org.apache.commons.lang3.StringUtils.isAlphanumeric
 import org.apache.commons.lang3.StringUtils.isAlphanumericSpace
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
-open class SqlQueryBuilder(
-  open val databaseName: String,
+abstract class SqlQueryBuilder(
   open val tableName: String,
   private val fields: Array<String>,
 ) {
@@ -46,7 +46,7 @@ open class SqlQueryBuilder(
     }
   }
 
-  protected fun getSQL(): String {
+  protected fun getSQL(databaseName: String): String {
     val query = Query()
       .fields(*fields)
       .from("$databaseName.$tableName")
@@ -57,4 +57,6 @@ open class SqlQueryBuilder(
 
     return query.toSql()
   }
+
+  abstract fun build(databaseName: String): AthenaQuery
 }

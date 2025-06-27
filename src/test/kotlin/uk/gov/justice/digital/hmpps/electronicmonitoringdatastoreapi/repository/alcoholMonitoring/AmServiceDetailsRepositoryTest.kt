@@ -9,8 +9,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmServiceDetailsDTO
 
 class AmServiceDetailsRepositoryTest {
@@ -70,18 +70,18 @@ class AmServiceDetailsRepositoryTest {
     fun `getServices passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amServicesResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       amServiceDetailsRepository.getServiceDetails("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getServices returns a list of AthenaAmServiceDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amServicesResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = amServiceDetailsRepository.getServiceDetails("123")
 
@@ -95,7 +95,7 @@ class AmServiceDetailsRepositoryTest {
     fun `getServices returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amServicesResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = amServiceDetailsRepository.getServiceDetails("987")
 

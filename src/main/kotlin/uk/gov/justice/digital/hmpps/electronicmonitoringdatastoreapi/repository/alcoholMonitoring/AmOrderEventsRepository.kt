@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
@@ -14,14 +13,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 @Service
 class AmOrderEventsRepository(
   val athenaClient: EmDatastoreClientInterface,
-  @param:Value($$"${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
 ) {
 
   fun getIncidentEventsList(legacySubjectId: String): List<AthenaAmIncidentEventDTO> {
-    val incidentEventsQuery = AmIncidentEventsQueryBuilder(athenaDatabase)
+    val incidentEventsQuery = AmIncidentEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery)
 
@@ -29,9 +25,8 @@ class AmOrderEventsRepository(
   }
 
   fun getViolationEventsList(legacySubjectId: String): List<AthenaAmViolationEventDTO> {
-    val violationEventsQuery = AmViolationEventsQueryBuilder(athenaDatabase)
+    val violationEventsQuery = AmViolationEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(violationEventsQuery)
 
@@ -39,9 +34,8 @@ class AmOrderEventsRepository(
   }
 
   fun getContactEventsList(legacySubjectId: String): List<AthenaAmContactEventDTO> {
-    val contactEventsQuery = AmContactEventsQueryBuilder(athenaDatabase)
+    val contactEventsQuery = AmContactEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(contactEventsQuery)
 

@@ -5,30 +5,28 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaAmVisitDetailsListQuery
 import kotlin.collections.toTypedArray
 
-class AmVisitDetailsQueryBuilder(
-  override val databaseName: String,
-) : SqlQueryBuilder(
-  databaseName,
-  "am_visit_details",
-  arrayOf(
-    "legacy_subject_id",
-    "visit_id",
-    "visit_type",
-    "visit_attempt",
-    "date_visit_raised",
-    "visit_address",
-    "visit_notes",
-    "visit_outcome",
-    "actual_work_start_date",
-    "actual_work_start_time",
-    "actual_work_end_date",
-    "actual_work_end_time",
-    "visit_rejection_reason",
-    "visit_rejection_description",
-    "visit_cancel_reason",
-    "visit_cancel_description",
-  ),
-) {
+class AmVisitDetailsQueryBuilder :
+  SqlQueryBuilder(
+    "am_visit_details",
+    arrayOf(
+      "legacy_subject_id",
+      "visit_id",
+      "visit_type",
+      "visit_attempt",
+      "date_visit_raised",
+      "visit_address",
+      "visit_notes",
+      "visit_outcome",
+      "actual_work_start_date",
+      "actual_work_start_time",
+      "actual_work_end_date",
+      "actual_work_end_time",
+      "visit_rejection_reason",
+      "visit_rejection_description",
+      "visit_cancel_reason",
+      "visit_cancel_description",
+    ),
+  ) {
   fun withLegacySubjectId(legacySubjectId: String): AmVisitDetailsQueryBuilder {
     validateAlphanumeric(legacySubjectId, "legacy_subject_id")
 
@@ -41,5 +39,5 @@ class AmVisitDetailsQueryBuilder(
     return this
   }
 
-  fun build(): AthenaAmVisitDetailsListQuery = AthenaAmVisitDetailsListQuery(getSQL(), values.toTypedArray())
+  override fun build(databaseName: String): AthenaAmVisitDetailsListQuery = AthenaAmVisitDetailsListQuery(getSQL(databaseName), values.toTypedArray())
 }

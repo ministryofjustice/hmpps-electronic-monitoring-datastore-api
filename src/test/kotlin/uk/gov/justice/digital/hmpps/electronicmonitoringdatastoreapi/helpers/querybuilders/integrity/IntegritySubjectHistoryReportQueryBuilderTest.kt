@@ -23,9 +23,9 @@ class IntegritySubjectHistoryReportQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(baseQuery.trimIndent())
 
-    val result = IntegritySubjectHistoryReportQueryBuilder("fake_database")
+    val result = IntegritySubjectHistoryReportQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
+      .build("fake_database")
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
@@ -36,9 +36,9 @@ class IntegritySubjectHistoryReportQueryBuilderTest {
     val dangerousInput = "12345 OR 1=1--"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      IntegritySubjectHistoryReportQueryBuilder("fake_database")
+      IntegritySubjectHistoryReportQueryBuilder()
         .withLegacySubjectId(dangerousInput)
-        .build()
+        .build("fake_database")
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 
@@ -47,9 +47,9 @@ class IntegritySubjectHistoryReportQueryBuilderTest {
     val dangerousInput = "' UNION SELECT username, password FROM users--"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      IntegritySubjectHistoryReportQueryBuilder("fake_database")
+      IntegritySubjectHistoryReportQueryBuilder()
         .withLegacySubjectId(dangerousInput)
-        .build()
+        .build("fake_database")
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 }
