@@ -83,10 +83,10 @@ class SearchController(
     authentication: Authentication,
     @Parameter(description = "The search criteria for the query", required = true)
     @RequestBody orderSearchCriteria: OrderSearchCriteria,
+    @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
+    restricted: Boolean = false,
   ): ResponseEntity<QueryExecutionResponse> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val queryExecutionId = integrityOrderService.getQueryExecutionId(orderSearchCriteria, validatedRole)
+    val queryExecutionId = integrityOrderService.getQueryExecutionId(orderSearchCriteria, restricted)
 
     auditService.createEvent(
       authentication.name,
@@ -95,7 +95,7 @@ class SearchController(
         "legacySubjectId" to orderSearchCriteria.legacySubjectId,
         "searchType" to orderSearchCriteria.searchType,
         "queryExecutionId" to queryExecutionId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
+        "restrictedOrdersIncluded" to restricted,
       ),
     )
 
