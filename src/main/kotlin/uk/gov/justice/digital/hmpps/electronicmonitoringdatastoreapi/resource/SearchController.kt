@@ -95,7 +95,7 @@ class SearchController(
         "legacySubjectId" to orderSearchCriteria.legacySubjectId,
         "searchType" to orderSearchCriteria.searchType,
         "queryExecutionId" to queryExecutionId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
+        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
       ),
     )
 
@@ -156,7 +156,7 @@ class SearchController(
       "RETRIEVE_SEARCH_RESULT",
       mapOf(
         "executionId" to queryExecutionId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO),
+        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
         "rows" to results.count().toString(),
       ),
     )

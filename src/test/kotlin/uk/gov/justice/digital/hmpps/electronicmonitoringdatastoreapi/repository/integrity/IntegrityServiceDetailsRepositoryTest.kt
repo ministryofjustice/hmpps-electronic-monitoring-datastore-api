@@ -105,7 +105,7 @@ class IntegrityServiceDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getServiceDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getServiceDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -116,7 +116,7 @@ class IntegrityServiceDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getServiceDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getServiceDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -130,7 +130,7 @@ class IntegrityServiceDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getServiceDetails("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getServiceDetails("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)

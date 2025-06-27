@@ -33,8 +33,8 @@ class ConnectivityControllerTest {
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityOrderService = mock(IntegrityOrderService::class.java)
     roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    `when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = mock(AuditService::class.java)
     controller = ConnectivityController(integrityOrderService, roleService, auditService)
   }
@@ -59,10 +59,10 @@ class ConnectivityControllerTest {
 
     @Test
     fun `Returns true when ROLE_EM_DATASTORE_GENERAL_RO role found from authentication object`() {
-      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO
+      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(integrityOrderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(true)
+      `when`(integrityOrderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.test(authentication)
@@ -73,10 +73,10 @@ class ConnectivityControllerTest {
 
     @Test
     fun `Returns true when ROLE_EM_DATASTORE_RESTRICTED_RO role found from authentication object`() {
-      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO
+      val expectedRole = AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO
 
       `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(expectedRole)
-      `when`(integrityOrderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)).thenReturn(true)
+      `when`(integrityOrderService.checkAvailability(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)).thenReturn(true)
       `when`(authentication.principal).thenReturn("EXPECTED_PRINCIPAL")
 
       val result = controller.test(authentication)

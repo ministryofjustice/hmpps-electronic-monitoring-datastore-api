@@ -37,13 +37,13 @@ class AthenaRoleServiceTest {
 
     @Test
     fun `retrieves IAM role for GENERAL Athena role`() {
-      val result: String = athenaRoleService.getIamRole(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result: String = athenaRoleService.getIamRole(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
       Assertions.assertThat(result).isEqualTo(generalRoleIamString)
     }
 
     @Test
     fun `retrieves IAM role for RESTRICTED Athena role`() {
-      val result: String = athenaRoleService.getIamRole(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
+      val result: String = athenaRoleService.getIamRole(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
       Assertions.assertThat(result).isEqualTo(restrictedRoleIamString)
     }
   }
@@ -62,16 +62,16 @@ class AthenaRoleServiceTest {
     fun `orders the results by role priority`() {
       val result: List<AthenaRole> = athenaRoleService.mapToOrderedUniqueRoles(
         listOf(
-          "ROLE_EM_DATASTORE_GENERAL_RO",
+          "ROLE_EM_DATASTORE_GENERAL__RO",
           "ROLE_FOR_OTHER_SERVICE",
-          "ROLE_EM_DATASTORE_GENERAL_RO",
+          "ROLE_EM_DATASTORE_GENERAL__RO",
           "ROLE_FOR_OTHER_SERVICE",
-          "ROLE_EM_DATASTORE_RESTRICTED_RO",
+          "ROLE_EM_DATASTORE_RESTRICTED__RO",
         ),
       )
       Assertions.assertThat(result.size).isEqualTo(3)
-      Assertions.assertThat(result[0]).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
-      Assertions.assertThat(result[1]).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Assertions.assertThat(result[0]).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
+      Assertions.assertThat(result[1]).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
       Assertions.assertThat(result[2]).isEqualTo(AthenaRole.NONE)
     }
   }
@@ -106,67 +106,67 @@ class AthenaRoleServiceTest {
 
     // when they have General, as an authority/claim, give them general
     @Test
-    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_GENERAL_RO with correct IAM role if this role is present`() {
+    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_GENERAL__RO with correct IAM role if this role is present`() {
       val auth = AuthenticationStub(
         name = "fake name",
-        authorities = mutableListOf(AuthorityStub("ROLE_EM_DATASTORE_GENERAL_RO")),
+        authorities = mutableListOf(AuthorityStub("ROLE_EM_DATASTORE_GENERAL__RO")),
       )
 
       val result: AthenaRole = athenaRoleService.getRoleFromAuthentication(auth)
       val resolvedIamRole = athenaRoleService.getIamRole(result)
 
-      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
       Assertions.assertThat(resolvedIamRole).isEqualTo(generalRoleIamString)
     }
 
     @Test
-    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_GENERAL_RO if other roles also present`() {
+    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_GENERAL__RO if other roles also present`() {
       val auth = AuthenticationStub(
         name = "fake name",
         authorities = mutableListOf(
           AuthorityStub("ROLE_FOR_OTHER_SERVICE"),
-          AuthorityStub("ROLE_EM_DATASTORE_GENERAL_RO"),
+          AuthorityStub("ROLE_EM_DATASTORE_GENERAL__RO"),
           AuthorityStub("ROLE_FOR_OTHER_SERVICE"),
         ),
       )
 
       val result: AthenaRole = athenaRoleService.getRoleFromAuthentication(auth)
 
-      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     // when special, give them special not general
     @Test
-    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_RESTRICTED_RO if this role is present`() {
+    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_RESTRICTED__RO if this role is present`() {
       val auth = AuthenticationStub(
         name = "fake name",
-        authorities = mutableListOf(AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED_RO")),
+        authorities = mutableListOf(AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED__RO")),
       )
 
       val result: AthenaRole = athenaRoleService.getRoleFromAuthentication(auth)
       val resolvedIamRole = athenaRoleService.getIamRole(result)
 
-      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
+      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
       Assertions.assertThat(resolvedIamRole).isEqualTo(restrictedRoleIamString)
     }
 
     @Test
-    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_RESTRICTED_RO if other roles also present`() {
+    fun `GetRoleFromAuthentication returns role ROLE_EM_DATASTORE_RESTRICTED__RO if other roles also present`() {
       val auth = AuthenticationStub(
         name = "fake name",
         authorities = mutableListOf(
           AuthorityStub("ROLE_FOR_OTHER_SERVICE"),
-          AuthorityStub("ROLE_EM_DATASTORE_GENERAL_RO"),
-          AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED_RO"),
-          AuthorityStub("ROLE_EM_DATASTORE_GENERAL_RO"),
-          AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED_RO"),
+          AuthorityStub("ROLE_EM_DATASTORE_GENERAL__RO"),
+          AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED__RO"),
+          AuthorityStub("ROLE_EM_DATASTORE_GENERAL__RO"),
+          AuthorityStub("ROLE_EM_DATASTORE_RESTRICTED__RO"),
           AuthorityStub("ROLE_FOR_OTHER_SERVICE"),
         ),
       )
 
       val result: AthenaRole = athenaRoleService.getRoleFromAuthentication(auth)
 
-      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
+      Assertions.assertThat(result).isEqualTo(AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
     }
 
     // when special and general, then special

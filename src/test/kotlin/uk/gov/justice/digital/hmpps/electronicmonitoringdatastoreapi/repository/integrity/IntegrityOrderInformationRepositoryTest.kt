@@ -103,7 +103,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getKeyOrderInformation("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getKeyOrderInformation("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -114,7 +114,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getKeyOrderInformation("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getKeyOrderInformation("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(AthenaIntegrityKeyOrderInformationDTO::class.java)
     }
@@ -128,7 +128,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getKeyOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacyOrderId).isEqualTo(legacySubjectId)
@@ -185,7 +185,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -196,7 +196,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(AthenaIntegritySubjectHistoryReportDTO::class.java)
     }
@@ -210,7 +210,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSubjectHistoryReport(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getSubjectHistoryReport(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.name).isEqualTo(fullName)

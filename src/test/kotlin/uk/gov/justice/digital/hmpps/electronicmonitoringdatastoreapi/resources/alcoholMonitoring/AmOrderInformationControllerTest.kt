@@ -32,7 +32,7 @@ class AmOrderInformationControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     amOrderInformationService = Mockito.mock(AmOrderInformationService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
     amOrderInformationController = AmOrderInformationController(amOrderInformationService, auditService)
   }
@@ -57,7 +57,7 @@ class AmOrderInformationControllerTest {
         orderEndDate = LocalDateTime.parse("2013-04-03T00:00:00"),
       )
 
-      Mockito.`when`(amOrderInformationService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(amOrderInformationService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
 
       val result = amOrderInformationController.getOrderInformation(authentication, legacySubjectId)
 
@@ -65,7 +65,7 @@ class AmOrderInformationControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(AmOrderInformation::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(amOrderInformationService, Mockito.times(1)).getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amOrderInformationService, Mockito.times(1)).getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
   }
 }

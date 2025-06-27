@@ -84,7 +84,7 @@ class AmOrderInformationController(
     )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<AmOrderInformation> {
-    val result = amOrderInformationService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    val result = amOrderInformationService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
     auditService.createEvent(
       authentication.name,
