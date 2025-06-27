@@ -15,11 +15,11 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 @Service
 class SearchRepository(
-  @Autowired val athenaClient: EmDatastoreClientInterface,
-  @Value("\${services.athena.database}")
+  @field:Autowired val athenaClient: EmDatastoreClientInterface,
+  @param:Value("\${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun searchOrders(criteria: OrderSearchCriteria, role: AthenaRole): String {
+  fun searchOrders(criteria: OrderSearchCriteria, restricted: Boolean): String {
     val tableName = AthenaHelper.tableNameFromSearchType(criteria.searchType)
     val orderSearchQuery = OrderSearchQueryBuilder(athenaDatabase, tableName)
       .withLegacySubjectId(criteria.legacySubjectId)
@@ -29,7 +29,7 @@ class SearchRepository(
       .withDob(criteria.dobDay, criteria.dobMonth, criteria.dobYear)
       .build()
 
-    return athenaClient.getQueryExecutionId(orderSearchQuery, role)
+    return athenaClient.getQueryExecutionId(orderSearchQuery, restricted)
   }
 
   fun getSearchResults(queryExecutionId: String, role: AthenaRole): List<AthenaOrderSearchResultDTO> {

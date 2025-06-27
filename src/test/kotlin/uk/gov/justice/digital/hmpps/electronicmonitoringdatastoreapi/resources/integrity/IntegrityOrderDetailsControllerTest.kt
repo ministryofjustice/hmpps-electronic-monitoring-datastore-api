@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityOrderDetailsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
@@ -71,15 +70,15 @@ class IntegrityOrderDetailsControllerTest {
         responsibleOrganisationDetailsRegion = "",
       )
 
-      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, false)).thenReturn(expectedResult)
 
-      val result = controller.getGeneralOrderDetails(authentication, legacySubjectId)
+      val result = controller.getOrderDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, false)
     }
   }
 
@@ -121,15 +120,15 @@ class IntegrityOrderDetailsControllerTest {
         responsibleOrganisationDetailsRegion = "",
       )
 
-      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, true)).thenReturn(expectedResult)
 
-      val result = controller.getRestrictedOrderDetails(authentication, legacySubjectId)
+      val result = controller.getOrderDetails(authentication, legacySubjectId, true)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
+      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, true)
     }
   }
 }
