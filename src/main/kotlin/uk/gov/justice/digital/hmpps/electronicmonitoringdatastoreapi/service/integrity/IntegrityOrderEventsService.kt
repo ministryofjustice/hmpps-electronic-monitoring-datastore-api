@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.in
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IncidentEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityContactEventDetails
@@ -41,8 +40,8 @@ class IntegrityOrderEventsService(
     }
   }
 
-  fun getViolationEvents(legacySubjectId: String, role: AthenaRole): List<Event<IntegrityViolationEventDetails>> {
-    val result = integrityOrderEventsRepository.getViolationEventsList(legacySubjectId, role)
+  fun getViolationEvents(legacySubjectId: String, restricted: Boolean): List<Event<IntegrityViolationEventDetails>> {
+    val result = integrityOrderEventsRepository.getViolationEventsList(legacySubjectId, restricted)
 
     return result.map { event ->
       Event(
