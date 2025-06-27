@@ -2,14 +2,12 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchQuery
 
-class ListKeyOrderInformationQueryBuilder(
-  override val databaseName: String,
-) : SqlQueryBuilder(
-  databaseName,
-  "order_details",
-  arrayOf(
-    "legacy_subject_id",
-  ),
-) {
-  fun build(): AthenaOrderSearchQuery = AthenaOrderSearchQuery(getSQL(), values.toTypedArray())
+class ListKeyOrderInformationQueryBuilder :
+  SqlQueryBuilder(
+    "order_details",
+    arrayOf(
+      "legacy_subject_id",
+    ),
+  ) {
+  override fun build(databaseName: String): AthenaOrderSearchQuery = AthenaOrderSearchQuery(getSQL(databaseName), values.toTypedArray())
 }

@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
@@ -16,13 +15,10 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 @Service
 class IntegrityOrderEventsRepository(
   val athenaClient: EmDatastoreClientInterface,
-  @param:Value($$"${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
 ) {
   fun getMonitoringEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityMonitoringEventDTO> {
-    val monitoringEventsQuery = IntegrityMonitoringEventsQueryBuilder(athenaDatabase)
+    val monitoringEventsQuery = IntegrityMonitoringEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, restricted)
 
@@ -30,9 +26,8 @@ class IntegrityOrderEventsRepository(
   }
 
   fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityIncidentEventDTO> {
-    val incidentEventsQuery = IntegrityIncidentEventsQueryBuilder(athenaDatabase)
+    val incidentEventsQuery = IntegrityIncidentEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, restricted)
 
@@ -40,9 +35,8 @@ class IntegrityOrderEventsRepository(
   }
 
   fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityViolationEventDTO> {
-    val violationEventsQuery = IntegrityViolationEventsQueryBuilder(athenaDatabase)
+    val violationEventsQuery = IntegrityViolationEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, restricted)
 
@@ -50,9 +44,8 @@ class IntegrityOrderEventsRepository(
   }
 
   fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityContactEventDTO> {
-    val contactEventsQuery = IntegrityContactEventsQueryBuilder(athenaDatabase)
+    val contactEventsQuery = IntegrityContactEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
     val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, restricted)
 

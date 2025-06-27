@@ -11,7 +11,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegritySubjectHistoryReportDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
@@ -101,18 +101,18 @@ class IntegrityOrderInformationRepositoryTest {
     fun `getKeyOrderInformation calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       repository.getKeyOrderInformation("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getKeyOrderInformation returns an AthenaKeyOrderInformationDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getKeyOrderInformation("123", false)
 
@@ -126,7 +126,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(keyOrderInformationResultSet(legacySubjectId, fullName))
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getKeyOrderInformation(legacySubjectId, false)
 
@@ -183,18 +183,18 @@ class IntegrityOrderInformationRepositoryTest {
     fun `getSubjectHistoryReport passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       repository.getSubjectHistoryReport("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getSubjectHistoryReport returns an AthenaSubjectHistoryReportDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getSubjectHistoryReport("123", false)
 
@@ -208,7 +208,7 @@ class IntegrityOrderInformationRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet(fullName))
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
       val result = repository.getSubjectHistoryReport(orderId, false)
 
