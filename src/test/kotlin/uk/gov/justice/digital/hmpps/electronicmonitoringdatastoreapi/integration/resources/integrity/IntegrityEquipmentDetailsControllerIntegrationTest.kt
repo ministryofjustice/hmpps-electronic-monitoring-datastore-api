@@ -38,11 +38,6 @@ class IntegrityEquipmentDetailsControllerIntegrationTest : ControllerIntegration
     }
 
     @Test
-    fun `should return 403 forbidden if restricted role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/equipment-details", listOf(ROLE_EM_DATASTORE_RESTRICTED__RO))
-    }
-
-    @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
         .uri("/orders/integrity/2_4/equipment-details")
@@ -61,10 +56,20 @@ class IntegrityEquipmentDetailsControllerIntegrationTest : ControllerIntegration
         .expectStatus()
         .isOk
     }
+
+    @Test
+    fun `should return OK with valid auth header and role for accessing restricted orders`() {
+      webTestClient.get()
+        .uri("/orders/integrity/234/equipment-details")
+        .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
+        .exchange()
+        .expectStatus()
+        .isOk
+    }
   }
 
   @Nested
-  @DisplayName("GET /orders/integrity/restricted/{legacySubjectId}/equipment-details")
+  @DisplayName("GET /orders/integrity/{legacySubjectId}/equipment-details?restricted=true")
   inner class GetRestrictedEquipmentDetails {
 
     @BeforeEach
@@ -74,28 +79,28 @@ class IntegrityEquipmentDetailsControllerIntegrationTest : ControllerIntegration
 
     @Test
     fun `should return 401 unauthorized if no authorization header`() {
-      noAuthHeaderRespondsWithUnauthorizedTest("/orders/integrity/restricted/234/equipment-details")
+      noAuthHeaderRespondsWithUnauthorizedTest("/orders/integrity/234/equipment-details?restricted=true")
     }
 
     @Test
     fun `should return 403 forbidden if no role in authorization header`() {
-      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/integrity/restricted/234/equipment-details")
+      noRoleInAuthHeaderRespondsWithForbiddenTest("/orders/integrity/234/equipment-details?restricted=true")
     }
 
     @Test
     fun `should return 403 forbidden if wrong role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/integrity/restricted/234/equipment-details", listOf("ROLE_WRONG"))
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/equipment-details?restricted=true", listOf("ROLE_WRONG"))
     }
 
     @Test
     fun `should return 403 forbidden if general role in authorization header`() {
-      wrongRolesRespondsWithForbiddenTest("/orders/integrity/restricted/234/equipment-details", listOf(ROLE_EM_DATASTORE_GENERAL__RO))
+      wrongRolesRespondsWithForbiddenTest("/orders/integrity/234/equipment-details?restricted=true", listOf(ROLE_EM_DATASTORE_GENERAL__RO))
     }
 
     @Test
     fun `should throw a Bad Request exception if the URL param format is invalid`() {
       webTestClient.get()
-        .uri("/orders/integrity/restricted/2_4/equipment-details")
+        .uri("/orders/integrity/2_4/equipment-details?restricted=true")
         .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
         .exchange()
         .expectStatus()
@@ -105,7 +110,7 @@ class IntegrityEquipmentDetailsControllerIntegrationTest : ControllerIntegration
     @Test
     fun `should return OK with valid auth header and role for accessing restricted orders`() {
       webTestClient.get()
-        .uri("/orders/integrity/restricted/234/equipment-details")
+        .uri("/orders/integrity/234/equipment-details?restricted=true")
         .headers(setAuthorisation(roles = listOf(ROLE_EM_DATASTORE_RESTRICTED__RO)))
         .exchange()
         .expectStatus()
