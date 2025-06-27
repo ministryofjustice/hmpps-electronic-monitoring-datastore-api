@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityContactEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityIncidentEventDTO
@@ -166,27 +165,27 @@ class IntegrityOrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityOrderEventsRepository.getViolationEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      Mockito.`when`(integrityOrderEventsRepository.getViolationEventsList(legacySubjectId, false))
         .thenReturn(exampleViolationEventList)
     }
 
     @Test
     fun `calls getViolationEventsList from order information repository`() {
-      service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getViolationEvents(legacySubjectId, false)
 
-      Mockito.verify(integrityOrderEventsRepository, Mockito.times(1)).getViolationEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderEventsRepository, Mockito.times(1)).getViolationEventsList(legacySubjectId, false)
     }
 
     @Test
     fun `returns ViolationEventList when a response is received`() {
-      val result = service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getViolationEvents(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      val result = service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getViolationEvents(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
