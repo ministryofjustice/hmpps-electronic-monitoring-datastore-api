@@ -1,32 +1,28 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.OrderSearchQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 
 @Service
 class SearchRepository(
   @field:Autowired val athenaClient: EmDatastoreClientInterface,
-  @param:Value($$"${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
 ) {
   fun searchOrders(criteria: OrderSearchCriteria, restricted: Boolean): String {
     val tableName = AthenaHelper.tableNameFromSearchType(criteria.searchType)
-    val orderSearchQuery = OrderSearchQueryBuilder(athenaDatabase, tableName)
+    val orderSearchQuery = OrderSearchQueryBuilder(tableName)
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)
       .withAlias(criteria.alias)
       .withDob(criteria.dobDay, criteria.dobMonth, criteria.dobYear)
-      .build()
 
     return athenaClient.getQueryExecutionId(orderSearchQuery, restricted)
   }
@@ -38,7 +34,7 @@ class SearchRepository(
   }
 
   fun listLegacyIds(restricted: Boolean): List<String> {
-    val athenaQuery = ListKeyOrderInformationQueryBuilder(athenaDatabase).build()
+    val athenaQuery = ListKeyOrderInformationQueryBuilder()
 
     val athenaResponse: ResultSet = athenaClient.getQueryResult(athenaQuery, restricted)
 
@@ -51,7 +47,7 @@ class SearchRepository(
     return result.map { it.legacySubjectId }
   }
 
-  fun runQuery(athenaQuery: AthenaStringQuery, restricted: Boolean): String {
+  fun runQuery(athenaQuery: SqlQueryBuilder, restricted: Boolean): String {
     val athenaResponse = athenaClient.getQueryResult(athenaQuery, restricted)
 
     val result = athenaResponse.toString()

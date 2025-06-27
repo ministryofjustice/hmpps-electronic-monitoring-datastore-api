@@ -18,7 +18,7 @@ import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 
 // We will instantiate as new for now
 @Component
@@ -46,7 +46,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
       .build()
   }
 
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, restricted: Boolean): String {
+  override fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean): String {
     val iamRole = if (restricted) restrictedRole else generalRole
 
     val athenaClient = startClient(iamRole)
@@ -67,7 +67,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
     return resultSet
   }
 
-  override fun getQueryResult(athenaQuery: AthenaQuery, restricted: Boolean): ResultSet {
+  override fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean): ResultSet {
     val iamRole = if (restricted) restrictedRole else generalRole
 
     val athenaClient = startClient(iamRole)
@@ -84,7 +84,9 @@ class EmDatastoreClient : EmDatastoreClientInterface {
   }
 
   @Throws(AthenaClientException::class)
-  private fun submitAthenaQuery(athenaClient: AthenaClient, query: AthenaQuery): String {
+  private fun submitAthenaQuery(athenaClient: AthenaClient, athenaQuery: SqlQueryBuilder): String {
+    val query = athenaQuery.build(databaseName)
+
     // The QueryExecutionContext allows us to set the database.
     val queryExecutionContext = QueryExecutionContext.builder()
       .database(databaseName)
