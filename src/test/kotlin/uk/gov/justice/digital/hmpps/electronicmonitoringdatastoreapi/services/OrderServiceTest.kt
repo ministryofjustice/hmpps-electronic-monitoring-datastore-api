@@ -211,9 +211,9 @@ class OrderServiceTest {
     fun setup() {
       `when`(integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, false))
         .thenReturn(blankKeyOrderInformation)
-      `when`(integrityOrderInformationRepository.getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      `when`(integrityOrderInformationRepository.getSubjectHistoryReport(legacySubjectId, false))
         .thenReturn(blankSubjectHistoryReport)
-      `when`(integrityOrderInformationRepository.getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      `when`(integrityOrderInformationRepository.getDocumentList(legacySubjectId, false))
         .thenReturn(blankDocumentList)
     }
 
@@ -229,7 +229,7 @@ class OrderServiceTest {
     fun `calls getSubjectHistoryReport from order information repository`() {
       service.getOrderInformation(legacySubjectId, false)
 
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, false)
     }
 
     @Disabled("We are not currently returning documents")
@@ -237,7 +237,7 @@ class OrderServiceTest {
     fun `calls getDocumentList from order information repository`() {
       service.getOrderInformation(legacySubjectId, false)
 
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getDocumentList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderInformationRepository, times(1)).getDocumentList(legacySubjectId, false)
     }
 
     @Test

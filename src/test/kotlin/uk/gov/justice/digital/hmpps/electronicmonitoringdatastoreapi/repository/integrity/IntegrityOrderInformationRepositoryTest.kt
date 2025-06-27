@@ -9,7 +9,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -184,20 +183,20 @@ class IntegrityOrderInformationRepositoryTest {
     fun `getSubjectHistoryReport passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      repository.getSubjectHistoryReport("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getSubjectHistoryReport returns an AthenaSubjectHistoryReportDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getSubjectHistoryReport("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getSubjectHistoryReport("123", false)
 
       Assertions.assertThat(result).isInstanceOf(AthenaIntegritySubjectHistoryReportDTO::class.java)
     }
@@ -209,9 +208,9 @@ class IntegrityOrderInformationRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(subjectHistoryReportResultSet(fullName))
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getSubjectHistoryReport(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getSubjectHistoryReport(orderId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.name).isEqualTo(fullName)

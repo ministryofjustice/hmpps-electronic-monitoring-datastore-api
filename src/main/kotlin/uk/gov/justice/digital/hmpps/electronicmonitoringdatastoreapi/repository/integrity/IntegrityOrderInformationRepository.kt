@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity.IntegrityDocumentsQueryBuilder
@@ -30,24 +29,24 @@ class IntegrityOrderInformationRepository(
     return result.first()
   }
 
-  fun getSubjectHistoryReport(orderId: String, role: AthenaRole): AthenaIntegritySubjectHistoryReportDTO {
+  fun getSubjectHistoryReport(orderId: String, restricted: Boolean): AthenaIntegritySubjectHistoryReportDTO {
     val subjectHistoryReportQuery = IntegritySubjectHistoryReportQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(subjectHistoryReportQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(subjectHistoryReportQuery, restricted)
 
     val result = AthenaHelper.mapTo<AthenaIntegritySubjectHistoryReportDTO>(athenaResponse)
 
     return result.first()
   }
 
-  fun getDocumentList(orderId: String, role: AthenaRole): List<AthenaIntegrityDocumentDTO> {
+  fun getDocumentList(orderId: String, restricted: Boolean): List<AthenaIntegrityDocumentDTO> {
     val documentListQuery = IntegrityDocumentsQueryBuilder(athenaDatabase)
       .withLegacySubjectId(orderId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(documentListQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(documentListQuery, restricted)
 
     return AthenaHelper.mapTo<AthenaIntegrityDocumentDTO>(athenaResponse)
   }
