@@ -138,7 +138,7 @@ class AmOrderDetailsRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -149,7 +149,7 @@ class AmOrderDetailsRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(AthenaAmOrderDetailsDTO::class.java)
     }
@@ -165,7 +165,7 @@ class AmOrderDetailsRepositoryTest {
 
       `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacyOrderId).isEqualTo(legacyOrderId)
