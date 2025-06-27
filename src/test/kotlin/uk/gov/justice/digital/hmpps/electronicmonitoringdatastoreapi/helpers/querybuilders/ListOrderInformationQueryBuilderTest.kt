@@ -18,8 +18,8 @@ class ListOrderInformationQueryBuilderTest {
   fun `returns valid SQL if legacySubjectId is populated`() {
     val expectedSQL = replaceWhitespace(baseQuery.trimIndent())
 
-    val result = ListKeyOrderInformationQueryBuilder("fake_database")
-      .build()
+    val result = ListKeyOrderInformationQueryBuilder()
+      .build("fake_database")
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
     Assertions.assertThat(result.parameters).isEqualTo(arrayOf<String>())
