@@ -15,8 +15,8 @@ import java.time.LocalDateTime
 class IntegrityOrderEventsService(
   @field:Autowired val integrityOrderEventsRepository: IntegrityOrderEventsRepository,
 ) {
-  fun getMonitoringEvents(legacySubjectId: String, role: AthenaRole): List<Event<IntegrityMonitoringEventDetails>> {
-    val result = integrityOrderEventsRepository.getMonitoringEventsList(legacySubjectId, role)
+  fun getMonitoringEvents(legacySubjectId: String, restricted: Boolean): List<Event<IntegrityMonitoringEventDetails>> {
+    val result = integrityOrderEventsRepository.getMonitoringEventsList(legacySubjectId, restricted)
 
     return result.map { event ->
       Event(
@@ -28,8 +28,8 @@ class IntegrityOrderEventsService(
     }
   }
 
-  fun getIncidentEvents(legacySubjectId: String, role: AthenaRole): List<Event<IncidentEventDetails>> {
-    val result = integrityOrderEventsRepository.getIncidentEventsList(legacySubjectId, role)
+  fun getIncidentEvents(legacySubjectId: String, restricted: Boolean): List<Event<IncidentEventDetails>> {
+    val result = integrityOrderEventsRepository.getIncidentEventsList(legacySubjectId, restricted)
 
     return result.map { event ->
       Event(
