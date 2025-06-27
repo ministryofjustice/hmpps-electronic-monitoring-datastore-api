@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
@@ -94,20 +94,20 @@ class AmVisitDetailsRepositoryTest {
     fun `getVisitDetails passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amVisitDetailsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      amVisitDetailsRepository.getVisitDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      amVisitDetailsRepository.getVisitDetails("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getVisitDetails returns a list of AthenaAmVisitDetailsDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amVisitDetailsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = amVisitDetailsRepository.getVisitDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amVisitDetailsRepository.getVisitDetails("123")
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -119,9 +119,9 @@ class AmVisitDetailsRepositoryTest {
     fun `getVisitDetails returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amVisitDetailsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = amVisitDetailsRepository.getVisitDetails("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amVisitDetailsRepository.getVisitDetails("987")
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)

@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -29,9 +28,7 @@ class MockEmDatastoreClient : EmDatastoreClientInterface {
     }
   }
 
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, restricted: Boolean): String = getQueryExecutionId(athenaQuery, null)
-
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
+  override fun getQueryExecutionId(athenaQuery: AthenaQuery, restricted: Boolean): String {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
@@ -39,9 +36,7 @@ class MockEmDatastoreClient : EmDatastoreClientInterface {
     return "query-execution-id"
   }
 
-  override fun getQueryResult(athenaQuery: AthenaQuery, restricted: Boolean): ResultSet = getQueryResult(athenaQuery, null)
-
-  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
+  override fun getQueryResult(athenaQuery: AthenaQuery, restricted: Boolean): ResultSet {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
@@ -50,9 +45,7 @@ class MockEmDatastoreClient : EmDatastoreClientInterface {
     return AthenaHelper.Companion.resultSetFromJson(athenaResponse)
   }
 
-  override fun getQueryResult(queryExecutionId: String, restricted: Boolean): ResultSet = getQueryResult(queryExecutionId, null)
-
-  override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
+  override fun getQueryResult(queryExecutionId: String, restricted: Boolean): ResultSet {
     if (queryExecutionId == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }

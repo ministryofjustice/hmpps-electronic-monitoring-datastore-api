@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_ALCOHOL_ORDERS
@@ -84,7 +83,7 @@ class AmOrderDetailsController(
     )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<AmOrderDetails> {
-    val result = amOrderDetailsService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+    val result = amOrderDetailsService.getOrderDetails(legacySubjectId)
 
     auditService.createEvent(
       authentication.name,
