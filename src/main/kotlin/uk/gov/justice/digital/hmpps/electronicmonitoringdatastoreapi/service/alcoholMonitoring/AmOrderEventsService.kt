@@ -1,8 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmIncidentEventDetails
@@ -12,15 +10,15 @@ import java.time.LocalDateTime
 
 @Service
 class AmOrderEventsService(
-  @Autowired val orderEventsRepository: AmOrderEventsRepository,
+  val orderEventsRepository: AmOrderEventsRepository,
 ) {
 
-  fun getIncidentEvents(legacySubjectId: String, role: AthenaRole): List<AmEvent<AmIncidentEventDetails>> {
-    val result = orderEventsRepository.getIncidentEventsList(legacySubjectId, role)
+  fun getIncidentEvents(legacySubjectId: String): List<AmEvent<AmIncidentEventDetails>> {
+    val result = orderEventsRepository.getIncidentEventsList(legacySubjectId)
 
     return result.map { event ->
-      AmEvent<AmIncidentEventDetails>(
-        legacySubjectId = event.legacySubjectId.toString(),
+      AmEvent(
+        legacySubjectId = event.legacySubjectId,
         type = "am-incident",
         dateTime = LocalDateTime.parse("${event.violationAlertDate}T${event.violationAlertTime}"),
         details = AmIncidentEventDetails(event),
@@ -28,12 +26,12 @@ class AmOrderEventsService(
     }
   }
 
-  fun getViolationEvents(legacySubjectId: String, role: AthenaRole): List<AmEvent<AmViolationEventDetails>> {
-    val result = orderEventsRepository.getViolationEventsList(legacySubjectId, role)
+  fun getViolationEvents(legacySubjectId: String): List<AmEvent<AmViolationEventDetails>> {
+    val result = orderEventsRepository.getViolationEventsList(legacySubjectId)
 
     return result.map { event ->
-      AmEvent<AmViolationEventDetails>(
-        legacySubjectId = event.legacySubjectId.toString(),
+      AmEvent(
+        legacySubjectId = event.legacySubjectId,
         type = "am-violation",
         dateTime = LocalDateTime.parse("${event.nonComplianceDate}T${event.nonComplianceTime}"),
         details = AmViolationEventDetails(event),
@@ -41,12 +39,12 @@ class AmOrderEventsService(
     }
   }
 
-  fun getContactEvents(legacySubjectId: String, role: AthenaRole): List<AmEvent<AmContactEventDetails>> {
-    val result = orderEventsRepository.getContactEventsList(legacySubjectId, role)
+  fun getContactEvents(legacySubjectId: String): List<AmEvent<AmContactEventDetails>> {
+    val result = orderEventsRepository.getContactEventsList(legacySubjectId)
 
     return result.map { event ->
-      AmEvent<AmContactEventDetails>(
-        legacySubjectId = event.legacySubjectId.toString(),
+      AmEvent(
+        legacySubjectId = event.legacySubjectId,
         type = "am-contact",
         dateTime = LocalDateTime.parse("${event.contactDate}T${event.contactTime}"),
         details = AmContactEventDetails(event),

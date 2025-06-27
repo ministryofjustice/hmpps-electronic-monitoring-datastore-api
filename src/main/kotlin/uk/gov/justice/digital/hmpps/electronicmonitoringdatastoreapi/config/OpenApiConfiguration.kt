@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 
-const val TOKEN_HMPPS_AUTH = "hmpps-auth-token"
+const val TOKEN_HMPPS_AUTH = "hmpps-electronic-monitoring-datastore-data-role"
 
 const val TAG_SEARCHING_ORDERS = "Search orders"
 const val TAG_ALCOHOL_ORDERS = "Alcohol monitoring orders"
@@ -33,7 +33,7 @@ class OpenApiConfiguration {
     .servers(serviceServers())
     .info(apiInfo())
     .components(securityComponents())
-    .addSecurityItem(SecurityRequirement().addList(TOKEN_HMPPS_AUTH))
+    .addSecurityItem(securityRequirement())
     .tags(apiTags())
 
   private fun serviceServers(): List<Server> = listOf(
@@ -81,16 +81,20 @@ class OpenApiConfiguration {
     .name("The MIT License (MIT)")
     .url("https://github.com/ministryofjustice/hmpps-electronic-monitoring-datastore-api/blob/main/LICENSE")
 
-  private fun securityComponents(): Components = Components().addSecuritySchemes(
-    TOKEN_HMPPS_AUTH,
-    SecurityScheme()
-      .type(SecurityScheme.Type.HTTP)
-      .scheme("bearer")
-      .bearerFormat("JWT")
-      .`in`(SecurityScheme.In.HEADER)
-      .name(HttpHeaders.AUTHORIZATION)
-      .description("A HMPPS Auth access token with one or both of the `$ROLE_EM_DATASTORE_GENERAL__RO` or `$ROLE_EM_DATASTORE_RESTRICTED__RO` roles."),
-  )
+  private fun securityComponents(): Components = Components()
+    .addSecuritySchemes(
+      TOKEN_HMPPS_AUTH,
+      SecurityScheme()
+        .type(SecurityScheme.Type.HTTP)
+        .scheme("bearer")
+        .bearerFormat("JWT")
+        .`in`(SecurityScheme.In.HEADER)
+        .name(HttpHeaders.AUTHORIZATION)
+        .description("A HMPPS Auth access token with the `$ROLE_EM_DATASTORE_GENERAL__RO` or `$ROLE_EM_DATASTORE_RESTRICTED__RO` roles."),
+    )
+
+  private fun securityRequirement(): SecurityRequirement = SecurityRequirement()
+    .addList(TOKEN_HMPPS_AUTH, listOf("read"))
 
   private fun apiTags(): List<Tag> = listOf(
     Tag()

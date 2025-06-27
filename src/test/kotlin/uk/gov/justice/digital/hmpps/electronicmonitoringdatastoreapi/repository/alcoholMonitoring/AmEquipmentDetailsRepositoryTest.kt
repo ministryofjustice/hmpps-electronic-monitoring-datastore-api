@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
@@ -85,20 +85,20 @@ class AmEquipmentDetailsRepositoryTest {
     fun `getEquipmentDetails passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      amEquipmentDetailsRepository.getEquipmentDetails("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getEquipmentDetails returns a list of AthenaAmEquipmentDetailsDTO`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amEquipmentDetailsRepository.getEquipmentDetails("123")
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -110,9 +110,9 @@ class AmEquipmentDetailsRepositoryTest {
     fun `getEquipmentDetails returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet("000"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = amEquipmentDetailsRepository.getEquipmentDetails("000", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amEquipmentDetailsRepository.getEquipmentDetails("000")
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)

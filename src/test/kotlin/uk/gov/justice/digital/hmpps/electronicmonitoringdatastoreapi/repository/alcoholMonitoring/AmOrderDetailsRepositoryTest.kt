@@ -8,7 +8,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -136,20 +136,20 @@ class AmOrderDetailsRepositoryTest {
     fun `getOrderDetails calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      repository.getOrderDetails("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
+      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), eq(false))
     }
 
     @Test
     fun `getOrderDetails returns an AthenaAmOrderDetailsDTO`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getOrderDetails("123")
 
       Assertions.assertThat(result).isInstanceOf(AthenaAmOrderDetailsDTO::class.java)
     }
@@ -163,9 +163,9 @@ class AmOrderDetailsRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet(legacyOrderId, legacySubjectId, firstName, lastName))
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = repository.getOrderDetails(legacySubjectId)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacyOrderId).isEqualTo(legacyOrderId)
