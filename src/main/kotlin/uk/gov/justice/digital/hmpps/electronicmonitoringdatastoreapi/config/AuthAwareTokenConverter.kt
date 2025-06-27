@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.AuthenticationException
@@ -12,30 +11,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.stereotype.Component
 
 @Component
-class AuthAwareTokenConverter(
-  @Value("\${services.hmpps-auth.mfa}") private val requireMFA: Boolean = true,
-) : Converter<Jwt, AbstractAuthenticationToken> {
+class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
   private val jwtGrantedAuthoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>> =
     JwtGrantedAuthoritiesConverter()
 
   override fun convert(jwt: Jwt): AbstractAuthenticationToken {
-    if (requireMFA) {
-      verifyPassedMFA(jwt)
-    }
-
     val principal = extractPrincipal(jwt)
     val authorities = extractAuthorities(jwt)
 
     return AuthAwareAuthenticationToken(jwt, principal, authorities)
-  }
-
-  @Throws(AuthenticationException::class)
-  private fun verifyPassedMFA(jwt: Jwt) {
-    val passedMFA = jwt.claims["passed_mfa"] as Boolean?
-
-    if (passedMFA != true) {
-      throw InvalidBearerTokenException("Multi-factor authentication must have been used as part of your authentication")
-    }
   }
 
   @Throws(AuthenticationException::class)

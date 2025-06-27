@@ -20,60 +20,12 @@ class AuthAwareTokenConverterTest {
     val jwt = Jwt.withTokenValue("token")
       .header("alg", "none")
       .claim("sub", "user")
-      .claim("passed_mfa", true)
       .claim("authorities", listOf("SCOPE_read"))
       .build()
 
     val token = sut.convert(jwt)
 
     Assertions.assertThat(token).isNotNull()
-  }
-
-  @Nested
-  inner class VerifyPassedMFA {
-    @Test
-    fun `Verifies MFA was passed if true`() {
-      val sut = AuthAwareTokenConverter()
-      val jwt = Jwt.withTokenValue("token")
-        .header("alg", "none")
-        .claim("sub", "user")
-        .claim("passed_mfa", true)
-        .claim("authorities", listOf("SCOPE_read"))
-        .build()
-
-      val token = sut.convert(jwt)
-
-      Assertions.assertThat(token).isNotNull()
-    }
-
-    @Test
-    fun `Verifies MFA was not passed if false`() {
-      val sut = AuthAwareTokenConverter()
-      val jwt = Jwt.withTokenValue("token")
-        .header("alg", "none")
-        .claim("sub", "user")
-        .claim("passed_mfa", false)
-        .claim("authorities", listOf("SCOPE_read"))
-        .build()
-
-      Assertions.assertThatExceptionOfType(InvalidBearerTokenException::class.java).isThrownBy {
-        sut.convert(jwt)
-      }.withMessage("Multi-factor authentication must have been used as part of your authentication")
-    }
-
-    @Test
-    fun `Verifies MFA was not passed if not present`() {
-      val sut = AuthAwareTokenConverter()
-      val jwt = Jwt.withTokenValue("token")
-        .header("alg", "none")
-        .claim("sub", "user")
-        .claim("authorities", listOf("SCOPE_read"))
-        .build()
-
-      Assertions.assertThatExceptionOfType(InvalidBearerTokenException::class.java).isThrownBy {
-        sut.convert(jwt)
-      }.withMessage("Multi-factor authentication must have been used as part of your authentication")
-    }
   }
 
   @Nested
@@ -86,7 +38,6 @@ class AuthAwareTokenConverterTest {
       val jwt = Jwt.withTokenValue("token")
         .header("alg", "none")
         .claim("sub", expectedPrincipal)
-        .claim("passed_mfa", true)
         .claim("authorities", listOf("SCOPE_read"))
         .build()
 
@@ -100,7 +51,6 @@ class AuthAwareTokenConverterTest {
       val sut = AuthAwareTokenConverter()
       val jwt = Jwt.withTokenValue("token")
         .header("alg", "none")
-        .claim("passed_mfa", true)
         .claim("authorities", listOf("SCOPE_read"))
         .build()
 
@@ -121,7 +71,6 @@ class AuthAwareTokenConverterTest {
       val jwt = Jwt.withTokenValue("token")
         .header("alg", "none")
         .claim("sub", "user")
-        .claim("passed_mfa", true)
         .claim("authorities", listOf("SCOPE_read"))
         .build()
 
@@ -136,7 +85,6 @@ class AuthAwareTokenConverterTest {
       val jwt = Jwt.withTokenValue("token")
         .header("alg", "none")
         .claim("sub", "user")
-        .claim("passed_mfa", true)
         .build()
 
       Assertions.assertThatExceptionOfType(InvalidBearerTokenException::class.java).isThrownBy {
@@ -150,7 +98,6 @@ class AuthAwareTokenConverterTest {
       val jwt = Jwt.withTokenValue("token")
         .header("alg", "none")
         .claim("sub", "user")
-        .claim("passed_mfa", true)
         .claim("authorities", "SCOPE_read")
         .build()
 
