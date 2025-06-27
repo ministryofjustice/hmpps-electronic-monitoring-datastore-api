@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 
 @Service
 class IntegrityOrderEventsService(
-  @Autowired val integrityOrderEventsRepository: IntegrityOrderEventsRepository,
+  @field:Autowired val integrityOrderEventsRepository: IntegrityOrderEventsRepository,
 ) {
   fun getMonitoringEvents(legacySubjectId: String, role: AthenaRole): List<Event<IntegrityMonitoringEventDetails>> {
     val result = integrityOrderEventsRepository.getMonitoringEventsList(legacySubjectId, role)
