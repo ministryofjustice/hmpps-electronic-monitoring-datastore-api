@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityKeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
@@ -21,12 +20,6 @@ class IntegrityOrderService(
   @field:Autowired val integrityOrderDetailsRepository: IntegrityOrderDetailsRepository,
 ) {
   fun checkAvailability(restricted: Boolean = false): Boolean = searchRepository.listLegacyIds(restricted).count() > 0
-
-  fun query(athenaQuery: AthenaStringQuery, restricted: Boolean): String {
-    val result = searchRepository.runQuery(athenaQuery, restricted)
-
-    return result
-  }
 
   fun getQueryExecutionId(criteria: OrderSearchCriteria, restricted: Boolean): String = searchRepository.searchOrders(criteria, restricted)
 
