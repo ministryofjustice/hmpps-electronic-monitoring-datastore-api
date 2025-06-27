@@ -38,7 +38,7 @@ class IntegrityOrderEventsServiceTest {
   inner class GetMonitoringEventsList {
     val legacySubjectId = "fake-id"
 
-    val exampleMonitoringEventList = listOf<AthenaIntegrityMonitoringEventDTO>(
+    val exampleMonitoringEventList = listOf(
       AthenaIntegrityMonitoringEventDTO(
         legacySubjectId = "123",
         eventType = "TEST_EVENT",
@@ -90,7 +90,7 @@ class IntegrityOrderEventsServiceTest {
   inner class GetIncidentEvents {
     val legacySubjectId = "fake-id"
 
-    val exampleIncidentEventList = listOf<AthenaIntegrityIncidentEventDTO>(
+    val exampleIncidentEventList = listOf(
       AthenaIntegrityIncidentEventDTO(
         legacySubjectId = "123",
         violationAlertType = "TEST_VIOLATION",
@@ -138,7 +138,7 @@ class IntegrityOrderEventsServiceTest {
   inner class GetViolationEvents {
     val legacySubjectId = "fake-id"
 
-    val exampleViolationEventList = listOf<AthenaIntegrityViolationEventDTO>(
+    val exampleViolationEventList = listOf(
       AthenaIntegrityViolationEventDTO(
         legacySubjectId = "123",
         enforcementReason = "TEST_REASON",
@@ -203,7 +203,7 @@ class IntegrityOrderEventsServiceTest {
   inner class GetContactEvents {
     val legacySubjectId = "fake-id"
 
-    val exampleContactEventList = listOf<AthenaIntegrityContactEventDTO>(
+    val exampleContactEventList = listOf(
       AthenaIntegrityContactEventDTO(
         legacySubjectId = "123",
         outcome = "Mr silly laughed out loud",
@@ -221,27 +221,27 @@ class IntegrityOrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityOrderEventsRepository.getContactEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      Mockito.`when`(integrityOrderEventsRepository.getContactEventsList(legacySubjectId, false))
         .thenReturn(exampleContactEventList)
     }
 
     @Test
     fun `calls getContactEventsList from order information repository`() {
-      service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getContactEvents(legacySubjectId, false)
 
-      Mockito.verify(integrityOrderEventsRepository, Mockito.times(1)).getContactEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityOrderEventsRepository, Mockito.times(1)).getContactEventsList(legacySubjectId, false)
     }
 
     @Test
     fun `returns ContactsEventList when a response is received`() {
-      val result = service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getContactEvents(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      val result = service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getContactEvents(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
