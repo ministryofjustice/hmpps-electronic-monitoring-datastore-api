@@ -89,7 +89,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      repository.getSuspensionOfVisits("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getSuspensionOfVisits("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
     }
@@ -100,7 +100,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisits("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getSuspensionOfVisits("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
@@ -111,7 +111,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisits("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getSuspensionOfVisits("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -126,7 +126,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisits("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getSuspensionOfVisits("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

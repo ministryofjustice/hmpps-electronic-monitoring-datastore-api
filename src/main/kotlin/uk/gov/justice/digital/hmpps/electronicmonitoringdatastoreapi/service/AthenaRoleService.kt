@@ -31,8 +31,8 @@ class AthenaRoleService(
     }.toSet().sortedByDescending { it.priority }
 
   fun getIamRole(athenaRole: AthenaRole): String = when (athenaRole.name) {
-    "ROLE_EM_DATASTORE_RESTRICTED_RO" -> restrictedRole
-    "ROLE_EM_DATASTORE_GENERAL_RO" -> generalRole
+    "ROLE_EM_DATASTORE_RESTRICTED__RO" -> restrictedRole
+    "ROLE_EM_DATASTORE_GENERAL__RO" -> generalRole
     else -> ""
   }
 }

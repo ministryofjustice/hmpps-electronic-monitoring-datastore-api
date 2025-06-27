@@ -33,7 +33,7 @@ class IntegrityVisitDetailsControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityVisitDetailsService = Mockito.mock(IntegrityVisitDetailsService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = VisitDetailsController(integrityVisitDetailsService, roleService, auditService)
   }
@@ -61,14 +61,14 @@ class IntegrityVisitDetailsControllerTest {
         ),
       )
 
-      Mockito.`when`(integrityVisitDetailsService.getVisitDetails(legacyOrderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityVisitDetailsService.getVisitDetails(legacyOrderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
 
       val result = controller.getVisitDetails(authentication, legacyOrderId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
-      Mockito.verify(integrityVisitDetailsService, Mockito.times(1)).getVisitDetails(legacyOrderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(integrityVisitDetailsService, Mockito.times(1)).getVisitDetails(legacyOrderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
   }
 }

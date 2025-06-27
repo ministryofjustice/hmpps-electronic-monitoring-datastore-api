@@ -84,7 +84,7 @@ class AmVisitDetailsController(
     )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<List<AmVisitDetails>> {
-    val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
     auditService.createEvent(
       authentication.name,

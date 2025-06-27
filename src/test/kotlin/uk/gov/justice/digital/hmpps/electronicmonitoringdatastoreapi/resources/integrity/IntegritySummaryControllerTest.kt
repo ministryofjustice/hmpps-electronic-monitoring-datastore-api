@@ -35,7 +35,7 @@ class IntegritySummaryControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityOrderService = Mockito.mock(IntegrityOrderService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = SummaryController(integrityOrderService, roleService, auditService)
   }
@@ -69,7 +69,7 @@ class IntegritySummaryControllerTest {
         documents = listOf<IntegrityDocument>(),
       )
 
-      Mockito.`when`(integrityOrderService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderService.getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
 
       val result = controller.getSummary(authentication, legacySubjectId)
 
@@ -77,7 +77,7 @@ class IntegritySummaryControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderInformation::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderService, Mockito.times(1)).getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(integrityOrderService, Mockito.times(1)).getOrderInformation(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
   }
 }

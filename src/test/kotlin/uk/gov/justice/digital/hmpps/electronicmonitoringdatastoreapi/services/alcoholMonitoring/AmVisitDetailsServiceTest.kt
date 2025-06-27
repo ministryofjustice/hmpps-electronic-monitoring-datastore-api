@@ -54,20 +54,20 @@ class AmVisitDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amVisitDetailsRepository.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amVisitDetailsRepository.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(exampleVisitDetails)
     }
 
     @Test
     fun `calls getVisitDetails from amVisitDetailsRepository`() {
-      amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
-      Mockito.verify(amVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns a list of AmVisitDetails when a response is received`() {
-      val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -77,7 +77,7 @@ class AmVisitDetailsServiceTest {
 
     @Test
     fun `returns correct details of the AmVisitDetails when a response is received`() {
-      val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

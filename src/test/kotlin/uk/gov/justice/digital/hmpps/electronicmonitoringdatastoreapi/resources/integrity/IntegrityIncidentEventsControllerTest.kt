@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
-class IncidentEventsControllerTest {
+class IntegrityIncidentEventsControllerTest {
   private lateinit var integrityOrderEventsService: IntegrityOrderEventsService
   private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
@@ -33,7 +33,7 @@ class IncidentEventsControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityOrderEventsService = Mockito.mock(IntegrityOrderEventsService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = IncidentEventsController(integrityOrderEventsService, roleService, auditService)
   }
@@ -54,7 +54,7 @@ class IncidentEventsControllerTest {
         ),
       )
 
-      Mockito.`when`(integrityOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderEventsService.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
 
       val result = controller.getIncidentEvents(authentication, legacySubjectId)
 
@@ -62,7 +62,7 @@ class IncidentEventsControllerTest {
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
       Mockito.verify(integrityOrderEventsService, Mockito.times(1))
-        .getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+        .getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
   }
 }

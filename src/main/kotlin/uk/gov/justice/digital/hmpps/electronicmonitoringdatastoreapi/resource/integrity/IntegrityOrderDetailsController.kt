@@ -81,7 +81,7 @@ class IntegrityOrderDetailsController(
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<IntegrityOrderDetails> {
-    val result = integrityOrderService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    val result = integrityOrderService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
     auditService.createEvent(
       authentication.name,
@@ -142,7 +142,7 @@ class IntegrityOrderDetailsController(
     @Pattern(regexp = "^[0-9]+$", message = "Input contains illegal characters - legacy subject ID must be a number")
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<IntegrityOrderDetails> {
-    val result = integrityOrderService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED_RO)
+    val result = integrityOrderService.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO)
 
     auditService.createEvent(
       authentication.name,

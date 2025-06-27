@@ -57,27 +57,27 @@ class IntegrityServiceDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityServiceDetailsRepository.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(integrityServiceDetailsRepository.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(exampleServiceDetails)
     }
 
     @Test
     fun `calls getServiceDetails from order information repository`() {
-      service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
-      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns a list of ServiceDetails when a response is received`() {
-      val result = service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the ServiceDetails when a response is received`() {
-      val result = service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
