@@ -1,10 +1,15 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 
 import io.swagger.v3.parser.OpenAPIV3Parser
+import net.minidev.json.JSONArray
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 
 class OpenApiDocsTest : IntegrationTestBase() {
   @LocalServerPort
@@ -57,35 +62,35 @@ class OpenApiDocsTest : IntegrationTestBase() {
     assertThat(result.openAPI.paths).isNotEmpty
   }
 
-//  @Test
-//  fun `the open api json path security requirements are valid`() {
-//    val result = OpenAPIV3Parser().readLocation("http://localhost:$port/v3/api-docs", null, null)
-//
-//    // The security requirements of each path don't appear to be validated like they are at https://editor.swagger.io/
-//    // We therefore need to grab all the valid security requirements and check that each path only contains those items
-//    val securityRequirements = result.openAPI.security.flatMap { it.keys }
-//    result.openAPI.paths.forEach { pathItem ->
-//      assertThat(pathItem.value.get.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
-//    }
-//  }
+  @Test
+  fun `the open api json path security requirements are valid`() {
+    val result = OpenAPIV3Parser().readLocation("http://localhost:$port/v3/api-docs", null, null)
 
-//  @ParameterizedTest
-//  @CsvSource(value = ["electronic-monitoring-datastore-api-ui-role, ROLE_TEMPLATE_KOTLIN__UI"])
-//  fun `the security scheme is setup for bearer tokens`(key: String, role: String) {
-//    webTestClient.get()
-//      .uri("/v3/api-docs")
-//      .accept(MediaType.APPLICATION_JSON)
-//      .exchange()
-//      .expectStatus().isOk
-//      .expectBody()
-//      .jsonPath("$.components.securitySchemes.$key.type").isEqualTo("http")
-//      .jsonPath("$.components.securitySchemes.$key.scheme").isEqualTo("bearer")
-//      .jsonPath("$.components.securitySchemes.$key.description").value<String> {
-//        assertThat(it).contains(role)
-//      }
-//      .jsonPath("$.components.securitySchemes.$key.bearerFormat").isEqualTo("JWT")
-//      .jsonPath("$.security[0].$key").isEqualTo(JSONArray().apply { this.add("read") })
-//  }
+    // The security requirements of each path don't appear to be validated like they are at https://editor.swagger.io/
+    // We therefore need to grab all the valid security requirements and check that each path only contains those items
+    val securityRequirements = result.openAPI.security.flatMap { it.keys }
+    result.openAPI.paths.forEach { pathItem ->
+      assertThat(pathItem.value.get.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource(value = ["$TOKEN_HMPPS_AUTH, $ROLE_EM_DATASTORE_GENERAL__RO"])
+  fun `the security scheme is setup for bearer tokens`(key: String, role: String) {
+    webTestClient.get()
+      .uri("/v3/api-docs")
+      .accept(MediaType.APPLICATION_JSON)
+      .exchange()
+      .expectStatus().isOk
+      .expectBody()
+      .jsonPath("$.components.securitySchemes.$key.type").isEqualTo("http")
+      .jsonPath("$.components.securitySchemes.$key.scheme").isEqualTo("bearer")
+      .jsonPath("$.components.securitySchemes.$key.description").value<String> {
+        assertThat(it).contains(role)
+      }
+      .jsonPath("$.components.securitySchemes.$key.bearerFormat").isEqualTo("JWT")
+      .jsonPath("$.security[0].$key").isEqualTo(JSONArray().apply { this.add("read") })
+  }
 
   @Test
   fun `all endpoints have a security scheme defined`() {
@@ -95,6 +100,6 @@ class OpenApiDocsTest : IntegrationTestBase() {
       .exchange()
       .expectStatus().isOk
       .expectBody()
-      .jsonPath("$.paths[*][*][?(!@.security)]").exists()
+      .jsonPath("$.paths[*][*][?(!@.security)]").doesNotExist()
   }
 }
