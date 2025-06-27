@@ -44,8 +44,8 @@ class IntegrityOrderService(
     return results.map { result -> OrderSearchResult(result) }
   }
 
-  fun getOrderInformation(legacySubjectId: String, role: AthenaRole): IntegrityOrderInformation {
-    val keyOrderInformation = integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, role)
+  fun getOrderInformation(legacySubjectId: String, restricted: Boolean): IntegrityOrderInformation {
+    val keyOrderInformation = integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, restricted)
     val parsedIntegrityKeyOrderInformation = IntegrityKeyOrderInformation(keyOrderInformation)
 
     val emptyHistoryReport: IntegritySubjectHistoryReport = IntegritySubjectHistoryReport.createEmpty()

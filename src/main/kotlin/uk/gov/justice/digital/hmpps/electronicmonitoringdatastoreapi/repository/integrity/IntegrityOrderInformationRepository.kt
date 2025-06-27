@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
@@ -15,16 +14,16 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 @Service
 class IntegrityOrderInformationRepository(
-  @Autowired val athenaClient: EmDatastoreClientInterface,
-  @Value("\${services.athena.database}")
+  val athenaClient: EmDatastoreClientInterface,
+  @param:Value($$"${services.athena.database}")
   var athenaDatabase: String = "unknown_database",
 ) {
-  fun getKeyOrderInformation(legacySubjectId: String, role: AthenaRole): AthenaIntegrityKeyOrderInformationDTO {
+  fun getKeyOrderInformation(legacySubjectId: String, restricted: Boolean): AthenaIntegrityKeyOrderInformationDTO {
     val keyOrderInformationQuery = IntegrityOrderInformationQueryBuilder(athenaDatabase)
       .withLegacySubjectId(legacySubjectId)
       .build()
 
-    val athenaResponse = athenaClient.getQueryResult(keyOrderInformationQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(keyOrderInformationQuery, restricted)
 
     val result = AthenaHelper.mapTo<AthenaIntegrityKeyOrderInformationDTO>(athenaResponse)
 
