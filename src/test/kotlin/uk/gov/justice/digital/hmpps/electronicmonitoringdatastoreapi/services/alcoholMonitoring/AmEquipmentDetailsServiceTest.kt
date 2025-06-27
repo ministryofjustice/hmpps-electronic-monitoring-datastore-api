@@ -67,20 +67,20 @@ class AmEquipmentDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(exampleEquipmentDetails)
     }
 
     @Test
     fun `calls getEquipmentDetails from amEquipmentDetailsRepository`() {
-      amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
-      Mockito.verify(amEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(amEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns a list of AmEquipmentDetails when a response is received`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -90,7 +90,7 @@ class AmEquipmentDetailsServiceTest {
 
     @Test
     fun `returns correct details of the AmEquipmentDetails when a response is received`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -103,7 +103,7 @@ class AmEquipmentDetailsServiceTest {
 
     @Test
     fun `handles null dates and times correctly`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result.first().deviceInstalledDateTime).isEqualTo(LocalDateTime.parse("2001-01-01T01:10:10"))
       Assertions.assertThat(result.first().deviceRemovedDateTime).isEqualTo(LocalDateTime.parse("2002-02-02T02:20:20"))

@@ -44,27 +44,27 @@ class IntegritySuspensionOfVisitsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integritySuspensionOfVisitsRepository.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(integritySuspensionOfVisitsRepository.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
         .thenReturn(exampleSuspensionOfVisits)
     }
 
     @Test
     fun `calls getSuspensionOfVisits from order information repository`() {
-      service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
-      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     }
 
     @Test
     fun `returns a list of SuspensionOfVisits when a response is received`() {
-      val result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the suspension of visits when a response is received`() {
-      val result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)

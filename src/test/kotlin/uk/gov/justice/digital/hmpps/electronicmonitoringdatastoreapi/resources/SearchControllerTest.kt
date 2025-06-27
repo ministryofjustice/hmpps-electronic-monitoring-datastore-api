@@ -34,8 +34,8 @@ class SearchControllerTest {
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityOrderService = Mockito.mock(IntegrityOrderService::class.java)
     roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    Mockito.`when`(roleService.fromString(any<String>())).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
     auditService = Mockito.mock(AuditService::class.java)
     controller = SearchController(integrityOrderService, roleService, auditService)
   }
@@ -61,7 +61,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      Mockito.`when`(integrityOrderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(queryExecutionId)
+      Mockito.`when`(integrityOrderService.getQueryExecutionId(orderSearchCriteria, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(queryExecutionId)
 
       val result = controller.executeSearch(authentication, orderSearchCriteria)
 
@@ -93,7 +93,7 @@ class SearchControllerTest {
         ),
       )
 
-      Mockito.`when`(integrityOrderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderService.getSearchResults(queryExecutionId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)).thenReturn(expectedResult)
 
       val result = controller.getSearchResults(authentication, queryExecutionId)
 

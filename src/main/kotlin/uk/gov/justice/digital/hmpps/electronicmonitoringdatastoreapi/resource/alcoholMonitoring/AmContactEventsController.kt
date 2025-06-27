@@ -85,7 +85,7 @@ class AmContactEventsController(
     )
     @PathVariable legacySubjectId: String,
   ): ResponseEntity<List<AmEvent<AmContactEventDetails>>> {
-    val result = amOrderEventsService.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    val result = amOrderEventsService.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
 
     auditService.createEvent(
       authentication.name,
