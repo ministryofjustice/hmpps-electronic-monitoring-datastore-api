@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_SEARCHING_ORDERS
@@ -26,7 +25,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKE
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -35,7 +33,6 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 @RestController
 class SearchController(
   @field:Autowired val integrityOrderService: IntegrityOrderService,
-  val athenaRoleService: AthenaRoleService,
   @field:Autowired val auditService: AuditService,
 ) {
 
@@ -141,22 +138,22 @@ class SearchController(
     ],
   )
   @SecurityRequirement(name = TOKEN_HMPPS_AUTH, scopes = [ROLE_EM_DATASTORE_GENERAL__RO, ROLE_EM_DATASTORE_RESTRICTED__RO])
-  @PreAuthorize("hasAnyAuthority('$ROLE_EM_DATASTORE_GENERAL__RO', '$ROLE_EM_DATASTORE_RESTRICTED__RO')")
+  @PreAuthorize("( hasAuthority('$ROLE_EM_DATASTORE_GENERAL__RO') and #restricted == false ) or ( hasAuthority('$ROLE_EM_DATASTORE_RESTRICTED__RO') )")
   fun getSearchResults(
     authentication: Authentication,
     @Parameter(description = "The query execution ID of the search job", required = true)
     @RequestParam(name = "id", required = true) queryExecutionId: String,
+    @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
+    restricted: Boolean = false,
   ): ResponseEntity<List<OrderSearchResult>> {
-    val validatedRole = athenaRoleService.getRoleFromAuthentication(authentication)
-
-    val results = integrityOrderService.getSearchResults(queryExecutionId, validatedRole)
+    val results = integrityOrderService.getSearchResults(queryExecutionId, restricted)
 
     auditService.createEvent(
       authentication.name,
       "RETRIEVE_SEARCH_RESULT",
       mapOf(
         "executionId" to queryExecutionId,
-        "restrictedOrdersIncluded" to (validatedRole == AthenaRole.ROLE_EM_DATASTORE_RESTRICTED__RO),
+        "restrictedOrdersIncluded" to restricted,
         "rows" to results.count().toString(),
       ),
     )

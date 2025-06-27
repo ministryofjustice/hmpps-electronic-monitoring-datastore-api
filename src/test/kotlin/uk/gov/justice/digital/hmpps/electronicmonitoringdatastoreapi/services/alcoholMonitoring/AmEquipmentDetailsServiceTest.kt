@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEquipmentDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmEquipmentDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmEquipmentDetailsRepository
@@ -67,20 +66,20 @@ class AmEquipmentDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      Mockito.`when`(amEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId))
         .thenReturn(exampleEquipmentDetails)
     }
 
     @Test
     fun `calls getEquipmentDetails from amEquipmentDetailsRepository`() {
-      amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
 
-      Mockito.verify(amEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(amEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId)
     }
 
     @Test
     fun `returns a list of AmEquipmentDetails when a response is received`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result).allSatisfy {
@@ -90,7 +89,7 @@ class AmEquipmentDetailsServiceTest {
 
     @Test
     fun `returns correct details of the AmEquipmentDetails when a response is received`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
@@ -103,7 +102,7 @@ class AmEquipmentDetailsServiceTest {
 
     @Test
     fun `handles null dates and times correctly`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
 
       Assertions.assertThat(result.first().deviceInstalledDateTime).isEqualTo(LocalDateTime.parse("2001-01-01T01:10:10"))
       Assertions.assertThat(result.first().deviceRemovedDateTime).isEqualTo(LocalDateTime.parse("2002-02-02T02:20:20"))
