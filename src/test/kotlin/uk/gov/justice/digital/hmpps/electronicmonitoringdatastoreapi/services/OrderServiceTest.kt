@@ -12,7 +12,6 @@ import org.mockito.Mockito.`when`
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaStringQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityDocumentDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityKeyOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
@@ -70,29 +69,6 @@ class OrderServiceTest {
       `when`(searchRepository.listLegacyIds(false)).thenThrow(NullPointerException(errorMessage))
 
       Assertions.assertThatThrownBy { service.checkAvailability(false) }.isInstanceOf(RuntimeException::class.java)
-    }
-  }
-
-  @Nested
-  inner class Query {
-    val athenaQuery = AthenaStringQuery("fake query", arrayOf())
-
-    @Test
-    fun `passes query to order repository`() {
-      `when`(searchRepository.runQuery(athenaQuery, false)).thenReturn("Expected response")
-
-      service.query(athenaQuery, false)
-
-      Mockito.verify(searchRepository, times(1)).runQuery(athenaQuery, false)
-    }
-
-    @Test
-    fun `returns response from order repository`() {
-      `when`(searchRepository.runQuery(athenaQuery, false)).thenReturn("Expected response")
-
-      val result = service.query(athenaQuery, false)
-
-      Assertions.assertThat(result).isEqualTo("Expected response")
     }
   }
 

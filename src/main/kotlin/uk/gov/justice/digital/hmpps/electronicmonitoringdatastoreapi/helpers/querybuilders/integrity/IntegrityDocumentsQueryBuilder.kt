@@ -4,16 +4,14 @@ import io.zeko.db.sql.dsl.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaDocumentListQuery
 
-class IntegrityDocumentsQueryBuilder(
-  override val databaseName: String,
-) : SqlQueryBuilder(
-  databaseName,
-  "equipment_details",
-  arrayOf(
-    "legacy_subject_id",
-    "legacy_order_id",
-  ),
-) {
+class IntegrityDocumentsQueryBuilder :
+  SqlQueryBuilder(
+    "equipment_details",
+    arrayOf(
+      "legacy_subject_id",
+      "legacy_order_id",
+    ),
+  ) {
   fun withLegacySubjectId(subjectId: String): IntegrityDocumentsQueryBuilder {
     validateAlphanumeric(subjectId, "legacy_subject_id")
 
@@ -26,5 +24,5 @@ class IntegrityDocumentsQueryBuilder(
     return this
   }
 
-  fun build(): AthenaDocumentListQuery = AthenaDocumentListQuery(getSQL(), values.toTypedArray())
+  override fun build(databaseName: String): AthenaDocumentListQuery = AthenaDocumentListQuery(getSQL(databaseName), values.toTypedArray())
 }

@@ -6,10 +6,8 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 import java.time.LocalDate
 
 class OrderSearchQueryBuilder(
-  override val databaseName: String,
   tableName: String,
 ) : SqlQueryBuilder(
-  databaseName,
   tableName,
   arrayOf(
     "legacy_subject_id",
@@ -89,11 +87,11 @@ class OrderSearchQueryBuilder(
     return this
   }
 
-  fun build(): AthenaOrderSearchQuery {
+  override fun build(databaseName: String): AthenaOrderSearchQuery {
     if (whereClauses.isEmpty()) {
       throw IllegalArgumentException("At least one search criteria must be populated")
     }
 
-    return AthenaOrderSearchQuery(getSQL(), values.toTypedArray())
+    return AthenaOrderSearchQuery(getSQL(databaseName), values.toTypedArray())
   }
 }
