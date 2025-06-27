@@ -43,9 +43,7 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
       .trimIndent()
   }
 
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, restricted: Boolean): String = getQueryExecutionId(athenaQuery, null)
-
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
+  override fun getQueryExecutionId(athenaQuery: AthenaQuery, restricted: Boolean): String {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
@@ -71,9 +69,7 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
     return MOCK_QUERY_EXECUTION_ID
   }
 
-  override fun getQueryResult(queryExecutionId: String, restricted: Boolean): ResultSet = getQueryResult(queryExecutionId, null)
-
-  override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
+  override fun getQueryResult(queryExecutionId: String, restricted: Boolean): ResultSet {
     if (queryExecutionId == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
@@ -91,9 +87,7 @@ class MockEMDatastoreClient : EmDatastoreClientInterface {
     return AthenaHelper.resultSetFromJson(athenaResponse)
   }
 
-  override fun getQueryResult(athenaQuery: AthenaQuery, restricted: Boolean): ResultSet = getQueryResult(athenaQuery, null)
-
-  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
+  override fun getQueryResult(athenaQuery: AthenaQuery, restricted: Boolean): ResultSet {
     if (athenaQuery.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
