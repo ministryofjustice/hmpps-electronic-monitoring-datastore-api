@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityVisitDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetailsAddress
@@ -51,27 +50,27 @@ class IntegrityVisitDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityVisitDetailsRepository.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO))
+      Mockito.`when`(integrityVisitDetailsRepository.getVisitDetails(legacySubjectId, false))
         .thenReturn(exampleVisitDetails)
     }
 
     @Test
     fun `calls getVisitDetails from order information repository`() {
-      service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      service.getVisitDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      Mockito.verify(integrityVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, false)
     }
 
     @Test
     fun `returns a list of VisitDetails when a response is received`() {
-      val result = service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getVisitDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isInstanceOf(List::class.java)
     }
 
     @Test
     fun `returns correct details of the VisitDetails when a response is received`() {
-      val result = service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL__RO)
+      val result = service.getVisitDetails(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
