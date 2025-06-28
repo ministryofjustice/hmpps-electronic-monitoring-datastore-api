@@ -1,17 +1,21 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import java.io.File
 
 @Component
 @Profile("integration")
 class MockEmDatastoreClient : EmDatastoreClientInterface {
+
+  @Value($$"${services.athena.database}")
+  private val databaseName: String = "test_database"
+
   companion object {
     var responses: MutableList<String> = mutableListOf<String>()
 
@@ -29,16 +33,20 @@ class MockEmDatastoreClient : EmDatastoreClientInterface {
     }
   }
 
-  override fun getQueryExecutionId(athenaQuery: AthenaQuery, role: AthenaRole?): String {
-    if (athenaQuery.queryString == "THROW ERROR") {
+  override fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean): String {
+    val query = athenaQuery.build(databaseName)
+
+    if (query.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
 
     return "query-execution-id"
   }
 
-  override fun getQueryResult(athenaQuery: AthenaQuery, role: AthenaRole?): ResultSet {
-    if (athenaQuery.queryString == "THROW ERROR") {
+  override fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean): ResultSet {
+    val query = athenaQuery.build(databaseName)
+
+    if (query.queryString == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }
 
@@ -46,7 +54,7 @@ class MockEmDatastoreClient : EmDatastoreClientInterface {
     return AthenaHelper.Companion.resultSetFromJson(athenaResponse)
   }
 
-  override fun getQueryResult(queryExecutionId: String, role: AthenaRole?): ResultSet {
+  override fun getQueryResult(queryExecutionId: String, restricted: Boolean): ResultSet {
     if (queryExecutionId == "THROW ERROR") {
       throw IllegalArgumentException("I threw an error")
     }

@@ -9,11 +9,9 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Event
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityMonitoringEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.MonitoringEventsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityMonitoringEventsController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
@@ -22,9 +20,8 @@ import java.time.LocalDateTime
 @JsonTest
 class IntegrityMonitoringEventsControllerTest {
   private lateinit var integrityOrderEventsService: IntegrityOrderEventsService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
-  private lateinit var controller: MonitoringEventsController
+  private lateinit var controller: IntegrityMonitoringEventsController
   private lateinit var authentication: Authentication
 
   @BeforeEach
@@ -32,10 +29,8 @@ class IntegrityMonitoringEventsControllerTest {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     integrityOrderEventsService = Mockito.mock(IntegrityOrderEventsService::class.java)
-    roleService = Mockito.mock(AthenaRoleService::class.java)
-    Mockito.`when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = MonitoringEventsController(integrityOrderEventsService, roleService, auditService)
+    controller = IntegrityMonitoringEventsController(integrityOrderEventsService, auditService)
   }
 
   @Nested
@@ -55,7 +50,7 @@ class IntegrityMonitoringEventsControllerTest {
         ),
       )
 
-      Mockito.`when`(integrityOrderEventsService.getMonitoringEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      Mockito.`when`(integrityOrderEventsService.getMonitoringEvents(legacySubjectId, false)).thenReturn(expectedResult)
 
       val result = controller.getMonitoringEvents(authentication, legacySubjectId)
 
@@ -63,7 +58,7 @@ class IntegrityMonitoringEventsControllerTest {
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
 
       Mockito.verify(integrityOrderEventsService, Mockito.times(1))
-        .getMonitoringEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+        .getMonitoringEvents(legacySubjectId, false)
     }
   }
 }

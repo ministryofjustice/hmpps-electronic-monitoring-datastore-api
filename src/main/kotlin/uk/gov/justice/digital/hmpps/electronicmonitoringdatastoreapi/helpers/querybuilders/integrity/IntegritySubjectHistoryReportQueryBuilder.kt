@@ -4,16 +4,14 @@ import io.zeko.db.sql.dsl.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaSubjectHistoryReportQuery
 
-class IntegritySubjectHistoryReportQueryBuilder(
-  override var databaseName: String,
-) : SqlQueryBuilder(
-  databaseName,
-  "subject_history_report",
-  arrayOf(
-    "legacy_subject_id",
-    "legacy_order_id",
-  ),
-) {
+class IntegritySubjectHistoryReportQueryBuilder :
+  SqlQueryBuilder(
+    "subject_history_report",
+    arrayOf(
+      "legacy_subject_id",
+      "legacy_order_id",
+    ),
+  ) {
   fun withLegacySubjectId(subjectId: String): IntegritySubjectHistoryReportQueryBuilder {
     validateAlphanumeric(subjectId, "legacy_subject_id")
 
@@ -26,5 +24,5 @@ class IntegritySubjectHistoryReportQueryBuilder(
     return this
   }
 
-  fun build(): AthenaSubjectHistoryReportQuery = AthenaSubjectHistoryReportQuery(getSQL(), values.toTypedArray())
+  override fun build(databaseName: String): AthenaSubjectHistoryReportQuery = AthenaSubjectHistoryReportQuery(getSQL(databaseName), values.toTypedArray())
 }

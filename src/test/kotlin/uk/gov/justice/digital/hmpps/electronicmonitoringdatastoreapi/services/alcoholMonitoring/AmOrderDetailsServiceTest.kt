@@ -8,7 +8,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmOrderDetailsRepository
@@ -40,13 +39,13 @@ class AmOrderDetailsServiceTest {
       lastName = "Smith",
       alias = "Zeno",
       dateOfBirth = "1980-02-01",
-      sex = "Sex",
+      legacyGender = "Sex",
       specialInstructions = "Special instructions",
-      phoneNumber = "09876543210",
-      address1 = "1 Primary Street",
-      address2 = "Sutton",
-      address3 = "London",
-      postcode = "ABC 123",
+      phoneOrMobileNumber = "09876543210",
+      primaryAddressLine1 = "1 Primary Street",
+      primaryAddressLine2 = "Sutton",
+      primaryAddressLine3 = "London",
+      primaryAddressPostCode = "ABC 123",
       legacyOrderId = "1234567",
       orderStartDate = "2012-02-01",
       orderEndDate = "2013-04-03",
@@ -61,26 +60,26 @@ class AmOrderDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(amOrderDetailsRepository.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      `when`(amOrderDetailsRepository.getOrderDetails(orderId))
         .thenReturn(orderDetailsData)
     }
 
     @Test
     fun `calls getAmOrderDetails from order details repository`() {
-      service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Mockito.verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getOrderDetails(orderId)
+      Mockito.verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId)
     }
 
     @Test
     fun `returns AmOrderDetails`() {
-      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(orderId)
 
       Assertions.assertThat(result).isInstanceOf(AmOrderDetails::class.java)
     }
 
     @Test
     fun `returns correct details of the order`() {
-      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(orderId)
 
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("AA2020")
