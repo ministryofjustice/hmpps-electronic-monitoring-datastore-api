@@ -23,12 +23,6 @@ class IntegrityServiceDetailsRepositoryTest {
     repository = IntegrityServiceDetailsRepository(emDatastoreClient)
   }
 
-  @Test
-  fun `ServiceDetailsRepository can be instantiated`() {
-    val sut = IntegrityServiceDetailsRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetServicesList {
     fun serviceDetailsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
@@ -111,20 +105,6 @@ class IntegrityServiceDetailsRepositoryTest {
     }
 
     @Test
-    fun `getServicesList returns an AthenaServicesListDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(serviceDetailsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
-
-      val result = repository.getServiceDetails("123", false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AthenaIntegrityServiceDetailsDTO::class.java)
-      }
-    }
-
-    @Test
     fun `getServicesList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(serviceDetailsResultSet("987"))
 
@@ -132,10 +112,7 @@ class IntegrityServiceDetailsRepositoryTest {
 
       val result = repository.getServiceDetails("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegrityServiceDetailsDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
       Assertions.assertThat(result.first().serviceId).isEqualTo(333)
     }
