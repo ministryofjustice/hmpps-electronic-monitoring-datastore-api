@@ -24,17 +24,17 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 @Component
 @Profile("!integration & !mocking")
 class EmDatastoreClient : EmDatastoreClientInterface {
-  @Value($$"${services.athena-roles.restricted:uninitialised}")
+  @field:Value($$"${services.athena-roles.restricted:uninitialised}")
   private val restrictedRole: String = "uninitialised"
 
-  @Value($$"${services.athena-roles.general:uninitialised}")
+  @field:Value($$"${services.athena-roles.general:uninitialised}")
   private val generalRole: String = "uninitialised"
 
-  @Value($$"${services.athena.output}")
+  @field:Value($$"${services.athena.output}")
   private val output: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
   private val sleepLength: Long = 1000
 
-  @Value($$"${services.athena.database}")
+  @field:Value($$"${services.athena.database}")
   private val databaseName: String = "test_database"
 
   private fun startClient(iamRole: String): AthenaClient {
