@@ -14,7 +14,7 @@ import kotlin.io.readText
 @Profile("mocking")
 class MockEMDatastoreClient : EmDatastoreClientInterface {
 
-  @Value($$"${services.athena.database}")
+  @field:Value($$"${services.athena.database}")
   private val databaseName: String = "test_database"
 
   private companion object {
