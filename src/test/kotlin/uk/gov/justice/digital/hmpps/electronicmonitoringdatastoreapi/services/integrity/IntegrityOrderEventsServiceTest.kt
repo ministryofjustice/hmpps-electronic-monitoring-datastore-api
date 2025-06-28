@@ -27,12 +27,6 @@ class IntegrityOrderEventsServiceTest {
     service = IntegrityOrderEventsService(integrityOrderEventsRepository)
   }
 
-  @Test
-  fun `OrderService can be instantiated`() {
-    val sut = IntegrityOrderEventsService(integrityOrderEventsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetMonitoringEventsList {
     val legacySubjectId = "fake-id"
@@ -64,23 +58,11 @@ class IntegrityOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns MonitoringEventList when a response is received`() {
-      val result = service.getMonitoringEvents(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the order when a response is received`() {
       val result = service.getMonitoringEvents(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(IntegrityMonitoringEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_EVENT")
     }
   }
@@ -112,23 +94,11 @@ class IntegrityOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns IncidentEventList when a response is received`() {
-      val result = service.getIncidentEvents(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the order when a response is received`() {
       val result = service.getIncidentEvents(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(IncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_VIOLATION")
     }
   }
@@ -177,23 +147,11 @@ class IntegrityOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns ViolationEventList when a response is received`() {
-      val result = service.getViolationEvents(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the order when a response is received`() {
       val result = service.getViolationEvents(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(IntegrityViolationEventDetails::class.java)
       Assertions.assertThat(result.first().details.breachDetails).isEqualTo("TEST_BREACH")
     }
   }
@@ -232,23 +190,11 @@ class IntegrityOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns ContactsEventList when a response is received`() {
-      val result = service.getContactEvents(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the order when a response is received`() {
       val result = service.getContactEvents(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(Event::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(IntegrityContactEventDetails::class.java)
       Assertions.assertThat(result.first().details.type).isEqualTo("TEST_CONTACT")
     }
   }

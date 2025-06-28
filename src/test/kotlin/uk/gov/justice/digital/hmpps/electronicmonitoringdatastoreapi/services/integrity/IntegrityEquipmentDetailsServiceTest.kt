@@ -21,12 +21,6 @@ class IntegrityEquipmentDetailsServiceTest {
     service = IntegrityEquipmentDetailsService(integrityEquipmentDetailsRepository)
   }
 
-  @Test
-  fun `EquipmentDetailsService can be instantiated`() {
-    val sut = IntegrityEquipmentDetailsService(integrityEquipmentDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetEquipmentDetails {
     val legacySubjectId = "fake-id"
@@ -63,24 +57,12 @@ class IntegrityEquipmentDetailsServiceTest {
     }
 
     @Test
-    fun `returns a list of EquipmentDetails when a response is received`() {
-      val result = service.getEquipmentDetails(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the EquipmentDetails when a response is received`() {
       val result = service.getEquipmentDetails(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(IntegrityEquipmentDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-      Assertions.assertThat(result.first().pid).isInstanceOf(IntegrityEquipmentDetail::class.java)
       Assertions.assertThat(result.first().pid?.equipmentCategoryDescription).isEqualTo("TEST_PID_CATEGORY")
-      Assertions.assertThat(result.first().hmu).isInstanceOf(IntegrityEquipmentDetail::class.java)
       Assertions.assertThat(result.first().hmu?.equipmentCategoryDescription).isEqualTo("TEST_HMU_CATEGORY")
     }
   }

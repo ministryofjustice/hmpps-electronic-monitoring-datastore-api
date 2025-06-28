@@ -87,8 +87,6 @@ class IntegrityOrderDetailsControllerTest {
       val result = controller.getOrderDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      Assertions.assertThat(result.body).isNotNull
-      Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
       Mockito.verify(orderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, false)
     }
@@ -146,8 +144,6 @@ class IntegrityOrderDetailsControllerTest {
       val result = controller.getOrderDetails(authentication, legacySubjectId, true)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      Assertions.assertThat(result.body).isNotNull
-      Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
       Mockito.verify(orderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, true)
     }

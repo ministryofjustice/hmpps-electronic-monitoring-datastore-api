@@ -58,7 +58,6 @@ class SearchControllerTest {
 
       val result = controller.executeSearch(authentication, orderSearchCriteria)
 
-      assertThat(result.body).isNotNull
       assertThat(result.body).isEqualTo(expectedResult)
     }
   }
@@ -90,7 +89,7 @@ class SearchControllerTest {
 
       val result = controller.getSearchResults(authentication, queryExecutionId)
 
-      assertThat(result.body).isNotNull
+      assertThat(result.body).isNotEmpty
       assertThat(result.body).isEqualTo(expectedResult)
     }
   }

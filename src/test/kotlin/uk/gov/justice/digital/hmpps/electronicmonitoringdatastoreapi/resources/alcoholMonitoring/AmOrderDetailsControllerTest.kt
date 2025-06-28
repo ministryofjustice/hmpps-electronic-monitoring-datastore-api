@@ -67,8 +67,6 @@ class AmOrderDetailsControllerTest {
       val result = amOrderDetailsController.getOrderDetails(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      Assertions.assertThat(result.body).isNotNull
-      Assertions.assertThat(result.body).isInstanceOf(AmOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
       Mockito.verify(amOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId)
     }
