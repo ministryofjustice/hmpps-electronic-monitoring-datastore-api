@@ -22,13 +22,13 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_INTEGRITY_ORDERS
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderInformationService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestController
 class IntegrityOrderInformationController(
-  @field:Autowired val integrityOrderService: IntegrityOrderService,
+  @field:Autowired val orderInformationService: IntegrityOrderInformationService,
   @field:Autowired val auditService: AuditService,
 ) {
 
@@ -81,7 +81,7 @@ class IntegrityOrderInformationController(
     @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
     restricted: Boolean = false,
   ): ResponseEntity<IntegrityOrderInformation> {
-    val result = integrityOrderService.getOrderInformation(legacySubjectId, restricted)
+    val result = orderInformationService.getOrderInformation(legacySubjectId, restricted)
 
     auditService.createEvent(
       authentication.name,
