@@ -132,7 +132,7 @@ class IntegrityOrderInformationRepositoryTest {
       Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacyOrderId).isEqualTo(legacySubjectId)
       Assertions.assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
-      Assertions.assertThat(result.name).isEqualTo(fullName)
+      Assertions.assertThat(result.fullName).isEqualTo(fullName)
     }
   }
 }
