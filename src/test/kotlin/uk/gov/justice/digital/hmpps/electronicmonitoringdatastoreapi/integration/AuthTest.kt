@@ -49,7 +49,7 @@ class AuthTest : IntegrationTestBase() {
   fun `Providing JWT without right role return 403`() {
     webTestClient.get()
       .uri("/orders/integrity/123")
-      .headers(setAuthorisation(roles = emptyList<String>()))
+      .headers(setAuthorisation(roles = emptyList()))
       .exchange()
       .expectStatus()
       .isForbidden
