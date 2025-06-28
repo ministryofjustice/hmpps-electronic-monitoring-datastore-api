@@ -36,13 +36,13 @@ class IntegrityOrderInformationServiceTest {
     val orderInformationData = AthenaIntegrityOrderInformationDTO(
       legacySubjectId = "123",
       legacyOrderId = "321",
-      name = "John Smith",
+      fullName = "John Smith",
       alias = "Zeno",
       dateOfBirth = "1980-02-01",
-      address1 = "1 Primary Street",
-      address2 = "Sutton",
-      address3 = "London",
-      postcode = "ABC 123",
+      primaryAddressLine1 = "1 Primary Street",
+      primaryAddressLine2 = "Sutton",
+      primaryAddressLine3 = "London",
+      primaryAddressPostCode = "ABC 123",
       orderStartDate = "2012-02-01",
       orderEndDate = "2013-04-03",
     )

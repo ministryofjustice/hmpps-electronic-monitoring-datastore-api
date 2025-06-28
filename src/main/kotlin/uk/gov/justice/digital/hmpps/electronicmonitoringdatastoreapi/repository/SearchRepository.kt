@@ -7,7 +7,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDa
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.ListKeyOrderInformationQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.OrderSearchQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
 
@@ -45,13 +44,5 @@ class SearchRepository(
     val result = AthenaHelper.mapTo<SubjectId>(athenaResponse)
 
     return result.map { it.legacySubjectId }
-  }
-
-  fun runQuery(athenaQuery: SqlQueryBuilder, restricted: Boolean): String {
-    val athenaResponse = athenaClient.getQueryResult(athenaQuery, restricted)
-
-    val result = athenaResponse.toString()
-
-    return result
   }
 }
