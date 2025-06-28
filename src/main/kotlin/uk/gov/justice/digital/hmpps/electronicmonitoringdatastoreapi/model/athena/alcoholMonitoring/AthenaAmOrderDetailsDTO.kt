@@ -22,9 +22,9 @@ data class AthenaAmOrderDetailsDTO(
   val orderType: String?,
   val orderTypeDescription: String?,
   val orderEndOutcome: String?,
-  @JsonProperty("responsible_org_details_phone_number")
+  @param:JsonProperty("responsible_org_details_phone_number")
   val responsibleOrganisationPhoneNumber: String?,
-  @JsonProperty("responsible_org_details_email")
+  @param:JsonProperty("responsible_org_details_email")
   val responsibleOrganisationEmail: String?,
   val tagAtSource: String?,
 )
