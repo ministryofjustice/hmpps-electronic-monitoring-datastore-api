@@ -20,12 +20,6 @@ class IntegrityServiceDetailsServiceTest {
     service = IntegrityServiceDetailsService(integrityServiceDetailsRepository)
   }
 
-  @Test
-  fun `ServiceDetailsService can be instantiated`() {
-    val sut = IntegrityServiceDetailsService(integrityServiceDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetServiceDetails {
     val legacySubjectId = "fake-id"
@@ -68,20 +62,10 @@ class IntegrityServiceDetailsServiceTest {
     }
 
     @Test
-    fun `returns a list of ServiceDetails when a response is received`() {
-      val result = service.getServiceDetails(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the ServiceDetails when a response is received`() {
       val result = service.getServiceDetails(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(IntegrityServiceDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
     }

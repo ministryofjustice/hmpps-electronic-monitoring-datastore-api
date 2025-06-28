@@ -63,12 +63,6 @@ class IntegrityOrderDetailsRepositoryTest {
     repository = IntegrityOrderDetailsRepository(emDatastoreClient)
   }
 
-  @Test
-  fun `OrderDetailsRepository can be instantiated`() {
-    val sut = SearchRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetOrderDetails {
     @Test
@@ -83,17 +77,6 @@ class IntegrityOrderDetailsRepositoryTest {
     }
 
     @Test
-    fun `getOrderDetails returns an AthenaOrderDetailsDTO`() {
-      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
-
-      val result = repository.getOrderDetails("123", false)
-
-      Assertions.assertThat(result).isInstanceOf(AthenaIntegrityOrderDetailsDTO::class.java)
-    }
-
-    @Test
     fun `getOrderDetails returns the first result from getQueryResult`() {
       val legacySubjectId = "expectedId"
       val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet(legacySubjectId))
@@ -102,7 +85,6 @@ class IntegrityOrderDetailsRepositoryTest {
 
       val result = repository.getOrderDetails(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
     }
   }

@@ -25,12 +25,6 @@ class AmOrderEventsServiceTest {
     service = AmOrderEventsService(amOrderEventsRepository)
   }
 
-  @Test
-  fun `OrderService can be instantiated`() {
-    val sut = AmOrderEventsService(amOrderEventsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetContactEvents {
     val legacySubjectId = "fake-id"
@@ -67,35 +61,11 @@ class AmOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns a list of Event when a response is received`() {
-      val result = service.getContactEvents(legacySubjectId)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
-      }
-    }
-
-    @Test
-    fun `Each Event contains AmContactEventDetails`() {
-      val result = service.getContactEvents(legacySubjectId)
-
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it.details).isInstanceOf(AmContactEventDetails::class.java)
-      }
-    }
-
-    @Test
     fun `returns correct details of the order when a response is received`() {
       val result = service.getContactEvents(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(AmContactEventDetails::class.java)
       Assertions.assertThat(result.first().details.channel).isEqualTo("TEST_CHANNEL")
       Assertions.assertThat(result.first().details.contactDateTime).isEqualTo("2001-01-01T01:01:01")
     }
@@ -135,35 +105,11 @@ class AmOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns a list of Event when a response is received`() {
-      val result = service.getIncidentEvents(legacySubjectId)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
-      }
-    }
-
-    @Test
-    fun `Each Event contains AmIncidentEventDetails`() {
-      val result = service.getIncidentEvents(legacySubjectId)
-
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it.details).isInstanceOf(AmIncidentEventDetails::class.java)
-      }
-    }
-
-    @Test
     fun `Returns correct details of the order when a response is received`() {
       val result = service.getIncidentEvents(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(AmIncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.violationAlertType).isEqualTo("TEST_ALERT_TYPE")
       Assertions.assertThat(result.first().details.violationAlertDateTime).isEqualTo("2001-01-01T01:01:01")
     }
@@ -207,35 +153,11 @@ class AmOrderEventsServiceTest {
     }
 
     @Test
-    fun `returns a list of Event when a response is received`() {
-      val result = service.getViolationEvents(legacySubjectId)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
-      }
-    }
-
-    @Test
-    fun `Each Event contains AmViolationEventDetails`() {
-      val result = service.getViolationEvents(legacySubjectId)
-
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it.details).isInstanceOf(AmViolationEventDetails::class.java)
-      }
-    }
-
-    @Test
     fun `returns correct details of the order when a response is received`() {
       val result = service.getViolationEvents(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(AmViolationEventDetails::class.java)
       Assertions.assertThat(result.first().details.nonComplianceReason).isEqualTo("TEST_REASON")
       Assertions.assertThat(result.first().details.nonComplianceDateTime).isEqualTo("2001-01-01T01:01:01")
     }

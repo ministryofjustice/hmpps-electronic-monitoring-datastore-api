@@ -25,12 +25,6 @@ class AmOrderDetailsRepositoryTest {
     repository = AmOrderDetailsRepository(emDatastoreClient)
   }
 
-  @Test
-  fun `AmOrderDetailsRepository can be instantiated`() {
-    val sut = AmOrderDetailsRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   fun varCharValueColumn(value: String) = """
     {
       "VarCharValue": "$value"
@@ -144,17 +138,6 @@ class AmOrderDetailsRepositoryTest {
     }
 
     @Test
-    fun `getOrderDetails returns an AthenaAmOrderDetailsDTO`() {
-      val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
-
-      `when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
-
-      val result = repository.getOrderDetails("123")
-
-      Assertions.assertThat(result).isInstanceOf(AthenaAmOrderDetailsDTO::class.java)
-    }
-
-    @Test
     fun `getOrderDetails returns the first result from getQueryResult`() {
       val legacySubjectId = "subjectId777"
       val legacyOrderId = "orderId777"
@@ -167,7 +150,6 @@ class AmOrderDetailsRepositoryTest {
 
       val result = repository.getOrderDetails(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacyOrderId).isEqualTo(legacyOrderId)
       Assertions.assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
       Assertions.assertThat(result.firstName).isEqualTo(firstName)

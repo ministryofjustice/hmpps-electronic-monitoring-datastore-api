@@ -21,12 +21,6 @@ class AmEquipmentDetailsServiceTest {
     amEquipmentDetailsService = AmEquipmentDetailsService(amEquipmentDetailsRepository)
   }
 
-  @Test
-  fun `AmEquipmentDetailsService can be instantiated`() {
-    val sut = AmEquipmentDetailsService(amEquipmentDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetEquipmentDetails {
     val legacySubjectId = "fake-id"
@@ -78,23 +72,10 @@ class AmEquipmentDetailsServiceTest {
     }
 
     @Test
-    fun `returns a list of AmEquipmentDetails when a response is received`() {
-      val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEquipmentDetails::class.java)
-      }
-    }
-
-    @Test
     fun `returns correct details of the AmEquipmentDetails when a response is received`() {
       val result = amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEquipmentDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().deviceSerialNumber).isEqualTo("740")
       Assertions.assertThat(result.first().legFitting).isEqualTo("right")
