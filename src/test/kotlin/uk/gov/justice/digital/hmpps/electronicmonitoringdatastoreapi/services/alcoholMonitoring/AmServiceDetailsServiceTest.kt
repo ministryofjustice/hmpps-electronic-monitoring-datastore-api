@@ -21,12 +21,6 @@ class AmServiceDetailsServiceTest {
     amServiceDetailsService = AmServiceDetailsService(amServiceDetailsRepository)
   }
 
-  @Test
-  fun `AmServicesService can be instantiated`() {
-    val sut = AmServiceDetailsService(amServiceDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetServices {
     val legacySubjectId = "fake-id"
@@ -58,23 +52,10 @@ class AmServiceDetailsServiceTest {
     }
 
     @Test
-    fun `returns a list of AmService when a response is received`() {
-      val result = amServiceDetailsService.getServiceDetails(legacySubjectId)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmServiceDetails::class.java)
-      }
-    }
-
-    @Test
     fun `returns correct details of the AmService when a response is received`() {
       val result = amServiceDetailsService.getServiceDetails(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmServiceDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().serviceAddress).isEqualTo("service address")
       Assertions.assertThat(result.first().hmuSerialNumber).isEqualTo("hmu-01")

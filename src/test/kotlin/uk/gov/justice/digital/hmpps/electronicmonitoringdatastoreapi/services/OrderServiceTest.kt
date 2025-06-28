@@ -24,11 +24,6 @@ class OrderServiceTest {
     service = OrderSearchService(searchRepository)
   }
 
-  @Test
-  fun `OrderService can be instantiated`() {
-    Assertions.assertThat(service).isNotNull()
-  }
-
   @Nested
   inner class CheckAvailability {
     @Test
@@ -109,8 +104,7 @@ class OrderServiceTest {
 
       val result = service.getSearchResults(queryExecutionId, false)
 
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result.count()).isEqualTo(0)
+      Assertions.assertThat(result).isEmpty()
     }
 
     @Test
@@ -134,9 +128,7 @@ class OrderServiceTest {
 
       val result = service.getSearchResults(queryExecutionId, false)
 
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result.count()).isEqualTo(1)
-      Assertions.assertThat(result.first()).isInstanceOf(OrderSearchResult::class.java)
     }
   }
 }
