@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athe
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class AthenaIntegrityKeyOrderInformationDTO(
+data class AthenaIntegrityOrderInformationDTO(
   val legacySubjectId: String,
   val legacyOrderId: String?,
   @JsonProperty("full_name")
