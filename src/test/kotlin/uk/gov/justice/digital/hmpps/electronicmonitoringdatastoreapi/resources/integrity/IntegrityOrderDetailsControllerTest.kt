@@ -14,14 +14,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityOrderDetailsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderDetailsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
 class IntegrityOrderDetailsControllerTest {
-  private lateinit var integrityOrderDetailsService: IntegrityOrderService
+  private lateinit var orderDetailsService: IntegrityOrderDetailsService
   private lateinit var auditService: AuditService
   private lateinit var controller: IntegrityOrderDetailsController
   private lateinit var authentication: Authentication
@@ -30,9 +30,9 @@ class IntegrityOrderDetailsControllerTest {
   fun setup() {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    integrityOrderDetailsService = Mockito.mock(IntegrityOrderService::class.java)
+    orderDetailsService = Mockito.mock(IntegrityOrderDetailsService::class.java)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = IntegrityOrderDetailsController(integrityOrderDetailsService, auditService)
+    controller = IntegrityOrderDetailsController(orderDetailsService, auditService)
   }
 
   @Nested
@@ -82,7 +82,7 @@ class IntegrityOrderDetailsControllerTest {
         responsibleOrganisationDetailsRegion = "",
       )
 
-      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, false)).thenReturn(expectedResult)
+      Mockito.`when`(orderDetailsService.getOrderDetails(legacySubjectId, false)).thenReturn(expectedResult)
 
       val result = controller.getOrderDetails(authentication, legacySubjectId)
 
@@ -90,7 +90,7 @@ class IntegrityOrderDetailsControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, false)
+      Mockito.verify(orderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, false)
     }
   }
 
@@ -141,7 +141,7 @@ class IntegrityOrderDetailsControllerTest {
         responsibleOrganisationDetailsRegion = "",
       )
 
-      Mockito.`when`(integrityOrderDetailsService.getOrderDetails(legacySubjectId, true)).thenReturn(expectedResult)
+      Mockito.`when`(orderDetailsService.getOrderDetails(legacySubjectId, true)).thenReturn(expectedResult)
 
       val result = controller.getOrderDetails(authentication, legacySubjectId, true)
 
@@ -149,7 +149,7 @@ class IntegrityOrderDetailsControllerTest {
       Assertions.assertThat(result.body).isNotNull
       Assertions.assertThat(result.body).isInstanceOf(IntegrityOrderDetails::class.java)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
-      Mockito.verify(integrityOrderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, true)
+      Mockito.verify(orderDetailsService, Mockito.times(1)).getOrderDetails(legacySubjectId, true)
     }
   }
 }

@@ -12,14 +12,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Order
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderSearchService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
 @JsonTest
 class SearchControllerTest {
-  private lateinit var integrityOrderService: IntegrityOrderService
+  private lateinit var orderSearchService: OrderSearchService
   private lateinit var auditService: AuditService
   private lateinit var controller: SearchController
   private lateinit var authentication: Authentication
@@ -28,9 +28,9 @@ class SearchControllerTest {
   fun setup() {
     authentication = Mockito.mock(Authentication::class.java)
     Mockito.`when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    integrityOrderService = Mockito.mock(IntegrityOrderService::class.java)
+    orderSearchService = Mockito.mock(OrderSearchService::class.java)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = SearchController(integrityOrderService, auditService)
+    controller = SearchController(orderSearchService, auditService)
   }
 
   @Nested
@@ -54,7 +54,7 @@ class SearchControllerTest {
         queryExecutionId = queryExecutionId,
       )
 
-      Mockito.`when`(integrityOrderService.getQueryExecutionId(orderSearchCriteria, false)).thenReturn(queryExecutionId)
+      Mockito.`when`(orderSearchService.getQueryExecutionId(orderSearchCriteria, false)).thenReturn(queryExecutionId)
 
       val result = controller.executeSearch(authentication, orderSearchCriteria)
 
@@ -86,7 +86,7 @@ class SearchControllerTest {
         ),
       )
 
-      Mockito.`when`(integrityOrderService.getSearchResults(queryExecutionId, false)).thenReturn(expectedResult)
+      Mockito.`when`(orderSearchService.getSearchResults(queryExecutionId, false)).thenReturn(expectedResult)
 
       val result = controller.getSearchResults(authentication, queryExecutionId)
 

@@ -25,14 +25,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKE
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderSearchService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = TAG_SEARCHING_ORDERS)
 @RestController
 class SearchController(
-  @field:Autowired val integrityOrderService: IntegrityOrderService,
+  @field:Autowired val orderSearchService: OrderSearchService,
   @field:Autowired val auditService: AuditService,
 ) {
 
@@ -83,7 +83,7 @@ class SearchController(
     @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
     restricted: Boolean = false,
   ): ResponseEntity<QueryExecutionResponse> {
-    val queryExecutionId = integrityOrderService.getQueryExecutionId(orderSearchCriteria, restricted)
+    val queryExecutionId = orderSearchService.getQueryExecutionId(orderSearchCriteria, restricted)
 
     auditService.createEvent(
       authentication.name,
@@ -146,7 +146,7 @@ class SearchController(
     @Parameter(description = "A flag to indicate whether to include restricted orders in the resultset")
     restricted: Boolean = false,
   ): ResponseEntity<List<OrderSearchResult>> {
-    val results = integrityOrderService.getSearchResults(queryExecutionId, restricted)
+    val results = orderSearchService.getSearchResults(queryExecutionId, restricted)
 
     auditService.createEvent(
       authentication.name,

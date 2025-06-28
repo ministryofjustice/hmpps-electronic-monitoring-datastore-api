@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -12,29 +11,17 @@ import org.mockito.Mockito.`when`
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchResult
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityDocumentDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityKeyOrderInformationDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegritySubjectHistoryReportDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SearchRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderDetailsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderInformationRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderSearchService
 
 class OrderServiceTest {
   private lateinit var searchRepository: SearchRepository
-  private lateinit var integrityOrderInformationRepository: IntegrityOrderInformationRepository
-  private lateinit var integrityOrderDetailsRepository: IntegrityOrderDetailsRepository
-  private lateinit var service: IntegrityOrderService
+  private lateinit var service: OrderSearchService
 
   @BeforeEach
   fun setup() {
     searchRepository = mock(SearchRepository::class.java)
-    integrityOrderInformationRepository = mock(IntegrityOrderInformationRepository::class.java)
-    integrityOrderDetailsRepository = mock(IntegrityOrderDetailsRepository::class.java)
-    service = IntegrityOrderService(searchRepository, integrityOrderInformationRepository, integrityOrderDetailsRepository)
+    service = OrderSearchService(searchRepository)
   }
 
   @Test
@@ -150,124 +137,6 @@ class OrderServiceTest {
       Assertions.assertThat(result).isInstanceOf(List::class.java)
       Assertions.assertThat(result.count()).isEqualTo(1)
       Assertions.assertThat(result.first()).isInstanceOf(OrderSearchResult::class.java)
-    }
-  }
-
-  @Nested
-  inner class GetOrderInformation {
-    val legacySubjectId = "fake-id"
-
-    val blankKeyOrderInformation = AthenaIntegrityKeyOrderInformationDTO(
-      legacySubjectId = "",
-      legacyOrderId = legacySubjectId,
-      name = "TEST",
-      alias = "",
-      dateOfBirth = "",
-      address1 = "",
-      address2 = "",
-      address3 = "",
-      postcode = "",
-      orderStartDate = "",
-      orderEndDate = "",
-    )
-
-    val blankSubjectHistoryReport = AthenaIntegritySubjectHistoryReportDTO(
-      reportUrl = "",
-      name = "TEST",
-      createdOn = "",
-      time = "",
-    )
-
-    val blankDocumentList = listOf<AthenaIntegrityDocumentDTO>()
-
-    @BeforeEach
-    fun setup() {
-      `when`(integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, false))
-        .thenReturn(blankKeyOrderInformation)
-      `when`(integrityOrderInformationRepository.getSubjectHistoryReport(legacySubjectId, false))
-        .thenReturn(blankSubjectHistoryReport)
-      `when`(integrityOrderInformationRepository.getDocumentList(legacySubjectId, false))
-        .thenReturn(blankDocumentList)
-    }
-
-    @Test
-    fun `calls getKeyOrderInformation from order information repository`() {
-      service.getOrderInformation(legacySubjectId, false)
-
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, false)
-    }
-
-    @Disabled("SubjectHistoryReport will no longer be used")
-    @Test
-    fun `calls getSubjectHistoryReport from order information repository`() {
-      service.getOrderInformation(legacySubjectId, false)
-
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getSubjectHistoryReport(legacySubjectId, false)
-    }
-
-    @Disabled("We are not currently returning documents")
-    @Test
-    fun `calls getDocumentList from order information repository`() {
-      service.getOrderInformation(legacySubjectId, false)
-
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getDocumentList(legacySubjectId, false)
-    }
-
-    @Test
-    fun `returns OrderInformation when a document is found`() {
-      val result = service.getOrderInformation(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(IntegrityOrderInformation::class.java)
-    }
-
-    @Test
-    fun `returns correct details of the order when a document is found`() {
-      val result = service.getOrderInformation(legacySubjectId, false)
-
-      Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo(legacySubjectId)
-      Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("TEST")
-      Assertions.assertThat(result.subjectHistoryReport.name).isEqualTo("")
-      Assertions.assertThat(result.documents).isEmpty()
-    }
-  }
-
-  @Nested
-  inner class GetOrderDetails {
-    val legacySubjectId = "fake-id"
-
-    val blankOrderDetails = AthenaIntegrityOrderDetailsDTO(
-      legacySubjectId = "",
-      legacyOrderId = "",
-      offenceRisk = true,
-    )
-
-    @BeforeEach
-    fun setup() {
-      `when`(integrityOrderDetailsRepository.getOrderDetails(legacySubjectId, false))
-        .thenReturn(blankOrderDetails)
-    }
-
-    @Test
-    fun `calls getOrderDetails from order details repository`() {
-      service.getOrderDetails(legacySubjectId, false)
-      Mockito.verify(integrityOrderDetailsRepository, times(1)).getOrderDetails(legacySubjectId, false)
-    }
-
-    @Test
-    fun `returns OrderDetails`() {
-      val result = service.getOrderDetails(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(IntegrityOrderDetails::class.java)
-    }
-
-    @Test
-    fun `returns correct details of the order`() {
-      val result = service.getOrderDetails(legacySubjectId, false)
-
-      Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.legacySubjectId).isEqualTo("")
-      Assertions.assertThat(result.specials).isEqualTo("no")
     }
   }
 }
