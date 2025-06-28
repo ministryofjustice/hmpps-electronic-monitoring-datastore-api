@@ -9,10 +9,7 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityDocument
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityKeyOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegritySubjectHistoryReport
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityOrderInformationController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderInformationService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
@@ -40,28 +37,20 @@ class IntegritySummaryControllerTest {
     @Test
     fun `gets summary from order service`() {
       val legacySubjectId = "1ab"
+
       val expectedResult = IntegrityOrderInformation(
-        keyOrderInformation = IntegrityKeyOrderInformation(
-          specials = "NO",
-          legacySubjectId = "1234567",
-          legacyOrderId = "7654321-DIFFERENT ID",
-          name = "John Smith",
-          alias = "Zeno",
-          dateOfBirth = LocalDateTime.parse("1980-02-01T00:00:00"),
-          address1 = "1 Primary Street",
-          address2 = "Sutton",
-          address3 = "London",
-          postcode = "ABC 123",
-          orderStartDate = LocalDateTime.parse("2012-02-01T00:00:00"),
-          orderEndDate = LocalDateTime.parse("2013-04-03T00:00:00"),
-        ),
-        subjectHistoryReport = IntegritySubjectHistoryReport(
-          reportUrl = "#",
-          name = "1234567",
-          createdOn = "01-02-2020",
-          time = "0900",
-        ),
-        documents = listOf<IntegrityDocument>(),
+        specials = "NO",
+        legacySubjectId = "1234567",
+        legacyOrderId = "7654321-DIFFERENT ID",
+        name = "John Smith",
+        alias = "Zeno",
+        dateOfBirth = LocalDateTime.parse("1980-02-01T00:00:00"),
+        address1 = "1 Primary Street",
+        address2 = "Sutton",
+        address3 = "London",
+        postcode = "ABC 123",
+        orderStartDate = LocalDateTime.parse("2012-02-01T00:00:00"),
+        orderEndDate = LocalDateTime.parse("2013-04-03T00:00:00"),
       )
 
       Mockito.`when`(orderInformationService.getOrderInformation(legacySubjectId, false)).thenReturn(expectedResult)

@@ -8,7 +8,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityKeyOrderInformationDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderInformationDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderInformation
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityOrderInformationRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderInformationService
@@ -33,7 +33,7 @@ class IntegrityOrderInformationServiceTest {
   inner class GetOrderInformation {
     val legacySubjectId = "fake-id"
 
-    val orderInformationData = AthenaIntegrityKeyOrderInformationDTO(
+    val orderInformationData = AthenaIntegrityOrderInformationDTO(
       legacySubjectId = "123",
       legacyOrderId = "321",
       name = "John Smith",
@@ -49,14 +49,14 @@ class IntegrityOrderInformationServiceTest {
 
     @BeforeEach
     fun setup() {
-      `when`(integrityOrderInformationRepository.getKeyOrderInformation(legacySubjectId, false))
+      `when`(integrityOrderInformationRepository.getOrderInformation(legacySubjectId, false))
         .thenReturn(orderInformationData)
     }
 
     @Test
     fun `calls getOrderInformation from order information repository`() {
       service.getOrderInformation(legacySubjectId, false)
-      Mockito.verify(integrityOrderInformationRepository, times(1)).getKeyOrderInformation(legacySubjectId, false)
+      Mockito.verify(integrityOrderInformationRepository, times(1)).getOrderInformation(legacySubjectId, false)
     }
 
     @Test
@@ -71,10 +71,9 @@ class IntegrityOrderInformationServiceTest {
       val result = service.getOrderInformation(legacySubjectId, false)
 
       Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.keyOrderInformation).isNotNull
-      Assertions.assertThat(result.keyOrderInformation.legacyOrderId).isEqualTo("321")
-      Assertions.assertThat(result.keyOrderInformation.name).isEqualTo("John Smith")
-      Assertions.assertThat(result.keyOrderInformation.dateOfBirth).isEqualTo(LocalDateTime.parse("1980-02-01T00:00:00"))
+      Assertions.assertThat(result.legacyOrderId).isEqualTo("321")
+      Assertions.assertThat(result.name).isEqualTo("John Smith")
+      Assertions.assertThat(result.dateOfBirth).isEqualTo(LocalDateTime.parse("1980-02-01T00:00:00"))
     }
   }
 }
