@@ -39,7 +39,7 @@ class IntegrityOrderDetailsController(
   @RequestMapping(
     method = [RequestMethod.GET],
     path = [
-      "/orders/integrity/{legacySubjectId}/details",
+      "/orders/integrity/{legacySubjectId}",
     ],
     produces = [MediaType.APPLICATION_JSON_VALUE],
   )
