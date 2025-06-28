@@ -25,12 +25,6 @@ class IntegritySuspensionOfVisitsRepositoryTest {
     repository = IntegritySuspensionOfVisitsRepository(emDatastoreClient)
   }
 
-  @Test
-  fun `OrderSuspensionOfVisitsRepository can be instantiated`() {
-    val sut = IntegritySuspensionOfVisitsRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetSuspensionOfVisits {
     fun suspensionOfVisitsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
@@ -95,17 +89,6 @@ class IntegritySuspensionOfVisitsRepositoryTest {
     }
 
     @Test
-    fun `getSuspensionOfVisits returns an AthenaSuspensionOfVisitsDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(suspensionOfVisitsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
-
-      val result = repository.getSuspensionOfVisits("123", false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `getSuspensionOfVisits returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(suspensionOfVisitsResultSet("987"))
 
@@ -113,10 +96,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       val result = repository.getSuspensionOfVisits("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegritySuspensionOfVisitsDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
     }
 
@@ -128,10 +108,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       val result = repository.getSuspensionOfVisits("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegritySuspensionOfVisitsDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
     }
   }
