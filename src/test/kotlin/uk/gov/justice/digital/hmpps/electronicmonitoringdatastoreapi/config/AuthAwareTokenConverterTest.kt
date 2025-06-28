@@ -8,11 +8,6 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException
 
 class AuthAwareTokenConverterTest {
-  @Test
-  fun `Can be instantiated`() {
-    val sut = AuthAwareTokenConverter()
-    Assertions.assertThat(sut).isNotNull()
-  }
 
   @Test
   fun `Verifies a valid token`() {
