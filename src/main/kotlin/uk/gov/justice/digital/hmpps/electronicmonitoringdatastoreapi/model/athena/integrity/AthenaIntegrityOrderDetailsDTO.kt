@@ -1,8 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-// TODO: Check which fields are nullable
 data class AthenaIntegrityOrderDetailsDTO(
   val legacySubjectId: String,
   val legacyOrderId: String?,
@@ -13,11 +10,8 @@ data class AthenaIntegrityOrderDetailsDTO(
   val adultOrChild: String? = "",
   val sex: String? = "",
   val contact: String? = "",
-  @JsonProperty("primary_address_line_1")
   val primaryAddressLine1: String? = "",
-  @JsonProperty("primary_address_line_2")
   val primaryAddressLine2: String? = "",
-  @JsonProperty("primary_address_line_3")
   val primaryAddressLine3: String? = "",
   val primaryAddressPostCode: String? = "",
   val phoneOrMobileNumber: String? = "",
