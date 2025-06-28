@@ -9,19 +9,13 @@ data class AthenaAmOrderDetailsDTO(
   val lastName: String?,
   val alias: String?,
   val dateOfBirth: String?,
-  @JsonProperty("legacy_gender")
-  val sex: String?,
+  val legacyGender: String?,
   val specialInstructions: String?,
-  @JsonProperty("phone_or_mobile_number")
-  val phoneNumber: String?,
-  @JsonProperty("primary_address_line_1")
-  val address1: String?,
-  @JsonProperty("primary_address_line_2")
-  val address2: String?,
-  @JsonProperty("primary_address_line_3")
-  val address3: String?,
-  @JsonProperty("primary_address_post_code")
-  val postcode: String?,
+  val phoneOrMobileNumber: String?,
+  val primaryAddressLine1: String?,
+  val primaryAddressLine2: String?,
+  val primaryAddressLine3: String?,
+  val primaryAddressPostCode: String?,
   val orderStartDate: String?,
   val orderEndDate: String?,
   val enforceableCondition: String?,
