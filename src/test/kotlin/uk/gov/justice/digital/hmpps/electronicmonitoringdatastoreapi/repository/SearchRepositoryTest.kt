@@ -7,9 +7,4 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDa
 
 class SearchRepositoryTest {
 
-  @Test
-  fun `OrderRepository can be instantiated`() {
-    val sut = SearchRepository(mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
 }

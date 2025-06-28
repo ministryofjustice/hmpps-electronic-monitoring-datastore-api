@@ -20,12 +20,6 @@ class IntegritySuspensionOfVisitsServiceTest {
     service = IntegritySuspensionOfVisitsService(integritySuspensionOfVisitsRepository)
   }
 
-  @Test
-  fun `SuspensionOfVisitsService can be instantiated`() {
-    val sut = IntegritySuspensionOfVisitsService(integritySuspensionOfVisitsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetSuspensionOfVisits {
     val legacySubjectId = "fake-id"
@@ -55,20 +49,10 @@ class IntegritySuspensionOfVisitsServiceTest {
     }
 
     @Test
-    fun `returns a list of SuspensionOfVisits when a response is received`() {
-      val result = service.getSuspensionOfVisits(legacySubjectId, false)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-    }
-
-    @Test
     fun `returns correct details of the suspension of visits when a response is received`() {
       val result = service.getSuspensionOfVisits(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(IntegritySuspensionOfVisits::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().suspensionOfVisits).isEqualTo("Yes")
     }
