@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityVisitDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetailsAddress
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityVisitDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityVisitDetailsService
 
@@ -25,7 +23,7 @@ class IntegrityVisitDetailsServiceTest {
   inner class GetVisitDetails {
     val legacySubjectId = "fake-id"
 
-    val exampleVisitDetails = listOf<AthenaIntegrityVisitDetailsDTO>(
+    val exampleVisitDetails = listOf(
       AthenaIntegrityVisitDetailsDTO(
         legacySubjectId = "123",
         address1 = "address_line_1",

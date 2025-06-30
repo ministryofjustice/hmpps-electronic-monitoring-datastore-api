@@ -17,6 +17,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.al
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
+import java.util.UUID
 
 @ActiveProfiles("test")
 @JsonTest
@@ -26,6 +27,8 @@ class AmContactEventsControllerTest {
   private lateinit var controller: AmContactEventsController
   private lateinit var authentication: Authentication
 
+  private lateinit var legacySubjectId: String
+
   @BeforeEach
   fun setup() {
     authentication = mock(Authentication::class.java)
@@ -33,16 +36,38 @@ class AmContactEventsControllerTest {
     amOrderEventsService = Mockito.mock(AmOrderEventsService::class.java)
     auditService = Mockito.mock(AuditService::class.java)
     controller = AmContactEventsController(amOrderEventsService, auditService)
+
+    legacySubjectId = UUID.randomUUID().toString()
   }
 
   @Nested
   inner class GetContactEvents {
+    val expectedEmptyResult = emptyList<AmEvent<AmContactEventDetails>>()
+
     @Test
-    fun `gets contact events from alcohol monitoring order events service`() {
-      val legacySubjectId = "1ab"
+    fun `Calls service`() {
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenReturn(expectedEmptyResult)
+
+      controller.getContactEvents(authentication, legacySubjectId)
+
+      Mockito.verify(amOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId)
+    }
+
+    @Test
+    fun `gets empty list from service`() {
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenReturn(expectedEmptyResult)
+
+      val result = controller.getContactEvents(authentication, legacySubjectId)
+
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isEqualTo(expectedEmptyResult)
+    }
+
+    @Test
+    fun `gets list of results from service`() {
       val expectedResult = listOf(
         AmEvent(
-          legacySubjectId = "1543",
+          legacySubjectId = legacySubjectId,
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2001, 1, 1, 1, 1, 1),
           details = AmContactEventDetails(
@@ -67,6 +92,15 @@ class AmContactEventsControllerTest {
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
+    }
+
+    @Test
+    fun `Propagates errors from service when it throws an error`() {
+      val expectedError = RuntimeException("Fake error form service")
+
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenThrow(expectedError)
+
+      Assertions.assertThatThrownBy { controller.getContactEvents(authentication, legacySubjectId) }.isInstanceOf(RuntimeException::class.java)
 
       Mockito.verify(amOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId)
     }

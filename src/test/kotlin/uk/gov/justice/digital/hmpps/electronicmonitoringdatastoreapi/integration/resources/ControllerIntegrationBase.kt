@@ -28,7 +28,7 @@ class ControllerIntegrationBase : IntegrationTestBase() {
 
     testObject
       .uri(uri)
-      .headers(setAuthorisation(roles = emptyList<String>()))
+      .headers(setAuthorisation(roles = emptyList()))
       .exchange()
       .expectStatus()
       .isForbidden
