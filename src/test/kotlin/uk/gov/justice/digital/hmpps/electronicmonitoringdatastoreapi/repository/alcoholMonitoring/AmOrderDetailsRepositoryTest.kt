@@ -12,8 +12,7 @@ import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AmOrderDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -25,106 +24,63 @@ class AmOrderDetailsRepositoryTest {
     repository = AmOrderDetailsRepository(emDatastoreClient)
   }
 
-  fun varCharValueColumn(value: String) = """
-    {
-      "VarCharValue": "$value"
-    }
-  """.trimIndent()
-
   @Nested
   inner class GetAmOrderDetails {
-    fun amOrderDetailsData(subjectId: String, orderId: String, firstName: String, lastName: String) = """
-      {
-        "Data": [
-          ${varCharValueColumn(subjectId)},
-          ${varCharValueColumn(firstName)},
-          ${varCharValueColumn(lastName)},
-          ${varCharValueColumn("alias")},
-          ${varCharValueColumn("1970-01-01")},
-          ${varCharValueColumn("sex")},
-          ${varCharValueColumn("special instructions")},
-          ${varCharValueColumn("09876543210")},
-          ${varCharValueColumn("address line 1")},
-          ${varCharValueColumn("")},
-          ${varCharValueColumn("address line 3")},
-          ${varCharValueColumn("postcode")},
-          ${varCharValueColumn(orderId)},
-          ${varCharValueColumn("1970-01-01")},
-          ${varCharValueColumn("1970-01-01")},
-          ${varCharValueColumn("enforceable condition")},
-          ${varCharValueColumn("order type")},
-          ${varCharValueColumn("order type description")},
-          ${varCharValueColumn("order end outcome")},
-          ${varCharValueColumn("responsible organisation phone number")},
-          ${varCharValueColumn("responsible organisation email")},
-          ${varCharValueColumn("tag at source")}
-        ]
-      }
-    """.trimIndent()
+    fun amOrderDetailsData(subjectId: String, orderId: String, firstName: String, lastName: String): Array<String> = arrayOf(
+      subjectId,
+      firstName,
+      lastName,
+      "alias",
+      "1970-01-01",
+      "sex",
+      "special instructions",
+      "09876543210",
+      "address line 1",
+      "",
+      "address line 3",
+      "postcode",
+      orderId,
+      "1970-01-01",
+      "1970-01-01",
+      "enforceable condition",
+      "order type",
+      "order type description",
+      "order end outcome",
+      "responsible organisation phone number",
+      "responsible organisation email",
+      "tag at source",
+    )
 
-    fun amOrderDetailsResultSet(firstSubjectId: String? = "7853521", firstOrderId: String? = "1253587", firstFirstName: String? = "ELLEN", firstLastName: String? = "RIPLEY") = """
-      {
-        "ResultSet": {
-          "Rows": [
-            {
-              "Data": [
-                ${varCharValueColumn("legacy_subject_id")},
-                ${varCharValueColumn("first_name")},
-                ${varCharValueColumn("last_name")},
-                ${varCharValueColumn("alias")},
-                ${varCharValueColumn("date_of_birth")},
-                ${varCharValueColumn("legacy_gender")},
-                ${varCharValueColumn("special_instructions")},
-                ${varCharValueColumn("phone_or_mobile_number")},
-                ${varCharValueColumn("primary_address_line_1")},
-                ${varCharValueColumn("primary_address_line_2")},
-                ${varCharValueColumn("primary_address_line_3")},
-                ${varCharValueColumn("primary_address_post_code")},
-                ${varCharValueColumn("legacy_order_id")},
-                ${varCharValueColumn("order_start_date")},
-                ${varCharValueColumn("order_end_date")},
-                ${varCharValueColumn("enforceable_condition")},
-                ${varCharValueColumn("order_type")},
-                ${varCharValueColumn("order_type_description")},
-                ${varCharValueColumn("order_end_outcome")},
-                ${varCharValueColumn("responsible_org_details_phone_number")},
-                ${varCharValueColumn("responsible_org_details_email")},
-                ${varCharValueColumn("tag_at_source")}
-              ]
-            },
-            ${amOrderDetailsData(firstOrderId!!, firstSubjectId!!, firstFirstName!!, firstLastName!!)},
-            ${amOrderDetailsData("1034415", "1032792", "JOHN", "BROWNLIE")}
-          ],
-          "ResultSetMetadata": {
-            "ColumnInfo": [
-              """ + metaDataRow("legacy_subject_id") + """,
-              """ + metaDataRow("first_name") + """,
-              """ + metaDataRow("last_name") + """,
-              """ + metaDataRow("alias") + """,
-              """ + metaDataRow("date_of_birth") + """,
-              """ + metaDataRow("legacy_gender") + """,
-              """ + metaDataRow("special_instructions") + """,
-              """ + metaDataRow("phone_or_mobile_number") + """,
-              """ + metaDataRow("primary_address_line_1") + """,
-              """ + metaDataRow("primary_address_line_2") + """,
-              """ + metaDataRow("primary_address_line_3") + """,
-              """ + metaDataRow("primary_address_post_code") + """,
-              """ + metaDataRow("legacy_order_id") + """,
-              """ + metaDataRow("order_start_date") + """,
-              """ + metaDataRow("order_end_date") + """,
-              """ + metaDataRow("enforceable_condition") + """,
-              """ + metaDataRow("order_type") + """,
-              """ + metaDataRow("order_type_description") + """,
-              """ + metaDataRow("order_end_outcome") + """,
-              """ + metaDataRow("responsible_org_details_phone_number") + """,
-              """ + metaDataRow("responsible_org_details_email") + """,
-              """ + metaDataRow("tag_at_source") + """
-            ]
-          }
-        },
-        "UpdateCount": 0
-      }
-    """.trimIndent()
+    fun amOrderDetailsResultSet(firstSubjectId: String? = "7853521", firstOrderId: String? = "1253587", firstFirstName: String? = "ELLEN", firstLastName: String? = "RIPLEY"): String = MockAthenaResultSetBuilder(
+      columns = arrayOf(
+        "legacy_subject_id",
+        "first_name",
+        "last_name",
+        "alias",
+        "date_of_birth",
+        "legacy_gender",
+        "special_instructions",
+        "phone_or_mobile_number",
+        "primary_address_line_1",
+        "primary_address_line_2",
+        "primary_address_line_3",
+        "primary_address_post_code",
+        "legacy_order_id",
+        "order_start_date",
+        "order_end_date",
+        "enforceable_condition",
+        "order_type",
+        "order_type_description",
+        "order_end_outcome",
+        "responsible_org_details_phone_number",
+        "responsible_org_details_email",
+        "tag_at_source",
+      ),
+      rows = arrayOf(
+        amOrderDetailsData(firstOrderId!!, firstSubjectId!!, firstFirstName!!, firstLastName!!),
+        amOrderDetailsData("1034415", "1032792", "JOHN", "BROWNLIE"),
+      ),
+    ).build()
 
     @Test
     fun `getOrderDetails calls getQueryResult`() {

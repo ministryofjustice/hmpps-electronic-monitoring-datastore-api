@@ -38,8 +38,8 @@ class IntegrityMonitoringEventsControllerTest {
     @Test
     fun `gets monitoring events from order events service`() {
       val legacySubjectId = "1ab"
-      val expectedResult = listOf<Event<IntegrityMonitoringEventDetails>>(
-        Event<IntegrityMonitoringEventDetails>(
+      val expectedResult = listOf(
+        Event(
           legacySubjectId = "1543",
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2021, 1, 1, 1, 1, 1),
