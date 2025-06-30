@@ -10,52 +10,27 @@ import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.SearchRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.varCharValueColumn
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class IntegrityOrderDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
   private lateinit var repository: IntegrityOrderDetailsRepository
 
-  fun orderDetailsData(subjectId: String, orderId: String, offenceRisk: Boolean) = """
-    {
-      "Data": [
-        ${varCharValueColumn(subjectId)},
-        ${varCharValueColumn(orderId)},
-        ${varCharValueColumn(offenceRisk.toString())},
-      ]
-    }
-  """.trimIndent()
-
   fun orderDetailsResultSet(
-    subjectId: String? = "1234",
-    orderId: String? = "fakeOrderId",
-    offenceRisk: Boolean = true,
-  ) = """
-    {
-      "ResultSet": {
-        "Rows": [
-          {
-            "Data": [
-              ${varCharValueColumn("legacy_subject_id")},
-            ]
-          },
-          ${orderDetailsData(subjectId!!, orderId!!, offenceRisk)},
-          ${orderDetailsData("5678", "This row should never be returned", false)}
-        ],
-        "ResultSetMetadata": {
-          "ColumnInfo": [
-            ${metaDataRow("legacy_subject_id")},
-            ${metaDataRow("legacy_order_id")},
-            ${metaDataRow("offence_risk", "boolean")}
-          ]
-        }
-      },
-      "UpdateCount": 0
-    }
-  """.trimIndent()
+    subjectId: String,
+    orderId: String,
+    offenceRisk: Boolean,
+  ) = MockAthenaResultSetBuilder(
+    columns = arrayOf(
+      "legacy_subject_id",
+      "legacy_order_id",
+      "offence_risk", // boolean
+    ),
+    rows = arrayOf(
+      arrayOf(subjectId, orderId, offenceRisk.toString()),
+      arrayOf("5678", "This row should never be returned", "false"),
+    ),
+  ).build()
 
   @BeforeEach
   fun setup() {
@@ -67,7 +42,7 @@ class IntegrityOrderDetailsRepositoryTest {
   inner class GetOrderDetails {
     @Test
     fun `getOrderDetails calls getQueryResult`() {
-      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet())
+      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet("123564", "768324", true))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
@@ -79,7 +54,7 @@ class IntegrityOrderDetailsRepositoryTest {
     @Test
     fun `getOrderDetails returns the first result from getQueryResult`() {
       val legacySubjectId = "expectedId"
-      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet(legacySubjectId))
+      val resultSet = AthenaHelper.resultSetFromJson(orderDetailsResultSet(legacySubjectId, "123564", false))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 

@@ -1,5 +1,3 @@
-@file:Suppress("ArrayInDataClass")
-
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
 abstract class AthenaQuery(
@@ -7,27 +5,12 @@ abstract class AthenaQuery(
   open val parameters: Array<String>,
 )
 
-class AthenaStringQuery(
-  override val queryString: String,
-  override val parameters: Array<String>,
-) : AthenaQuery(queryString, parameters)
-
-class AthenaDocumentListQuery(
-  override val queryString: String,
-  override val parameters: Array<String>,
-) : AthenaQuery(queryString, parameters)
-
 class AthenaOrderInformationQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
 
 class AthenaOrderSearchQuery(
-  override val queryString: String,
-  override val parameters: Array<String>,
-) : AthenaQuery(queryString, parameters)
-
-class AthenaSubjectHistoryReportQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
@@ -79,17 +62,7 @@ class AthenaViolationEventsListQuery(
 
 // AM Query types
 
-class AthenaAmContactEventsListQuery(
-  override val queryString: String,
-  override val parameters: Array<String>,
-) : AthenaQuery(queryString, parameters)
-
 class AthenaAmEquipmentDetailsListQuery(
-  override val queryString: String,
-  override val parameters: Array<String>,
-) : AthenaQuery(queryString, parameters)
-
-class AthenaAmIncidentEventsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)
@@ -105,11 +78,6 @@ class AthenaAmOrderInformationQuery(
 ) : AthenaQuery(queryString, parameters)
 
 class AthenaAmServicesListQuery(
-  override val queryString: String,
-  override val parameters: Array<String>,
-) : AthenaQuery(queryString, parameters)
-
-class AthenaAmViolationEventsListQuery(
   override val queryString: String,
   override val parameters: Array<String>,
 ) : AthenaQuery(queryString, parameters)

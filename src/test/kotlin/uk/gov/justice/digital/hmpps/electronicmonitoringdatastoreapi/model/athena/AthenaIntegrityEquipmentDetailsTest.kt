@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
@@ -8,7 +8,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integ
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityEquipmentDetails
 import java.time.LocalDateTime
 
-class EquipmentDetailsTest {
+class AthenaIntegrityEquipmentDetailsTest {
   @Nested
   inner class Construct {
     @Test

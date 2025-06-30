@@ -10,8 +10,7 @@ import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmServiceDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AmServiceDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -62,7 +61,7 @@ class AmServiceDetailsRepositoryTest {
 
     @Test
     fun `getServices passes correct query to getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(amServicesResultSet())
+      val resultSet = AthenaHelper.Companion.resultSetFromJson(amServicesResultSet("123"))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 

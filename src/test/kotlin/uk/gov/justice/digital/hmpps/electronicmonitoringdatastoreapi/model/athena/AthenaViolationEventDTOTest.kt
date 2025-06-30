@@ -4,14 +4,14 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityViolationEventDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaViolationEventDTOTest {
 
   @Nested
   inner class Construct {
-    val columnNames = arrayOf<String>(
+    val columnNames = arrayOf(
       "legacy_subject_id",
       "enforcement_reason",
       "investigation_outcome_reason",
@@ -40,7 +40,7 @@ class AthenaViolationEventDTOTest {
       val athenaResponseString = MockAthenaResultSetBuilder(
         columns = columnNames,
         rows = arrayOf(
-          arrayOf<String>(
+          arrayOf(
             "123",
             "TEST_ENFORCEMENT_REASON",
             "TEST_OUTCOME_REASON",
@@ -100,7 +100,7 @@ class AthenaViolationEventDTOTest {
       val athenaResponseString = MockAthenaResultSetBuilder(
         columns = columnNames,
         rows = arrayOf(
-          arrayOf<String>(
+          arrayOf(
             "123",
             "",
             "",
