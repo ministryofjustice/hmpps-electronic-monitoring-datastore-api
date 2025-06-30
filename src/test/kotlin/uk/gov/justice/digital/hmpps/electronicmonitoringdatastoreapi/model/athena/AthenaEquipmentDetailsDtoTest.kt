@@ -1,16 +1,16 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models.athena
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena
 
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityEquipmentDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaEquipmentDetailsDtoTest {
   @Nested
   inner class Construct {
-    val columnNames = arrayOf<String>(
+    val columnNames = arrayOf(
       "legacy_subject_id",
       "hmu_id",
       "hmu_equipment_category_description",
@@ -31,7 +31,7 @@ class AthenaEquipmentDetailsDtoTest {
       val athenaResponseString = MockAthenaResultSetBuilder(
         columns = columnNames,
         rows = arrayOf(
-          arrayOf<String>(
+          arrayOf(
             "123",
             "",
             "",
@@ -48,7 +48,7 @@ class AthenaEquipmentDetailsDtoTest {
           ),
         ),
       ).build()
-      val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
+      val athenaResponse = AthenaHelper.Companion.resultSetFromJson(athenaResponseString)
       val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
@@ -75,7 +75,7 @@ class AthenaEquipmentDetailsDtoTest {
       val athenaResponseString = MockAthenaResultSetBuilder(
         columns = columnNames,
         rows = arrayOf(
-          arrayOf<String>(
+          arrayOf(
             "123",
             "",
             "",
@@ -92,7 +92,7 @@ class AthenaEquipmentDetailsDtoTest {
           ),
         ),
       ).build()
-      val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
+      val athenaResponse = AthenaHelper.Companion.resultSetFromJson(athenaResponseString)
       val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
@@ -119,7 +119,7 @@ class AthenaEquipmentDetailsDtoTest {
       val athenaResponseString = MockAthenaResultSetBuilder(
         columns = columnNames,
         rows = arrayOf(
-          arrayOf<String>(
+          arrayOf(
             "123",
             "hmu_id",
             "hmu_equipment_category_description",
@@ -136,7 +136,7 @@ class AthenaEquipmentDetailsDtoTest {
           ),
         ),
       ).build()
-      val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
+      val athenaResponse = AthenaHelper.Companion.resultSetFromJson(athenaResponseString)
       val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(
@@ -163,7 +163,7 @@ class AthenaEquipmentDetailsDtoTest {
       val athenaResponseString = MockAthenaResultSetBuilder(
         columns = columnNames,
         rows = arrayOf(
-          arrayOf<String>(
+          arrayOf(
             "123",
             "hmu_id",
             "",
@@ -180,7 +180,7 @@ class AthenaEquipmentDetailsDtoTest {
           ),
         ),
       ).build()
-      val athenaResponse = AthenaHelper.resultSetFromJson(athenaResponseString)
+      val athenaResponse = AthenaHelper.Companion.resultSetFromJson(athenaResponseString)
       val dto = AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
 
       Assertions.assertThat(dto.first()).isEqualTo(

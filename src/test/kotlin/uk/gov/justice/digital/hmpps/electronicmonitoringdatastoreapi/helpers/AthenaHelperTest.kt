@@ -207,11 +207,11 @@ class AthenaHelperTest {
   fun `Can extract a list of properties from a class`() {
     data class ArbitraryClass(
       val firstField: String,
-      val BADLYNamedField: Boolean?,
-      val ThirdField: Long = 4455566,
+      @Suppress("PropertyName") val BADLYNamedField: Boolean?,
+      @Suppress("PropertyName") val ThirdField: Long = 4455566,
     )
 
-    val expected = listOf<String>("first_field", "badlynamed_field", "third_field")
+    val expected = listOf("first_field", "badlynamed_field", "third_field")
 
     val result: List<String> = AthenaHelper.extractFieldNames(ArbitraryClass::class)
 

@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
