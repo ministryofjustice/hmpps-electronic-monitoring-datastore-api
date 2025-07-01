@@ -50,7 +50,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            first_name LIKE ?
+            UPPER(first_name) LIKE ?
       """.trimIndent(),
     )
 
@@ -79,7 +79,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            last_name LIKE ?
+            UPPER(last_name) LIKE ?
       """.trimIndent(),
     )
 
@@ -108,7 +108,7 @@ class OrderSearchQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(
       baseQuery + """
-            alias LIKE ?
+            UPPER(alias) LIKE ?
       """.trimIndent(),
     )
 
@@ -139,7 +139,7 @@ class OrderSearchQueryBuilderTest {
     val expectedSQL = replaceWhitespace(
       baseQuery + """
             UPPER(CAST(legacy_subject_id as varchar)) = ?
-            AND alias LIKE ?
+            AND UPPER(alias) LIKE ?
       """.trimIndent(),
     )
     val expectedParameters = arrayOf("UPPER('4')", "UPPER('%The Big Apple%')")

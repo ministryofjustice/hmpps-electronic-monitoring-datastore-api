@@ -27,7 +27,7 @@ class AmViolationEventsQueryBuilderTest {
       FROM 
         fake_database.am_violations
       WHERE 
-         legacy_subject_id = ?
+         UPPER(CAST(legacy_subject_id as varchar)) = ?
   """.trimIndent()
 
   @Test
@@ -41,7 +41,7 @@ class AmViolationEventsQueryBuilderTest {
       .build("fake_database")
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
-    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('$legacySubjectId')"))
   }
 
   @Test
