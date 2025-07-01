@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.Pattern
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -26,6 +27,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.int
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
+@Tag(name = TAG_INTEGRITY_ORDERS)
 @RestController
 class IntegritySuspensionOfVisitsController(
   @field:Autowired val integritySuspensionOfVisitsService: IntegritySuspensionOfVisitsService,
@@ -33,7 +35,6 @@ class IntegritySuspensionOfVisitsController(
 ) {
 
   @Operation(
-    tags = [TAG_INTEGRITY_ORDERS],
     summary = "Get the suspension of visits for an integrity order",
   )
   @RequestMapping(
