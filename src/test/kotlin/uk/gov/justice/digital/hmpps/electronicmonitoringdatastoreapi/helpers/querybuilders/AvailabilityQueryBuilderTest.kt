@@ -3,13 +3,13 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ListOrderInformationQueryBuilderTest {
+class AvailabilityQueryBuilderTest {
 
   fun replaceWhitespace(text: String): String = text.replace("\\s+".toRegex(), " ")
 
   val baseQuery: String = """
       SELECT
-        legacy_subject_id
+        1
       FROM 
         fake_database.order_details
   """.trimIndent()
@@ -18,7 +18,7 @@ class ListOrderInformationQueryBuilderTest {
   fun `returns valid SQL if legacySubjectId is populated`() {
     val expectedSQL = replaceWhitespace(baseQuery.trimIndent())
 
-    val result = ListKeyOrderInformationQueryBuilder()
+    val result = AvailabilityQueryBuilder()
       .build("fake_database")
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
