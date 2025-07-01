@@ -26,7 +26,7 @@ class IntegrityEquipmentDetailsQueryBuilderTest {
       FROM
         fake_database.equipment_details 
       WHERE
-        legacy_subject_id = ?
+        UPPER(CAST(legacy_subject_id as varchar)) = ?
   """.trimIndent()
 
   @Test
@@ -40,7 +40,7 @@ class IntegrityEquipmentDetailsQueryBuilderTest {
       .build("fake_database")
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
-    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('$legacySubjectId')"))
   }
 
   @Test
