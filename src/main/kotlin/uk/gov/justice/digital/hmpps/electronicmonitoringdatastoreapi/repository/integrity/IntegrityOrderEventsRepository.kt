@@ -22,7 +22,7 @@ class IntegrityOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityMonitoringEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityMonitoringEventDTO>(athenaResponse)
   }
 
   fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityIncidentEventDTO> {
@@ -31,7 +31,7 @@ class IntegrityOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityIncidentEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityIncidentEventDTO>(athenaResponse)
   }
 
   fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityViolationEventDTO> {
@@ -40,7 +40,7 @@ class IntegrityOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
   }
 
   fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityContactEventDTO> {
@@ -49,6 +49,6 @@ class IntegrityOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityContactEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityContactEventDTO>(athenaResponse)
   }
 }
