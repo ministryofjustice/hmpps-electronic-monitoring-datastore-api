@@ -16,6 +16,6 @@ class AmVisitDetailsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(amVisitDetailsQuery)
 
-    return AthenaHelper.Companion.mapTo<AthenaAmVisitDetailsDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaAmVisitDetailsDTO>(athenaResponse)
   }
 }
