@@ -20,14 +20,14 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TAG_CONNECTIVITY
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderSearchService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AvailabilityService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Tag(name = TAG_CONNECTIVITY)
 @RestController
 class ConnectivityController(
-  @field:Autowired val orderSearchService: OrderSearchService,
+  @field:Autowired val availabilityService: AvailabilityService,
   @field:Autowired val auditService: AuditService,
 ) {
 
@@ -78,7 +78,7 @@ class ConnectivityController(
   ): ResponseEntity<Map<String, String>> {
     var message = "API Connection successful"
     try {
-      if (!orderSearchService.checkAvailability(restricted)) {
+      if (!availabilityService.checkAvailability(restricted)) {
         message = "API Connection successful, but no access to Athena"
       }
     } catch (_: Exception) {
