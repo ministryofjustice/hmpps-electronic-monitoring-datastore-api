@@ -43,7 +43,7 @@ class OrderSearchQueryBuilder(
     }
 
     values.add("UPPER('%$value%')")
-    whereClauses.put("first_name", "first_name" like "UPPER('%$value%')")
+    whereClauses.put("first_name", "UPPER(first_name)" like "UPPER('%$value%')")
     return this
   }
 
@@ -55,7 +55,7 @@ class OrderSearchQueryBuilder(
     }
 
     values.add("UPPER('%$value%')")
-    whereClauses.put("last_name", "last_name" like "UPPER('%$value%')")
+    whereClauses.put("last_name", "UPPER(last_name)" like "UPPER('%$value%')")
     return this
   }
 
@@ -67,20 +67,15 @@ class OrderSearchQueryBuilder(
     }
 
     values.add("UPPER('%$value%')")
-    whereClauses.put("alias", "alias" like "UPPER('%$value%')")
+    whereClauses.put("alias", "UPPER(alias)" like "UPPER('%$value%')")
     return this
   }
 
-  fun withDob(day: String?, month: String?, year: String?): OrderSearchQueryBuilder {
-    validateNumber(day, "date_of_birth_day")
-    validateNumber(month, "date_of_birth_month")
-    validateNumber(year, "date_of_birth_year")
-
-    if (day.isNullOrBlank() || month.isNullOrBlank() || year.isNullOrBlank()) {
+  fun withDob(dateOfBirth: LocalDate?): OrderSearchQueryBuilder {
+    if (dateOfBirth == null) {
       return this
     }
 
-    val dateOfBirth = LocalDate.of(year.toInt(), month.toInt(), day.toInt())
     values.add("DATE '$dateOfBirth'")
     whereClauses.put("date_of_birth", "date_of_birth" eq "DATE '$dateOfBirth'")
 
