@@ -15,7 +15,6 @@ import org.springframework.http.HttpHeaders
 
 const val TOKEN_HMPPS_AUTH = "hmpps-electronic-monitoring-datastore-data-role"
 
-const val TAG_SEARCHING_ORDERS = "Search orders"
 const val TAG_ALCOHOL_ORDERS = "Alcohol monitoring orders"
 const val TAG_INTEGRITY_ORDERS = "Integrity monitoring orders"
 const val TAG_CONNECTIVITY = "Connection testing"
@@ -97,8 +96,6 @@ class OpenApiConfiguration {
     .addList(TOKEN_HMPPS_AUTH, listOf("read"))
 
   private fun apiTags(): List<Tag> = listOf(
-    Tag()
-      .name(TAG_SEARCHING_ORDERS),
     Tag()
       .name(TAG_INTEGRITY_ORDERS)
       .description("Provides access to Integrity monitoring order information."),

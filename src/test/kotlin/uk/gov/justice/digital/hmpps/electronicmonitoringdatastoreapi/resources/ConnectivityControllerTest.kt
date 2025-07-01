@@ -14,13 +14,13 @@ import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.ConnectivityController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderSearchService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AvailabilityService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 
 @ActiveProfiles("test")
 @JsonTest
 class ConnectivityControllerTest {
-  private lateinit var orderSearchService: OrderSearchService
+  private lateinit var availabilityService: AvailabilityService
   private lateinit var auditService: AuditService
   private lateinit var controller: ConnectivityController
   private lateinit var authentication: Authentication
@@ -29,21 +29,21 @@ class ConnectivityControllerTest {
   fun setup() {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
-    orderSearchService = mock(OrderSearchService::class.java)
+    availabilityService = mock(AvailabilityService::class.java)
     auditService = mock(AuditService::class.java)
-    controller = ConnectivityController(orderSearchService, auditService)
+    controller = ConnectivityController(availabilityService, auditService)
   }
 
   @Nested
   inner class ConfirmGeneralAthenaAccess {
     @Test
     fun `Returns success message when check returns true`() {
-      `when`(orderSearchService.checkAvailability(false)).thenReturn(true)
+      `when`(availabilityService.checkAvailability(false)).thenReturn(true)
       `when`(authentication.principal).thenReturn(ROLE_EM_DATASTORE_GENERAL__RO)
 
       val result = controller.test(authentication)
 
-      Mockito.verify(orderSearchService, Mockito.times(1)).checkAvailability(false)
+      Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(false)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(result.body).isEqualTo(mapOf("message" to "API Connection successful"))
@@ -51,12 +51,12 @@ class ConnectivityControllerTest {
 
     @Test
     fun `Returns failure message when check returns false`() {
-      `when`(orderSearchService.checkAvailability(false)).thenReturn(false)
+      `when`(availabilityService.checkAvailability(false)).thenReturn(false)
       `when`(authentication.principal).thenReturn(ROLE_EM_DATASTORE_GENERAL__RO)
 
       val result = controller.test(authentication)
 
-      Mockito.verify(orderSearchService, Mockito.times(1)).checkAvailability(false)
+      Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(false)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(result.body).isEqualTo(mapOf("message" to "API Connection successful, but no access to Athena"))
@@ -64,12 +64,12 @@ class ConnectivityControllerTest {
 
     @Test
     fun `Returns error message when check throws an error`() {
-      `when`(orderSearchService.checkAvailability(false)).thenThrow(RuntimeException())
+      `when`(availabilityService.checkAvailability(false)).thenThrow(RuntimeException())
       `when`(authentication.principal).thenReturn(ROLE_EM_DATASTORE_GENERAL__RO)
 
       val result = controller.test(authentication)
 
-      Mockito.verify(orderSearchService, Mockito.times(1)).checkAvailability(false)
+      Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(false)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(result.body).isEqualTo(mapOf("message" to "Error determining Athena access"))
@@ -80,12 +80,12 @@ class ConnectivityControllerTest {
   inner class ConfirmRestrictedAthenaAccess {
     @Test
     fun `Returns success message when check returns true`() {
-      `when`(orderSearchService.checkAvailability(true)).thenReturn(true)
+      `when`(availabilityService.checkAvailability(true)).thenReturn(true)
       `when`(authentication.principal).thenReturn(ROLE_EM_DATASTORE_RESTRICTED__RO)
 
       val result = controller.test(authentication, true)
 
-      Mockito.verify(orderSearchService, Mockito.times(1)).checkAvailability(true)
+      Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(true)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(result.body).isEqualTo(mapOf("message" to "API Connection successful"))
@@ -93,12 +93,12 @@ class ConnectivityControllerTest {
 
     @Test
     fun `Returns failure message when check returns false`() {
-      `when`(orderSearchService.checkAvailability(true)).thenReturn(false)
+      `when`(availabilityService.checkAvailability(true)).thenReturn(false)
       `when`(authentication.principal).thenReturn(ROLE_EM_DATASTORE_RESTRICTED__RO)
 
       val result = controller.test(authentication, true)
 
-      Mockito.verify(orderSearchService, Mockito.times(1)).checkAvailability(true)
+      Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(true)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(result.body).isEqualTo(mapOf("message" to "API Connection successful, but no access to Athena"))
@@ -106,12 +106,12 @@ class ConnectivityControllerTest {
 
     @Test
     fun `Returns error message when check throws an error`() {
-      `when`(orderSearchService.checkAvailability(true)).thenThrow(RuntimeException())
+      `when`(availabilityService.checkAvailability(true)).thenThrow(RuntimeException())
       `when`(authentication.principal).thenReturn(ROLE_EM_DATASTORE_RESTRICTED__RO)
 
       val result = controller.test(authentication, true)
 
-      Mockito.verify(orderSearchService, Mockito.times(1)).checkAvailability(true)
+      Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(true)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       assertThat(result.body).isEqualTo(mapOf("message" to "Error determining Athena access"))

@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity
 
 import io.zeko.db.sql.dsl.eq
+import io.zeko.db.sql.dsl.like
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsQuery
+import java.time.LocalDate
 
 class IntegrityOrderDetailsQueryBuilder :
   SqlQueryBuilder(
@@ -52,6 +54,53 @@ class IntegrityOrderDetailsQueryBuilder :
 
     values.add("UPPER('$legacySubjectId')")
     whereClauses.put("legacy_subject_id", "UPPER(CAST(legacy_subject_id as varchar))" eq "UPPER('$legacySubjectId')")
+    return this
+  }
+
+  fun withFirstName(value: String?): IntegrityOrderDetailsQueryBuilder {
+    validateAlphanumericSpace(value, "first_name")
+
+    if (value.isNullOrBlank()) {
+      return this
+    }
+
+    values.add("UPPER('%$value%')")
+    whereClauses.put("first_name", "UPPER(first_name)" like "UPPER('%$value%')")
+    return this
+  }
+
+  fun withLastName(value: String?): IntegrityOrderDetailsQueryBuilder {
+    validateAlphanumericSpace(value, "last_name")
+
+    if (value.isNullOrBlank()) {
+      return this
+    }
+
+    values.add("UPPER('%$value%')")
+    whereClauses.put("last_name", "UPPER(last_name)" like "UPPER('%$value%')")
+    return this
+  }
+
+  fun withAlias(value: String?): IntegrityOrderDetailsQueryBuilder {
+    validateAlphanumericSpace(value, "alias")
+
+    if (value.isNullOrBlank()) {
+      return this
+    }
+
+    values.add("UPPER('%$value%')")
+    whereClauses.put("alias", "UPPER(alias)" like "UPPER('%$value%')")
+    return this
+  }
+
+  fun withDob(dateOfBirth: LocalDate?): IntegrityOrderDetailsQueryBuilder {
+    if (dateOfBirth == null) {
+      return this
+    }
+
+    values.add("DATE '$dateOfBirth'")
+    whereClauses.put("date_of_birth", "date_of_birth" eq "DATE '$dateOfBirth'")
+
     return this
   }
 
