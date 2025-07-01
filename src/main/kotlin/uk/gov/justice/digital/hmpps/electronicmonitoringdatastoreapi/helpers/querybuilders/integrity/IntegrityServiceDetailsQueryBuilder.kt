@@ -29,15 +29,15 @@ class IntegrityServiceDetailsQueryBuilder :
       "sunday",
     ),
   ) {
-  fun withLegacySubjectId(legacySubjectId: String): IntegrityServiceDetailsQueryBuilder {
+  fun withLegacySubjectId(legacySubjectId: String?): IntegrityServiceDetailsQueryBuilder {
     validateAlphanumeric(legacySubjectId, "legacy_subject_id")
 
-    if (legacySubjectId.isBlank()) {
+    if (legacySubjectId.isNullOrBlank()) {
       return this
     }
 
-    values.add(legacySubjectId)
-    whereClauses.put("legacy_subject_id", "legacy_subject_id" eq legacySubjectId)
+    values.add("UPPER('$legacySubjectId')")
+    whereClauses.put("legacy_subject_id", "UPPER(CAST(legacy_subject_id as varchar))" eq "UPPER('$legacySubjectId')")
     return this
   }
 

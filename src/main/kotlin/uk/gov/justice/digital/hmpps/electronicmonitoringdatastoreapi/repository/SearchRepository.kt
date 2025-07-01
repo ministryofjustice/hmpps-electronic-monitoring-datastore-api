@@ -21,7 +21,7 @@ class SearchRepository(
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)
       .withAlias(criteria.alias)
-      .withDob(criteria.dobDay, criteria.dobMonth, criteria.dobYear)
+      .withDob(criteria.dateOfBirth)
 
     return athenaClient.getQueryExecutionId(orderSearchQuery, restricted)
   }
