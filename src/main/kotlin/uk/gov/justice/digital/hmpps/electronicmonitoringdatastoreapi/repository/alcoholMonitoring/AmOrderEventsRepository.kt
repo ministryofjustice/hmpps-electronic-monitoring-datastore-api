@@ -21,7 +21,7 @@ class AmOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery)
 
-    return AthenaHelper.Companion.mapTo<AthenaAmIncidentEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaAmIncidentEventDTO>(athenaResponse)
   }
 
   fun getViolationEventsList(legacySubjectId: String): List<AthenaAmViolationEventDTO> {
@@ -30,7 +30,7 @@ class AmOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(violationEventsQuery)
 
-    return AthenaHelper.Companion.mapTo<AthenaAmViolationEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaAmViolationEventDTO>(athenaResponse)
   }
 
   fun getContactEventsList(legacySubjectId: String): List<AthenaAmContactEventDTO> {
@@ -39,6 +39,6 @@ class AmOrderEventsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(contactEventsQuery)
 
-    return AthenaHelper.Companion.mapTo<AthenaAmContactEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaAmContactEventDTO>(athenaResponse)
   }
 }
