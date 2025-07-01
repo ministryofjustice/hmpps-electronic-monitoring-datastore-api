@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.Query
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.SearchController
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.OrderSearchService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
@@ -43,9 +44,7 @@ class SearchControllerTest {
         firstName = "Amy",
         lastName = "Smith",
         alias = null,
-        dobDay = "01",
-        dobMonth = "01",
-        dobYear = "1970",
+        dateOfBirth = LocalDate.parse("1970-01-01"),
       )
 
       val queryExecutionId = "query-execution-id"
