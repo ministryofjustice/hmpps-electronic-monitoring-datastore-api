@@ -1,9 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity.IntegrityContactEventsQueryBuilder
@@ -17,47 +14,41 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 
 @Service
 class IntegrityOrderEventsRepository(
-  @Autowired val athenaClient: EmDatastoreClientInterface,
-  @Value("\${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
+  val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getMonitoringEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityMonitoringEventDTO> {
-    val monitoringEventsQuery = IntegrityMonitoringEventsQueryBuilder(athenaDatabase)
+  fun getMonitoringEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityMonitoringEventDTO> {
+    val monitoringEventsQuery = IntegrityMonitoringEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(monitoringEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityMonitoringEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityMonitoringEventDTO>(athenaResponse)
   }
 
-  fun getIncidentEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityIncidentEventDTO> {
-    val incidentEventsQuery = IntegrityIncidentEventsQueryBuilder(athenaDatabase)
+  fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityIncidentEventDTO> {
+    val incidentEventsQuery = IntegrityIncidentEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(incidentEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityIncidentEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityIncidentEventDTO>(athenaResponse)
   }
 
-  fun getViolationEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityViolationEventDTO> {
-    val violationEventsQuery = IntegrityViolationEventsQueryBuilder(athenaDatabase)
+  fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityViolationEventDTO> {
+    val violationEventsQuery = IntegrityViolationEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(violationEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityViolationEventDTO>(athenaResponse)
   }
 
-  fun getContactEventsList(legacySubjectId: String, role: AthenaRole): List<AthenaIntegrityContactEventDTO> {
-    val contactEventsQuery = IntegrityContactEventsQueryBuilder(athenaDatabase)
+  fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityContactEventDTO> {
+    val contactEventsQuery = IntegrityContactEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(contactEventsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityContactEventDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityContactEventDTO>(athenaResponse)
   }
 }

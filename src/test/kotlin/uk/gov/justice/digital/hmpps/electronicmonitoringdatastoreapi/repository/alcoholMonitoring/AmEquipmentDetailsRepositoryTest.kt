@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmEquipmentDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AmEquipmentDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -23,15 +22,9 @@ class AmEquipmentDetailsRepositoryTest {
     amEquipmentDetailsRepository = AmEquipmentDetailsRepository(emDatastoreClient)
   }
 
-  @Test
-  fun `AmEquipmentDetailsRepository can be instantiated`() {
-    val sut = AmEquipmentDetailsRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetEquipmentDetails {
-    private fun amEquipmentDetailsResultSet(firstId: String = "123") = MockAthenaResultSetBuilder(
+    private fun amEquipmentDetailsResultSet(firstId: String) = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
         "device_type",
@@ -83,41 +76,24 @@ class AmEquipmentDetailsRepositoryTest {
 
     @Test
     fun `getEquipmentDetails passes correct query to getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet())
+      val resultSet = AthenaHelper.resultSetFromJson(amEquipmentDetailsResultSet("123"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      amEquipmentDetailsRepository.getEquipmentDetails("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
-    }
-
-    @Test
-    fun `getEquipmentDetails returns a list of AthenaAmEquipmentDetailsDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
-
-      val result = amEquipmentDetailsRepository.getEquipmentDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AthenaAmEquipmentDetailsDTO::class.java)
-      }
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getEquipmentDetails returns all the results from getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet("000"))
+      val resultSet = AthenaHelper.resultSetFromJson(amEquipmentDetailsResultSet("000"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = amEquipmentDetailsRepository.getEquipmentDetails("000", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amEquipmentDetailsRepository.getEquipmentDetails("000")
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaAmEquipmentDetailsDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("000")
     }
   }

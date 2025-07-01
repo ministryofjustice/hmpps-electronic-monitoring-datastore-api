@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers
 
 import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
@@ -140,12 +139,6 @@ class AthenaHelperTest {
   """.trimIndent()
 
   @Test
-  fun `Can be instantiated`() {
-    val sut = AthenaHelper()
-    Assertions.assertThat(sut).isNotNull()
-  }
-
-  @Test
   fun `Can convert JSON to ResultSet object`() {
     val simpleResultTest: String = """
       {
@@ -213,11 +206,11 @@ class AthenaHelperTest {
   fun `Can extract a list of properties from a class`() {
     data class ArbitraryClass(
       val firstField: String,
-      val BADLYNamedField: Boolean?,
-      val ThirdField: Long = 4455566,
+      @Suppress("PropertyName") val BADLYNamedField: Boolean?,
+      @Suppress("PropertyName") val ThirdField: Long = 4455566,
     )
 
-    val expected = listOf<String>("first_field", "badlynamed_field", "third_field")
+    val expected = listOf("first_field", "badlynamed_field", "third_field")
 
     val result: List<String> = AthenaHelper.extractFieldNames(ArbitraryClass::class)
 
@@ -549,40 +542,6 @@ class AthenaHelperTest {
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
         .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
-    }
-  }
-
-  @Nested
-  inner class TableNameFromSearchType {
-    @Test
-    fun `assigns correct table for integrity data`() {
-      val searchType = "integrity"
-      val expectedTable = "order_details"
-
-      val actualTable = AthenaHelper.tableNameFromSearchType(searchType)
-
-      Assertions.assertThat(actualTable).isEqualTo(expectedTable)
-    }
-
-    @Test
-    fun `assigns correct table for alcohol monitoring data`() {
-      val searchType = "alcohol-monitoring"
-      val expectedTable = "am_order_details"
-
-      val actualTable = AthenaHelper.tableNameFromSearchType(searchType)
-
-      Assertions.assertThat(actualTable).isEqualTo(expectedTable)
-    }
-
-    @Test
-    fun `fails with 401 when searchType is invalid`() {
-      val searchType = "invalid-type"
-
-      assertThatThrownBy {
-        AthenaHelper.tableNameFromSearchType(searchType)
-      }
-        .isInstanceOf(IllegalArgumentException::class.java)
-        .hasMessageContaining("Unknown search type: invalid-type")
     }
   }
 }

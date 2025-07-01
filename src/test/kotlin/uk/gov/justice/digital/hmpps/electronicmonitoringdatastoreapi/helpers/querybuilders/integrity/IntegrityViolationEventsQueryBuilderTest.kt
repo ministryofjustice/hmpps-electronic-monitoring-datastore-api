@@ -33,7 +33,7 @@ class IntegrityViolationEventsQueryBuilderTest {
       FROM 
         fake_database.violations 
       WHERE 
-        legacy_subject_id = ?
+        UPPER(CAST(legacy_subject_id as varchar)) = ?
   """.trimIndent()
 
   @Test
@@ -42,12 +42,12 @@ class IntegrityViolationEventsQueryBuilderTest {
 
     val expectedSQL = replaceWhitespace(baseQuery.trimIndent())
 
-    val result = IntegrityViolationEventsQueryBuilder("fake_database")
+    val result = IntegrityViolationEventsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
+      .build("fake_database")
 
     Assertions.assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
-    Assertions.assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
+    Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('$legacySubjectId')"))
   }
 
   @Test
@@ -55,9 +55,9 @@ class IntegrityViolationEventsQueryBuilderTest {
     val dangerousInput = "12345 OR 1=1--"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      IntegrityViolationEventsQueryBuilder("fake_database")
+      IntegrityViolationEventsQueryBuilder()
         .withLegacySubjectId(dangerousInput)
-        .build()
+        .build("fake_database")
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 
@@ -66,9 +66,9 @@ class IntegrityViolationEventsQueryBuilderTest {
     val dangerousInput = "' UNION SELECT username, password FROM users--"
 
     Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java).isThrownBy {
-      IntegrityViolationEventsQueryBuilder("fake_database")
+      IntegrityViolationEventsQueryBuilder()
         .withLegacySubjectId(dangerousInput)
-        .build()
+        .build("fake_database")
     }.withMessage("legacy_subject_id must only contain alphanumeric characters and spaces")
   }
 }

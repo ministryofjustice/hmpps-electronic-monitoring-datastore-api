@@ -11,43 +11,63 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmContactEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.alcoholMonitoring.AmContactEventsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AthenaRoleService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime
+import java.util.UUID
 
 @ActiveProfiles("test")
 @JsonTest
 class AmContactEventsControllerTest {
   private lateinit var amOrderEventsService: AmOrderEventsService
-  private lateinit var roleService: AthenaRoleService
   private lateinit var auditService: AuditService
   private lateinit var controller: AmContactEventsController
   private lateinit var authentication: Authentication
+
+  private lateinit var legacySubjectId: String
 
   @BeforeEach
   fun setup() {
     authentication = mock(Authentication::class.java)
     `when`(authentication.name).thenReturn("MOCK_AUTH_USER")
     amOrderEventsService = Mockito.mock(AmOrderEventsService::class.java)
-    roleService = mock(AthenaRoleService::class.java)
-    `when`(roleService.getRoleFromAuthentication(authentication)).thenReturn(AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
     auditService = Mockito.mock(AuditService::class.java)
-    controller = AmContactEventsController(amOrderEventsService, roleService, auditService)
+    controller = AmContactEventsController(amOrderEventsService, auditService)
+
+    legacySubjectId = UUID.randomUUID().toString()
   }
 
   @Nested
   inner class GetContactEvents {
+    val expectedEmptyResult = emptyList<AmEvent<AmContactEventDetails>>()
+
     @Test
-    fun `gets contact events from alcohol monitoring order events service`() {
-      val legacySubjectId = "1ab"
+    fun `Calls service`() {
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenReturn(expectedEmptyResult)
+
+      controller.getContactEvents(authentication, legacySubjectId)
+
+      Mockito.verify(amOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId)
+    }
+
+    @Test
+    fun `gets empty list from service`() {
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenReturn(expectedEmptyResult)
+
+      val result = controller.getContactEvents(authentication, legacySubjectId)
+
+      Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
+      Assertions.assertThat(result.body).isEqualTo(expectedEmptyResult)
+    }
+
+    @Test
+    fun `gets list of results from service`() {
       val expectedResult = listOf(
         AmEvent(
-          legacySubjectId = "1543",
+          legacySubjectId = legacySubjectId,
           type = "TEST_STATUS",
           dateTime = LocalDateTime.of(2001, 1, 1, 1, 1, 1),
           details = AmContactEventDetails(
@@ -66,14 +86,23 @@ class AmContactEventsControllerTest {
         ),
       )
 
-      `when`(amOrderEventsService.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)).thenReturn(expectedResult)
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenReturn(expectedResult)
 
       val result = controller.getContactEvents(authentication, legacySubjectId)
 
       Assertions.assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
       Assertions.assertThat(result.body).isEqualTo(expectedResult)
+    }
 
-      Mockito.verify(amOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+    @Test
+    fun `Propagates errors from service when it throws an error`() {
+      val expectedError = RuntimeException("Fake error form service")
+
+      `when`(amOrderEventsService.getContactEvents(legacySubjectId)).thenThrow(expectedError)
+
+      Assertions.assertThatThrownBy { controller.getContactEvents(authentication, legacySubjectId) }.isInstanceOf(RuntimeException::class.java)
+
+      Mockito.verify(amOrderEventsService, Mockito.times(1)).getContactEvents(legacySubjectId)
     }
   }
 }

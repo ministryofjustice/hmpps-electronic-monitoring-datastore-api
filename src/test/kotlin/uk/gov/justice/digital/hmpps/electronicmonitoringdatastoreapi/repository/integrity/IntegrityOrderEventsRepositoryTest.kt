@@ -6,15 +6,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.mocks.MockAthenaResultSetBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityContactEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityIncidentEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityMonitoringEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityViolationEventDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class IntegrityOrderEventsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -24,12 +20,6 @@ class IntegrityOrderEventsRepositoryTest {
   fun setup() {
     emDatastoreClient = Mockito.mock(EmDatastoreClient::class.java)
     repository = IntegrityOrderEventsRepository(emDatastoreClient)
-  }
-
-  @Test
-  fun `OrderEventsRepository can be instantiated`() {
-    val sut = IntegrityOrderEventsRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
   }
 
   @Nested
@@ -73,36 +63,22 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getMonitoringEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(monitoringEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getMonitoringEventsList("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
-    }
-
-    @Test
-    fun `getMonitoringEventsList returns an AthenaMonitoringEventListDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(monitoringEventsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
-
-      val result = repository.getMonitoringEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getMonitoringEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(monitoringEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getMonitoringEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getMonitoringEventsList("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegrityMonitoringEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
       Assertions.assertThat(result.first().eventType).isEqualTo("TEST_EVENT")
     }
@@ -137,36 +113,22 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getIncidentEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(incidentEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getIncidentEventsList("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
-    }
-
-    @Test
-    fun `getIncidentEventsList returns an AthenaIncidentEventListDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(incidentEventsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
-
-      val result = repository.getIncidentEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getIncidentEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(incidentEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getIncidentEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getIncidentEventsList("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegrityIncidentEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
       Assertions.assertThat(result.first().violationAlertType).isEqualTo("TEST_ALERT")
     }
@@ -252,36 +214,22 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getViolationEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(violationEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getViolationEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getViolationEventsList("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
-    }
-
-    @Test
-    fun `getViolationEventsList returns an AthenaViolationEventListDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(violationEventsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
-
-      val result = repository.getViolationEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getViolationEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(violationEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getViolationEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getViolationEventsList("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegrityViolationEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
       Assertions.assertThat(result.first().investigationOutcomeReason).isEqualTo("TEST_OUTCOME_REASON")
     }
@@ -334,36 +282,22 @@ class IntegrityOrderEventsRepositoryTest {
     fun `getContactEventsList passes correct query to getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(contactEventsResultSet())
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getContactEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getContactEventsList("123", false)
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
-    }
-
-    @Test
-    fun `getContactEventsList returns an AthenaContactEventListDTO`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(contactEventsResultSet())
-
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
-
-      val result = repository.getContactEventsList("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
     fun `getContactEventsList returns all the results from getQueryResult`() {
       val resultSet = AthenaHelper.Companion.resultSetFromJson(contactEventsResultSet("987"))
 
-      Mockito.`when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getContactEventsList("987", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getContactEventsList("987", false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(2)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AthenaIntegrityContactEventDTO::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
       Assertions.assertThat(result.first().contactType).isEqualTo("TEST_CONTACT")
     }

@@ -5,11 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmContactEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmEvent
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmIncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmContactEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmIncidentEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmViolationEventDTO
@@ -24,12 +19,6 @@ class AmOrderEventsServiceTest {
   fun setup() {
     amOrderEventsRepository = Mockito.mock(AmOrderEventsRepository::class.java)
     service = AmOrderEventsService(amOrderEventsRepository)
-  }
-
-  @Test
-  fun `OrderService can be instantiated`() {
-    val sut = AmOrderEventsService(amOrderEventsRepository)
-    Assertions.assertThat(sut).isNotNull()
   }
 
   @Nested
@@ -56,47 +45,23 @@ class AmOrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amOrderEventsRepository.getContactEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amOrderEventsRepository.getContactEventsList(legacySubjectId))
         .thenReturn(exampleContactEventList)
     }
 
     @Test
     fun `calls getContactEventsList from AM order information repository`() {
-      service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getContactEvents(legacySubjectId)
 
-      Mockito.verify(amOrderEventsRepository, Mockito.times(1)).getContactEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of Event when a response is received`() {
-      val result = service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
-      }
-    }
-
-    @Test
-    fun `Each Event contains AmContactEventDetails`() {
-      val result = service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it.details).isInstanceOf(AmContactEventDetails::class.java)
-      }
+      Mockito.verify(amOrderEventsRepository, Mockito.times(1)).getContactEventsList(legacySubjectId)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      val result = service.getContactEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getContactEvents(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(AmContactEventDetails::class.java)
       Assertions.assertThat(result.first().details.channel).isEqualTo("TEST_CHANNEL")
       Assertions.assertThat(result.first().details.contactDateTime).isEqualTo("2001-01-01T01:01:01")
     }
@@ -124,47 +89,23 @@ class AmOrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amOrderEventsRepository.getIncidentEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amOrderEventsRepository.getIncidentEventsList(legacySubjectId))
         .thenReturn(exampleAmIncidentEventList)
     }
 
     @Test
     fun `calls getIncidentEventsList from AM order events repository`() {
-      service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getIncidentEvents(legacySubjectId)
 
-      Mockito.verify(amOrderEventsRepository, Mockito.times(1)).getIncidentEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of Event when a response is received`() {
-      val result = service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
-      }
-    }
-
-    @Test
-    fun `Each Event contains AmIncidentEventDetails`() {
-      val result = service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it.details).isInstanceOf(AmIncidentEventDetails::class.java)
-      }
+      Mockito.verify(amOrderEventsRepository, Mockito.times(1)).getIncidentEventsList(legacySubjectId)
     }
 
     @Test
     fun `Returns correct details of the order when a response is received`() {
-      val result = service.getIncidentEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getIncidentEvents(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(AmIncidentEventDetails::class.java)
       Assertions.assertThat(result.first().details.violationAlertType).isEqualTo("TEST_ALERT_TYPE")
       Assertions.assertThat(result.first().details.violationAlertDateTime).isEqualTo("2001-01-01T01:01:01")
     }
@@ -196,47 +137,23 @@ class AmOrderEventsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amOrderEventsRepository.getViolationEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amOrderEventsRepository.getViolationEventsList(legacySubjectId))
         .thenReturn(exampleViolationEventList)
     }
 
     @Test
     fun `Calls getViolationEventsList from AM order events repository`() {
-      service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getViolationEvents(legacySubjectId)
 
-      Mockito.verify(amOrderEventsRepository, Mockito.times(1)).getViolationEventsList(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of Event when a response is received`() {
-      val result = service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmEvent::class.java)
-      }
-    }
-
-    @Test
-    fun `Each Event contains AmViolationEventDetails`() {
-      val result = service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it.details).isInstanceOf(AmViolationEventDetails::class.java)
-      }
+      Mockito.verify(amOrderEventsRepository, Mockito.times(1)).getViolationEventsList(legacySubjectId)
     }
 
     @Test
     fun `returns correct details of the order when a response is received`() {
-      val result = service.getViolationEvents(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getViolationEvents(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmEvent::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-
-      Assertions.assertThat(result.first().details).isInstanceOf(AmViolationEventDetails::class.java)
       Assertions.assertThat(result.first().details.nonComplianceReason).isEqualTo("TEST_REASON")
       Assertions.assertThat(result.first().details.nonComplianceDateTime).isEqualTo("2001-01-01T01:01:01")
     }

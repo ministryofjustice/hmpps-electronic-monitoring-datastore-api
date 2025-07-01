@@ -5,10 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityVisitDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetailsAddress
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityVisitDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityVisitDetailsService
 
@@ -22,17 +19,11 @@ class IntegrityVisitDetailsServiceTest {
     service = IntegrityVisitDetailsService(integrityVisitDetailsRepository)
   }
 
-  @Test
-  fun `SuspensionOfVisitsService can be instantiated`() {
-    val sut = IntegrityVisitDetailsService(integrityVisitDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetVisitDetails {
     val legacySubjectId = "fake-id"
 
-    val exampleVisitDetails = listOf<AthenaIntegrityVisitDetailsDTO>(
+    val exampleVisitDetails = listOf(
       AthenaIntegrityVisitDetailsDTO(
         legacySubjectId = "123",
         address1 = "address_line_1",
@@ -51,34 +42,23 @@ class IntegrityVisitDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityVisitDetailsRepository.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(integrityVisitDetailsRepository.getVisitDetails(legacySubjectId, false))
         .thenReturn(exampleVisitDetails)
     }
 
     @Test
     fun `calls getVisitDetails from order information repository`() {
-      service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getVisitDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of VisitDetails when a response is received`() {
-      val result = service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(integrityVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, false)
     }
 
     @Test
     fun `returns correct details of the VisitDetails when a response is received`() {
-      val result = service.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getVisitDetails(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(IntegrityVisitDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-      Assertions.assertThat(result.first().address).isInstanceOf(IntegrityVisitDetailsAddress::class.java)
       Assertions.assertThat(result.first().visitType).isEqualTo("TEST_VISIT_TYPE")
     }
   }
