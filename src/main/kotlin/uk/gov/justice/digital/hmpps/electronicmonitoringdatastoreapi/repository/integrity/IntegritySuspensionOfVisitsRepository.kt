@@ -16,6 +16,6 @@ class IntegritySuspensionOfVisitsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(suspensionOfVisitsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegritySuspensionOfVisitsDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegritySuspensionOfVisitsDTO>(athenaResponse)
   }
 }

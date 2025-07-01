@@ -16,6 +16,6 @@ class IntegrityVisitDetailsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(visitDetailsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityVisitDetailsDTO>(athenaResponse)
   }
 }
