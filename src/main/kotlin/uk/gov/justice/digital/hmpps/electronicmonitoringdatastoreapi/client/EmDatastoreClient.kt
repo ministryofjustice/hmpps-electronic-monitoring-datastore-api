@@ -38,7 +38,7 @@ class EmDatastoreClient : EmDatastoreClientInterface {
   private val databaseName: String = "test_database"
 
   private fun startClient(iamRole: String): AthenaClient {
-    val credentialsProvider: AwsCredentialsProvider = EmDatastoreCredentialsProvider.Companion.getCredentials(iamRole)
+    val credentialsProvider: AwsCredentialsProvider = EmDatastoreCredentialsProvider.getCredentials(iamRole)
 
     return AthenaClient.builder()
       .region(Region.EU_WEST_2)
