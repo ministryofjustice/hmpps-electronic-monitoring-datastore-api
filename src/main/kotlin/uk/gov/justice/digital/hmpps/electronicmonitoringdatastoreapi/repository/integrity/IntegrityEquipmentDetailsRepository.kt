@@ -16,6 +16,6 @@ class IntegrityEquipmentDetailsRepository(
 
     val athenaResponse = athenaClient.getQueryResult(equipmentDetailsQuery, restricted)
 
-    return AthenaHelper.Companion.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaIntegrityEquipmentDetailsDTO>(athenaResponse)
   }
 }
