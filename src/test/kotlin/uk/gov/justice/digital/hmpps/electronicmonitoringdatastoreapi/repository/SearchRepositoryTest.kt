@@ -13,6 +13,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.Ath
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
+import java.time.LocalDate
 
 class SearchRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -35,9 +36,7 @@ class SearchRepositoryTest {
         firstName = "Test First Name",
         lastName = "Test Last Name",
         alias = "Test Alias",
-        dobDay = "01",
-        dobMonth = "01",
-        dobYear = "2001",
+        dateOfBirth = LocalDate.parse("2001-01-01"),
       )
 
       repository.searchOrders(searchCriteria, false)
