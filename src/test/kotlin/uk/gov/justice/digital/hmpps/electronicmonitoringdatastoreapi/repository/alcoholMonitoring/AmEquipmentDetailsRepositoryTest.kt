@@ -24,7 +24,7 @@ class AmEquipmentDetailsRepositoryTest {
 
   @Nested
   inner class GetEquipmentDetails {
-    private fun amEquipmentDetailsResultSet(firstId: String = "123") = MockAthenaResultSetBuilder(
+    private fun amEquipmentDetailsResultSet(firstId: String) = MockAthenaResultSetBuilder(
       columns = arrayOf(
         "legacy_subject_id",
         "device_type",
@@ -76,7 +76,7 @@ class AmEquipmentDetailsRepositoryTest {
 
     @Test
     fun `getEquipmentDetails passes correct query to getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet("123"))
+      val resultSet = AthenaHelper.resultSetFromJson(amEquipmentDetailsResultSet("123"))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
@@ -87,7 +87,7 @@ class AmEquipmentDetailsRepositoryTest {
 
     @Test
     fun `getEquipmentDetails returns all the results from getQueryResult`() {
-      val resultSet = AthenaHelper.Companion.resultSetFromJson(amEquipmentDetailsResultSet("000"))
+      val resultSet = AthenaHelper.resultSetFromJson(amEquipmentDetailsResultSet("000"))
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
