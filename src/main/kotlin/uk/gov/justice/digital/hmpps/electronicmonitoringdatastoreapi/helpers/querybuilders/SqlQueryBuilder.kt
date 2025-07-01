@@ -10,8 +10,10 @@ abstract class SqlQueryBuilder(
   open val tableName: String,
   private val fields: Array<String>,
 ) {
-  protected val whereClauses: MutableMap<String, QueryBlock> = mutableMapOf()
-  protected val values: MutableList<String> = mutableListOf()
+  var whereClauses: MutableMap<String, QueryBlock> = mutableMapOf()
+    protected set
+  var values: MutableList<String> = mutableListOf()
+    protected set
 
   protected fun validateNumber(value: String?, field: String) {
     if (value.isNullOrBlank()) {
