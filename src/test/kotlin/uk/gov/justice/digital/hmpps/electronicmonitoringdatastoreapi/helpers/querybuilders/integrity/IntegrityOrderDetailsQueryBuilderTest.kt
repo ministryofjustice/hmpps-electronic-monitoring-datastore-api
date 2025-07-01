@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity
 
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Test
@@ -46,7 +47,7 @@ class IntegrityOrderDetailsQueryBuilderTest {
       FROM 
         fake_database.order_details
       WHERE 
-         legacy_subject_id = ?
+         UPPER(CAST(legacy_subject_id as varchar)) = ?
   """.trimIndent()
 
   @Test
@@ -60,7 +61,7 @@ class IntegrityOrderDetailsQueryBuilderTest {
       .build("fake_database")
 
     assertThat(replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
-    assertThat(result.parameters).isEqualTo(arrayOf(legacySubjectId))
+    assertThat(result.parameters).isEqualTo(arrayOf("UPPER('$legacySubjectId')"))
   }
 
   @Test
