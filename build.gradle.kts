@@ -31,6 +31,7 @@ dependencies {
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.35") {
     exclude(group = "io.swagger.core.v3")
   }
+  testImplementation(kotlin("test"))
 }
 
 kotlin {

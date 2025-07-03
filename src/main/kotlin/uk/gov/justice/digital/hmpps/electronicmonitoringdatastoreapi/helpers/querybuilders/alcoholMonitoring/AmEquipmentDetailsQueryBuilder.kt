@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import io.zeko.db.sql.dsl.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaAmEquipmentDetailsListQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.AthenaAmEquipmentDetailsListQuery
 import kotlin.collections.toTypedArray
 
 class AmEquipmentDetailsQueryBuilder :

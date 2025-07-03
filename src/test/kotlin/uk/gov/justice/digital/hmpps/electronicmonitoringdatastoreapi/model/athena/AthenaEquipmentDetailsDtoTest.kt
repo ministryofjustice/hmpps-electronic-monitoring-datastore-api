@@ -4,26 +4,26 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityEquipmentDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegrityEquipmentDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaEquipmentDetailsDtoTest {
   @Nested
   inner class Construct {
-    val columnNames = arrayOf(
-      "legacy_subject_id",
-      "hmu_id",
-      "hmu_equipment_category_description",
-      "hmu_install_date",
-      "hmu_install_time",
-      "hmu_removed_date",
-      "hmu_removed_time",
-      "pid_id",
-      "pid_equipment_category_description",
-      "date_device_installed",
-      "time_device_installed",
-      "date_device_removed",
-      "time_device_removed",
+    val columnNames = mapOf(
+      "legacy_subject_id" to "bigInt",
+      "hmu_id" to "bigInt",
+      "hmu_equipment_category_description" to "varchar",
+      "hmu_install_date" to "varchar",
+      "hmu_install_time" to "varchar",
+      "hmu_removed_date" to "varchar",
+      "hmu_removed_time" to "varchar",
+      "pid_id" to "bigInt",
+      "pid_equipment_category_description" to "varchar",
+      "date_device_installed" to "varchar",
+      "time_device_installed" to "varchar",
+      "date_device_removed" to "varchar",
+      "time_device_removed" to "varchar",
     )
 
     @Test

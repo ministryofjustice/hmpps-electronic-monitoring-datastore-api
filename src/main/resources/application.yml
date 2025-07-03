@@ -5,8 +5,6 @@ info.app:
 spring:
   application:
     name: hmpps-electronic-monitoring-datastore-api
-  codec:
-    max-in-memory-size: 10MB
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     serialization:
@@ -21,6 +19,9 @@ spring:
         provider:
           hmpps-auth:
             token-uri: ${services.hmpps-auth.url}/oauth/token
+  http:
+    codecs:
+      max-in-memory-size: 10MB
 
 server:
   port: 8080
@@ -57,10 +58,9 @@ management:
 services:
   hmpps-auth:
     url: ${HMPPS_AUTH_URL}
-    mfa: ${MFA_REQUIRED}
   athena:
     database: ${ATHENA_DATABASE_NAME}
     output: ${ATHENA_OUTPUT_BUCKET}
-  athena-roles:
-    restricted: ${ATHENA_SPECIALS_IAM_ROLE}
-    general: ${ATHENA_GENERAL_IAM_ROLE}
+    roles:
+      restricted: ${ATHENA_SPECIALS_IAM_ROLE}
+      general: ${ATHENA_GENERAL_IAM_ROLE}
