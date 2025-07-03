@@ -4,139 +4,23 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegrityOrderDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaHelperTest {
-  val defaultResultSet: String = """
-    {
-      "ResultSet": {
-        "Rows": [
-          {
-            "Data": [
-              {
-                "VarCharValue": "legacy_subject_id"
-              },
-              {
-                "VarCharValue": "legacy_order_id"
-              },
-              {
-                "VarCharValue": "first_name"
-              },
-              {
-                "VarCharValue": "last_name"
-              },
-              {
-                "VarCharValue": "full_name"
-              }
-            ]
-          },
-          {
-            "Data": [
-              {
-                "VarCharValue": "1253587"
-              },
-              {
-                "VarCharValue": "1250042"
-              },
-              {
-                "VarCharValue": "ELLEN"
-              },
-              {
-                "VarCharValue": "RIPLY"
-              },
-              {
-                "VarCharValue": "ELLEN RIPLY"
-              }
-            ]
-          },
-          {
-            "Data": [
-              {
-                "VarCharValue": "1034415"
-              },
-              {
-                "VarCharValue": "1032792"
-              },
-              {
-                "VarCharValue": "JOHN"
-              },
-              {
-                "VarCharValue": "BROWNLIE"
-              },
-              {
-                "VarCharValue": "JOHN BROWNLIE"
-              }
-            ]
-          }
-        ],
-        "ResultSetMetadata": {
-          "ColumnInfo": [
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "legacy_subject_id",
-              "Label": "legacy_subject_id",
-              "Type": "bigint",
-              "Precision": 19,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": false
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "legacy_order_id",
-              "Label": "legacy_order_id",
-              "Type": "bigint",
-              "Precision": 19,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": false
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "first_name",
-              "Label": "first_name",
-              "Type": "varchar",
-              "Precision": 2147483647,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": true
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "last_name",
-              "Label": "last_name",
-              "Type": "varchar",
-              "Precision": 2147483647,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": true
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "full_name",
-              "Label": "full_name",
-              "Type": "varchar",
-              "Precision": 2147483647,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": true
-            }
-          ]
-        }
-      },
-      "UpdateCount": 0
-    }
-  """.trimIndent()
+  val defaultResultSet: String = MockAthenaResultSetBuilder(
+    columns = mapOf(
+      "legacy_subject_id" to "bigInt",
+      "legacy_order_id" to "bigInt",
+      "first_name" to "varchar",
+      "last_name" to "varchar",
+      "full_name" to "varchar",
+    ),
+    rows = arrayOf(
+      arrayOf("1253587", "1250042", "ELLEN", "RIPLY", "ELLEN RIPLY"),
+      arrayOf("1034415", "1032792", "JOHN", "BROWNLIE", "JOHN BROWNLIE"),
+    ),
+  ).build()
 
   @Test
   fun `Can convert JSON to ResultSet object`() {
@@ -246,6 +130,9 @@ class AthenaHelperTest {
             "VarCharValue": "legacy_subject_id"
           },
           {
+            "VarCharValue": "legacy_order_id"
+          },
+          {
             "VarCharValue": "first_name"
           },
                     {
@@ -273,6 +160,9 @@ class AthenaHelperTest {
       },
       {
         "Data": [
+          {
+            "VarCharValue": "1253587"
+          },
           {
             "VarCharValue": "1253587"
           },
@@ -311,6 +201,18 @@ class AthenaHelperTest {
           "TableName": "",
           "Name": "legacy_subject_id",
           "Label": "legacy_subject_id",
+          "Type": "bigint",
+          "Precision": "19",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "false"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "legacy_order_id",
+          "Label": "legacy_order_id",
           "Type": "bigint",
           "Precision": "19",
           "Scale": "0",
@@ -419,9 +321,10 @@ class AthenaHelperTest {
 }""",
       )
 
-      val expected: List<AthenaOrderSearchResultDTO> = listOf(
-        AthenaOrderSearchResultDTO(
+      val expected: List<AthenaIntegrityOrderDetailsDTO> = listOf(
+        AthenaIntegrityOrderDetailsDTO(
           legacySubjectId = "1253587",
+          legacyOrderId = "1253587",
           firstName = "ELLEN",
           lastName = "RIPLY",
           primaryAddressLine1 = "310 Lightbowne Road, Moston",
@@ -430,10 +333,11 @@ class AthenaHelperTest {
           primaryAddressPostCode = "M40 0FJ",
           orderStartDate = "2019-10-24",
           orderEndDate = "2020-03-24",
+          offenceRisk = false,
         ),
       )
 
-      val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
+      val result = AthenaHelper.mapTo<AthenaIntegrityOrderDetailsDTO>(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }

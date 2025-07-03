@@ -43,14 +43,12 @@ class JwtAuthorisationHelper {
     username: String? = null,
     scope: List<String> = listOf(),
     roles: List<String> = listOf(),
-    passedMFA: Boolean? = true,
   ): (HttpHeaders) -> Unit {
     val token = createJwtAccessToken(
       clientId = clientId,
       username = username,
       scope = scope,
       roles = roles,
-      passedMFA = passedMFA,
     )
     return { it.setBearerAuth(token) }
   }
@@ -65,7 +63,6 @@ class JwtAuthorisationHelper {
     jwtId: String = UUID.randomUUID().toString(),
     authSource: String = "none",
     grantType: String = "client_credentials",
-    passedMFA: Boolean? = true,
   ): String = mutableMapOf<String, Any>(
     "sub" to (username ?: clientId),
     "client_id" to clientId,
@@ -78,7 +75,6 @@ class JwtAuthorisationHelper {
       // ensure that all roles have a ROLE_ prefix
       this["authorities"] = roles.map { "ROLE_${it.substringAfter("ROLE_")}" }
     }
-    passedMFA?.let { this["passed_mfa"] = passedMFA }
   }
     .let {
       Jwts.builder()

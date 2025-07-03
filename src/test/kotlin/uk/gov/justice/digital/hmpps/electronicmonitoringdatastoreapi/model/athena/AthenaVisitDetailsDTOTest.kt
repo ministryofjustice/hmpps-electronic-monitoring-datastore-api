@@ -4,25 +4,25 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityVisitDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegrityVisitDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaVisitDetailsDTOTest {
   @Nested
   inner class Construct {
-    val columnNames = arrayOf(
-      "legacy_subject_id",
-      "address_1",
-      "address_2",
-      "address_3",
-      "postcode",
-      "actual_work_start_date",
-      "actual_work_start_time",
-      "actual_work_end_date",
-      "actual_work_end_time",
-      "visit_notes",
-      "visit_type",
-      "visit_outcome",
+    val columnNames = mapOf(
+      "legacy_subject_id" to "varchar",
+      "address_1" to "varchar",
+      "address_2" to "varchar",
+      "address_3" to "varchar",
+      "postcode" to "varchar",
+      "actual_work_start_date" to "varchar",
+      "actual_work_start_time" to "varchar",
+      "actual_work_end_date" to "varchar",
+      "actual_work_end_time" to "varchar",
+      "visit_notes" to "varchar",
+      "visit_type" to "varchar",
+      "visit_outcome" to "varchar",
     )
 
     @Test

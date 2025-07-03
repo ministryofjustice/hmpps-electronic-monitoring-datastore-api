@@ -24,10 +24,10 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.que
 @Component
 @Profile("!integration & !mocking")
 class EmDatastoreClient : EmDatastoreClientInterface {
-  @field:Value($$"${services.athena-roles.restricted:uninitialised}")
+  @field:Value($$"${services.athena.roles.restricted:uninitialised}")
   private val restrictedRole: String = "uninitialised"
 
-  @field:Value($$"${services.athena-roles.general:uninitialised}")
+  @field:Value($$"${services.athena.roles.general:uninitialised}")
   private val generalRole: String = "uninitialised"
 
   @field:Value($$"${services.athena.output}")
