@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.nullableLocalDateTime
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegritySuspensionOfVisitsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegritySuspensionOfVisitsDTO
 import java.time.LocalDateTime
 
 data class IntegritySuspensionOfVisits(

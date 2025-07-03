@@ -25,18 +25,18 @@ class AmOrderEventsRepositoryTest {
   @Nested
   inner class GetIncidentEventsList {
     fun amIncidentEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
-      columns = arrayOf(
-        "legacy_subject_id",
-        "violation_alert_id",
-        "violation_alert_date",
-        "violation_alert_time",
-        "violation_alert_type",
-        "violation_alert_response_action",
-        "visit_required",
-        "probation_interaction_required",
-        "ams_interaction_required",
-        "multiple_alerts",
-        "additional_alerts",
+      columns = mapOf(
+        "legacy_subject_id" to "varchar",
+        "violation_alert_id" to "varchar",
+        "violation_alert_date" to "varchar",
+        "violation_alert_time" to "varchar",
+        "violation_alert_type" to "varchar",
+        "violation_alert_response_action" to "varchar",
+        "visit_required" to "varchar",
+        "probation_interaction_required" to "varchar",
+        "ams_interaction_required" to "varchar",
+        "multiple_alerts" to "varchar",
+        "additional_alerts" to "varchar",
       ),
       rows = arrayOf(
         arrayOf(
@@ -96,20 +96,20 @@ class AmOrderEventsRepositoryTest {
   @Nested
   inner class GetContactEventsList {
     fun amContactEventsResultSet(firstId: String = "987123") = MockAthenaResultSetBuilder(
-      columns = arrayOf(
-        "legacy_subject_id",
-        "contact_date",
-        "contact_time",
-        "inbound_or_outbound",
-        "from_to",
-        "channel",
-        "subject_consent_withdrawn",
-        "call_outcome",
-        "statement",
-        "reason_for_contact",
-        "outcome_of_contact",
-        "visit_required",
-        "visit_id",
+      columns = mapOf(
+        "legacy_subject_id" to "varchar",
+        "contact_date" to "varchar",
+        "contact_time" to "varchar",
+        "inbound_or_outbound" to "varchar",
+        "from_to" to "varchar",
+        "channel" to "varchar",
+        "subject_consent_withdrawn" to "varchar",
+        "call_outcome" to "varchar",
+        "statement" to "varchar",
+        "reason_for_contact" to "varchar",
+        "outcome_of_contact" to "varchar",
+        "visit_required" to "varchar",
+        "visit_id" to "varchar",
       ),
       rows = arrayOf(
         arrayOf(

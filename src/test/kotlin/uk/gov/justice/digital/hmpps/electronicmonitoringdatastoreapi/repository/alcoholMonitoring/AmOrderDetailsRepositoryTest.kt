@@ -55,29 +55,29 @@ class AmOrderDetailsRepositoryTest {
     )
 
     fun amOrderDetailsResultSet(firstSubjectId: String? = "7853521", firstOrderId: String? = "1253587", firstFirstName: String? = "ELLEN", firstLastName: String? = "RIPLEY"): String = MockAthenaResultSetBuilder(
-      columns = arrayOf(
-        "legacy_subject_id",
-        "first_name",
-        "last_name",
-        "alias",
-        "date_of_birth",
-        "legacy_gender",
-        "special_instructions",
-        "phone_or_mobile_number",
-        "primary_address_line_1",
-        "primary_address_line_2",
-        "primary_address_line_3",
-        "primary_address_post_code",
-        "legacy_order_id",
-        "order_start_date",
-        "order_end_date",
-        "enforceable_condition",
-        "order_type",
-        "order_type_description",
-        "order_end_outcome",
-        "responsible_org_details_phone_number",
-        "responsible_org_details_email",
-        "tag_at_source",
+      columns = mapOf(
+        "legacy_subject_id" to "varchar",
+        "first_name" to "varchar",
+        "last_name" to "varchar",
+        "alias" to "varchar",
+        "date_of_birth" to "varchar",
+        "legacy_gender" to "varchar",
+        "special_instructions" to "varchar",
+        "phone_or_mobile_number" to "varchar",
+        "primary_address_line_1" to "varchar",
+        "primary_address_line_2" to "varchar",
+        "primary_address_line_3" to "varchar",
+        "primary_address_post_code" to "varchar",
+        "legacy_order_id" to "varchar",
+        "order_start_date" to "varchar",
+        "order_end_date" to "varchar",
+        "enforceable_condition" to "varchar",
+        "order_type" to "varchar",
+        "order_type_description" to "varchar",
+        "order_end_outcome" to "varchar",
+        "responsible_org_details_phone_number" to "varchar",
+        "responsible_org_details_email" to "varchar",
+        "tag_at_source" to "varchar",
       ),
       rows = arrayOf(
         amOrderDetailsData(firstOrderId!!, firstSubjectId!!, firstFirstName!!, firstLastName!!),
@@ -159,10 +159,10 @@ class AmOrderDetailsRepositoryTest {
   inner class GetSearchResults {
     val validResponse = AthenaHelper.resultSetFromJson(
       MockAthenaResultSetBuilder(
-        columns = arrayOf(
-          "legacy_subject_id",
-          "first_name",
-          "last_name",
+        columns = mapOf(
+          "legacy_subject_id" to "varchar",
+          "first_name" to "varchar",
+          "last_name" to "varchar",
         ),
         rows = arrayOf(
           arrayOf("123564", "John", "Doh"),
