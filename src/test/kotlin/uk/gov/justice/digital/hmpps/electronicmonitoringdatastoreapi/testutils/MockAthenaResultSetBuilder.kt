@@ -1,12 +1,17 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils
 
 class MockAthenaResultSetBuilder(
-  val columns: Array<String>,
+  val columns: Map<String, String>,
   val rows: Array<Array<String>>,
 ) {
-  private val validTypes = listOf("varchar", "boolean")
+  constructor(
+    columns: Array<String>,
+    rows: Array<Array<String>>,
+  ) : this(columns.associateWith { "varchar" }, rows)
 
-  private fun metaDataRow(label: String, type: String = "varchar"): String {
+  private val validTypes = listOf("varchar", "boolean", "bigInt")
+
+  private fun metaDataRow(label: String, type: String): String {
     if (!validTypes.contains(type)) {
       throw Exception("Type $type not a valid column type")
     }
@@ -27,7 +32,7 @@ class MockAthenaResultSetBuilder(
     """.trimIndent()
   }
 
-  private fun varCharValueColumn(value: String) = if (value.isEmpty()) {
+  private fun valueColumn(value: String) = if (value.isEmpty()) {
     "{}"
   } else {
     """{ "VarCharValue": "$value" }"""
@@ -36,29 +41,23 @@ class MockAthenaResultSetBuilder(
   private fun row(data: Array<String>) = """
     {
       "Data": [
-        ${data.joinToString(",\n") { value -> varCharValueColumn(value) }}
+        ${data.joinToString(",\n") { value -> valueColumn(value) }}
       ]
     }
   """.trimIndent()
 
-  private fun resultSet(
-    columns: Array<String>,
-    rows: Array<Array<String>>,
-  ) = """
+  fun build(): String = """
     {
       "ResultSet": {
-        "Rows": [
-          ${arrayOf(row(columns), rows.joinToString(",\n") { data -> row(data) }).joinToString(",\n")}
+        "Rows": [${arrayOf(row(this.columns.keys.toTypedArray()), this.rows.joinToString(",\n") { data -> row(data) }).joinToString(",\n")}
         ],
         "ResultSetMetadata": {
           "ColumnInfo": [
-            ${columns.joinToString(",\n") { column -> metaDataRow(column) }}
+            ${this.columns.entries.joinToString(",\n") { column -> metaDataRow(column.key, column.value) }}
           ]
         }
       },
       "UpdateCount": 0
     }
   """.trimIndent()
-
-  fun build(): String = resultSet(columns, rows)
 }
