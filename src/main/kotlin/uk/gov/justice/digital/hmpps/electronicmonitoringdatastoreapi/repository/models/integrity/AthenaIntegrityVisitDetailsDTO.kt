@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity
 
 data class AthenaIntegrityVisitDetailsDTO(
   val legacySubjectId: String,

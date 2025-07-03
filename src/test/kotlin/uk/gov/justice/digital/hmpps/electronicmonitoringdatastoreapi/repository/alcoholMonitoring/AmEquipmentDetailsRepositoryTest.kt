@@ -25,20 +25,20 @@ class AmEquipmentDetailsRepositoryTest {
   @Nested
   inner class GetEquipmentDetails {
     private fun amEquipmentDetailsResultSet(firstId: String) = MockAthenaResultSetBuilder(
-      columns = arrayOf(
-        "legacy_subject_id",
-        "device_type",
-        "device_serial_number",
-        "device_address_type",
-        "leg_fitting",
-        "date_device_installed",
-        "time_device_installed",
-        "date_device_removed",
-        "time_device_removed",
-        "hmu_install_date",
-        "hmu_install_time",
-        "hmu_removed_date",
-        "hmu_removed_time",
+      columns = mapOf(
+        "legacy_subject_id" to "varchar",
+        "device_type" to "varchar",
+        "device_serial_number" to "varchar",
+        "device_address_type" to "varchar",
+        "leg_fitting" to "varchar",
+        "date_device_installed" to "varchar",
+        "time_device_installed" to "varchar",
+        "date_device_removed" to "varchar",
+        "time_device_removed" to "varchar",
+        "hmu_install_date" to "varchar",
+        "hmu_install_time" to "varchar",
+        "hmu_removed_date" to "varchar",
+        "hmu_removed_time" to "varchar",
       ),
       rows = arrayOf(
         arrayOf(
