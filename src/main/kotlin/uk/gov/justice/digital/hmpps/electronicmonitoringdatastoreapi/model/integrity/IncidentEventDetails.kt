@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity
 
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.EventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityIncidentEventDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegrityIncidentEventDTO
 
 data class IncidentEventDetails(
   val type: String?,

@@ -4,35 +4,35 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityViolationEventDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegrityViolationEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaViolationEventDTOTest {
 
   @Nested
   inner class Construct {
-    val columnNames = arrayOf(
-      "legacy_subject_id",
-      "enforcement_reason",
-      "investigation_outcome_reason",
-      "breach_details",
-      "breach_enforcement_outcome",
-      "agency_action",
-      "breach_date",
-      "breach_time",
-      "breach_identified_date",
-      "breach_identified_time",
-      "authority_first_notified_date",
-      "authority_first_notified_time",
-      "agency_response_date",
-      "breach_pack_requested_date",
-      "breach_pack_sent_date",
-      "section_9_date",
-      "hearing_date",
-      "summons_served_date",
-      "subject_letter_sent_date",
-      "warning_letter_sent_date",
-      "warning_letter_sent_time",
+    val columnNames = mapOf(
+      "legacy_subject_id" to "varchar",
+      "enforcement_reason" to "varchar",
+      "investigation_outcome_reason" to "varchar",
+      "breach_details" to "varchar",
+      "breach_enforcement_outcome" to "varchar",
+      "agency_action" to "varchar",
+      "breach_date" to "varchar",
+      "breach_time" to "varchar",
+      "breach_identified_date" to "varchar",
+      "breach_identified_time" to "varchar",
+      "authority_first_notified_date" to "varchar",
+      "authority_first_notified_time" to "varchar",
+      "agency_response_date" to "varchar",
+      "breach_pack_requested_date" to "varchar",
+      "breach_pack_sent_date" to "varchar",
+      "section_9_date" to "varchar",
+      "hearing_date" to "varchar",
+      "summons_served_date" to "varchar",
+      "subject_letter_sent_date" to "varchar",
+      "warning_letter_sent_date" to "varchar",
+      "warning_letter_sent_time" to "varchar",
     )
 
     @Test
