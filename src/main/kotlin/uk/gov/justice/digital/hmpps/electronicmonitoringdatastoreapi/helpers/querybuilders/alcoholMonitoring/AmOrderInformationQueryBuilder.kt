@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import io.zeko.db.sql.dsl.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.AthenaAmOrderInformationQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.AthenaAmOrderInformationQuery
 
 class AmOrderInformationQueryBuilder :
   SqlQueryBuilder(
