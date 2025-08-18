@@ -15,12 +15,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.QueryExecutionResponse
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityOrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityOrderDetailsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityOrderDetailsService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models.QueryExecutionResponse
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models.integrity.IntegrityOrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services.integrity.IntegrityOrderDetailsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services.internal.AuditService
 import java.time.LocalDate
 import java.time.LocalDateTime
 

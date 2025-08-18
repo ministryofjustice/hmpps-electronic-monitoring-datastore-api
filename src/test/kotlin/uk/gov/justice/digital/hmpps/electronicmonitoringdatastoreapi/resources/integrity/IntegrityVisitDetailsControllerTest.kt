@@ -9,11 +9,10 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityVisitDetailsAddress
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.resource.integrity.IntegrityVisitDetailsController
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityVisitDetailsService
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models.integrity.IntegrityVisitDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.models.integrity.IntegrityVisitDetailsAddress
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services.integrity.IntegrityVisitDetailsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.services.internal.AuditService
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")

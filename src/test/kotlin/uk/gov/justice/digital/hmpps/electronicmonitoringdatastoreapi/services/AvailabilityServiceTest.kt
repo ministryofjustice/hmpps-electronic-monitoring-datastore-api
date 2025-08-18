@@ -8,8 +8,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AvailabilityRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.AvailabilityService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.AvailabilityRepository
 
 class AvailabilityServiceTest {
   private lateinit var availabilityRepository: AvailabilityRepository
