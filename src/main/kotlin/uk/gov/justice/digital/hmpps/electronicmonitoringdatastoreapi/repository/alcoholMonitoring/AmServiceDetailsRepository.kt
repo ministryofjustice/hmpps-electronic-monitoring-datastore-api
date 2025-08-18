@@ -1,27 +1,21 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.alcoholMonitoring.AmServicesQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmServiceDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.alcoholMonitoring.AthenaAmServiceDetailsDTO
 
 @Service
 class AmServiceDetailsRepository(
-  @Autowired val athenaClient: EmDatastoreClientInterface,
-  @Value("\${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
+  val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getServiceDetails(legacySubjectId: String, role: AthenaRole): List<AthenaAmServiceDetailsDTO> {
-    val amServicesQuery = AmServicesQueryBuilder(athenaDatabase)
+  fun getServiceDetails(legacySubjectId: String): List<AthenaAmServiceDetailsDTO> {
+    val amServicesQuery = AmServicesQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(amServicesQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(amServicesQuery)
 
-    return AthenaHelper.Companion.mapTo<AthenaAmServiceDetailsDTO>(athenaResponse)
+    return AthenaHelper.mapTo<AthenaAmServiceDetailsDTO>(athenaResponse)
   }
 }

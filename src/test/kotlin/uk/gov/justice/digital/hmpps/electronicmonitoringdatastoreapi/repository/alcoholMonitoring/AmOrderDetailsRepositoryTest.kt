@@ -1,19 +1,21 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.metaDataRow
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
+import java.time.LocalDate
 
 class AmOrderDetailsRepositoryTest {
   private lateinit var emDatastoreClient: EmDatastoreClient
@@ -21,137 +23,77 @@ class AmOrderDetailsRepositoryTest {
 
   @BeforeEach
   fun setup() {
-    emDatastoreClient = mock(EmDatastoreClient::class.java)
+    emDatastoreClient = mock<EmDatastoreClient>()
     repository = AmOrderDetailsRepository(emDatastoreClient)
   }
 
-  @Test
-  fun `AmOrderDetailsRepository can be instantiated`() {
-    val sut = AmOrderDetailsRepository(Mockito.mock(EmDatastoreClient::class.java))
-    Assertions.assertThat(sut).isNotNull()
-  }
-
-  fun varCharValueColumn(value: String) = """
-    {
-      "VarCharValue": "$value"
-    }
-  """.trimIndent()
-
   @Nested
   inner class GetAmOrderDetails {
-    fun amOrderDetailsData(subjectId: String, orderId: String, firstName: String, lastName: String) = """
-      {
-        "Data": [
-          ${varCharValueColumn(subjectId)},
-          ${varCharValueColumn(firstName)},
-          ${varCharValueColumn(lastName)},
-          ${varCharValueColumn("alias")},
-          ${varCharValueColumn("1970-01-01")},
-          ${varCharValueColumn("sex")},
-          ${varCharValueColumn("special instructions")},
-          ${varCharValueColumn("09876543210")},
-          ${varCharValueColumn("address line 1")},
-          ${varCharValueColumn("")},
-          ${varCharValueColumn("address line 3")},
-          ${varCharValueColumn("postcode")},
-          ${varCharValueColumn(orderId)},
-          ${varCharValueColumn("1970-01-01")},
-          ${varCharValueColumn("1970-01-01")},
-          ${varCharValueColumn("enforceable condition")},
-          ${varCharValueColumn("order type")},
-          ${varCharValueColumn("order type description")},
-          ${varCharValueColumn("order end outcome")},
-          ${varCharValueColumn("responsible organisation phone number")},
-          ${varCharValueColumn("responsible organisation email")},
-          ${varCharValueColumn("tag at source")}
-        ]
-      }
-    """.trimIndent()
+    fun amOrderDetailsData(subjectId: String, orderId: String, firstName: String, lastName: String): Array<String> = arrayOf(
+      subjectId,
+      firstName,
+      lastName,
+      "alias",
+      "1970-01-01",
+      "sex",
+      "special instructions",
+      "09876543210",
+      "address line 1",
+      "",
+      "address line 3",
+      "postcode",
+      orderId,
+      "1970-01-01",
+      "1970-01-01",
+      "enforceable condition",
+      "order type",
+      "order type description",
+      "order end outcome",
+      "responsible organisation phone number",
+      "responsible organisation email",
+      "tag at source",
+    )
 
-    fun amOrderDetailsResultSet(firstSubjectId: String? = "7853521", firstOrderId: String? = "1253587", firstFirstName: String? = "ELLEN", firstLastName: String? = "RIPLEY") = """
-      {
-        "ResultSet": {
-          "Rows": [
-            {
-              "Data": [
-                ${varCharValueColumn("legacy_subject_id")},
-                ${varCharValueColumn("first_name")},
-                ${varCharValueColumn("last_name")},
-                ${varCharValueColumn("alias")},
-                ${varCharValueColumn("date_of_birth")},
-                ${varCharValueColumn("legacy_gender")},
-                ${varCharValueColumn("special_instructions")},
-                ${varCharValueColumn("phone_or_mobile_number")},
-                ${varCharValueColumn("primary_address_line_1")},
-                ${varCharValueColumn("primary_address_line_2")},
-                ${varCharValueColumn("primary_address_line_3")},
-                ${varCharValueColumn("primary_address_post_code")},
-                ${varCharValueColumn("legacy_order_id")},
-                ${varCharValueColumn("order_start_date")},
-                ${varCharValueColumn("order_end_date")},
-                ${varCharValueColumn("enforceable_condition")},
-                ${varCharValueColumn("order_type")},
-                ${varCharValueColumn("order_type_description")},
-                ${varCharValueColumn("order_end_outcome")},
-                ${varCharValueColumn("responsible_org_details_phone_number")},
-                ${varCharValueColumn("responsible_org_details_email")},
-                ${varCharValueColumn("tag_at_source")}
-              ]
-            },
-            ${amOrderDetailsData(firstOrderId!!, firstSubjectId!!, firstFirstName!!, firstLastName!!)},
-            ${amOrderDetailsData("1034415", "1032792", "JOHN", "BROWNLIE")}
-          ],
-          "ResultSetMetadata": {
-            "ColumnInfo": [
-              """ + metaDataRow("legacy_subject_id") + """,
-              """ + metaDataRow("first_name") + """,
-              """ + metaDataRow("last_name") + """,
-              """ + metaDataRow("alias") + """,
-              """ + metaDataRow("date_of_birth") + """,
-              """ + metaDataRow("legacy_gender") + """,
-              """ + metaDataRow("special_instructions") + """,
-              """ + metaDataRow("phone_or_mobile_number") + """,
-              """ + metaDataRow("primary_address_line_1") + """,
-              """ + metaDataRow("primary_address_line_2") + """,
-              """ + metaDataRow("primary_address_line_3") + """,
-              """ + metaDataRow("primary_address_post_code") + """,
-              """ + metaDataRow("legacy_order_id") + """,
-              """ + metaDataRow("order_start_date") + """,
-              """ + metaDataRow("order_end_date") + """,
-              """ + metaDataRow("enforceable_condition") + """,
-              """ + metaDataRow("order_type") + """,
-              """ + metaDataRow("order_type_description") + """,
-              """ + metaDataRow("order_end_outcome") + """,
-              """ + metaDataRow("responsible_org_details_phone_number") + """,
-              """ + metaDataRow("responsible_org_details_email") + """,
-              """ + metaDataRow("tag_at_source") + """
-            ]
-          }
-        },
-        "UpdateCount": 0
-      }
-    """.trimIndent()
+    fun amOrderDetailsResultSet(firstSubjectId: String? = "7853521", firstOrderId: String? = "1253587", firstFirstName: String? = "ELLEN", firstLastName: String? = "RIPLEY"): String = MockAthenaResultSetBuilder(
+      columns = mapOf(
+        "legacy_subject_id" to "varchar",
+        "first_name" to "varchar",
+        "last_name" to "varchar",
+        "alias" to "varchar",
+        "date_of_birth" to "varchar",
+        "legacy_gender" to "varchar",
+        "special_instructions" to "varchar",
+        "phone_or_mobile_number" to "varchar",
+        "primary_address_line_1" to "varchar",
+        "primary_address_line_2" to "varchar",
+        "primary_address_line_3" to "varchar",
+        "primary_address_post_code" to "varchar",
+        "legacy_order_id" to "varchar",
+        "order_start_date" to "varchar",
+        "order_end_date" to "varchar",
+        "enforceable_condition" to "varchar",
+        "order_type" to "varchar",
+        "order_type_description" to "varchar",
+        "order_end_outcome" to "varchar",
+        "responsible_org_details_phone_number" to "varchar",
+        "responsible_org_details_email" to "varchar",
+        "tag_at_source" to "varchar",
+      ),
+      rows = arrayOf(
+        amOrderDetailsData(firstOrderId!!, firstSubjectId!!, firstFirstName!!, firstLastName!!),
+        amOrderDetailsData("1034415", "1032792", "JOHN", "BROWNLIE"),
+      ),
+    ).build()
 
     @Test
     fun `getOrderDetails calls getQueryResult`() {
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      whenever(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      repository.getOrderDetails("123")
 
-      Mockito.verify(emDatastoreClient).getQueryResult(any<AthenaQuery>(), any<AthenaRole>())
-    }
-
-    @Test
-    fun `getOrderDetails returns an AthenaAmOrderDetailsDTO`() {
-      val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet())
-
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
-
-      val result = repository.getOrderDetails("123", AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(AthenaAmOrderDetailsDTO::class.java)
+      verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
 
     @Test
@@ -163,15 +105,96 @@ class AmOrderDetailsRepositoryTest {
 
       val resultSet = AthenaHelper.resultSetFromJson(amOrderDetailsResultSet(legacyOrderId, legacySubjectId, firstName, lastName))
 
-      `when`(emDatastoreClient.getQueryResult(any<AthenaQuery>(), any<AthenaRole>())).thenReturn(resultSet)
+      whenever(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = repository.getOrderDetails(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
-      Assertions.assertThat(result.legacyOrderId).isEqualTo(legacyOrderId)
-      Assertions.assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
-      Assertions.assertThat(result.firstName).isEqualTo(firstName)
-      Assertions.assertThat(result.lastName).isEqualTo(lastName)
+      assertThat(result.legacyOrderId).isEqualTo(legacyOrderId)
+      assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
+      assertThat(result.firstName).isEqualTo(firstName)
+      assertThat(result.lastName).isEqualTo(lastName)
+    }
+  }
+
+  @Nested
+  inner class SearchOrders {
+    @Test
+    fun `searchOrders calls getQueryExecutionId with the correct sql query`() {
+      val argumentCaptor = argumentCaptor<SqlQueryBuilder>()
+      val searchCriteria = OrderSearchCriteria(
+        legacySubjectId = "123456",
+        firstName = "Test First Name",
+        lastName = "Test Last Name",
+        alias = "Test Alias",
+        dateOfBirth = LocalDate.parse("2001-01-01"),
+      )
+
+      repository.searchOrders(searchCriteria, false)
+
+      verify(emDatastoreClient).getQueryExecutionId(argumentCaptor.capture(), eq(false))
+      assertThat(argumentCaptor.firstValue.values).isEqualTo(
+        listOf(
+          "UPPER('123456')",
+          "UPPER('%Test First Name%')",
+          "UPPER('%Test Last Name%')",
+          "UPPER('%Test Alias%')",
+          "DATE '2001-01-01'",
+        ),
+      )
+    }
+
+    @Test
+    fun `searchOrders returns the query execution id from Athena`() {
+      val expected = "query-id"
+      val searchCriteria = OrderSearchCriteria()
+
+      whenever(emDatastoreClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false))).thenReturn(expected)
+
+      val result = repository.searchOrders(searchCriteria, false)
+      assertThat(result).isEqualTo(expected)
+    }
+  }
+
+  @Nested
+  inner class GetSearchResults {
+    val validResponse = AthenaHelper.resultSetFromJson(
+      MockAthenaResultSetBuilder(
+        columns = mapOf(
+          "legacy_subject_id" to "varchar",
+          "first_name" to "varchar",
+          "last_name" to "varchar",
+        ),
+        rows = arrayOf(
+          arrayOf("123564", "John", "Doh"),
+          arrayOf("5678", "Martin", "Martian"),
+        ),
+      ).build(),
+    )
+
+    @Test
+    fun `getSearchResults calls getQueryExecutionId with the correct sql query`() {
+      val argumentCaptor = argumentCaptor<String>()
+      val queryExecutionId = "test-id"
+
+      whenever(emDatastoreClient.getQueryResult(eq(queryExecutionId), eq(false))).thenReturn(validResponse)
+
+      repository.getSearchResults(queryExecutionId, false)
+
+      verify(emDatastoreClient).getQueryResult(argumentCaptor.capture(), eq(false))
+      assertThat(argumentCaptor.firstValue).isEqualTo(queryExecutionId)
+    }
+
+    @Test
+    fun `searchOrders returns the query execution id from Athena`() {
+      val queryExecutionId = "execution-id-test"
+
+      whenever(emDatastoreClient.getQueryResult(eq(queryExecutionId), eq(false))).thenReturn(validResponse)
+
+      val result = repository.getSearchResults(queryExecutionId, false)
+
+      assertThat(result).hasSize(2)
+      assertThat(result[0].legacySubjectId).isEqualTo("123564")
+      assertThat(result[1].legacySubjectId).isEqualTo("5678")
     }
   }
 }

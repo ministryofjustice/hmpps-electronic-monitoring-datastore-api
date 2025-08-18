@@ -1,30 +1,41 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity.IntegrityOrderDetailsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderDetailsQuery
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityOrderDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.integrity.AthenaIntegrityOrderDetailsDTO
 
 @Service
 class IntegrityOrderDetailsRepository(
-  @Autowired val athenaClient: EmDatastoreClientInterface,
-  @Value("\${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
+  val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): AthenaIntegrityOrderDetailsDTO {
-    val orderDetailsQuery: AthenaOrderDetailsQuery = IntegrityOrderDetailsQueryBuilder(athenaDatabase)
+  fun getOrderDetails(legacySubjectId: String, restricted: Boolean): AthenaIntegrityOrderDetailsDTO {
+    val orderDetailsQuery = IntegrityOrderDetailsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(orderDetailsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(orderDetailsQuery, restricted)
 
     val result = AthenaHelper.mapTo<AthenaIntegrityOrderDetailsDTO>(athenaResponse)
 
     return result.first()
+  }
+
+  fun searchOrders(criteria: OrderSearchCriteria, restricted: Boolean): String {
+    val orderSearchQuery = IntegrityOrderDetailsQueryBuilder()
+      .withLegacySubjectId(criteria.legacySubjectId)
+      .withFirstName(criteria.firstName)
+      .withLastName(criteria.lastName)
+      .withAlias(criteria.alias)
+      .withDob(criteria.dateOfBirth)
+
+    return athenaClient.getQueryExecutionId(orderSearchQuery, restricted)
+  }
+
+  fun getSearchResults(queryExecutionId: String, restricted: Boolean): List<AthenaIntegrityOrderDetailsDTO> {
+    val resultSet = athenaClient.getQueryResult(queryExecutionId, restricted)
+    val results = AthenaHelper.mapTo<AthenaIntegrityOrderDetailsDTO>(resultSet)
+    return results
   }
 }

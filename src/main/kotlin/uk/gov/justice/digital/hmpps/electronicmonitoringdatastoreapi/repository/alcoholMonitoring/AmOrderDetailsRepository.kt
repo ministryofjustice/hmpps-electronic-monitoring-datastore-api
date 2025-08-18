@@ -1,29 +1,41 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClientInterface
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.alcoholMonitoring.AmOrderDetailsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.alcoholMonitoring.AthenaAmOrderDetailsDTO
 
 @Service
 class AmOrderDetailsRepository(
-  @Autowired val athenaClient: EmDatastoreClientInterface,
-  @Value("\${services.athena.database}")
-  var athenaDatabase: String = "unknown_database",
+  val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getOrderDetails(legacySubjectId: String, role: AthenaRole): AthenaAmOrderDetailsDTO {
-    val orderDetailsQuery = AmOrderDetailsQueryBuilder(athenaDatabase)
+  fun getOrderDetails(legacySubjectId: String): AthenaAmOrderDetailsDTO {
+    val orderDetailsQuery = AmOrderDetailsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
-      .build()
 
-    val athenaResponse = athenaClient.getQueryResult(orderDetailsQuery, role)
+    val athenaResponse = athenaClient.getQueryResult(orderDetailsQuery)
 
     val result = AthenaHelper.mapTo<AthenaAmOrderDetailsDTO>(athenaResponse)
 
     return result.first()
+  }
+
+  fun searchOrders(criteria: OrderSearchCriteria, restricted: Boolean): String {
+    val orderSearchQuery = AmOrderDetailsQueryBuilder()
+      .withLegacySubjectId(criteria.legacySubjectId)
+      .withFirstName(criteria.firstName)
+      .withLastName(criteria.lastName)
+      .withAlias(criteria.alias)
+      .withDob(criteria.dateOfBirth)
+
+    return athenaClient.getQueryExecutionId(orderSearchQuery, restricted)
+  }
+
+  fun getSearchResults(queryExecutionId: String, restricted: Boolean): List<AthenaAmOrderDetailsDTO> {
+    val resultSet = athenaClient.getQueryResult(queryExecutionId, restricted)
+    val results = AthenaHelper.mapTo<AthenaAmOrderDetailsDTO>(resultSet)
+    return results
   }
 }

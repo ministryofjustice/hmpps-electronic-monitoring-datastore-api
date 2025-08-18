@@ -5,10 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmVisitDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmVisitDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmVisitDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.alcoholMonitoring.AthenaAmVisitDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmVisitDetailsService
 
 class AmVisitDetailsServiceTest {
@@ -19,12 +17,6 @@ class AmVisitDetailsServiceTest {
   fun setup() {
     amVisitDetailsRepository = Mockito.mock(AmVisitDetailsRepository::class.java)
     amVisitDetailsService = AmVisitDetailsService(amVisitDetailsRepository)
-  }
-
-  @Test
-  fun `AmVisitDetailsService can be instantiated`() {
-    val sut = AmVisitDetailsService(amVisitDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
   }
 
   @Nested
@@ -54,35 +46,22 @@ class AmVisitDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amVisitDetailsRepository.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(amVisitDetailsRepository.getVisitDetails(legacySubjectId))
         .thenReturn(exampleVisitDetails)
     }
 
     @Test
     fun `calls getVisitDetails from amVisitDetailsRepository`() {
-      amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      amVisitDetailsService.getVisitDetails(legacySubjectId)
 
-      Mockito.verify(amVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of AmVisitDetails when a response is received`() {
-      val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
-      Assertions.assertThat(result).allSatisfy {
-        Assertions.assertThat(it).isInstanceOf(AmVisitDetails::class.java)
-      }
+      Mockito.verify(amVisitDetailsRepository, Mockito.times(1)).getVisitDetails(legacySubjectId)
     }
 
     @Test
     fun `returns correct details of the AmVisitDetails when a response is received`() {
-      val result = amVisitDetailsService.getVisitDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = amVisitDetailsService.getVisitDetails(legacySubjectId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(AmVisitDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().visitAddress).isEqualTo("test visit address")
       Assertions.assertThat(result.first().visitType).isEqualTo("visit type")

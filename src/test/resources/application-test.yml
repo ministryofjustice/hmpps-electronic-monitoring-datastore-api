@@ -8,22 +8,20 @@ management.endpoint:
 hmpps:
   test:
     jwt-helper-enabled: false
-
-hmpps.sqs:
-  provider: localstack
-  useWebToken: false
-  queues:
-    audit:
-      queueName: "audit"
+  sqs:
+    provider: localstack
+    useWebToken: false
+    queues:
+      audit:
+        queueName: "audit"
 
 services:
   hmpps-auth:
     url: http://localhost:8090/auth
     # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-    mfa: true
   athena:
     database: totally-fake-database-name
     output: totally-fake-output-bucket-name
-  athena-roles:
-    restricted: fakeIAM
-    general: fakeIAM2
+    roles:
+      restricted: fakeIAM
+      general: fakeIAM2

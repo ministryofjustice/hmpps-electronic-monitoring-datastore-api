@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -19,7 +18,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint
 @EnableGlobalAuthentication
 @EnableMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 class OAuth2ResourceServerSecurityConfiguration(
-  @Autowired private val authAwareTokenConverter: AuthAwareTokenConverter,
+  private val authAwareTokenConverter: AuthAwareTokenConverter,
 ) {
   @Bean
   @Throws(Exception::class)

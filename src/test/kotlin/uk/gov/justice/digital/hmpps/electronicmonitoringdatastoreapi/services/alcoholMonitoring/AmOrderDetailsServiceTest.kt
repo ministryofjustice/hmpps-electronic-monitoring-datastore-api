@@ -4,14 +4,13 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.`when`
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.alcoholMonitoring.AmOrderDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.alcoholMonitoring.AthenaAmOrderDetailsDTO
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.alcoholMonitoring.AmOrderDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.alcoholMonitoring.AthenaAmOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.alcoholMonitoring.AmOrderDetailsService
 import java.time.LocalDateTime
 
@@ -21,71 +20,125 @@ class AmOrderDetailsServiceTest {
 
   @BeforeEach
   fun setup() {
-    amOrderDetailsRepository = mock(AmOrderDetailsRepository::class.java)
+    amOrderDetailsRepository = mock<AmOrderDetailsRepository>()
     service = AmOrderDetailsService(amOrderDetailsRepository)
   }
 
-  @Test
-  fun `AmOrderDetailsService can be instantiated`() {
-    Assertions.assertThat(service).isNotNull()
-  }
+  val orderDetailsData = AthenaAmOrderDetailsDTO(
+    legacySubjectId = "AA2020",
+    firstName = "John",
+    lastName = "Smith",
+    alias = "Zeno",
+    dateOfBirth = "1980-02-01",
+    legacyGender = "Sex",
+    specialInstructions = "Special instructions",
+    phoneOrMobileNumber = "09876543210",
+    primaryAddressLine1 = "1 Primary Street",
+    primaryAddressLine2 = "Sutton",
+    primaryAddressLine3 = "London",
+    primaryAddressPostCode = "ABC 123",
+    legacyOrderId = "1234567",
+    orderStartDate = "2012-02-01",
+    orderEndDate = "2013-04-03",
+    enforceableCondition = "Enforceable condition",
+    orderType = "Community",
+    orderTypeDescription = "",
+    orderEndOutcome = "",
+    responsibleOrganisationPhoneNumber = "01234567890",
+    responsibleOrganisationEmail = "a@b.c",
+    tagAtSource = "",
+  )
 
   @Nested
   inner class GetOrderDetails {
     val orderId = "fake-id"
 
-    val orderDetailsData = AthenaAmOrderDetailsDTO(
-      legacySubjectId = "AA2020",
-      firstName = "John",
-      lastName = "Smith",
-      alias = "Zeno",
-      dateOfBirth = "1980-02-01",
-      sex = "Sex",
-      specialInstructions = "Special instructions",
-      phoneNumber = "09876543210",
-      address1 = "1 Primary Street",
-      address2 = "Sutton",
-      address3 = "London",
-      postcode = "ABC 123",
-      legacyOrderId = "1234567",
-      orderStartDate = "2012-02-01",
-      orderEndDate = "2013-04-03",
-      enforceableCondition = "Enforceable condition",
-      orderType = "Community",
-      orderTypeDescription = "",
-      orderEndOutcome = "",
-      responsibleOrganisationPhoneNumber = "01234567890",
-      responsibleOrganisationEmail = "a@b.c",
-      tagAtSource = "",
-    )
-
     @BeforeEach
     fun setup() {
-      `when`(amOrderDetailsRepository.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      whenever(amOrderDetailsRepository.getOrderDetails(orderId))
         .thenReturn(orderDetailsData)
     }
 
     @Test
     fun `calls getAmOrderDetails from order details repository`() {
-      service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-      Mockito.verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns AmOrderDetails`() {
-      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(AmOrderDetails::class.java)
+      service.getOrderDetails(orderId)
+      verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId)
     }
 
     @Test
     fun `returns correct details of the order`() {
-      val result = service.getOrderDetails(orderId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getOrderDetails(orderId)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.legacySubjectId).isEqualTo("AA2020")
       Assertions.assertThat(result.firstName).isEqualTo("John")
       Assertions.assertThat(result.orderEndDate).isEqualTo(LocalDateTime.parse("2013-04-03T00:00:00"))
+    }
+  }
+
+  @Nested
+  inner class SearchOrders {
+    private val orderSearchCriteria = OrderSearchCriteria(
+      legacySubjectId = "fake-id",
+    )
+
+    @Test
+    fun `calls searchOrders from order repository`() {
+      whenever(amOrderDetailsRepository.searchOrders(orderSearchCriteria, false))
+        .thenReturn("query-execution-id")
+
+      service.getQueryExecutionId(orderSearchCriteria, false)
+
+      verify(amOrderDetailsRepository, times(1)).searchOrders(orderSearchCriteria, false)
+    }
+
+    @Test
+    fun `returns a query execution ID`() {
+      val expectedResult = "query-execution-id"
+      whenever(amOrderDetailsRepository.searchOrders(orderSearchCriteria, false))
+        .thenReturn("query-execution-id")
+
+      val result = service.getQueryExecutionId(orderSearchCriteria, false)
+
+      Assertions.assertThat(result).isEqualTo(expectedResult)
+    }
+  }
+
+  @Nested
+  inner class GetSearchResults {
+    private val queryExecutionId = "query-execution-id"
+
+    @Test
+    fun `calls searchOrders from order repository`() {
+      whenever(amOrderDetailsRepository.getSearchResults(queryExecutionId, false))
+        .thenReturn(listOf())
+
+      service.getSearchResults(queryExecutionId, false)
+
+      verify(amOrderDetailsRepository, times(1)).getSearchResults(queryExecutionId, false)
+    }
+
+    @Test
+    fun `returns empty list when no results are returned`() {
+      whenever(amOrderDetailsRepository.getSearchResults(queryExecutionId, false))
+        .thenReturn(listOf())
+
+      val result = service.getSearchResults(queryExecutionId, false)
+
+      Assertions.assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `returns list of order search results when results are returned`() {
+      whenever(amOrderDetailsRepository.getSearchResults(queryExecutionId, false))
+        .thenReturn(
+          listOf(
+            orderDetailsData,
+          ),
+        )
+
+      val result = service.getSearchResults(queryExecutionId, false)
+
+      Assertions.assertThat(result.count()).isEqualTo(1)
     }
   }
 }
