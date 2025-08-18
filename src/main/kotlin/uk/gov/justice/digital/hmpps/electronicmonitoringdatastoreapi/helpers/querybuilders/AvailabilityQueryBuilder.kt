@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders
 
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.models.AthenaOrderSearchQuery
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.AthenaOrderSearchQuery
 
 class AvailabilityQueryBuilder :
   SqlQueryBuilder(
