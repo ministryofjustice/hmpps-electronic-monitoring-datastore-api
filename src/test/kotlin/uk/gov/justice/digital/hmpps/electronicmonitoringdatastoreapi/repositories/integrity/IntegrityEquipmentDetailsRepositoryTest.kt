@@ -80,7 +80,7 @@ class IntegrityEquipmentDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getEquipmentDetails("123", false)
+      repository.findByLegacySubjectIdAndRestricted("123", false)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
@@ -91,7 +91,7 @@ class IntegrityEquipmentDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getEquipmentDetails("987", false)
+      val result = repository.findByLegacySubjectIdAndRestricted("987", false)
 
       Assertions.assertThat(result.size).isEqualTo(2)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")

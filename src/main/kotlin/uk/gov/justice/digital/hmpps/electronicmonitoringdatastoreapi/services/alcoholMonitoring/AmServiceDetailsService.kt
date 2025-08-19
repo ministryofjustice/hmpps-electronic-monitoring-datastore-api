@@ -9,7 +9,7 @@ class AmServiceDetailsService(
   val amServiceDetailsRepository: AmServiceDetailsRepository,
 ) {
   fun getServiceDetails(legacySubjectId: String): List<AmServiceDetails> {
-    val result = amServiceDetailsRepository.getServiceDetails(legacySubjectId)
+    val result = amServiceDetailsRepository.findByLegacySubjectId(legacySubjectId)
 
     return result.map { item -> AmServiceDetails(item) }
   }
