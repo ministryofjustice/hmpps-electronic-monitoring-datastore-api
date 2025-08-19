@@ -48,7 +48,7 @@ class IntegrityServiceDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityServiceDetailsRepository.getServiceDetails(legacySubjectId, false))
+      Mockito.`when`(integrityServiceDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
         .thenReturn(exampleServiceDetails)
     }
 
@@ -56,7 +56,7 @@ class IntegrityServiceDetailsServiceTest {
     fun `calls getServiceDetails from order information repository`() {
       service.getServiceDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).getServiceDetails(legacySubjectId, false)
+      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
     }
 
     @Test

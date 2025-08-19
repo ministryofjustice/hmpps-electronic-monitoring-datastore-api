@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositorie
 class IntegrityServiceDetailsRepository(
   val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getServiceDetails(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityServiceDetailsDTO> {
+  fun findByLegacySubjectIdAndRestricted(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityServiceDetailsDTO> {
     val servicesQuery = IntegrityServiceDetailsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
 

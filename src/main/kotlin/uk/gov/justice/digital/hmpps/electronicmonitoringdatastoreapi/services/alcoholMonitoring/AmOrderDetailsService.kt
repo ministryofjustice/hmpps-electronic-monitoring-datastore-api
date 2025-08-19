@@ -12,7 +12,7 @@ class AmOrderDetailsService(
 ) {
 
   fun getOrderDetails(legacySubjectId: String): AmOrderDetails {
-    val orderDetails = orderDetailsRepository.getOrderDetails(legacySubjectId)
+    val orderDetails = orderDetailsRepository.findByLegacySubjectId(legacySubjectId)
 
     return AmOrderDetails(orderDetails)
   }

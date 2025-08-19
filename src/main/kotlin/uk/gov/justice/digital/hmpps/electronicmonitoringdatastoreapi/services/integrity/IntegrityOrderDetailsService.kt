@@ -11,7 +11,7 @@ class IntegrityOrderDetailsService(
   @field:Autowired val integrityOrderDetailsRepository: IntegrityOrderDetailsRepository,
 ) {
   fun getOrderDetails(legacySubjectId: String, restricted: Boolean): IntegrityOrderDetails {
-    val orderDetailsDTO = integrityOrderDetailsRepository.getOrderDetails(legacySubjectId, restricted)
+    val orderDetailsDTO = integrityOrderDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, restricted)
     return IntegrityOrderDetails(orderDetailsDTO)
   }
 

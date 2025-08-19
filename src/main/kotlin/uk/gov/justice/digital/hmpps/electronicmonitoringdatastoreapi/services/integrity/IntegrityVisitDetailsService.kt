@@ -9,7 +9,7 @@ class IntegrityVisitDetailsService(
   val integrityVisitDetailsRepository: IntegrityVisitDetailsRepository,
 ) {
   fun getVisitDetails(legacySubjectId: String, restricted: Boolean): List<IntegrityVisitDetails> {
-    val result = integrityVisitDetailsRepository.getVisitDetails(legacySubjectId, restricted)
+    val result = integrityVisitDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, restricted)
 
     return result.map { item -> IntegrityVisitDetails(item) }
   }

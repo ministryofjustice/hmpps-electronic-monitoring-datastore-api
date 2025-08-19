@@ -82,7 +82,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getSuspensionOfVisits("123", false)
+      repository.findByLegacySubjectIdAndRestricted("123", false)
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
@@ -93,7 +93,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisits("987", false)
+      val result = repository.findByLegacySubjectIdAndRestricted("987", false)
 
       Assertions.assertThat(result.size).isEqualTo(2)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")
@@ -105,7 +105,7 @@ class IntegritySuspensionOfVisitsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getSuspensionOfVisits("987", false)
+      val result = repository.findByLegacySubjectIdAndRestricted("987", false)
 
       Assertions.assertThat(result.size).isEqualTo(1)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")

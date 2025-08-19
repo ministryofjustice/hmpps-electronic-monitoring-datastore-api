@@ -54,14 +54,14 @@ class AmOrderDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      whenever(amOrderDetailsRepository.getOrderDetails(orderId))
+      whenever(amOrderDetailsRepository.findByLegacySubjectId(orderId))
         .thenReturn(orderDetailsData)
     }
 
     @Test
     fun `calls getAmOrderDetails from order details repository`() {
       service.getOrderDetails(orderId)
-      verify(amOrderDetailsRepository, times(1)).getOrderDetails(orderId)
+      verify(amOrderDetailsRepository, times(1)).findByLegacySubjectId(orderId)
     }
 
     @Test
