@@ -58,7 +58,7 @@ class AmEquipmentDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(amEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId))
+      Mockito.`when`(amEquipmentDetailsRepository.findByLegacySubjectId(legacySubjectId))
         .thenReturn(exampleEquipmentDetails)
     }
 
@@ -66,7 +66,7 @@ class AmEquipmentDetailsServiceTest {
     fun `calls getEquipmentDetails from amEquipmentDetailsRepository`() {
       amEquipmentDetailsService.getEquipmentDetails(legacySubjectId)
 
-      Mockito.verify(amEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId)
+      Mockito.verify(amEquipmentDetailsRepository, Mockito.times(1)).findByLegacySubjectId(legacySubjectId)
     }
 
     @Test
