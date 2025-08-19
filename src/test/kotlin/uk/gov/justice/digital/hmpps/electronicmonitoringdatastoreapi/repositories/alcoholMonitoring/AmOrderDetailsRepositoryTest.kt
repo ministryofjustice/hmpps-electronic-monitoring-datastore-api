@@ -91,7 +91,7 @@ class AmOrderDetailsRepositoryTest {
 
       whenever(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getOrderDetails("123")
+      repository.findByLegacySubjectId("123")
 
       verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
@@ -107,7 +107,7 @@ class AmOrderDetailsRepositoryTest {
 
       whenever(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails(legacySubjectId)
+      val result = repository.findByLegacySubjectId(legacySubjectId)
 
       assertThat(result.legacyOrderId).isEqualTo(legacyOrderId)
       assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)

@@ -65,7 +65,7 @@ class AmServiceDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      amServiceDetailsRepository.getServiceDetails("123")
+      amServiceDetailsRepository.findByLegacySubjectId("123")
 
       Mockito.verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
@@ -76,7 +76,7 @@ class AmServiceDetailsRepositoryTest {
 
       Mockito.`when`(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = amServiceDetailsRepository.getServiceDetails("987")
+      val result = amServiceDetailsRepository.findByLegacySubjectId("987")
 
       Assertions.assertThat(result.size).isEqualTo(2)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")

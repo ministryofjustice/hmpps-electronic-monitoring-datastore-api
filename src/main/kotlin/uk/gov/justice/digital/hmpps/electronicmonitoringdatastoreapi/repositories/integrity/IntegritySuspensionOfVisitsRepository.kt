@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositorie
 class IntegritySuspensionOfVisitsRepository(
   val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getSuspensionOfVisits(legacySubjectId: String, restricted: Boolean): List<AthenaIntegritySuspensionOfVisitsDTO> {
+  fun findByLegacySubjectIdAndRestricted(legacySubjectId: String, restricted: Boolean): List<AthenaIntegritySuspensionOfVisitsDTO> {
     val suspensionOfVisitsQuery = IntegritySuspensionOfVisitsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
 
