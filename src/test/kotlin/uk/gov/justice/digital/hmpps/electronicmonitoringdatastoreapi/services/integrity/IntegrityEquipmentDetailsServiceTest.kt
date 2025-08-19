@@ -42,7 +42,7 @@ class IntegrityEquipmentDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, false))
+      Mockito.`when`(integrityEquipmentDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
         .thenReturn(exampleEquipmentDetailsList)
     }
 
@@ -50,7 +50,7 @@ class IntegrityEquipmentDetailsServiceTest {
     fun `calls getEquipmentDetails from order information repository`() {
       service.getEquipmentDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityEquipmentDetailsRepository, Mockito.times(1)).getEquipmentDetails(legacySubjectId, false)
+      Mockito.verify(integrityEquipmentDetailsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
     }
 
     @Test

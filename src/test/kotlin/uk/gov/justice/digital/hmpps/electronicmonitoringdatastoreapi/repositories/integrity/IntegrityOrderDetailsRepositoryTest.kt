@@ -51,7 +51,7 @@ class IntegrityOrderDetailsRepositoryTest {
 
       whenever(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      repository.getOrderDetails("123", false)
+      repository.findByLegacySubjectIdAndRestricted("123", false)
 
       verify(emDatastoreClient).getQueryResult(any<SqlQueryBuilder>(), eq(false))
     }
@@ -63,7 +63,7 @@ class IntegrityOrderDetailsRepositoryTest {
 
       whenever(emDatastoreClient.getQueryResult(any<SqlQueryBuilder>(), eq(false))).thenReturn(resultSet)
 
-      val result = repository.getOrderDetails(legacySubjectId, false)
+      val result = repository.findByLegacySubjectIdAndRestricted(legacySubjectId, false)
 
       assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
     }

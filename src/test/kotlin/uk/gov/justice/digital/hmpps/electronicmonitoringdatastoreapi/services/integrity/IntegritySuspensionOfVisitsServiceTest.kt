@@ -35,7 +35,7 @@ class IntegritySuspensionOfVisitsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integritySuspensionOfVisitsRepository.getSuspensionOfVisits(legacySubjectId, false))
+      Mockito.`when`(integritySuspensionOfVisitsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
         .thenReturn(exampleSuspensionOfVisits)
     }
 
@@ -43,7 +43,7 @@ class IntegritySuspensionOfVisitsServiceTest {
     fun `calls getSuspensionOfVisits from order information repository`() {
       service.getSuspensionOfVisits(legacySubjectId, false)
 
-      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(legacySubjectId, false)
+      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
     }
 
     @Test

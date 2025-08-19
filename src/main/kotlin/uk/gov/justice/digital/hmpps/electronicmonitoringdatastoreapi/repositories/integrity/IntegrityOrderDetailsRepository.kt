@@ -11,7 +11,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositorie
 class IntegrityOrderDetailsRepository(
   val athenaClient: EmDatastoreClientInterface,
 ) {
-  fun getOrderDetails(legacySubjectId: String, restricted: Boolean): AthenaIntegrityOrderDetailsDTO {
+  fun findByLegacySubjectIdAndRestricted(legacySubjectId: String, restricted: Boolean): AthenaIntegrityOrderDetailsDTO {
     val orderDetailsQuery = IntegrityOrderDetailsQueryBuilder()
       .withLegacySubjectId(legacySubjectId)
 

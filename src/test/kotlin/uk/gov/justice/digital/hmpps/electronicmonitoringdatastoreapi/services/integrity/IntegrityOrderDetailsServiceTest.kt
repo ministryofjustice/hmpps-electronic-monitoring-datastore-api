@@ -65,14 +65,14 @@ class IntegrityOrderDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      whenever(integrityOrderDetailsRepository.getOrderDetails(legacySubjectId, false))
+      whenever(integrityOrderDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
         .thenReturn(orderDetailsData)
     }
 
     @Test
     fun `calls getOrderDetails from integrity order details repository`() {
       service.getOrderDetails(legacySubjectId, false)
-      verify(integrityOrderDetailsRepository, times(1)).getOrderDetails(legacySubjectId, false)
+      verify(integrityOrderDetailsRepository, times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
     }
 
     @Test

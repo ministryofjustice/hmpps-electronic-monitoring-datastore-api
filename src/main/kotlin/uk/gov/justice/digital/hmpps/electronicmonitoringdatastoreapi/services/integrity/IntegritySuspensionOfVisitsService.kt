@@ -9,7 +9,7 @@ class IntegritySuspensionOfVisitsService(
   val integritySuspensionOfVisitsRepository: IntegritySuspensionOfVisitsRepository,
 ) {
   fun getSuspensionOfVisits(legacySubjectId: String, restricted: Boolean): List<IntegritySuspensionOfVisits> {
-    val result = integritySuspensionOfVisitsRepository.getSuspensionOfVisits(legacySubjectId, restricted)
+    val result = integritySuspensionOfVisitsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, restricted)
 
     return result.map { item -> IntegritySuspensionOfVisits(item) }
   }

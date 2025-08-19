@@ -9,7 +9,7 @@ class IntegrityEquipmentDetailsService(
   val integrityEquipmentDetailsRepository: IntegrityEquipmentDetailsRepository,
 ) {
   fun getEquipmentDetails(legacySubjectId: String, restricted: Boolean): List<IntegrityEquipmentDetails> {
-    val result = integrityEquipmentDetailsRepository.getEquipmentDetails(legacySubjectId, restricted)
+    val result = integrityEquipmentDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, restricted)
 
     return result.map { item -> IntegrityEquipmentDetails(item) }
   }
