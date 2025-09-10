@@ -1,6 +1,6 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.0.0"
-  kotlin("plugin.spring") version "2.2.10"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.0.1"
+  kotlin("plugin.spring") version "2.2.20"
   jacoco
 }
 
@@ -10,12 +10,12 @@ configurations {
 
 dependencies {
   implementation("org.apache.commons:commons-lang3:3.18.0")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.5.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.6.0")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.4.10")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
-  implementation("software.amazon.awssdk:athena:2.33.4")
-  implementation("software.amazon.awssdk:sts:2.33.4")
+  implementation("software.amazon.awssdk:athena:2.33.7")
+  implementation("software.amazon.awssdk:sts:2.33.7")
   implementation("org.json:json:20250517")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
@@ -23,7 +23,7 @@ dependencies {
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.5.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.6.0")
   testImplementation("org.wiremock:wiremock-standalone:3.13.1")
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.33") {
     exclude(group = "io.swagger.core.v3")
