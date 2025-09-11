@@ -8,5 +8,5 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositorie
 class AvailabilityService(
   @field:Autowired val availabilityRepository: AvailabilityRepository,
 ) {
-  fun checkAvailability(restricted: Boolean = false): Boolean = availabilityRepository.listLegacyIds(restricted).count() > 0
+  fun checkAvailability(restricted: Boolean = false): Boolean = availabilityRepository.test(restricted)
 }

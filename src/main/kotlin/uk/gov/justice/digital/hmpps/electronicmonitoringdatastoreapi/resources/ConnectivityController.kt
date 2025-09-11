@@ -81,8 +81,8 @@ class ConnectivityController(
       if (!availabilityService.checkAvailability(restricted)) {
         message = "API Connection successful, but no access to Athena"
       }
-    } catch (_: Exception) {
-      message = "Error determining Athena access"
+    } catch (ex: Exception) {
+      message = "Error determining Athena access: ${ex.message}"
     }
     val result = mapOf("message" to message)
 
