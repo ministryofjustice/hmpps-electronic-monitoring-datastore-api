@@ -71,7 +71,7 @@ class ConnectivityControllerTest {
       Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(false)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      assertThat(result.body).isEqualTo(mapOf("message" to "Error determining Athena access"))
+      assertThat(result.body).isEqualTo(mapOf("message" to "Error determining Athena access: null"))
     }
   }
 
@@ -113,7 +113,7 @@ class ConnectivityControllerTest {
       Mockito.verify(availabilityService, Mockito.times(1)).checkAvailability(true)
 
       assertThat(result.statusCode).isEqualTo(HttpStatus.OK)
-      assertThat(result.body).isEqualTo(mapOf("message" to "Error determining Athena access"))
+      assertThat(result.body).isEqualTo(mapOf("message" to "Error determining Athena access: null"))
     }
   }
 }
