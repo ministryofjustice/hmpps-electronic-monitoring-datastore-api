@@ -24,16 +24,16 @@ class AvailabilityServiceTest {
   inner class CheckAvailability {
     @Test
     fun `calls listLegacyIds from order repository`() {
-      whenever(availabilityRepository.listLegacyIds(false)).thenReturn(listOf("fake-id"))
+      whenever(availabilityRepository.test(false)).thenReturn(true)
 
       service.checkAvailability(false)
 
-      verify(availabilityRepository, times(1)).listLegacyIds(false)
+      verify(availabilityRepository, times(1)).test(false)
     }
 
     @Test
     fun `confirms AWS athena is available if successful`() {
-      whenever(availabilityRepository.listLegacyIds(false)).thenReturn(listOf("fake-id"))
+      whenever(availabilityRepository.test(false)).thenReturn(true)
 
       val result = service.checkAvailability(false)
 
@@ -44,7 +44,7 @@ class AvailabilityServiceTest {
     fun `confirms AWS athena is unavailable if not successful by not handling error`() {
       val errorMessage = "fake error message"
 
-      whenever(availabilityRepository.listLegacyIds(false)).thenThrow(NullPointerException(errorMessage))
+      whenever(availabilityRepository.test(false)).thenThrow(NullPointerException(errorMessage))
 
       Assertions.assertThatThrownBy { service.checkAvailability(false) }.isInstanceOf(RuntimeException::class.java)
     }
