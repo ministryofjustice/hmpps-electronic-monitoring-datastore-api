@@ -33,6 +33,7 @@ class ConnectivityController(
 
   @Operation(
     summary = "Test the connectivity with athena",
+    operationId = "testConnectivity",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -82,7 +83,11 @@ class ConnectivityController(
         message = "API Connection successful, but no access to Athena"
       }
     } catch (ex: Exception) {
-      message = "Error determining Athena access: ${ex.message}"
+      message = if (ex.message != null && ex.message!!.contains("The security token included in the request is expired")) {
+        "API Connection failed: Security token is no longer valid"
+      } else {
+        "Error determining Athena access: ${ex.message}"
+      }
     }
     val result = mapOf("message" to message)
 

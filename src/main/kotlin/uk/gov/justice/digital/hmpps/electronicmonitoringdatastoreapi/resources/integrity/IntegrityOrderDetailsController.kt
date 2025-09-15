@@ -41,6 +41,7 @@ class IntegrityOrderDetailsController(
 
   @Operation(
     summary = "Execute a search for integrity orders",
+    operationId = "executeIntegrityOrderSearch",
   )
   @RequestMapping(
     method = [RequestMethod.POST],
@@ -104,6 +105,7 @@ class IntegrityOrderDetailsController(
 
   @Operation(
     summary = "Get the search results for a previous job execution",
+    operationId = "getIntegrityOrderSearchResults",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
@@ -166,6 +168,7 @@ class IntegrityOrderDetailsController(
 
   @Operation(
     summary = "Get the details for a integrity order",
+    operationId = "getIntegrityOrderDetails",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
