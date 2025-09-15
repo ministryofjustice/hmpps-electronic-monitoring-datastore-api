@@ -35,6 +35,7 @@ class IntegrityServiceDetailsController(
 ) {
   @Operation(
     summary = "Get the curfew timetable for an integrity order",
+    operationId = "getIntegrityServiceDetails",
   )
   @RequestMapping(
     method = [RequestMethod.GET],

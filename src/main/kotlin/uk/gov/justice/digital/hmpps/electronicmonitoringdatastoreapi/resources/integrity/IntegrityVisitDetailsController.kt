@@ -35,6 +35,7 @@ class IntegrityVisitDetailsController(
 ) {
   @Operation(
     summary = "Get the visit details for an integrity order",
+    operationId = "getIntegrityVisitDetails",
   )
   @RequestMapping(
     method = [RequestMethod.GET],

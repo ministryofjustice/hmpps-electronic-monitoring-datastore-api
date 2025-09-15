@@ -36,6 +36,7 @@ class IntegrityMonitoringEventsController(
 ) {
   @Operation(
     summary = "Get the monitoring events for an integrity order",
+    operationId = "getIntegrityMonitoringEvents",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
