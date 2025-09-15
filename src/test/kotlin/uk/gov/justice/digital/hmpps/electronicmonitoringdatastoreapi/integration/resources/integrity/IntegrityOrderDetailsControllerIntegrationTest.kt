@@ -71,7 +71,7 @@ class IntegrityOrderDetailsControllerIntegrationTest : ControllerIntegrationBase
 
       val requestBody = mapOf(
         "legacySubjectId" to "12345",
-        "firstName" to "Amy",
+        "firstName" to "Pheobe",
         "lastName" to "Smith",
       )
 
@@ -92,7 +92,7 @@ class IntegrityOrderDetailsControllerIntegrationTest : ControllerIntegrationBase
 
   @Nested
   @DisplayName("GET /orders/integrity?id={queryExecutionId}")
-  inner class GetAmSearchResults {
+  inner class GetAlcoholMonitoringSearchResults {
 
     @Test
     fun `should fail with 401 when no authorization header is provided`() {
@@ -127,7 +127,7 @@ class IntegrityOrderDetailsControllerIntegrationTest : ControllerIntegrationBase
         .contentType(MediaType.APPLICATION_JSON)
         .expectBody()
         .jsonPath("$.length()").isEqualTo(6)
-        .jsonPath("$[0].firstName").isEqualTo("Amy")
+        .jsonPath("$[0].firstName").isEqualTo("Pheobe")
         .jsonPath("$[0].lastName").isEqualTo("Smith")
     }
 

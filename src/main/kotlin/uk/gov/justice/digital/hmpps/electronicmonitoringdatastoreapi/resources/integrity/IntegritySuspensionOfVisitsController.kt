@@ -36,6 +36,7 @@ class IntegritySuspensionOfVisitsController(
 
   @Operation(
     summary = "Get the suspension of visits for an integrity order",
+    operationId = "getIntegritySuspensionOfVisits",
   )
   @RequestMapping(
     method = [RequestMethod.GET],
