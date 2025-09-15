@@ -37,6 +37,7 @@ class IntegrityContactEventsController(
 
   @Operation(
     summary = "Get the contact events for a integrity order",
+    operationId = "getIntegrityContactEvents",
   )
   @RequestMapping(
     method = [RequestMethod.GET],

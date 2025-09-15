@@ -131,7 +131,7 @@ class IntegrityOrderDetailsControllerTest {
     fun `get a query execution ID from order service`() {
       val orderSearchCriteria = OrderSearchCriteria(
         legacySubjectId = "12345",
-        firstName = "Amy",
+        firstName = "Pheobe",
         lastName = "Smith",
         alias = null,
         dateOfBirth = LocalDate.parse("1970-01-01"),

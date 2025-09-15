@@ -36,6 +36,7 @@ class IntegrityEquipmentDetailsController(
 
   @Operation(
     summary = "Get the equipment details for an integrity order",
+    operationId = "getIntegrityEquipmentDetails",
   )
   @RequestMapping(
     method = [RequestMethod.GET],

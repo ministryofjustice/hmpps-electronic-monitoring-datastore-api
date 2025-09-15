@@ -43,7 +43,7 @@ class IntegrityServiceDetailsControllerTest {
           serviceAddress1 = "",
           serviceAddress2 = "",
           serviceAddress3 = "",
-          serviceAddressPostcode = "TEST+POSTCODE",
+          serviceAddressPostCode = "TEST+POSTCODE",
           serviceStartDate = LocalDateTime.parse("2020-04-04T00:00:00"),
           serviceEndDate = LocalDateTime.parse("2020-04-14T00:00:00"),
           curfewStartDate = LocalDateTime.parse("2020-04-06T00:00:00"),
