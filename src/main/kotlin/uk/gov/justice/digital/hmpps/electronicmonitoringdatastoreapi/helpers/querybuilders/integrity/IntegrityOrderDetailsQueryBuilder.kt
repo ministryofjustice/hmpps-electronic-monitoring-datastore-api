@@ -2,8 +2,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.qu
 
 import io.zeko.db.sql.dsl.eq
 import io.zeko.db.sql.dsl.like
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.AthenaIntegrityOrderDetailsQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.AthenaOrderDetailsQuery
 import java.time.LocalDate
 
 class IntegrityOrderDetailsQueryBuilder :
@@ -104,5 +104,5 @@ class IntegrityOrderDetailsQueryBuilder :
     return this
   }
 
-  override fun build(databaseName: String): AthenaOrderDetailsQuery = AthenaOrderDetailsQuery(getSQL(databaseName), values.toTypedArray())
+  override fun build(databaseName: String): AthenaIntegrityOrderDetailsQuery = AthenaIntegrityOrderDetailsQuery(getSQL(databaseName), values.toTypedArray())
 }

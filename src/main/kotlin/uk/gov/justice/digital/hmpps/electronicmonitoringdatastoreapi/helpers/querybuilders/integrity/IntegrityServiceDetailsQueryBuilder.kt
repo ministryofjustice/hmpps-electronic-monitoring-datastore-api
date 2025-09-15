@@ -1,8 +1,8 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.integrity
 
 import io.zeko.db.sql.dsl.eq
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.AthenaIntegrityServiceDetailsQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.AthenaServiceDetailsQuery
 
 class IntegrityServiceDetailsQueryBuilder :
   SqlQueryBuilder(
@@ -41,5 +41,5 @@ class IntegrityServiceDetailsQueryBuilder :
     return this
   }
 
-  override fun build(databaseName: String): AthenaServiceDetailsQuery = AthenaServiceDetailsQuery(getSQL(databaseName), values.toTypedArray())
+  override fun build(databaseName: String): AthenaIntegrityServiceDetailsQuery = AthenaIntegrityServiceDetailsQuery(getSQL(databaseName), values.toTypedArray())
 }

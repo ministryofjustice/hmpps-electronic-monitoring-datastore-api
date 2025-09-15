@@ -65,7 +65,7 @@ class IntegrityServiceDetailsServiceTest {
 
       Assertions.assertThat(result.size).isEqualTo(1)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-      Assertions.assertThat(result.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
+      Assertions.assertThat(result.first().serviceAddressPostCode).isEqualTo("WA16 9GH")
     }
   }
 }
