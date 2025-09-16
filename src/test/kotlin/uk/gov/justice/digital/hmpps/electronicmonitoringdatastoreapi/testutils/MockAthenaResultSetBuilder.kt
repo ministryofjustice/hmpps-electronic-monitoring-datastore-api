@@ -16,6 +16,12 @@ class MockAthenaResultSetBuilder(
       throw Exception("Type $type not a valid column type")
     }
 
+    val precision = if (type == "bigInt") {
+      17
+    } else {
+      2147483647
+    }
+
     return """
     {
       "CatalogName": "hive",
@@ -24,7 +30,7 @@ class MockAthenaResultSetBuilder(
       "Name": "$label",
       "Label": "$label",
       "Type": "$type",
-      "Precision": 2147483647,
+      "Precision": $precision,
       "Scale": 0,
       "Nullable": "UNKNOWN",
       "CaseSensitive": true
