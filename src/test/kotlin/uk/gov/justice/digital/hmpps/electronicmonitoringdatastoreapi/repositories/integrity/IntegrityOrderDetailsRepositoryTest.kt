@@ -26,10 +26,10 @@ class IntegrityOrderDetailsRepositoryTest {
     orderId: String,
     offenceRisk: Boolean,
   ) = MockAthenaResultSetBuilder(
-    columns = arrayOf(
-      "legacy_subject_id",
-      "legacy_order_id",
-      "offence_risk", // boolean
+    columns = mapOf(
+      "legacy_subject_id" to "varchar",
+      "legacy_order_id" to "varchar",
+      "offence_risk" to "boolean",
     ),
     rows = arrayOf(
       arrayOf(subjectId, orderId, offenceRisk.toString()),
