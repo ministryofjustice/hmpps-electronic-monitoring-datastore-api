@@ -1,149 +1,26 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers
 
 import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaOrderSearchResultDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.integrity.AthenaIntegrityOrderDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class AthenaHelperTest {
-  val defaultResultSet: String = """
-    {
-      "ResultSet": {
-        "Rows": [
-          {
-            "Data": [
-              {
-                "VarCharValue": "legacy_subject_id"
-              },
-              {
-                "VarCharValue": "legacy_order_id"
-              },
-              {
-                "VarCharValue": "first_name"
-              },
-              {
-                "VarCharValue": "last_name"
-              },
-              {
-                "VarCharValue": "full_name"
-              }
-            ]
-          },
-          {
-            "Data": [
-              {
-                "VarCharValue": "1253587"
-              },
-              {
-                "VarCharValue": "1250042"
-              },
-              {
-                "VarCharValue": "ELLEN"
-              },
-              {
-                "VarCharValue": "RIPLY"
-              },
-              {
-                "VarCharValue": "ELLEN RIPLY"
-              }
-            ]
-          },
-          {
-            "Data": [
-              {
-                "VarCharValue": "1034415"
-              },
-              {
-                "VarCharValue": "1032792"
-              },
-              {
-                "VarCharValue": "JOHN"
-              },
-              {
-                "VarCharValue": "BROWNLIE"
-              },
-              {
-                "VarCharValue": "JOHN BROWNLIE"
-              }
-            ]
-          }
-        ],
-        "ResultSetMetadata": {
-          "ColumnInfo": [
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "legacy_subject_id",
-              "Label": "legacy_subject_id",
-              "Type": "bigint",
-              "Precision": 19,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": false
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "legacy_order_id",
-              "Label": "legacy_order_id",
-              "Type": "bigint",
-              "Precision": 19,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": false
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "first_name",
-              "Label": "first_name",
-              "Type": "varchar",
-              "Precision": 2147483647,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": true
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "last_name",
-              "Label": "last_name",
-              "Type": "varchar",
-              "Precision": 2147483647,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": true
-            },
-            {
-              "CatalogName": "hive",
-              "SchemaName": "",
-              "TableName": "",
-              "Name": "full_name",
-              "Label": "full_name",
-              "Type": "varchar",
-              "Precision": 2147483647,
-              "Scale": 0,
-              "Nullable": "UNKNOWN",
-              "CaseSensitive": true
-            }
-          ]
-        }
-      },
-      "UpdateCount": 0
-    }
-  """.trimIndent()
-
-  @Test
-  fun `Can be instantiated`() {
-    val sut = AthenaHelper()
-    Assertions.assertThat(sut).isNotNull()
-  }
+  val defaultResultSet: String = MockAthenaResultSetBuilder(
+    columns = mapOf(
+      "legacy_subject_id" to "bigInt",
+      "legacy_order_id" to "bigInt",
+      "first_name" to "varchar",
+      "last_name" to "varchar",
+      "full_name" to "varchar",
+    ),
+    rows = arrayOf(
+      arrayOf("1253587", "1250042", "ELLEN", "RIPLY", "ELLEN RIPLY"),
+      arrayOf("1034415", "1032792", "JOHN", "BROWNLIE", "JOHN BROWNLIE"),
+    ),
+  ).build()
 
   @Test
   fun `Can convert JSON to ResultSet object`() {
@@ -213,11 +90,11 @@ class AthenaHelperTest {
   fun `Can extract a list of properties from a class`() {
     data class ArbitraryClass(
       val firstField: String,
-      val BADLYNamedField: Boolean?,
-      val ThirdField: Long = 4455566,
+      @Suppress("PropertyName") val BADLYNamedField: Boolean?,
+      @Suppress("PropertyName") val ThirdField: Long = 4455566,
     )
 
-    val expected = listOf<String>("first_field", "badlynamed_field", "third_field")
+    val expected = listOf("first_field", "badlynamed_field", "third_field")
 
     val result: List<String> = AthenaHelper.extractFieldNames(ArbitraryClass::class)
 
@@ -253,6 +130,9 @@ class AthenaHelperTest {
             "VarCharValue": "legacy_subject_id"
           },
           {
+            "VarCharValue": "legacy_order_id"
+          },
+          {
             "VarCharValue": "first_name"
           },
                     {
@@ -280,6 +160,9 @@ class AthenaHelperTest {
       },
       {
         "Data": [
+          {
+            "VarCharValue": "1253587"
+          },
           {
             "VarCharValue": "1253587"
           },
@@ -318,6 +201,18 @@ class AthenaHelperTest {
           "TableName": "",
           "Name": "legacy_subject_id",
           "Label": "legacy_subject_id",
+          "Type": "bigint",
+          "Precision": "19",
+          "Scale": "0",
+          "Nullable": "UNKNOWN",
+          "CaseSensitive": "false"
+        },
+        {
+          "CatalogName": "hive",
+          "SchemaName": "",
+          "TableName": "",
+          "Name": "legacy_order_id",
+          "Label": "legacy_order_id",
           "Type": "bigint",
           "Precision": "19",
           "Scale": "0",
@@ -426,9 +321,10 @@ class AthenaHelperTest {
 }""",
       )
 
-      val expected: List<AthenaOrderSearchResultDTO> = listOf(
-        AthenaOrderSearchResultDTO(
+      val expected: List<AthenaIntegrityOrderDetailsDTO> = listOf(
+        AthenaIntegrityOrderDetailsDTO(
           legacySubjectId = "1253587",
+          legacyOrderId = "1253587",
           firstName = "ELLEN",
           lastName = "RIPLY",
           primaryAddressLine1 = "310 Lightbowne Road, Moston",
@@ -437,10 +333,11 @@ class AthenaHelperTest {
           primaryAddressPostCode = "M40 0FJ",
           orderStartDate = "2019-10-24",
           orderEndDate = "2020-03-24",
+          offenceRisk = false,
         ),
       )
 
-      val result = AthenaHelper.mapTo<AthenaOrderSearchResultDTO>(resultSet)
+      val result = AthenaHelper.mapTo<AthenaIntegrityOrderDetailsDTO>(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }
@@ -549,40 +446,6 @@ class AthenaHelperTest {
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
         .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
-    }
-  }
-
-  @Nested
-  inner class TableNameFromSearchType {
-    @Test
-    fun `assigns correct table for integrity data`() {
-      val searchType = "integrity"
-      val expectedTable = "order_details"
-
-      val actualTable = AthenaHelper.tableNameFromSearchType(searchType)
-
-      Assertions.assertThat(actualTable).isEqualTo(expectedTable)
-    }
-
-    @Test
-    fun `assigns correct table for alcohol monitoring data`() {
-      val searchType = "alcohol-monitoring"
-      val expectedTable = "am_order_details"
-
-      val actualTable = AthenaHelper.tableNameFromSearchType(searchType)
-
-      Assertions.assertThat(actualTable).isEqualTo(expectedTable)
-    }
-
-    @Test
-    fun `fails with 401 when searchType is invalid`() {
-      val searchType = "invalid-type"
-
-      assertThatThrownBy {
-        AthenaHelper.tableNameFromSearchType(searchType)
-      }
-        .isInstanceOf(IllegalArgumentException::class.java)
-        .hasMessageContaining("Unknown search type: invalid-type")
     }
   }
 }

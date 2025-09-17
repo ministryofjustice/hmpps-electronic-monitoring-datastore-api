@@ -5,11 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegrityServiceDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegrityServiceDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegrityServiceDetailsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegrityServiceDetailsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.integrity.IntegrityServiceDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.integrity.AthenaIntegrityServiceDetailsDTO
 
 class IntegrityServiceDetailsServiceTest {
   private lateinit var integrityServiceDetailsRepository: IntegrityServiceDetailsRepository
@@ -21,17 +18,11 @@ class IntegrityServiceDetailsServiceTest {
     service = IntegrityServiceDetailsService(integrityServiceDetailsRepository)
   }
 
-  @Test
-  fun `ServiceDetailsService can be instantiated`() {
-    val sut = IntegrityServiceDetailsService(integrityServiceDetailsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetServiceDetails {
     val legacySubjectId = "fake-id"
 
-    val exampleServiceDetails = listOf<AthenaIntegrityServiceDetailsDTO>(
+    val exampleServiceDetails = listOf(
       AthenaIntegrityServiceDetailsDTO(
         legacySubjectId = "123",
         serviceId = 333,
@@ -57,34 +48,24 @@ class IntegrityServiceDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityServiceDetailsRepository.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(integrityServiceDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
         .thenReturn(exampleServiceDetails)
     }
 
     @Test
     fun `calls getServiceDetails from order information repository`() {
-      service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getServiceDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of ServiceDetails when a response is received`() {
-      val result = service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
     }
 
     @Test
     fun `returns correct details of the ServiceDetails when a response is received`() {
-      val result = service.getServiceDetails(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getServiceDetails(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(IntegrityServiceDetails::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
-      Assertions.assertThat(result.first().serviceAddressPostcode).isEqualTo("WA16 9GH")
+      Assertions.assertThat(result.first().serviceAddressPostCode).isEqualTo("WA16 9GH")
     }
   }
 }

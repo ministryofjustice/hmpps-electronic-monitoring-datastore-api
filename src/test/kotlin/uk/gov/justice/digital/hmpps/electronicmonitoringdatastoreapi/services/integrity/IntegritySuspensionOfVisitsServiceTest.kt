@@ -5,11 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.AthenaRole
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.integrity.AthenaIntegritySuspensionOfVisitsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.integrity.IntegritySuspensionOfVisits
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.integrity.IntegritySuspensionOfVisitsRepository
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.integrity.IntegritySuspensionOfVisitsService
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.integrity.IntegritySuspensionOfVisitsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repositories.models.integrity.AthenaIntegritySuspensionOfVisitsDTO
 
 class IntegritySuspensionOfVisitsServiceTest {
   private lateinit var integritySuspensionOfVisitsRepository: IntegritySuspensionOfVisitsRepository
@@ -21,17 +18,11 @@ class IntegritySuspensionOfVisitsServiceTest {
     service = IntegritySuspensionOfVisitsService(integritySuspensionOfVisitsRepository)
   }
 
-  @Test
-  fun `SuspensionOfVisitsService can be instantiated`() {
-    val sut = IntegritySuspensionOfVisitsService(integritySuspensionOfVisitsRepository)
-    Assertions.assertThat(sut).isNotNull()
-  }
-
   @Nested
   inner class GetSuspensionOfVisits {
     val legacySubjectId = "fake-id"
 
-    val exampleSuspensionOfVisits = listOf<AthenaIntegritySuspensionOfVisitsDTO>(
+    val exampleSuspensionOfVisits = listOf(
       AthenaIntegritySuspensionOfVisitsDTO(
         legacySubjectId = "123",
         suspensionOfVisits = "Yes",
@@ -44,32 +35,22 @@ class IntegritySuspensionOfVisitsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integritySuspensionOfVisitsRepository.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO))
+      Mockito.`when`(integritySuspensionOfVisitsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
         .thenReturn(exampleSuspensionOfVisits)
     }
 
     @Test
     fun `calls getSuspensionOfVisits from order information repository`() {
-      service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      service.getSuspensionOfVisits(legacySubjectId, false)
 
-      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-    }
-
-    @Test
-    fun `returns a list of SuspensionOfVisits when a response is received`() {
-      val result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
-
-      Assertions.assertThat(result).isInstanceOf(List::class.java)
+      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
     }
 
     @Test
     fun `returns correct details of the suspension of visits when a response is received`() {
-      val result = service.getSuspensionOfVisits(legacySubjectId, AthenaRole.ROLE_EM_DATASTORE_GENERAL_RO)
+      val result = service.getSuspensionOfVisits(legacySubjectId, false)
 
-      Assertions.assertThat(result).isNotNull
       Assertions.assertThat(result.size).isEqualTo(1)
-
-      Assertions.assertThat(result.first()).isInstanceOf(IntegritySuspensionOfVisits::class.java)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("123")
       Assertions.assertThat(result.first().suspensionOfVisits).isEqualTo("Yes")
     }
