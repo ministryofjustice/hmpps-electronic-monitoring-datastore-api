@@ -1,0 +1,3 @@
+package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
+
+abstract class IntegrityEventDetails
