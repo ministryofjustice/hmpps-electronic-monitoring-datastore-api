@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 
+@ActiveProfiles("integration")
 class AuthTest : IntegrationTestBase() {
   @Test
   fun `Providing no JWT to a secured endpoint returns 401`() {
@@ -41,7 +43,7 @@ class AuthTest : IntegrationTestBase() {
   fun `Providing JWT without user name claim returns 401`() {
     webTestClient.get()
       .uri("/orders/integrity/123")
-      .headers(setAuthorisationWithoutUsername())
+      .headers(setAuthorisation(username = ""))
       .exchange()
       .expectStatus()
       .isUnauthorized

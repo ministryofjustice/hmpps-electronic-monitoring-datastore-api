@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.health
 
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 
+@ActiveProfiles("integration")
 class HealthCheckTest : IntegrationTestBase() {
 
   @Test

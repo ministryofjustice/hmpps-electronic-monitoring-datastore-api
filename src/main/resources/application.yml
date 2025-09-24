@@ -5,23 +5,38 @@ info.app:
 spring:
   application:
     name: hmpps-electronic-monitoring-datastore-api
+
+  http:
+    codecs:
+      max-in-memory-size: 10MB
+
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
+
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri:  ${services.hmpps-auth.url}issuer
-          jwk-set-uri:  ${services.hmpps-auth.url}/.well-known/jwks.json
+          jwk-set-uri: ${services.hmpps-auth.url}/.well-known/jwks.json
       client:
         provider:
           hmpps-auth:
             token-uri: ${services.hmpps-auth.url}/oauth/token
-  http:
-    codecs:
-      max-in-memory-size: 10MB
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+    url: 'jdbc:postgresql://${DB_SERVER}/${DB_NAME}?sslmode=prefer'
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+  flyway:
+    enabled: true
 
 server:
   port: 8080
@@ -58,9 +73,13 @@ management:
 services:
   hmpps-auth:
     url: ${HMPPS_AUTH_URL}
+
+aws:
+  region: eu-west-2
   athena:
-    database: ${ATHENA_DATABASE_NAME}
-    output: ${ATHENA_OUTPUT_BUCKET}
-    roles:
-      restricted: ${ATHENA_SPECIALS_IAM_ROLE}
-      general: ${ATHENA_GENERAL_IAM_ROLE}
+    role-general: ${ATHENA_GENERAL_IAM_ROLE}
+    role-restricted: ${ATHENA_RESTRICTED_IAM_ROLE}
+
+datastore:
+  database: ${ATHENA_DATABASE_NAME}
+  output-bucket-arn: ${ATHENA_OUTPUT_BUCKET}

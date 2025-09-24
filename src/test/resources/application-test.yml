@@ -6,8 +6,6 @@ management.endpoint:
   info.cache.time-to-live: 0
 
 hmpps:
-  test:
-    jwt-helper-enabled: false
   sqs:
     provider: localstack
     useWebToken: false
@@ -17,11 +15,28 @@ hmpps:
 
 services:
   hmpps-auth:
-    url: http://localhost:8090/auth
-    # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+    url: "http://localhost:8090/auth"
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  flyway:
+    enabled: false
+  datasource:
+    url: 'jdbc:h2:mem:query-db;MODE=PostgreSQL'
+    username: postgres
+    password:
+
+aws:
+  region: eu-west-2
+  endpoint-url: http://localhost:8091
   athena:
-    database: totally-fake-database-name
-    output: totally-fake-output-bucket-name
-    roles:
-      restricted: fakeIAM
-      general: fakeIAM2
+    role-general: fakeIAMGeneral
+    role-restricted: fakeIAMRestricted
+
+datastore:
+  database: totally-fake-database-name
+  output-bucket-arn: totally-fake-output-bucket-name
+  retry-interval-ms: 10

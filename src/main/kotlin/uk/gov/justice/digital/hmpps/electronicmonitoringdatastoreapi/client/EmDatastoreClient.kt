@@ -1,10 +1,11 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Profile
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
-import software.amazon.awssdk.regions.Region
+import org.springframework.transaction.annotation.Transactional
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
 import software.amazon.awssdk.services.athena.model.GetQueryExecutionRequest
@@ -18,90 +19,64 @@ import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.querybuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.datastore.DatastoreProperties
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilder
 
-// We will instantiate as new for now
 @Component
-@Profile("!integration & !mocking")
-class EmDatastoreClient : EmDatastoreClientInterface {
-  @field:Value($$"${services.athena.roles.restricted:uninitialised}")
-  private val restrictedRole: String = "uninitialised"
+@EnableConfigurationProperties(DatastoreProperties::class)
+class EmDatastoreClient(
+  @field:Qualifier("athenaGeneralClient") val athenaGeneralClient: AthenaClient,
+  @field:Qualifier("athenaRestrictedClient") val athenaRestrictedClient: AthenaClient,
+  val properties: DatastoreProperties,
+) {
 
-  @field:Value($$"${services.athena.roles.general:uninitialised}")
-  private val generalRole: String = "uninitialised"
+  private val log = LoggerFactory.getLogger(this::class.java)
 
-  @field:Value($$"${services.athena.output}")
-  private val output: String = "s3://emds-dev-athena-query-results-20240917144028307600000004"
-  private val sleepLength: Long = 1000
-
-  @field:Value($$"${services.athena.database}")
-  private val databaseName: String = "test_database"
-
-  private fun startClient(iamRole: String): AthenaClient {
-    val credentialsProvider: AwsCredentialsProvider = EmDatastoreCredentialsProvider.getCredentials(iamRole)
-
-    return AthenaClient.builder()
-      .region(Region.EU_WEST_2)
-      .credentialsProvider(credentialsProvider)
-      .build()
-  }
-
-  override fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean): String {
-    val iamRole = if (restricted) restrictedRole else generalRole
-
-    val athenaClient = startClient(iamRole)
-    val queryExecutionId = submitAthenaQuery(athenaClient, athenaQuery)
-    athenaClient.close()
-    return queryExecutionId
-  }
-
-  override fun getQueryResult(queryExecutionId: String, restricted: Boolean): ResultSet {
-    val iamRole = if (restricted) restrictedRole else generalRole
-
-    val athenaClient = startClient(iamRole)
-
-    waitForQueryToComplete(athenaClient, queryExecutionId)
-    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
-
-    athenaClient.close()
-    return resultSet
-  }
-
-  override fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean): ResultSet {
-    val iamRole = if (restricted) restrictedRole else generalRole
-
-    val athenaClient = startClient(iamRole)
-
+  fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): ResultSet {
+    val athenaClient = getAthenaClient(restricted)
     val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
 
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)
 
     val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
-
-    athenaClient.close()
     return resultSet
+  }
+
+  fun getQueryResult(queryExecutionId: String, restricted: Boolean = false): ResultSet {
+    val athenaClient = getAthenaClient(restricted)
+    waitForQueryToComplete(athenaClient, queryExecutionId)
+    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    return resultSet
+  }
+
+  @Cacheable("athenaQueryExecutions")
+  @Transactional
+  fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): String {
+    val athenaClient = getAthenaClient(restricted)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
+    return queryExecutionId
   }
 
   @Throws(AthenaClientException::class)
   private fun submitAthenaQuery(athenaClient: AthenaClient, athenaQuery: SqlQueryBuilder): String {
-    val query = athenaQuery.build(databaseName)
+    val query = athenaQuery.build(properties.database)
 
-    // The QueryExecutionContext allows us to set the database.
     val queryExecutionContext = QueryExecutionContext.builder()
-      .database(databaseName)
+      .database(properties.database)
       .build()
 
     // The result configuration specifies where the results of the query should go.
     val resultConfiguration = ResultConfiguration.builder()
-      .outputLocation(output)
+      .outputLocation(properties.outputBucketArn)
       .build()
 
-    // TODO: Consider whether to enable the reuse of results - false by default
-    //  // result reuse configuration determines whether results should be reused
-    //  val resultReuseConfiguration = ResultReuseConfiguration.builder()
-    //    .resultReuseByAgeConfiguration(ResultReuseByAgeConfiguration.builder().enabled(false).build())
-    //    .build()
+    /*
+    // result reuse configuration determines whether results should be reused
+    val resultReuseConfiguration = ResultReuseConfiguration.builder()
+      .resultReuseByAgeConfiguration(ResultReuseByAgeConfiguration.builder().enabled(false).build())
+      .build()
+     */
 
     val startQueryExecutionRequest = StartQueryExecutionRequest.builder()
       .queryString(query.queryString)
@@ -112,8 +87,9 @@ class EmDatastoreClient : EmDatastoreClientInterface {
     }
 
     startQueryExecutionRequest.resultConfiguration(resultConfiguration)
-    // TODO: Consider whether to enable the reuse of results - false by default
     // .resultReuseConfiguration(resultReuseConfiguration)
+
+    log.debug("Starting query: {}", query)
 
     var startQueryExecutionResponse: StartQueryExecutionResponse
     try {
@@ -134,10 +110,12 @@ class EmDatastoreClient : EmDatastoreClientInterface {
 
     var getQueryExecutionResponse: GetQueryExecutionResponse
     var isQueryStillRunning = true
+
     while (isQueryStillRunning) {
       getQueryExecutionResponse = athenaClient.getQueryExecution(getQueryExecutionRequest)
 
       val queryState = getQueryExecutionResponse.queryExecution().status().state().toString()
+
       when (queryState) {
         QueryExecutionState.FAILED.toString() -> {
           throw RuntimeException(
@@ -153,11 +131,11 @@ class EmDatastoreClient : EmDatastoreClientInterface {
         }
         else -> {
           // Sleep an amount of time before retrying again.
-          Thread.sleep(sleepLength)
+          Thread.sleep(properties.retryIntervalMs)
         }
       }
 
-      println("The current status is: $queryState")
+      log.debug("Query execution id $queryExecutionId has status: $queryState")
     }
   }
 
@@ -176,4 +154,6 @@ class EmDatastoreClient : EmDatastoreClientInterface {
 
     return queryResults.resultSet()
   }
+
+  private fun getAthenaClient(restricted: Boolean) = if (restricted) athenaRestrictedClient else athenaGeneralClient
 }
