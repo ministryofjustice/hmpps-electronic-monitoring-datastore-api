@@ -5,16 +5,28 @@ hmpps.sqs:
     audit:
       queueName: "audit"
 
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?sslmode=prefer
+    username: postgres
+    password: postgres
+  flyway:
+    enabled: false
+
 services:
   hmpps-auth:
-    url: http://localhost:9090/auth
-    # url: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-  athena:
-    database: historic_api_mart_integration
-    output: fake_bucket
-    roles:
-      restricted: fakeIAM
-      general: fakeIAM2
+    url: ${HMPPS_AUTH_URL:http://localhost:8090/auth}
 
-CLIENT_ID: hmpps-electronic-monitoring-datastore-api
-CLIENT_SECRET: clientsecret
+aws:
+  region: eu-west-2
+  athena:
+    role-general: mockingGeneralAccessIAM
+    role-restricted: mockingRestrictedAccessIAM
+
+datastore:
+  database: historic_api_mart_integration
+  output-bucket-arn: fake_bucket

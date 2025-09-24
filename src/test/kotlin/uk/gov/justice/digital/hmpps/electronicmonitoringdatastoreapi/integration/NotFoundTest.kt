@@ -1,7 +1,9 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("integration")
 class NotFoundTest : IntegrationTestBase() {
 
   @Test

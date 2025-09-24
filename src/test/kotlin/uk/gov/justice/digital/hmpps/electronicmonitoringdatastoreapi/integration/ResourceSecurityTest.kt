@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import java.io.File
 
+@ActiveProfiles("integration")
 class ResourceSecurityTest : IntegrationTestBase() {
   @Autowired
   private lateinit var context: ApplicationContext
@@ -19,7 +21,6 @@ class ResourceSecurityTest : IntegrationTestBase() {
     "GET /v3/api-docs",
     "GET /v3/api-docs/swagger-config",
     " /error",
-    "GET /structured/test-athena",
   )
 
   @Test
