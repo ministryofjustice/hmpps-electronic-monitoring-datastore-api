@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils
 
+import software.amazon.awssdk.services.athena.model.ResultSet
+
 class MockAthenaResultSetBuilder(
   val columns: Map<String, String>,
   val rows: Array<Array<String>>,
@@ -9,17 +11,22 @@ class MockAthenaResultSetBuilder(
     rows: Array<Array<String>>,
   ) : this(columns.associateWith { "varchar" }, rows)
 
-  private val validTypes = listOf("varchar", "boolean", "bigInt")
+  private val validTypes = listOf("varchar", "boolean", "bigint", "date")
 
   private fun metaDataRow(label: String, type: String): String {
     if (!validTypes.contains(type)) {
       throw Exception("Type $type not a valid column type")
     }
 
-    val precision = if (type == "bigInt") {
-      17
-    } else {
-      2147483647
+    val precision = when (type) {
+      "bigint" -> 19
+      "varchar" -> 2147483647
+      else -> 0
+    }
+
+    val caseSensitive = when (type) {
+      "varchar" -> "true"
+      else -> "false"
     }
 
     return """
@@ -33,7 +40,7 @@ class MockAthenaResultSetBuilder(
       "Precision": $precision,
       "Scale": 0,
       "Nullable": "UNKNOWN",
-      "CaseSensitive": true
+      "CaseSensitive": $caseSensitive
     }
     """.trimIndent()
   }
@@ -52,7 +59,9 @@ class MockAthenaResultSetBuilder(
     }
   """.trimIndent()
 
-  fun build(): String = """
+  fun toResultSet(): ResultSet = AthenaResultSetHelper.resultSetFromJson(toString())
+
+  override fun toString(): String = """
     {
       "ResultSet": {
         "Rows": [${arrayOf(row(this.columns.keys.toTypedArray()), this.rows.joinToString(",\n") { data -> row(data) }).joinToString(",\n")}

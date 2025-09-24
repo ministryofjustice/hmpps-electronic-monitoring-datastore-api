@@ -2,10 +2,12 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integratio
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@ActiveProfiles("integration")
 class InfoTest : IntegrationTestBase() {
 
   @Test

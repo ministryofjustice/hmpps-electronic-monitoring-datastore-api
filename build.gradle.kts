@@ -12,25 +12,36 @@ configurations {
 
 dependencies {
   implementation("org.apache.commons:commons-lang3:3.19.0")
+
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.7.0")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.5.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
   implementation("software.amazon.awssdk:athena:2.35.7")
   implementation("software.amazon.awssdk:sts:2.35.7")
   implementation("org.json:json:20250517")
-  implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
-  implementation("com.fasterxml.jackson.core:jackson-core:2.20.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
+  runtimeOnly("org.postgresql:postgresql")
+  runtimeOnly("org.flywaydb:flyway-database-postgresql")
+
+  testImplementation("com.h2database:h2:2.3.232")
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.7.0")
+  testImplementation("org.mockito:mockito-core:5.17.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
   testImplementation("org.wiremock:wiremock-standalone:3.13.1")
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.35") {
     exclude(group = "io.swagger.core.v3")
   }
+
+  implementation("org.json:json:20250517")
+  implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
+  implementation("com.fasterxml.jackson.core:jackson-core:2.20.0")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
+
   testImplementation(kotlin("test"))
 }
 
