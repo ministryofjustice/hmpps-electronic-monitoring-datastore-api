@@ -81,3 +81,6 @@ localstack
 
 # Project-specific ignores
 .run/Local.run.xml
+
+## env files
+.env
