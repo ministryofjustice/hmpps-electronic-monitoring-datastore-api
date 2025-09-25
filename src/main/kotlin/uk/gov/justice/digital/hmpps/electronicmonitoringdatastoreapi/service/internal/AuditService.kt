@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.HmppsAuditEvent
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.internal.HmppsAuditEvent
 import uk.gov.justice.hmpps.sqs.HmppsQueue
 import uk.gov.justice.hmpps.sqs.HmppsQueueService
 

@@ -30,7 +30,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  local-stack-aws:
+  localstack:
     image: localstack/localstack:3.0
     container_name: local-stack-aws
     networks:
@@ -52,6 +52,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_EXECUTION_ENV=True
       - DEFAULT_REGION=eu-west-2
+      - HOSTNAME_EXTERNAL=awslocal
     volumes:
       - "./localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
