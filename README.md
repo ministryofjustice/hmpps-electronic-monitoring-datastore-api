@@ -75,8 +75,7 @@ minutes.
 The application comes with several spring profiles (each of which has a `{profile}.run.xml` file defined in [.run](.run)) :
 1) [Local](src/main/resources/application-local.yml): default settings for running locally and connecting to Athena.  
    To use this, you must create a non `-example` version of [Local.run.xml.example](.run/Local.run.xml.example) and add environment variables as specified in [Querying Athena with the local EM API](#querying-athena-with-the-local-em-api)
-2) [Mocking](src/main/resources/application-mocking.yml): run locally, but use a [`MockEMDatastoreClient`](src/main/kotlin/uk/gov/justice/digital/hmpps/electronicmonitoringdatastoreapi/client/MockEMDatastoreClient.kt) instead of `EMDatastoreClient`, with dummy Athena responses
-3) [Default](src/main/resources/application.yml): the main runtime configuration
+2) [Default](src/main/resources/application.yml): the main runtime configuration
 
 These profiles are not necessary when deploying to kubernetes as these values are included in the helm configuration templates -
 e.g. [`values-dev.yaml`](helm_deploy/values-dev.yaml).
@@ -94,7 +93,7 @@ will build the application and run it and HMPPS Auth within a local docker insta
 
 ### Running the application locally using Intellij
 
-1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0`
+1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0  --scale hmpps-auth=0`
 , which will just start a docker instance of the database and HMPPS Auth.
 
 2. Click the drop-down button for the `HmppsElectronicMonitoringDatastoreApi` run configuration file in the top 
@@ -192,19 +191,5 @@ This project has Jacoco integrated, and this will run after each test run. The g
 
 ## Deployment
 
-> Force-push your code to branch `deploy-dev` to deploy it to dev.  
-> This cannot deploy past dev, but is otherwise the same as the main deployment pipeline.
->
-> This is configured in [.circleci/config.yml](/.circleci/config.yml) in the `hmpps/deploy_env:` action for dev.
-
 - `main` is deployed via [CircleCI](https://app.circleci.com/pipelines/github/ministryofjustice/hmpps-electronic-monitoring-datastore-api)
 - Kubernetes logs can be found on [Kibana](https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(columns:!(log,kubernetes.pod_id),filters:!(('state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.namespace_name.keyword,negate:!f,params:(query:tst-em-example-app-jkn-dev),type:phrase),query:(match_phrase:(kubernetes.namespace_name.keyword:tst-em-example-app-jkn-dev))),('state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.pod_name,negate:!f,params:(query:hmpps-electronic-monitoring-datastore-api),type:phrase),query:(match_phrase:(kubernetes.pod_name:hmpps-electronic-monitoring-datastore-api)))),index:'167701b0-f8c0-11ec-b95c-1d65c3682287',interval:auto,query:(language:kuery,query:''),sort:!()))
-
-## Note on remaining TODOs and Examples from template app
-
-We have tried to provide some examples of best practice in the application - so there are lots of TODOs in the code
-where changes are required to meet your requirements. There is an `ExampleResource` that includes best practice and also
-serve as spring security examples. The template typescript project has a demonstration that calls this endpoint as well.
-
-For the demonstration, rather than introducing a dependency on a different service, this application calls out to
-itself. This is only to show a service calling out to another service and is certainly not recommended!
