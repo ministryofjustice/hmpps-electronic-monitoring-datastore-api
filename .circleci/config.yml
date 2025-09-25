@@ -17,6 +17,10 @@ jobs:
       name: hmpps/localstack
       jdk_tag: "21.0"
       localstack_tag: "3.0"
+    environment:
+      AWS_ACCESS_KEY_ID: ASIAIOSFODNN7EXAMPLE
+      AWS_SECRET_ACCESS_KEY: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      AWS_SESSION_TOKEN: IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZVERYLONGSTRINGEXAMPLE
     steps:
       - checkout
       - restore_cache:
