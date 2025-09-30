@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringOrderDetailsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityOrderDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityOrderDetailsQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
@@ -21,7 +20,7 @@ class IntegrityOrderDetailsRepository(
   ).first()
 
   fun searchOrders(criteria: OrderSearchCriteria, restricted: Boolean): String {
-    val orderSearchQuery = AthenaAlcoholMonitoringOrderDetailsQueryBuilder()
+    val orderSearchQuery = AthenaIntegrityOrderDetailsQueryBuilder()
       .withLegacySubjectId(criteria.legacySubjectId)
       .withFirstName(criteria.firstName)
       .withLastName(criteria.lastName)
