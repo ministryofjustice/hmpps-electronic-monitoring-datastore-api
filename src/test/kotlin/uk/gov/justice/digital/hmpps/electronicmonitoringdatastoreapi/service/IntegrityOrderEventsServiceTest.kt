@@ -5,11 +5,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityContactEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityIncidentEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityMonitoringEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityViolationEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderEventsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.ContactHistory
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.EventHistory
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Incident
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Violations
 
 class IntegrityOrderEventsServiceTest {
   private lateinit var integrityOrderEventsRepository: IntegrityOrderEventsRepository
@@ -26,7 +26,7 @@ class IntegrityOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleMonitoringEventList = listOf(
-      AthenaIntegrityMonitoringEventDTO(
+      EventHistory(
         legacySubjectId = "123",
         eventType = "TEST_EVENT",
         eventDate = "2022-10-10",
@@ -66,7 +66,7 @@ class IntegrityOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleIncidentEventList = listOf(
-      AthenaIntegrityIncidentEventDTO(
+      Incident(
         legacySubjectId = "123",
         violationAlertType = "TEST_VIOLATION",
         violationAlertDate = "2019-06-24",
@@ -102,7 +102,7 @@ class IntegrityOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleViolationEventList = listOf(
-      AthenaIntegrityViolationEventDTO(
+      Violations(
         legacySubjectId = "123",
         enforcementReason = "TEST_REASON",
         investigationOutcomeReason = "TEST_OUTCOME",
@@ -155,7 +155,7 @@ class IntegrityOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleContactEventList = listOf(
-      AthenaIntegrityContactEventDTO(
+      ContactHistory(
         legacySubjectId = "123",
         outcome = "Mr silly laughed out loud",
         contactType = "TEST_CONTACT",

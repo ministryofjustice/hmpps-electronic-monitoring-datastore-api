@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringServiceDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringServiceDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmServices
 import java.time.LocalDateTime
 
 class AlcoholMonitoringServiceDetailsServiceTest {
@@ -25,7 +25,7 @@ class AlcoholMonitoringServiceDetailsServiceTest {
     val legacySubjectId = "fake-id"
 
     private val exampleServices = listOf(
-      AthenaAlcoholMonitoringServiceDetailsDTO(
+      AmServices(
         legacySubjectId = "123",
         serviceStartDate = "2001-01-01",
         serviceEndDate = "2002-02-02",

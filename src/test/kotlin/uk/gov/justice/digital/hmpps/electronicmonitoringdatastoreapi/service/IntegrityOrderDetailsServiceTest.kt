@@ -8,9 +8,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.OrderDetails
 import java.time.LocalDateTime
 
 class IntegrityOrderDetailsServiceTest {
@@ -23,7 +23,7 @@ class IntegrityOrderDetailsServiceTest {
     service = IntegrityOrderDetailsService(integrityOrderDetailsRepository)
   }
 
-  val orderDetailsData = AthenaIntegrityOrderDetailsDTO(
+  val orderDetailsData = OrderDetails(
     legacySubjectId = "AA2020",
     firstName = "John",
     lastName = "Smith",
@@ -65,14 +65,14 @@ class IntegrityOrderDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      whenever(integrityOrderDetailsRepository.getByLegacySubjectIdAndRestricted(legacySubjectId, false))
+      whenever(integrityOrderDetailsRepository.getByLegacySubjectId(legacySubjectId, false))
         .thenReturn(orderDetailsData)
     }
 
     @Test
     fun `calls getOrderDetails from integrity order details repository`() {
       service.getOrderDetails(legacySubjectId, false)
-      verify(integrityOrderDetailsRepository, times(1)).getByLegacySubjectIdAndRestricted(legacySubjectId, false)
+      verify(integrityOrderDetailsRepository, times(1)).getByLegacySubjectId(legacySubjectId, false)
     }
 
     @Test

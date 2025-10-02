@@ -3,7 +3,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityVisitDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityVisitDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.VisitDetails
 import java.time.LocalDateTime
 
 class IntegrityVisitDetailsTest {
@@ -11,7 +12,7 @@ class IntegrityVisitDetailsTest {
   inner class Construct {
     @Test
     fun `VisitDetails can be mapped with all attributes`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = "address_1",
         address2 = "address_2",
@@ -49,7 +50,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped with the minimum details`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = null,
         address2 = null,
@@ -81,7 +82,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped without any address details`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = null,
         address2 = null,
@@ -113,7 +114,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped without any visit notes`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = "address_1",
         address2 = "address_2",
@@ -151,7 +152,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped without any visit outcome`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = "address_1",
         address2 = "address_2",
@@ -189,7 +190,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped without any end date`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = "address_1",
         address2 = "address_2",
@@ -227,7 +228,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped without a complete address`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = null,
         address2 = null,
@@ -265,7 +266,7 @@ class IntegrityVisitDetailsTest {
 
     @Test
     fun `VisitDetails can be mapped without a postcode`() {
-      val athenaDto = AthenaIntegrityVisitDetailsDTO(
+      val athenaDto = VisitDetails(
         legacySubjectId = "123",
         address1 = "address line 1",
         address2 = null,

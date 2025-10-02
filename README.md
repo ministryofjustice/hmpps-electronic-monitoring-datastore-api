@@ -93,7 +93,7 @@ will build the application and run it and HMPPS Auth within a local docker insta
 
 ### Running the application locally using Intellij
 
-1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0  --scale hmpps-auth=0`
+1. Run `docker compose pull && docker compose up --scale hmpps-electronic-monitoring-datastore-api=0`
 , which will just start a docker instance of the database and HMPPS Auth.
 
 2. Click the drop-down button for the `HmppsElectronicMonitoringDatastoreApi` run configuration file in the top 

@@ -20,7 +20,8 @@ import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.datastore.DatastoreProperties
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 @Component
 @EnableConfigurationProperties(DatastoreProperties::class)
@@ -34,7 +35,19 @@ class EmDatastoreClient(
 
   fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): ResultSet {
     val athenaClient = getAthenaClient(restricted)
-    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
+    val query = athenaQuery.build(properties.database)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, query)
+
+    // Wait for query to complete - blocking
+    waitForQueryToComplete(athenaClient, queryExecutionId)
+
+    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    return resultSet
+  }
+
+  fun getQueryResult(query: AthenaQuery, restricted: Boolean = false): ResultSet {
+    val athenaClient = getAthenaClient(restricted)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, query)
 
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)
@@ -54,14 +67,13 @@ class EmDatastoreClient(
   @Transactional
   fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): String {
     val athenaClient = getAthenaClient(restricted)
-    val queryExecutionId: String = submitAthenaQuery(athenaClient, athenaQuery)
+    val query = athenaQuery.build(properties.database)
+    val queryExecutionId: String = submitAthenaQuery(athenaClient, query)
     return queryExecutionId
   }
 
   @Throws(AthenaClientException::class)
-  private fun submitAthenaQuery(athenaClient: AthenaClient, athenaQuery: SqlQueryBuilder): String {
-    val query = athenaQuery.build(properties.database)
-
+  private fun submitAthenaQuery(athenaClient: AthenaClient, query: AthenaQuery): String {
     val queryExecutionContext = QueryExecutionContext.builder()
       .database(properties.database)
       .build()

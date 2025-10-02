@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringVisitDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringVisitDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmVisitDetails
 
 class AlcoholMonitoringVisitDetailsServiceTest {
   private lateinit var alcoholMonitoringVisitDetailsRepository: AlcoholMonitoringVisitDetailsRepository
@@ -23,7 +23,7 @@ class AlcoholMonitoringVisitDetailsServiceTest {
     val legacySubjectId = "fake-id"
 
     private val exampleVisitDetails = listOf(
-      AthenaAlcoholMonitoringVisitDetailsDTO(
+      AmVisitDetails(
         legacySubjectId = "123",
         visitId = "300",
         visitType = "visit type",
