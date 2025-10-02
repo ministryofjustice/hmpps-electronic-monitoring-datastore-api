@@ -1,47 +1,42 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.stereotype.Service
-import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityContactEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityContactEventsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityIncidentEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityIncidentEventsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityMonitoringEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityMonitoringEventsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityViolationEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityViolationEventsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaMapper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.athena.AthenaRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.ContactHistory
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.EventHistory
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Incident
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Violations
 
 @Service
 class IntegrityOrderEventsRepository(
   athenaClient: EmDatastoreClient,
-) : AthenaRepository<AthenaIntegrityMonitoringEventDTO>(athenaClient) {
-  override fun mapTo(results: ResultSet): List<AthenaIntegrityMonitoringEventDTO> = AthenaHelper.mapTo(results)
-
-  fun getMonitoringEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityMonitoringEventDTO> = this.executeQuery(
-    AthenaIntegrityMonitoringEventsQueryBuilder().withLegacySubjectId(legacySubjectId),
+) : AthenaRepository<EventHistory>(athenaClient, EventHistory::class) {
+  fun getMonitoringEventsList(legacySubjectId: String, restricted: Boolean): List<EventHistory> = this.executeQuery(
+    queryBuilder().findByLegacySubjectId(legacySubjectId),
     restricted,
   )
 
-  fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityIncidentEventDTO> {
-    val athenaQuery = AthenaIntegrityIncidentEventsQueryBuilder().withLegacySubjectId(legacySubjectId)
+  fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<Incident> {
+    val athenaQuery = SqlQueryBuilderBase(Incident::class).findByLegacySubjectId(legacySubjectId)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery)
     val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
-    return AthenaHelper.mapTo(queryResult)
+    return AthenaMapper(Incident::class).mapTo(queryResult)
   }
 
-  fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityViolationEventDTO> {
-    val athenaQuery = AthenaIntegrityViolationEventsQueryBuilder().withLegacySubjectId(legacySubjectId)
+  fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<Violations> {
+    val athenaQuery = SqlQueryBuilderBase(Violations::class).findByLegacySubjectId(legacySubjectId)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery, restricted)
     val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
-    return AthenaHelper.mapTo(queryResult)
+    return AthenaMapper(Violations::class).mapTo(queryResult)
   }
 
-  fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<AthenaIntegrityContactEventDTO> {
-    val athenaQuery = AthenaIntegrityContactEventsQueryBuilder().withLegacySubjectId(legacySubjectId)
+  fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<ContactHistory> {
+    val athenaQuery = SqlQueryBuilderBase(ContactHistory::class).findByLegacySubjectId(legacySubjectId)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery, restricted)
     val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
-    return AthenaHelper.mapTo(queryResult)
+    return AthenaMapper(ContactHistory::class).mapTo(queryResult)
   }
 }

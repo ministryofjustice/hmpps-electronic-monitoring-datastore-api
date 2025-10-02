@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityEvent
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityViolationEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityEvent
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.IntegrityOrderEventsService
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service.internal.AuditService
 import java.time.LocalDateTime

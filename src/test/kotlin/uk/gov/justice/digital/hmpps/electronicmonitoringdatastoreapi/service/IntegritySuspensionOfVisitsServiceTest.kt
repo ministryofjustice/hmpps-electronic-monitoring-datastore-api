@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegritySuspensionOfVisitsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegritySuspensionOfVisitsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.SuspensionOfVisits
 
 class IntegritySuspensionOfVisitsServiceTest {
   private lateinit var integritySuspensionOfVisitsRepository: IntegritySuspensionOfVisitsRepository
@@ -23,7 +23,7 @@ class IntegritySuspensionOfVisitsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleSuspensionOfVisits = listOf(
-      AthenaIntegritySuspensionOfVisitsDTO(
+      SuspensionOfVisits(
         legacySubjectId = "123",
         suspensionOfVisits = "Yes",
         suspensionOfVisitsRequestedDate = "2023-03-03",
@@ -35,7 +35,7 @@ class IntegritySuspensionOfVisitsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integritySuspensionOfVisitsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
+      Mockito.`when`(integritySuspensionOfVisitsRepository.findByLegacySubjectId(legacySubjectId, false))
         .thenReturn(exampleSuspensionOfVisits)
     }
 
@@ -43,7 +43,7 @@ class IntegritySuspensionOfVisitsServiceTest {
     fun `calls getSuspensionOfVisits from order information repository`() {
       service.getSuspensionOfVisits(legacySubjectId, false)
 
-      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
+      Mockito.verify(integritySuspensionOfVisitsRepository, Mockito.times(1)).findByLegacySubjectId(legacySubjectId, false)
     }
 
     @Test

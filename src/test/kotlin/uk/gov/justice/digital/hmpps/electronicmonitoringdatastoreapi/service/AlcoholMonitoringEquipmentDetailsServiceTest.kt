@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringEquipmentDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringEquipmentDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmEquipmentDetails
 import java.time.LocalDateTime
 
 class AlcoholMonitoringEquipmentDetailsServiceTest {
@@ -25,7 +25,7 @@ class AlcoholMonitoringEquipmentDetailsServiceTest {
     val legacySubjectId = "fake-id"
 
     private val exampleEquipmentDetails = listOf(
-      AthenaAlcoholMonitoringEquipmentDetailsDTO(
+      AmEquipmentDetails(
         legacySubjectId = "123",
         deviceType = "tag",
         deviceSerialNumber = "740",
@@ -40,7 +40,7 @@ class AlcoholMonitoringEquipmentDetailsServiceTest {
         hmuRemovedDate = null,
         hmuRemovedTime = null,
       ),
-      AthenaAlcoholMonitoringEquipmentDetailsDTO(
+      AmEquipmentDetails(
         legacySubjectId = "123",
         deviceType = "hmu",
         deviceSerialNumber = "740",

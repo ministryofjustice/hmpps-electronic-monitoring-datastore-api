@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityServiceDetailsDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityServiceDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Services
 
 class IntegrityServiceDetailsServiceTest {
   private lateinit var integrityServiceDetailsRepository: IntegrityServiceDetailsRepository
@@ -23,7 +23,7 @@ class IntegrityServiceDetailsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleServiceDetails = listOf(
-      AthenaIntegrityServiceDetailsDTO(
+      Services(
         legacySubjectId = "123",
         serviceId = 333,
         serviceAddress1 = "",
@@ -48,7 +48,7 @@ class IntegrityServiceDetailsServiceTest {
 
     @BeforeEach
     fun setup() {
-      Mockito.`when`(integrityServiceDetailsRepository.findByLegacySubjectIdAndRestricted(legacySubjectId, false))
+      Mockito.`when`(integrityServiceDetailsRepository.findByLegacySubjectId(legacySubjectId, false))
         .thenReturn(exampleServiceDetails)
     }
 
@@ -56,7 +56,7 @@ class IntegrityServiceDetailsServiceTest {
     fun `calls getServiceDetails from order information repository`() {
       service.getServiceDetails(legacySubjectId, false)
 
-      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).findByLegacySubjectIdAndRestricted(legacySubjectId, false)
+      Mockito.verify(integrityServiceDetailsRepository, Mockito.times(1)).findByLegacySubjectId(legacySubjectId, false)
     }
 
     @Test

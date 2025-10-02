@@ -8,7 +8,7 @@ import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 import java.util.UUID
 
@@ -82,7 +82,7 @@ class IntegrityEquipmentDetailsRepositoryTest {
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet())
 
-      repository.findByLegacySubjectIdAndRestricted("123", false)
+      repository.findByLegacySubjectId("123", false)
 
       Mockito.verify(athenaClient).getQueryResult(queryExecutionId, false)
     }
@@ -95,7 +95,7 @@ class IntegrityEquipmentDetailsRepositoryTest {
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet("987"))
 
-      val result = repository.findByLegacySubjectIdAndRestricted("987", false)
+      val result = repository.findByLegacySubjectId("987", false)
 
       Assertions.assertThat(result.size).isEqualTo(2)
       Assertions.assertThat(result.first().legacySubjectId).isEqualTo("987")

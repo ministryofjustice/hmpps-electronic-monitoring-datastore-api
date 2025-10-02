@@ -13,22 +13,37 @@ services:
       - SERVER_PORT=8080
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       - SPRING_PROFILES_ACTIVE=local
+      - AWS_ACCESS_KEY_ID=ASIAIOSFODNN7EXAMPLE
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - AWS_SESSION_TOKEN=IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZVERYLONGSTRINGEXAMPLE
       - ATHENA_DATABASE_NAME=test-database
       - ATHENA_OUTPUT_BUCKET=fake-output-bucket-id
 
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
-    container_name: hmpps-auth
     networks:
       - hmpps
+    container_name: hmpps-auth
     ports:
-      - "9090:8080"
+      - "8090:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health"]
     environment:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+
+  db:
+    image: postgres:latest
+    networks:
+      - hmpps
+    container_name: query-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
 
   localstack:
     image: localstack/localstack:3.0

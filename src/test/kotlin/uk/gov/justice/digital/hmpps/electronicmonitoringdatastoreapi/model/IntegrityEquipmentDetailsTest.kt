@@ -3,7 +3,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityEquipmentDetailsDTO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityEquipmentDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.EquipmentDetails
 import java.time.LocalDateTime
 
 class IntegrityEquipmentDetailsTest {
@@ -11,7 +12,7 @@ class IntegrityEquipmentDetailsTest {
   inner class Construct {
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped without any equipment details`() {
-      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
+      val athenaDto = EquipmentDetails(
         legacySubjectId = "123",
         hmuId = null,
         hmuEquipmentCategoryDescription = null,
@@ -40,7 +41,7 @@ class IntegrityEquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped without any home monitoring unit equipment details`() {
-      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
+      val athenaDto = EquipmentDetails(
         legacySubjectId = "123",
         hmuId = null,
         hmuEquipmentCategoryDescription = null,
@@ -74,7 +75,7 @@ class IntegrityEquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped without any personal equipment details`() {
-      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
+      val athenaDto = EquipmentDetails(
         legacySubjectId = "123",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = "hmu_equipment_category_description",
@@ -108,7 +109,7 @@ class IntegrityEquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped with just equipment ids`() {
-      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
+      val athenaDto = EquipmentDetails(
         legacySubjectId = "123",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = null,
@@ -147,7 +148,7 @@ class IntegrityEquipmentDetailsTest {
 
     @Test
     fun `AthenaEquipmentDetailsDto can be mapped with no times`() {
-      val athenaDto = AthenaIntegrityEquipmentDetailsDTO(
+      val athenaDto = EquipmentDetails(
         legacySubjectId = "123",
         hmuId = "hmu_id",
         hmuEquipmentCategoryDescription = null,

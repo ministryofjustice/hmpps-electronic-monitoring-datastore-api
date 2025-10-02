@@ -12,9 +12,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilderBase
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 import java.time.LocalDate
 import java.util.UUID
@@ -55,7 +55,7 @@ class IntegrityOrderDetailsRepositoryTest {
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet("123564", "768324", true))
 
-      repository.getByLegacySubjectIdAndRestricted("123", false)
+      repository.getByLegacySubjectId("123", false)
 
       verify(athenaClient).getQueryResult(queryExecutionId, false)
     }
@@ -70,7 +70,7 @@ class IntegrityOrderDetailsRepositoryTest {
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet(legacySubjectId, "123564", false))
 
-      val result = repository.getByLegacySubjectIdAndRestricted(legacySubjectId, false)
+      val result = repository.getByLegacySubjectId(legacySubjectId, false)
 
       assertThat(result.legacySubjectId).isEqualTo(legacySubjectId)
     }
@@ -89,16 +89,20 @@ class IntegrityOrderDetailsRepositoryTest {
         dateOfBirth = LocalDate.parse("2001-01-01"),
       )
 
+      val queryExecutionId = UUID.randomUUID().toString()
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+        .thenReturn(queryExecutionId)
+
       repository.searchOrders(searchCriteria, false)
 
       verify(athenaClient).getQueryExecutionId(argumentCaptor.capture(), eq(false))
       assertThat(argumentCaptor.firstValue.values).isEqualTo(
         listOf(
-          "UPPER('123456')",
+          "UPPER('%Test Alias%')",
+          "UPPER('%2001-01-01%')",
           "UPPER('%Test First Name%')",
           "UPPER('%Test Last Name%')",
-          "UPPER('%Test Alias%')",
-          "DATE '2001-01-01'",
+          "UPPER('%123456%')",
         ),
       )
     }
@@ -108,7 +112,7 @@ class IntegrityOrderDetailsRepositoryTest {
       val expected = "query-id"
       val searchCriteria = OrderSearchCriteria()
 
-      whenever(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
         .thenReturn(expected)
 
       val result = repository.searchOrders(searchCriteria, false)

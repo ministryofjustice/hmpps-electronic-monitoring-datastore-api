@@ -4,8 +4,8 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.athena.model.ResultSet
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaIntegrityOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaMapper
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.OrderDetails
 
 data class MiniOrder(
   val firstName: String,
@@ -329,8 +329,8 @@ class AthenaResultSetHelperTest {
 }""",
       )
 
-      val expected: List<AthenaIntegrityOrderDetailsDTO> = listOf(
-        AthenaIntegrityOrderDetailsDTO(
+      val expected: List<OrderDetails> = listOf(
+        OrderDetails(
           legacySubjectId = "1253587",
           legacyOrderId = "1253587",
           firstName = "ELLEN",
@@ -345,7 +345,7 @@ class AthenaResultSetHelperTest {
         ),
       )
 
-      val result = AthenaHelper.mapTo<AthenaIntegrityOrderDetailsDTO>(resultSet)
+      val result = AthenaMapper(OrderDetails::class).mapTo(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }
@@ -371,7 +371,7 @@ class AthenaResultSetHelperTest {
         ),
       )
 
-      val result = AthenaHelper.mapTo<MiniOrder>(resultSet)
+      val result = AthenaMapper(MiniOrder::class).mapTo(resultSet)
 
       Assertions.assertThat(result).isEqualTo(expected)
     }
@@ -453,7 +453,7 @@ class AthenaResultSetHelperTest {
       )
 
       Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
-        .isThrownBy { AthenaHelper.mapTo<FakeObject>(resultSet) }
+        .isThrownBy { AthenaMapper(FakeObject::class).mapTo(resultSet) }
     }
   }
 }

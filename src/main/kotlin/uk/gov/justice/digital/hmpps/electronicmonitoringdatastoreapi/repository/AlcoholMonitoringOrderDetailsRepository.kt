@@ -1,35 +1,22 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.stereotype.Service
-import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringOrderDetailsQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaHelper
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.athena.AthenaRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmOrderDetails
 
 @Service
 class AlcoholMonitoringOrderDetailsRepository(
   athenaClient: EmDatastoreClient,
-) : AthenaRepository<AthenaAlcoholMonitoringOrderDetailsDTO>(athenaClient) {
-  override fun mapTo(results: ResultSet): List<AthenaAlcoholMonitoringOrderDetailsDTO> = AthenaHelper.mapTo(results)
-
-  fun getByLegacySubjectId(legacySubjectId: String): AthenaAlcoholMonitoringOrderDetailsDTO = this.executeQuery(
-    AthenaAlcoholMonitoringOrderDetailsQueryBuilder().withLegacySubjectId(legacySubjectId),
-  ).first()
-
+) : AthenaRepository<AmOrderDetails>(athenaClient, AmOrderDetails::class) {
   fun searchOrders(criteria: OrderSearchCriteria): String {
-    val orderSearchQuery = AthenaAlcoholMonitoringOrderDetailsQueryBuilder()
-      .withLegacySubjectId(criteria.legacySubjectId)
-      .withFirstName(criteria.firstName)
-      .withLastName(criteria.lastName)
-      .withAlias(criteria.alias)
-      .withDob(criteria.dateOfBirth)
-
+    @Suppress("UNCHECKED_CAST")
+    val orderSearchQuery = queryBuilder().findBy(criteria)
     return athenaClient.getQueryExecutionId(orderSearchQuery)
   }
 
-  fun getSearchResults(queryExecutionId: String): List<AthenaAlcoholMonitoringOrderDetailsDTO> {
+  fun getSearchResults(queryExecutionId: String): List<AmOrderDetails> {
     val resultSet = athenaClient.getQueryResult(queryExecutionId)
     return mapTo(resultSet)
   }
