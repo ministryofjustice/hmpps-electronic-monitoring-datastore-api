@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityEquipmentDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.EquipmentDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityEquipmentDetailsRepository
 
 class IntegrityEquipmentDetailsServiceTest {
   private lateinit var integrityEquipmentDetailsRepository: IntegrityEquipmentDetailsRepository
