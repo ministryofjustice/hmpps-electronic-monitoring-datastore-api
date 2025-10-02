@@ -9,8 +9,8 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.OrderDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderDetailsRepository
 import java.time.LocalDateTime
 
 class IntegrityOrderDetailsServiceTest {

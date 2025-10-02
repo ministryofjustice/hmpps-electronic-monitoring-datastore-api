@@ -4,11 +4,11 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaMapper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.athena.AthenaRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.ContactHistory
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.EventHistory
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Incident
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Violations
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.athena.AthenaRepository
 
 @Service
 class IntegrityOrderEventsRepository(
