@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringServiceDetailsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmServices
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringServiceDetailsRepository
 import java.time.LocalDateTime
 
 class AlcoholMonitoringServiceDetailsServiceTest {

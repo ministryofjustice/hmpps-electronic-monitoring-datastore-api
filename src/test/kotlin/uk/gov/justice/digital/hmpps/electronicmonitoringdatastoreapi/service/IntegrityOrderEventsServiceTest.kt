@@ -5,11 +5,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderEventsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.ContactHistory
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.EventHistory
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Incident
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.Violations
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderEventsRepository
 
 class IntegrityOrderEventsServiceTest {
   private lateinit var integrityOrderEventsRepository: IntegrityOrderEventsRepository

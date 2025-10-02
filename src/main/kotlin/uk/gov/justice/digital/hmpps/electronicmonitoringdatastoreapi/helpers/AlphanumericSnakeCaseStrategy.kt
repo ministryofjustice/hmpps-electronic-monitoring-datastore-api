@@ -7,6 +7,8 @@ class AlphanumericSnakeCaseStrategy : PropertyNamingStrategies.NamingBase() {
   override fun translate(input: String?): String? = if (input == null) {
     null
   } else {
-    "([A-Z]+|[0-9]+)".toRegex().replace(input) { "_${it.groupValues[1]}".lowercase() }
+    "([A-Z]+|[0-9]+)".toRegex()
+      .replace(input.replace("'", "")) { "_${it.groupValues[1]}".lowercase() }
+      .replace("^_".toRegex(), "")
   }
 }

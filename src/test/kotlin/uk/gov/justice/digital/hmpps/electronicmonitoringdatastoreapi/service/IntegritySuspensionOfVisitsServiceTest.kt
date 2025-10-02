@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegritySuspensionOfVisitsRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.SuspensionOfVisits
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegritySuspensionOfVisitsRepository
 
 class IntegritySuspensionOfVisitsServiceTest {
   private lateinit var integritySuspensionOfVisitsRepository: IntegritySuspensionOfVisitsRepository

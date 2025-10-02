@@ -2,8 +2,8 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.athena.AthenaRepository
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.VisitDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.athena.AthenaRepository
 
 @Service
 class IntegrityVisitDetailsRepository(athenaClient: EmDatastoreClient) : AthenaRepository<VisitDetails>(athenaClient, VisitDetails::class)
