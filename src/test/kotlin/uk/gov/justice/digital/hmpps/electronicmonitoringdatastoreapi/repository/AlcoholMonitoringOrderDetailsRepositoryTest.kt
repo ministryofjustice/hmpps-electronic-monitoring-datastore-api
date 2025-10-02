@@ -12,9 +12,9 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.SqlQueryBuilderBase
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 import java.time.LocalDate
 import java.util.UUID
@@ -136,16 +136,20 @@ class AlcoholMonitoringOrderDetailsRepositoryTest {
         dateOfBirth = LocalDate.parse("2001-01-01"),
       )
 
+      val queryExecutionId = UUID.randomUUID().toString()
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+        .thenReturn(queryExecutionId)
+
       repository.searchOrders(searchCriteria)
 
       verify(athenaClient).getQueryExecutionId(argumentCaptor.capture(), eq(false))
       assertThat(argumentCaptor.firstValue.values).isEqualTo(
         listOf(
-          "UPPER('123456')",
+          "UPPER('%Test Alias%')",
+          "UPPER('%2001-01-01%')",
           "UPPER('%Test First Name%')",
           "UPPER('%Test Last Name%')",
-          "UPPER('%Test Alias%')",
-          "DATE '2001-01-01'",
+          "UPPER('%123456%')",
         ),
       )
     }
@@ -155,7 +159,7 @@ class AlcoholMonitoringOrderDetailsRepositoryTest {
       val expected = "query-id"
       val searchCriteria = OrderSearchCriteria()
 
-      whenever(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
         .thenReturn(expected)
 
       val result = repository.searchOrders(searchCriteria)

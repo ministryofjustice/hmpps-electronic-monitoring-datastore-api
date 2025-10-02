@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringContactEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringIncidentEventDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringViolationEventDTO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringOrderEventsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmContactHistory
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmIncident
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmViolations
 
 class AlcoholMonitoringOrderEventsServiceTest {
   private lateinit var alcoholMonitoringOrderEventsRepository: AlcoholMonitoringOrderEventsRepository
@@ -25,7 +25,7 @@ class AlcoholMonitoringOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleContactEventList = listOf(
-      AthenaAlcoholMonitoringContactEventDTO(
+      AmContactHistory(
         legacySubjectId = "123",
         contactDate = "2001-01-01",
         contactTime = "01:01:01",
@@ -71,7 +71,7 @@ class AlcoholMonitoringOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleAlcoholMonitoringIncidentEventList = listOf(
-      AthenaAlcoholMonitoringIncidentEventDTO(
+      AmIncident(
         legacySubjectId = "123",
         violationAlertId = "V123",
         violationAlertDate = "2001-01-01",
@@ -115,7 +115,7 @@ class AlcoholMonitoringOrderEventsServiceTest {
     val legacySubjectId = "fake-id"
 
     val exampleViolationEventList = listOf(
-      AthenaAlcoholMonitoringViolationEventDTO(
+      AmViolations(
         legacySubjectId = "123",
         enforcementId = "E123",
         nonComplianceReason = "TEST_REASON",

@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.va
 
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
 
 class OrderSearchCriteriaValidator : ConstraintValidator<ValidOrderSearchCriteria, OrderSearchCriteria> {
   override fun isValid(

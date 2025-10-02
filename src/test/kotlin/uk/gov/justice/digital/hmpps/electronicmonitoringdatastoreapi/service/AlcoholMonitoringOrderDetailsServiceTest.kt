@@ -8,9 +8,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.entity.AthenaAlcoholMonitoringOrderDetailsDTO
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.OrderSearchCriteria
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringOrderDetailsRepository
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity.AmOrderDetails
 import java.time.LocalDateTime
 
 class AlcoholMonitoringOrderDetailsServiceTest {
@@ -23,7 +23,7 @@ class AlcoholMonitoringOrderDetailsServiceTest {
     service = AlcoholMonitoringOrderDetailsService(alcoholMonitoringOrderDetailsRepository)
   }
 
-  val orderDetailsData = AthenaAlcoholMonitoringOrderDetailsDTO(
+  val orderDetailsData = AmOrderDetails(
     legacySubjectId = "AA2020",
     firstName = "John",
     lastName = "Smith",

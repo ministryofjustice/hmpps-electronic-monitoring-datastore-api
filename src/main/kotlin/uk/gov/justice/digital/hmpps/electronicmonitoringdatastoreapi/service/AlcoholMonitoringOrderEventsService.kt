@@ -1,10 +1,10 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AlcoholMonitoringContactEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AlcoholMonitoringEvent
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AlcoholMonitoringIncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.AlcoholMonitoringViolationEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.AlcoholMonitoringContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.AlcoholMonitoringEvent
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.AlcoholMonitoringIncidentEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.AlcoholMonitoringViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.AlcoholMonitoringOrderEventsRepository
 import java.time.LocalDateTime
 

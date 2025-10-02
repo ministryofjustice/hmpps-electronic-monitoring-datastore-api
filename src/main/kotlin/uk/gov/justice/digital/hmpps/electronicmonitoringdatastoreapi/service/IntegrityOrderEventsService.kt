@@ -2,11 +2,11 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityContactEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityEvent
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityIncidentEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityMonitoringEventDetails
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.IntegrityViolationEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityContactEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityEvent
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityIncidentEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityMonitoringEventDetails
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.IntegrityViolationEventDetails
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository.IntegrityOrderEventsRepository
 import java.time.LocalDateTime
 
