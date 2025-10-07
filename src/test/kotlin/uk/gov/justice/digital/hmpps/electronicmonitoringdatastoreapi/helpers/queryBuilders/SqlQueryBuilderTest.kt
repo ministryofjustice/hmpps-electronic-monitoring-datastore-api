@@ -169,12 +169,30 @@ class SqlQueryBuilderTest {
         FROM 
           fake_database.test_entity_model
         WHERE 
-           UPPER(CAST(legacy_subject_id as varchar)) = ?
+           UPPER(CAST(legacy_subject_id as varchar)) LIKE ?
     """.trimIndent()
 
     @Test
     fun `returns valid SQL`() {
       val criteria = OrderSearchCriteria(legacySubjectId = "AA122333")
+
+      val expectedSQL = TestHelpers.replaceWhitespace(findByCriteriaQuery.trimIndent())
+
+      val result = TestableSqlQueryBuilder().findBy(criteria).build("fake_database")
+
+      Assertions.assertThat(TestHelpers.replaceWhitespace(result.queryString)).isEqualTo(expectedSQL)
+      Assertions.assertThat(result.parameters).hasSize(1)
+      Assertions.assertThat(result.parameters).isEqualTo(arrayOf("UPPER('%${criteria.legacySubjectId}%')"))
+    }
+
+    @Test
+    fun `returns valid SQL when strings are empty`() {
+      val criteria = OrderSearchCriteria(
+        legacySubjectId = "AA122333",
+        firstName = "",
+        lastName = "",
+        alias = "",
+      )
 
       val expectedSQL = TestHelpers.replaceWhitespace(findByCriteriaQuery.trimIndent())
 

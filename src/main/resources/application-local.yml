@@ -19,13 +19,7 @@ spring:
 
 services:
   hmpps-auth:
-    url: ${HMPPS_AUTH_URL:http://localhost:8090/auth}
-
-aws:
-  region: eu-west-2
-  athena:
-    role-general: fakeGeneralAccessIAM
-    role-restricted: fakeRestrictedAccessIAM
+    url: ${HMPPS_AUTH_URL:http://localhost:9090/auth}
 
 datastore:
   database: historic_api_mart

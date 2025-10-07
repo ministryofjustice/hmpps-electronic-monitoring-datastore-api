@@ -30,7 +30,6 @@ spring:
     password:
 
 aws:
-  region: eu-west-2
   endpoint-url: http://localhost:8091
   athena:
     role-general: fakeIAMGeneral

@@ -24,7 +24,10 @@ abstract class AthenaRepository<T : Any>(
     return mapTo(queryResult)
   }
 
-  fun isValid(restricted: Boolean = false): Boolean = athenaClient.getQueryResult(AthenaQuery("SELECT 1", arrayOf()), restricted).hasRows()
+  fun isValid(restricted: Boolean = false): Boolean {
+    val queryResult = athenaClient.getQueryResult(AthenaQuery("SELECT 1", arrayOf()), restricted)
+    return queryResult.hasRows()
+  }
 
   // fun findAll(restricted: Boolean = false): List<T> = this.executeQuery(queryBuilder().findAll(), restricted)
   fun findBy(criteria: Any, restricted: Boolean = false): List<T> = this.executeQuery(queryBuilder().findAll(), restricted)

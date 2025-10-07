@@ -48,8 +48,8 @@ data class AlcoholMonitoringOrderDetails(
     orderTypeDescription = dto.orderTypeDescription,
     enforceableCondition = dto.enforceableCondition,
     orderEndOutcome = dto.orderEndOutcome,
-    responsibleOrganisationPhoneNumber = dto.responsibleOrganisationPhoneNumber,
-    responsibleOrganisationEmail = dto.responsibleOrganisationEmail,
+    responsibleOrganisationPhoneNumber = dto.responsibleOrgDetailsPhoneNumber,
+    responsibleOrganisationEmail = dto.responsibleOrgDetailsEmail,
     tagAtSource = dto.tagAtSource,
   )
 }

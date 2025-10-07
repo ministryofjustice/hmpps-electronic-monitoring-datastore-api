@@ -6,6 +6,7 @@
 .idea/
 .gradle/
 .kotlin/
+.run/
 build/
 
 # Mac files
@@ -80,3 +81,4 @@ localstack/
 
 ## env files
 .env
+/.run/
