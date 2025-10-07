@@ -43,8 +43,8 @@ class AlcoholMonitoringOrderDetailsServiceTest {
     orderType = "Community",
     orderTypeDescription = "",
     orderEndOutcome = "",
-    responsibleOrganisationPhoneNumber = "01234567890",
-    responsibleOrganisationEmail = "a@b.c",
+    responsibleOrgDetailsPhoneNumber = "01234567890",
+    responsibleOrgDetailsEmail = "a@b.c",
     tagAtSource = "",
   )
 

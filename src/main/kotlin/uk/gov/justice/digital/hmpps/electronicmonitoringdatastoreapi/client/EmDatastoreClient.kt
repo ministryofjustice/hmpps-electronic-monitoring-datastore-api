@@ -33,15 +33,25 @@ class EmDatastoreClient(
 
   private val log = LoggerFactory.getLogger(this::class.java)
 
-  fun getQueryResult(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): ResultSet {
-    val athenaClient = getAthenaClient(restricted)
+  fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): String {
     val query = athenaQuery.build(properties.database)
-    val queryExecutionId: String = submitAthenaQuery(athenaClient, query)
+    val athenaClient = getAthenaClient(restricted)
+    val queryExecutionId = submitAthenaQuery(athenaClient, query)
+    return queryExecutionId
+  }
 
-    // Wait for query to complete - blocking
+  @Cacheable("athenaQueryExecutions")
+  @Transactional
+  fun getQueryExecutionId(query: AthenaQuery, restricted: Boolean = false): String {
+    val athenaClient = getAthenaClient(restricted)
+    val queryExecutionId = submitAthenaQuery(athenaClient, query)
+    return queryExecutionId
+  }
+
+  fun getQueryResult(queryExecutionId: String, restricted: Boolean = false): ResultSet {
+    val athenaClient = getAthenaClient(restricted)
     waitForQueryToComplete(athenaClient, queryExecutionId)
-
-    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    val resultSet = retrieveResults(athenaClient, queryExecutionId)
     return resultSet
   }
 
@@ -52,24 +62,8 @@ class EmDatastoreClient(
     // Wait for query to complete - blocking
     waitForQueryToComplete(athenaClient, queryExecutionId)
 
-    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
+    val resultSet = retrieveResults(athenaClient, queryExecutionId)
     return resultSet
-  }
-
-  fun getQueryResult(queryExecutionId: String, restricted: Boolean = false): ResultSet {
-    val athenaClient = getAthenaClient(restricted)
-    waitForQueryToComplete(athenaClient, queryExecutionId)
-    val resultSet: ResultSet = retrieveResults(athenaClient, queryExecutionId)
-    return resultSet
-  }
-
-  @Cacheable("athenaQueryExecutions")
-  @Transactional
-  fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): String {
-    val athenaClient = getAthenaClient(restricted)
-    val query = athenaQuery.build(properties.database)
-    val queryExecutionId: String = submitAthenaQuery(athenaClient, query)
-    return queryExecutionId
   }
 
   @Throws(AthenaClientException::class)
@@ -101,7 +95,7 @@ class EmDatastoreClient(
     startQueryExecutionRequest.resultConfiguration(resultConfiguration)
     // .resultReuseConfiguration(resultReuseConfiguration)
 
-    log.debug("Starting query: {}", query)
+    log.debug("Starting query: {}", query.queryString)
 
     var startQueryExecutionResponse: StartQueryExecutionResponse
     try {

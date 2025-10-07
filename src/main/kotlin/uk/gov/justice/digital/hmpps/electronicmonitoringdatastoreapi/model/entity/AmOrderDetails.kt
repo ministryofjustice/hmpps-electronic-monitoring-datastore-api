@@ -1,7 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
 data class AmOrderDetails(
   val legacySubjectId: String,
   val legacyOrderId: String?,
@@ -22,9 +20,7 @@ data class AmOrderDetails(
   val orderType: String?,
   val orderTypeDescription: String?,
   val orderEndOutcome: String?,
-  @param:JsonProperty("responsible_org_details_phone_number")
-  val responsibleOrganisationPhoneNumber: String?,
-  @param:JsonProperty("responsible_org_details_email")
-  val responsibleOrganisationEmail: String?,
+  val responsibleOrgDetailsPhoneNumber: String?,
+  val responsibleOrgDetailsEmail: String?,
   val tagAtSource: String?,
 )
