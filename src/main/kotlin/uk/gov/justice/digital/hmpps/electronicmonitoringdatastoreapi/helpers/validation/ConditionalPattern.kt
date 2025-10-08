@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.va
 
 import jakarta.validation.Constraint
 import jakarta.validation.Payload
-import jakarta.validation.constraints.Pattern.Flag
 import kotlin.annotation.Retention
 import kotlin.annotation.Target
 import kotlin.reflect.KClass
@@ -15,5 +14,4 @@ annotation class ConditionalPattern(
   val groups: Array<KClass<*>> = [],
   val payload: Array<KClass<out Payload>> = [],
   val regexp: String,
-  val flags: Array<Flag> = [],
 )
