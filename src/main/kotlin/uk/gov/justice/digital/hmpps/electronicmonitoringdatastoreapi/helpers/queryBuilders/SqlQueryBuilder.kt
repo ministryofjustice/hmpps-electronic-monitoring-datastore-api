@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.reflect.KClass
 
 interface SqlQueryBuilder {
-  fun build(databaseName: String): AthenaQuery
+  fun build(databaseName: String? = null): AthenaQuery
   fun findAll(): SqlQueryBuilder
   fun findByLegacySubjectId(legacySubjectId: String?): SqlQueryBuilder
   fun getByLegacySubjectId(legacySubjectId: String?): SqlQueryBuilder
@@ -85,20 +85,12 @@ open class SqlQueryBuilderBase<T : Any>(
     }
   }
 
-  private fun validateAlphanumeric(value: String?, field: String) {
-    if (value.isNullOrBlank()) {
-      return
-    }
-
-    if (!StringUtils.isAlphanumeric(value)) {
-      throw IllegalArgumentException("$field must only contain alphanumeric characters and spaces")
-    }
-  }
-
   @Suppress("UNCHECKED_CAST")
-  private fun getSQL(databaseName: String): String {
+  private fun getSQL(databaseName: String?): String {
     val columns = AthenaMapper(recordKClass).getColumns()
-    val query = Query().fields(*columns).from(tableName)
+    val query = Query()
+      .fields(*columns)
+      .from(if (databaseName.isNullOrBlank()) tableName else "$databaseName.$tableName")
 
     whereClauses.forEach {
       query.where(it.value)
@@ -123,5 +115,5 @@ open class SqlQueryBuilderBase<T : Any>(
     whereClauses[key] = "UPPER(CAST($key as $type))" eq normalisedValue
   }
 
-  override fun build(databaseName: String): AthenaQuery = AthenaQuery(getSQL(databaseName), values.toTypedArray())
+  override fun build(databaseName: String?): AthenaQuery = AthenaQuery(getSQL(databaseName), values.toTypedArray())
 }

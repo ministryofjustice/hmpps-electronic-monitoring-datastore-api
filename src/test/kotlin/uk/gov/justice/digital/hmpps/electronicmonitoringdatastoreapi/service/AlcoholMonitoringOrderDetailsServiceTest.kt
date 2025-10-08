@@ -82,18 +82,18 @@ class AlcoholMonitoringOrderDetailsServiceTest {
 
     @Test
     fun `calls searchOrders from order repository`() {
-      whenever(alcoholMonitoringOrderDetailsRepository.searchOrders(orderSearchCriteria))
+      whenever(alcoholMonitoringOrderDetailsRepository.startSearch(orderSearchCriteria))
         .thenReturn("query-execution-id")
 
       service.getQueryExecutionId(orderSearchCriteria)
 
-      verify(alcoholMonitoringOrderDetailsRepository, times(1)).searchOrders(orderSearchCriteria)
+      verify(alcoholMonitoringOrderDetailsRepository, times(1)).startSearch(orderSearchCriteria)
     }
 
     @Test
     fun `returns a query execution ID`() {
       val expectedResult = "query-execution-id"
-      whenever(alcoholMonitoringOrderDetailsRepository.searchOrders(orderSearchCriteria))
+      whenever(alcoholMonitoringOrderDetailsRepository.startSearch(orderSearchCriteria))
         .thenReturn("query-execution-id")
 
       val result = service.getQueryExecutionId(orderSearchCriteria)

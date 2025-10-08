@@ -20,7 +20,6 @@ import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionResponse
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.datastore.DatastoreProperties
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 
 @Component
@@ -32,13 +31,6 @@ class EmDatastoreClient(
 ) {
 
   private val log = LoggerFactory.getLogger(this::class.java)
-
-  fun getQueryExecutionId(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): String {
-    val query = athenaQuery.build(properties.database)
-    val athenaClient = getAthenaClient(restricted)
-    val queryExecutionId = submitAthenaQuery(athenaClient, query)
-    return queryExecutionId
-  }
 
   @Cacheable("athenaQueryExecutions")
   @Transactional

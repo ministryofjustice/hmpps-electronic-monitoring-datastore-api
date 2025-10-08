@@ -15,7 +15,7 @@ class IntegrityOrderDetailsService(
     return IntegrityOrderDetails(orderDetailsDTO)
   }
 
-  fun getQueryExecutionId(criteria: OrderSearchCriteria, restricted: Boolean): String = integrityOrderDetailsRepository.searchOrders(criteria, restricted)
+  fun getQueryExecutionId(criteria: OrderSearchCriteria, restricted: Boolean): String = integrityOrderDetailsRepository.startSearch(criteria, restricted)
 
   fun getSearchResults(queryExecutionId: String, restricted: Boolean): List<IntegrityOrderDetails> {
     val results = integrityOrderDetailsRepository.getSearchResults(queryExecutionId, restricted)
