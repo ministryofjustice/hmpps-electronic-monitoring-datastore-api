@@ -12,9 +12,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.datastore.DatastoreProperties
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 import java.time.LocalDate
 import java.util.UUID
@@ -42,6 +42,9 @@ class IntegrityOrderDetailsRepositoryTest {
   @BeforeEach
   fun setup() {
     athenaClient = mock<EmDatastoreClient>()
+    Mockito.`when`(athenaClient.properties)
+      .thenReturn(DatastoreProperties(database = "fake-database", outputBucketArn = "fake-arn"))
+
     repository = IntegrityOrderDetailsRepository(athenaClient)
   }
 
@@ -50,7 +53,7 @@ class IntegrityOrderDetailsRepositoryTest {
     @Test
     fun `getOrderDetails calls getQueryResult`() {
       val queryExecutionId = UUID.randomUUID().toString()
-      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<AthenaQuery>(), eq(false)))
         .thenReturn(queryExecutionId)
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet("123564", "768324", true))
@@ -65,7 +68,7 @@ class IntegrityOrderDetailsRepositoryTest {
       val legacySubjectId = "expectedId"
 
       val queryExecutionId = UUID.randomUUID().toString()
-      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<AthenaQuery>(), eq(false)))
         .thenReturn(queryExecutionId)
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet(legacySubjectId, "123564", false))
@@ -80,7 +83,7 @@ class IntegrityOrderDetailsRepositoryTest {
   inner class SearchOrders {
     @Test
     fun `searchOrders calls getQueryExecutionId with the correct sql query`() {
-      val argumentCaptor = argumentCaptor<SqlQueryBuilderBase<Any>>()
+      val argumentCaptor = argumentCaptor<AthenaQuery>()
       val searchCriteria = OrderSearchCriteria(
         legacySubjectId = "123456",
         firstName = "Test First Name",
@@ -90,14 +93,14 @@ class IntegrityOrderDetailsRepositoryTest {
       )
 
       val queryExecutionId = UUID.randomUUID().toString()
-      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<AthenaQuery>(), eq(false)))
         .thenReturn(queryExecutionId)
 
-      repository.searchOrders(searchCriteria, false)
+      repository.startSearch(searchCriteria, false)
 
       verify(athenaClient).getQueryExecutionId(argumentCaptor.capture(), eq(false))
-      assertThat(argumentCaptor.firstValue.values).isEqualTo(
-        listOf(
+      assertThat(argumentCaptor.firstValue.parameters).isEqualTo(
+        arrayOf(
           "UPPER('%Test Alias%')",
           "UPPER('%2001-01-01%')",
           "UPPER('%Test First Name%')",
@@ -112,10 +115,10 @@ class IntegrityOrderDetailsRepositoryTest {
       val expected = "query-id"
       val searchCriteria = OrderSearchCriteria()
 
-      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<AthenaQuery>(), eq(false)))
         .thenReturn(expected)
 
-      val result = repository.searchOrders(searchCriteria, false)
+      val result = repository.startSearch(searchCriteria, false)
       assertThat(result).isEqualTo(expected)
     }
   }

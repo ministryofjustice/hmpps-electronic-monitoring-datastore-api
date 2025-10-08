@@ -10,7 +10,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.datastore.DatastoreProperties
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 import java.util.UUID
 
@@ -22,6 +23,9 @@ class AlcoholMonitoringEquipmentDetailsRepositoryTest {
   @BeforeEach
   fun setup() {
     athenaClient = Mockito.mock(EmDatastoreClient::class.java)
+    Mockito.`when`(athenaClient.properties)
+      .thenReturn(DatastoreProperties(database = "fake-database", outputBucketArn = "fake-arn"))
+
     repository = AlcoholMonitoringEquipmentDetailsRepository(athenaClient)
   }
 
@@ -81,7 +85,7 @@ class AlcoholMonitoringEquipmentDetailsRepositoryTest {
     @Test
     fun `passes correct query to getQueryResult`() {
       val queryExecutionId = UUID.randomUUID().toString()
-      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<AthenaQuery>(), eq(false)))
         .thenReturn(queryExecutionId)
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet("123", "456"))
@@ -94,7 +98,7 @@ class AlcoholMonitoringEquipmentDetailsRepositoryTest {
     @Test
     fun `returns all the results from getQueryResult`() {
       val queryExecutionId = UUID.randomUUID().toString()
-      Mockito.`when`(athenaClient.getQueryExecutionId(any<SqlQueryBuilder>(), eq(false)))
+      Mockito.`when`(athenaClient.getQueryExecutionId(any<AthenaQuery>(), eq(false)))
         .thenReturn(queryExecutionId)
       Mockito.`when`(athenaClient.getQueryResult(eq(queryExecutionId), eq(false)))
         .thenReturn(mockResultSet("000", "999"))

@@ -20,7 +20,7 @@ class AlcoholMonitoringOrderDetailsService(
     return AlcoholMonitoringOrderDetails(orderDetails)
   }
 
-  fun getQueryExecutionId(@Valid criteria: OrderSearchCriteria): String = orderDetailsRepository.searchOrders(criteria)
+  fun getQueryExecutionId(@Valid criteria: OrderSearchCriteria): String = orderDetailsRepository.startSearch(criteria)
 
   fun getSearchResults(queryExecutionId: String): List<AlcoholMonitoringOrderDetails> {
     val results = orderDetailsRepository.getSearchResults(queryExecutionId)

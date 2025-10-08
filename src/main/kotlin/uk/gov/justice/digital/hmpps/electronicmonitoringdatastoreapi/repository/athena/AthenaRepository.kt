@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.repository
 
 import software.amazon.awssdk.services.athena.model.ResultSet
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client.EmDatastoreClient
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSearchCriteria
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaMapper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
@@ -19,9 +20,9 @@ abstract class AthenaRepository<T : Any>(
   fun queryBuilder(): SqlQueryBuilder = SqlQueryBuilderBase(kClass)
 
   fun executeQuery(athenaQuery: SqlQueryBuilder, restricted: Boolean = false): List<T> {
-    val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery)
-    val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
-    return mapTo(queryResult)
+    val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery.build(athenaClient.properties.database))
+    val resultSet = athenaClient.getQueryResult(queryExecutionId, restricted)
+    return mapTo(resultSet)
   }
 
   fun isValid(restricted: Boolean = false): Boolean {
@@ -29,8 +30,24 @@ abstract class AthenaRepository<T : Any>(
     return queryResult.hasRows()
   }
 
-  // fun findAll(restricted: Boolean = false): List<T> = this.executeQuery(queryBuilder().findAll(), restricted)
-  fun findBy(criteria: Any, restricted: Boolean = false): List<T> = this.executeQuery(queryBuilder().findAll(), restricted)
-  fun findByLegacySubjectId(legacySubjectId: String, restricted: Boolean = false): List<T> = this.executeQuery(queryBuilder().findByLegacySubjectId(legacySubjectId), restricted)
-  fun getByLegacySubjectId(legacySubjectId: String, restricted: Boolean = false): T = findByLegacySubjectId(legacySubjectId, restricted).first()
+  fun startSearch(criteria: OrderSearchCriteria, restricted: Boolean = false): String {
+    val athenaQuery = queryBuilder().findBy(criteria).build(athenaClient.properties.database)
+    return athenaClient.getQueryExecutionId(athenaQuery, restricted)
+  }
+
+  fun getSearchResults(queryExecutionId: String, restricted: Boolean = false): List<T> {
+    val resultSet = athenaClient.getQueryResult(queryExecutionId, restricted)
+    return mapTo(resultSet)
+  }
+
+  fun findByLegacySubjectId(legacySubjectId: String, restricted: Boolean = false): List<T> {
+    val athenaQuery = queryBuilder().findByLegacySubjectId(legacySubjectId)
+    val resultSet = this.executeQuery(athenaQuery, restricted)
+    return resultSet
+  }
+
+  fun getByLegacySubjectId(legacySubjectId: String, restricted: Boolean = false): T {
+    val resultSet = findByLegacySubjectId(legacySubjectId, restricted)
+    return resultSet.first()
+  }
 }

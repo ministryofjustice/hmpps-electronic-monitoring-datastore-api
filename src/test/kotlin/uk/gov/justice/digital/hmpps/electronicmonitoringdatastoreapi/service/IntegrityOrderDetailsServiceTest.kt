@@ -94,18 +94,18 @@ class IntegrityOrderDetailsServiceTest {
 
     @Test
     fun `calls searchOrders from order repository`() {
-      whenever(integrityOrderDetailsRepository.searchOrders(orderSearchCriteria, false))
+      whenever(integrityOrderDetailsRepository.startSearch(orderSearchCriteria, false))
         .thenReturn("query-execution-id")
 
       service.getQueryExecutionId(orderSearchCriteria, false)
 
-      verify(integrityOrderDetailsRepository, times(1)).searchOrders(orderSearchCriteria, false)
+      verify(integrityOrderDetailsRepository, times(1)).startSearch(orderSearchCriteria, false)
     }
 
     @Test
     fun `returns a query execution ID`() {
       val expectedResult = "query-execution-id"
-      whenever(integrityOrderDetailsRepository.searchOrders(orderSearchCriteria, false))
+      whenever(integrityOrderDetailsRepository.startSearch(orderSearchCriteria, false))
         .thenReturn("query-execution-id")
 
       val result = service.getQueryExecutionId(orderSearchCriteria, false)

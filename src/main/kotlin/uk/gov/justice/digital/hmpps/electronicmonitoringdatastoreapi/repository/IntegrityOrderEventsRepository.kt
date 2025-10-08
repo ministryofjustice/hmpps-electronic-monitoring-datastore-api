@@ -20,21 +20,21 @@ class IntegrityOrderEventsRepository(
   )
 
   fun getIncidentEventsList(legacySubjectId: String, restricted: Boolean): List<Incident> {
-    val athenaQuery = SqlQueryBuilderBase(Incident::class).findByLegacySubjectId(legacySubjectId)
+    val athenaQuery = SqlQueryBuilderBase(Incident::class).findByLegacySubjectId(legacySubjectId).build(athenaClient.properties.database)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery)
     val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
     return AthenaMapper(Incident::class).mapTo(queryResult)
   }
 
   fun getViolationEventsList(legacySubjectId: String, restricted: Boolean): List<Violations> {
-    val athenaQuery = SqlQueryBuilderBase(Violations::class).findByLegacySubjectId(legacySubjectId)
+    val athenaQuery = SqlQueryBuilderBase(Violations::class).findByLegacySubjectId(legacySubjectId).build(athenaClient.properties.database)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery, restricted)
     val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
     return AthenaMapper(Violations::class).mapTo(queryResult)
   }
 
   fun getContactEventsList(legacySubjectId: String, restricted: Boolean): List<ContactHistory> {
-    val athenaQuery = SqlQueryBuilderBase(ContactHistory::class).findByLegacySubjectId(legacySubjectId)
+    val athenaQuery = SqlQueryBuilderBase(ContactHistory::class).findByLegacySubjectId(legacySubjectId).build(athenaClient.properties.database)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery, restricted)
     val queryResult = athenaClient.getQueryResult(queryExecutionId, restricted)
     return AthenaMapper(ContactHistory::class).mapTo(queryResult)

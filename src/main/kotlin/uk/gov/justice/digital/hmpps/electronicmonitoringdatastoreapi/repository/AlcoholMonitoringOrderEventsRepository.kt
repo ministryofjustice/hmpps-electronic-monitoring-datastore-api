@@ -18,14 +18,14 @@ class AlcoholMonitoringOrderEventsRepository(
   )
 
   fun getViolationEventsList(legacySubjectId: String): List<AmViolations> {
-    val athenaQuery = SqlQueryBuilderBase(AmViolations::class).findByLegacySubjectId(legacySubjectId)
+    val athenaQuery = SqlQueryBuilderBase(AmViolations::class).findByLegacySubjectId(legacySubjectId).build(athenaClient.properties.database)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery)
     val queryResult = athenaClient.getQueryResult(queryExecutionId)
     return AthenaMapper(AmViolations::class).mapTo(queryResult)
   }
 
   fun getContactEventsList(legacySubjectId: String): List<AmContactHistory> {
-    val athenaQuery = SqlQueryBuilderBase(AmContactHistory::class).findByLegacySubjectId(legacySubjectId)
+    val athenaQuery = SqlQueryBuilderBase(AmContactHistory::class).findByLegacySubjectId(legacySubjectId).build(athenaClient.properties.database)
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery)
     val queryResult = athenaClient.getQueryResult(queryExecutionId)
     return AthenaMapper(AmContactHistory::class).mapTo(queryResult)
