@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.2"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.3"
   kotlin("plugin.spring") version "2.2.20"
   jacoco
 }
@@ -14,8 +14,8 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.5.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
-  implementation("software.amazon.awssdk:athena:2.35.6")
-  implementation("software.amazon.awssdk:sts:2.35.6")
+  implementation("software.amazon.awssdk:athena:2.35.7")
+  implementation("software.amazon.awssdk:sts:2.35.7")
   implementation("org.json:json:20250517")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
