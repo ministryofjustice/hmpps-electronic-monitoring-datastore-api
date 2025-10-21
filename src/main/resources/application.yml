@@ -78,7 +78,7 @@ aws:
   region: eu-west-2
   athena:
     role-general: ${ATHENA_GENERAL_IAM_ROLE}
-    role-restricted: ${ATHENA_RESTRICTED_IAM_ROLE}
+    role-restricted: ${ATHENA_SPECIALS_IAM_ROLE}
 
 datastore:
   database: ${ATHENA_DATABASE_NAME}
