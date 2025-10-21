@@ -18,6 +18,14 @@ services:
       - AWS_SESSION_TOKEN=IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZVERYLONGSTRINGEXAMPLE
       - ATHENA_DATABASE_NAME=test-database
       - ATHENA_OUTPUT_BUCKET=fake-output-bucket-id
+    depends_on:
+      hmpps-auth:
+        condition: service_started
+      db:
+        condition: service_healthy
+        restart: true
+      localstack:
+        condition: service_healthy
 
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
@@ -41,6 +49,12 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
