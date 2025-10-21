@@ -19,17 +19,17 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
-  implementation("software.amazon.awssdk:athena:2.35.7")
-  implementation("software.amazon.awssdk:sts:2.35.7")
+  implementation("software.amazon.awssdk:athena:2.35.10")
+  implementation("software.amazon.awssdk:sts:2.35.10")
   implementation("org.json:json:20250517")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
   runtimeOnly("org.postgresql:postgresql")
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
-  testImplementation("com.h2database:h2:2.3.232")
+  testImplementation("com.h2database:h2:2.4.240")
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.7.0")
-  testImplementation("org.mockito:mockito-core:5.17.0")
+  testImplementation("org.mockito:mockito-core:5.20.0")
   testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
   testImplementation("org.wiremock:wiremock-standalone:3.13.1")
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.35") {
