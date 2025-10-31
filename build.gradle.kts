@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.3"
-  kotlin("plugin.spring") version "2.2.20"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.4"
+  kotlin("plugin.spring") version "2.2.21"
   jacoco
 }
 
@@ -13,14 +13,14 @@ configurations {
 dependencies {
   implementation("org.apache.commons:commons-lang3:3.19.0")
 
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.7.0")
-  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.5.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.8.1")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.6.1")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
-  implementation("software.amazon.awssdk:athena:2.35.10")
-  implementation("software.amazon.awssdk:sts:2.35.10")
+  implementation("software.amazon.awssdk:athena:2.37.2")
+  implementation("software.amazon.awssdk:sts:2.37.2")
   implementation("org.json:json:20250517")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
@@ -28,7 +28,7 @@ dependencies {
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
   testImplementation("com.h2database:h2:2.4.240")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.7.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.8.1")
   testImplementation("org.mockito:mockito-core:5.20.0")
   testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
   testImplementation("org.wiremock:wiremock-standalone:3.13.1")
@@ -38,9 +38,9 @@ dependencies {
 
   implementation("org.json:json:20250517")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
-  implementation("com.fasterxml.jackson.core:jackson-core:2.20.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.20.1")
+  implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
 
   testImplementation(kotlin("test"))
 }
