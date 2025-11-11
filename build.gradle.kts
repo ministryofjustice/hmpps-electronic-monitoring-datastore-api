@@ -17,10 +17,10 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.6.1")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
 
-  implementation("software.amazon.awssdk:athena:2.37.3")
-  implementation("software.amazon.awssdk:sts:2.37.3")
+  implementation("software.amazon.awssdk:athena:2.38.3")
+  implementation("software.amazon.awssdk:sts:2.38.3")
   implementation("org.json:json:20250517")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
