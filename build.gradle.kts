@@ -20,8 +20,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
 
-  implementation("software.amazon.awssdk:athena:2.38.3")
-  implementation("software.amazon.awssdk:sts:2.38.3")
+  implementation("software.amazon.awssdk:athena:2.38.4")
+  implementation("software.amazon.awssdk:sts:2.38.4")
   implementation("org.json:json:20250517")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
