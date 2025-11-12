@@ -5,7 +5,7 @@ ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 WORKDIR /app
 ADD . .
-RUN ./gradlew assemble
+RUN ./gradlew --no-daemon assemble
 
 FROM eclipse-temurin:25.0.1_8-jre-jammy
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"

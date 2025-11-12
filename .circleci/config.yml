@@ -29,6 +29,8 @@ jobs:
             - gradle-
       - run:
           command: ./gradlew check
+      - run:
+          command: ./gradlew assemble
       - save_cache:
           paths:
             - ~/.gradle
@@ -54,7 +56,6 @@ workflows:
             branches:
               only:
                 - main
-                - deploy-dev
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -66,7 +67,6 @@ workflows:
             branches:
               only:
                 - main
-                - deploy-dev
           requires:
             - validate
             - build_docker
