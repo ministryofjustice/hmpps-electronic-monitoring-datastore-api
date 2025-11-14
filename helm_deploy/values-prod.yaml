@@ -2,7 +2,7 @@
 # Per environment values which override defaults in hmpps-electronic-monitoring-datastore-api/values.yaml
 
 generic-service:
-  serviceAccountName: "hmpps-em-datastore-prod-athena"
+  serviceAccountName: "hmpps-em-datastore-prod"
 
   ingress:
     hosts:
@@ -27,4 +27,4 @@ generic-service:
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service
+  alertSeverity: hmpps-em-contract-management-tool-alerts
