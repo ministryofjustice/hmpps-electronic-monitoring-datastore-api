@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAMESPACE="${NAMESPACE:-hmpps-electronic-monitoring-datastore-dev}"
-LABEL="${LABEL:-hmpps-em-datastore-dev-athena-service-pod}"
+LABEL="${LABEL:-hmpps-em-datastore-dev-service-pod}"
 PARAM_NAME=${PARAM_NAME:-athena_general_role_arn} # either athena_general_role_arn or athena_specials_role_arn
 
 POD=$(kubectl \
