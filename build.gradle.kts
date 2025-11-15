@@ -20,8 +20,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
 
-  implementation("software.amazon.awssdk:athena:2.38.6")
-  implementation("software.amazon.awssdk:sts:2.38.6")
+  implementation("software.amazon.awssdk:athena:2.38.7")
+  implementation("software.amazon.awssdk:sts:2.38.7")
   implementation("org.json:json:20250517")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
@@ -32,7 +32,7 @@ dependencies {
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.8.1")
   testImplementation("org.mockito:mockito-core:5.20.0")
   testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
-  testImplementation("org.wiremock:wiremock-standalone:3.13.1")
+  testImplementation("org.wiremock:wiremock-standalone:3.13.2")
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.35") {
     exclude(group = "io.swagger.core.v3")
   }
