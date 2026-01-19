@@ -29,7 +29,7 @@ dependencies {
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
   testImplementation("com.h2database:h2:2.4.240")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.8.2")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.0.0")
   testImplementation("org.mockito:mockito-core:5.21.0")
   testImplementation("org.mockito.kotlin:mockito-kotlin:6.2.1")
   testImplementation("org.wiremock:wiremock-standalone:3.13.2")
