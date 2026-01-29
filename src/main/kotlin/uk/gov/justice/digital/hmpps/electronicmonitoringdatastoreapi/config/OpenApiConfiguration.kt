@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import io.swagger.v3.oas.models.servers.Server
 import io.swagger.v3.oas.models.tags.Tag
+import org.springframework.boot.info.BuildProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -23,16 +24,23 @@ const val ROLE_EM_DATASTORE_GENERAL__RO = "ROLE_EM_DATASTORE_GENERAL_RO"
 const val ROLE_EM_DATASTORE_RESTRICTED__RO = "ROLE_EM_DATASTORE_RESTRICTED_RO"
 
 @Configuration
-class OpenApiConfiguration {
-
-  private val version: String = "0.1"
+class OpenApiConfiguration(buildProperties: BuildProperties) {
+  private val version: String = buildProperties.version!!
 
   @Bean
   fun customOpenAPI(): OpenAPI = OpenAPI()
     .servers(serviceServers())
     .info(apiInfo())
-    .components(securityComponents())
-    .addSecurityItem(securityRequirement())
+    .components(
+      Components()
+        .addSecuritySchemes(
+          TOKEN_HMPPS_AUTH,
+          SecurityScheme()
+            .addBearerJwtRequirement(ROLE_EM_DATASTORE_GENERAL__RO)
+            .description("A HMPPS Auth access token with the `$ROLE_EM_DATASTORE_GENERAL__RO` or `$ROLE_EM_DATASTORE_RESTRICTED__RO` roles."),
+        ),
+    )
+    .addSecurityItem(SecurityRequirement().addList(TOKEN_HMPPS_AUTH))
     .tags(apiTags())
 
   private fun serviceServers(): List<Server> = listOf(
@@ -80,20 +88,12 @@ class OpenApiConfiguration {
     .name("The MIT License (MIT)")
     .url("https://github.com/ministryofjustice/hmpps-electronic-monitoring-datastore-api/blob/main/LICENSE")
 
-  private fun securityComponents(): Components = Components()
-    .addSecuritySchemes(
-      TOKEN_HMPPS_AUTH,
-      SecurityScheme()
-        .type(SecurityScheme.Type.HTTP)
-        .scheme("bearer")
-        .bearerFormat("JWT")
-        .`in`(SecurityScheme.In.HEADER)
-        .name(HttpHeaders.AUTHORIZATION)
-        .description("A HMPPS Auth access token with the `$ROLE_EM_DATASTORE_GENERAL__RO` or `$ROLE_EM_DATASTORE_RESTRICTED__RO` roles."),
-    )
-
-  private fun securityRequirement(): SecurityRequirement = SecurityRequirement()
-    .addList(TOKEN_HMPPS_AUTH, listOf("read"))
+  private fun SecurityScheme.addBearerJwtRequirement(role: String): SecurityScheme = type(SecurityScheme.Type.HTTP)
+    .scheme("bearer")
+    .bearerFormat("JWT")
+    .`in`(SecurityScheme.In.HEADER)
+    .name(HttpHeaders.AUTHORIZATION)
+    .description("A HMPPS Auth access token with the `$ROLE_EM_DATASTORE_GENERAL__RO` or `$ROLE_EM_DATASTORE_RESTRICTED__RO` roles.")
 
   private fun apiTags(): List<Tag> = listOf(
     Tag()

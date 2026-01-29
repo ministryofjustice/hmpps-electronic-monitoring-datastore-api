@@ -22,8 +22,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
   flyway:
     enabled: false
+
   datasource:
     url: 'jdbc:h2:mem:query-db;MODE=PostgreSQL'
     username: postgres
