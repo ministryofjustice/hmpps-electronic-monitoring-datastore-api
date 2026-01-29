@@ -54,7 +54,7 @@ jobs:
 
   gradle_verify:
     name: Validate the kotlin
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/gradle_verify.yml@v2
+    uses: ./.github/workflows/gradle_verify.yml
     secrets: inherit
     with:
       gradle-command: 'BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check'
@@ -128,8 +128,6 @@ jobs:
   deploy_preprod:
     name: Deploy to pre-production environment
     needs:
-      - build
-      - helm_lint
       - deploy_dev
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
@@ -142,8 +140,6 @@ jobs:
   deploy_prod:
     name: Deploy to production environment
     needs:
-      - build
-      - helm_lint
       - deploy_preprod
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
     secrets: inherit
