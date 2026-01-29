@@ -60,7 +60,7 @@ services:
       - POSTGRES_USER=postgres
 
   localstack:
-    image: localstack/localstack:4.12
+    image: localstack/localstack:4.13
     container_name: local-stack-aws
     networks:
       - hmpps
