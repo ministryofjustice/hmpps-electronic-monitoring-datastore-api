@@ -37,7 +37,7 @@ class PostgresCache(
     }
   }
 
-  override fun <T> get(key: Any, type: Class<T>?): T? {
+  override fun <T : Any> get(key: Any, type: Class<T>?): T? {
     val wrapper = get(key)
     if (wrapper?.get() == null) {
       return null
@@ -45,7 +45,7 @@ class PostgresCache(
     return type?.cast(wrapper.get())
   }
 
-  override fun <T> get(key: Any, valueLoader: Callable<T>): T? {
+  override fun <T : Any> get(key: Any, valueLoader: Callable<T>): T? {
     val value = get(key)?.get()
     if (value != null) {
       @Suppress("UNCHECKED_CAST")

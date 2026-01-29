@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 
+import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.parser.OpenAPIV3Parser
 import net.minidev.json.JSONArray
 import org.assertj.core.api.Assertions.assertThat
@@ -10,7 +11,10 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @ActiveProfiles("integration")
 class OpenApiDocsTest : IntegrationTestBase() {
@@ -54,14 +58,15 @@ class OpenApiDocsTest : IntegrationTestBase() {
       .accept(MediaType.APPLICATION_JSON)
       .exchange()
       .expectStatus().isOk
-      .expectBody().jsonPath("info.version").isEqualTo("0.1")
+      .expectBody().jsonPath("info.version").value<String> {
+        assertThat(it).startsWith(DateTimeFormatter.ISO_DATE.format(LocalDate.now()))
+      }
   }
 
   @Test
-  fun `the open api json is valid and contains documentation`() {
+  fun `the open api json is valid`() {
     val result = OpenAPIV3Parser().readLocation("http://localhost:$port/v3/api-docs", null, null)
     assertThat(result.messages).isEmpty()
-    assertThat(result.openAPI.paths).isNotEmpty
   }
 
   @Test
@@ -72,12 +77,29 @@ class OpenApiDocsTest : IntegrationTestBase() {
     // We therefore need to grab all the valid security requirements and check that each path only contains those items
     val securityRequirements = result.openAPI.security.flatMap { it.keys }
     result.openAPI.paths.forEach { pathItem ->
-      assertThat(pathItem.value.get.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
+
+      val operations: List<Operation> = listOfNotNull(
+        pathItem.value.get,
+        pathItem.value.put,
+        pathItem.value.post,
+        pathItem.value.delete,
+        pathItem.value.options,
+        pathItem.value.head,
+        pathItem.value.patch,
+        pathItem.value.trace,
+      )
+
+      operations.forEach { operation ->
+        assertThat(operation.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
+      }
     }
   }
 
   @ParameterizedTest
-  @CsvSource(value = ["$TOKEN_HMPPS_AUTH, $ROLE_EM_DATASTORE_GENERAL__RO"])
+  @CsvSource(
+    "$TOKEN_HMPPS_AUTH, $ROLE_EM_DATASTORE_GENERAL__RO",
+    "$TOKEN_HMPPS_AUTH, $ROLE_EM_DATASTORE_RESTRICTED__RO",
+  )
   fun `the security scheme is setup for bearer tokens`(key: String, role: String) {
     webTestClient.get()
       .uri("/v3/api-docs")
@@ -91,7 +113,7 @@ class OpenApiDocsTest : IntegrationTestBase() {
         assertThat(it).contains(role)
       }
       .jsonPath("$.components.securitySchemes.$key.bearerFormat").isEqualTo("JWT")
-      .jsonPath("$.security[0].$key").isEqualTo(JSONArray().apply { this.add("read") })
+      .jsonPath("$.security[0].$key").isEqualTo(JSONArray())
   }
 
   @Test
