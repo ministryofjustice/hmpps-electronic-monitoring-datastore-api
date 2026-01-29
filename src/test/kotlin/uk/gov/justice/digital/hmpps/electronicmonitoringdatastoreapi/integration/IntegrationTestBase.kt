@@ -1,9 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 
-import com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -13,12 +9,21 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
+import software.amazon.awssdk.services.sqs.model.PurgeQueueRequest
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.config.PostgresContainer
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.config.registerPostgresProperties
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.testcontainers.LocalStackContainer
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.testcontainers.LocalStackContainer.setLocalStackProperties
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.AwsApiExtension
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.AwsApiExtension.Companion.awsMockServer
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
+import uk.gov.justice.hmpps.sqs.HmppsQueueService
+import uk.gov.justice.hmpps.sqs.MissingQueueException
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
 @ExtendWith(HmppsAuthApiExtension::class, AwsApiExtension::class)
@@ -43,6 +48,15 @@ abstract class IntegrationTestBase {
   @Autowired
   protected lateinit var jwtAuthHelper: JwtAuthorisationHelper
 
+  @Autowired
+  protected lateinit var hmppsQueueService: HmppsQueueService
+
+  private val auditQueue by lazy { hmppsQueueService.findByQueueId("audit") ?: throw MissingQueueException("HmppsQueue audit not found") }
+
+  protected val auditSqsClient by lazy { auditQueue.sqsClient }
+
+  protected val auditQueueUrl by lazy { auditQueue.queueUrl }
+
   internal fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(ROLE_EM_DATASTORE_GENERAL__RO),
@@ -51,6 +65,25 @@ abstract class IntegrationTestBase {
 
   protected fun stubPingWithResponse(status: Int) {
     hmppsAuth.stubHealthPing(status)
+  }
+
+  @BeforeEach
+  fun `clear queues`() {
+    auditSqsClient.purgeQueue(PurgeQueueRequest.builder().queueUrl(auditQueueUrl).build()).get()
+  }
+
+  companion object {
+
+    private val postgres = PostgresContainer.instance
+    private val localStackContainer = LocalStackContainer.instance
+
+    @Suppress("unused")
+    @JvmStatic
+    @DynamicPropertySource
+    fun testcontainers(registry: DynamicPropertyRegistry) {
+      localStackContainer?.also { setLocalStackProperties(it, registry) }
+      registry.registerPostgresProperties(postgres)
+    }
   }
 
   protected fun stubGetQueryExecutionId(
@@ -71,44 +104,5 @@ abstract class IntegrationTestBase {
     awsMockServer.stubAthenaStartQueryExecution(queryExecutionId)
     awsMockServer.stubAthenaGetQueryExecution(retryCount, finalQueryExecutionStatus)
     awsMockServer.stubAthenaGetQueryResults(queryResults)
-  }
-
-  protected fun stubFailedQueryExecution(
-    queryExecutionId: String,
-  ) {
-    awsMockServer.stubAthenaStartQueryExecution(queryExecutionId)
-    awsMockServer.stubAthenaGetQueryExecution(1, "FAILED")
-  }
-
-  protected fun verifyAthenaStartQueryExecutionCount(
-    count: Int,
-  ) {
-    awsMockServer.verify(
-      count,
-      postRequestedFor(urlPathEqualTo("/"))
-        .withHeader("X-Amz-Target", equalTo("AmazonAthena.StartQueryExecution")),
-    )
-  }
-
-  protected fun getAllServeEvents(): List<ServeEvent> = awsMockServer.allServeEvents
-
-  protected fun verifyAthenaGetQueryExecutionCount(
-    count: Int,
-  ) {
-    awsMockServer.verify(
-      count,
-      postRequestedFor(urlPathEqualTo("/"))
-        .withHeader("X-Amz-Target", equalTo("AmazonAthena.GetQueryExecution")),
-    )
-  }
-
-  protected fun verifyAthenaGetQueryResultsCount(
-    count: Int,
-  ) {
-    awsMockServer.verify(
-      count,
-      postRequestedFor(urlPathEqualTo("/"))
-        .withHeader("X-Amz-Target", equalTo("AmazonAthena.GetQueryResults")),
-    )
   }
 }
