@@ -1,6 +1,10 @@
 name: Pipeline [test -> build -> deploy]
+
 on:
   push:
+    branches:
+      - 'main'
+  pull_request:
     branches:
       - '**'
   workflow_dispatch:
@@ -15,12 +19,19 @@ on:
         required: true
         default: false
         type: boolean
+
 permissions:
   contents: read
   packages: write
+
 concurrency:
+  # Only cancel in progress when on a branch - use SHA on main to ensure uniqueness.
+  # This will allow multiple pipelines to run at the same time on main.
+  # Note that two pipelines running within a few minutes of each other will cause issues with helm deploying to
+  # a namespace, as the second one will not be able to get a lock as a deploy will be in progress.
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   helm_lint:
     strategy:
@@ -31,36 +42,91 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ matrix.environments }}
-  kotlin_validate:
+
+  app_version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.app_version.outputs.version }}
+    steps:
+      - id: app_version
+        name: Application version creators
+        uses: ministryofjustice/hmpps-github-actions/.github/actions/build-test-and-deploy/create_app_version@v2
+
+  gradle_verify:
     name: Validate the kotlin
-    uses: ./.github/workflows/kotlin_localstack.yml
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/gradle_verify.yml@v2
     secrets: inherit
+    with:
+      gradle-command: 'BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check'
+      upload-build-artifacts: ${{ github.ref == 'refs/heads/main' }}
+      upload-test-artifacts: true
+      java-version: "25"
+    needs:
+      - app_version
+
+  coverage:
+    name: Code Coverage Report
+    runs-on: ubuntu-latest
+    needs: gradle_verify
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: build
+
+      - name: Publish Coverage Report
+        uses: madrapps/jacoco-report@v1.7.1
+        with:
+          paths: |
+            build/reports/jacoco/integration/jacoco.xml
+            build/reports/jacoco/unit/jacoco.xml
+
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 0
+          min-coverage-changed-files: 0
+          title: 'Code Coverage Report'
+          pass-emoji: ':white_check_mark:'
+          fail-emoji: ':x:'
+          update-comment: true
+
   build:
     name: Build docker image from hmpps-github-actions
     if: github.ref == 'refs/heads/main'
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2
     needs:
-      - kotlin_validate
+      - gradle_verify
     with:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
-      push: ${{ inputs.push || true }}
-      docker_multiplatform: true
+      push: ${{ inputs.push || inputs.push == null }}
+      docker_multiplatform: false
+      download_build_artifacts: true
+
   deploy_dev:
-    name: Deploy to the dev environment
+    name: Deploy to the development environment
     if: github.ref == 'refs/heads/main'
     needs:
       - build
       - helm_lint
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
     secrets: inherit
     with:
       environment: 'dev'
       app_version: '${{ needs.build.outputs.app_version }}'
+      slack_notification: 'true'
       helm_timeout: '5m'
+
   deploy_preprod:
-    name: Deploy to the preprod environment
+    name: Deploy to pre-production environment
     needs:
       - build
       - helm_lint
@@ -70,16 +136,19 @@ jobs:
     with:
       environment: 'preprod'
       app_version: '${{ needs.build.outputs.app_version }}'
+      slack_notification: 'true'
       helm_timeout: '5m'
+
   deploy_prod:
-    name: Deploy to the prod environment
+    name: Deploy to production environment
     needs:
       - build
       - helm_lint
       - deploy_preprod
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2
     secrets: inherit
     with:
       environment: 'prod'
       app_version: '${{ needs.build.outputs.app_version }}'
+      slack_notification: 'true'
       helm_timeout: '5m'
