@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.0.2"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.0.3"
   kotlin("plugin.spring") version "2.3.0"
   kotlin("plugin.jpa") version "2.3.0"
   id("jacoco")
@@ -22,8 +22,8 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.2")
 
-  implementation("software.amazon.awssdk:athena:2.41.17")
-  implementation("software.amazon.awssdk:sts:2.41.17")
+  implementation("software.amazon.awssdk:athena:2.41.19")
+  implementation("software.amazon.awssdk:sts:2.41.19")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
   runtimeOnly("org.postgresql:postgresql:42.7.9")
