@@ -1,7 +1,7 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.0.2"
-  kotlin("plugin.spring") version "2.3.0"
-  kotlin("plugin.jpa") version "2.3.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.1.0"
+  kotlin("plugin.spring") version "2.3.20"
+  kotlin("plugin.jpa") version "2.3.20"
   id("jacoco")
 }
 
@@ -12,41 +12,41 @@ configurations {
 dependencies {
   implementation("org.apache.commons:commons-lang3:3.20.0")
 
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.0.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.1.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-webclient")
 
   implementation("org.springframework.boot:spring-boot-starter-flyway")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.2.0")
 
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.2")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.4")
 
-  implementation("software.amazon.awssdk:athena:2.41.17")
-  implementation("software.amazon.awssdk:sts:2.41.17")
+  implementation("software.amazon.awssdk:athena:2.42.19")
+  implementation("software.amazon.awssdk:sts:2.42.19")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
-  runtimeOnly("org.postgresql:postgresql:42.7.9")
+  runtimeOnly("org.postgresql:postgresql:42.7.10")
   runtimeOnly("org.flywaydb:flyway-core")
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
   testImplementation("com.h2database:h2:2.4.240")
   testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.0.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.1.0")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
   testImplementation("org.wiremock:wiremock-standalone:3.13.2")
-  testImplementation("io.swagger.parser.v3:swagger-parser:2.1.37") {
+  testImplementation("io.swagger.parser.v3:swagger-parser:2.1.39") {
     exclude(group = "io.swagger.core.v3")
   }
 
-  testImplementation("org.mockito:mockito-core:5.21.0")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:6.2.3")
+  testImplementation("org.mockito:mockito-core:5.23.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
 
   implementation("org.json:json:20250517")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.21")
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
-  implementation("com.fasterxml.jackson.core:jackson-core:2.21.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.21.2")
+  implementation("com.fasterxml.jackson.core:jackson-core:2.21.2")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
 
   testImplementation("org.testcontainers:postgresql:1.21.4")
   testImplementation("org.testcontainers:localstack:1.21.4")
