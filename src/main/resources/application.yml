@@ -73,6 +73,12 @@ management:
       cache:
         time-to-live: 2000ms
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
 services:
   hmpps-auth:
     url: ${HMPPS_AUTH_URL}
