@@ -20,7 +20,7 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.3.0")
 
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.4")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.5")
 
   implementation("software.amazon.awssdk:athena:2.42.21")
   implementation("software.amazon.awssdk:sts:2.42.21")
