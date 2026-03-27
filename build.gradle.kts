@@ -22,8 +22,8 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.5")
 
-  implementation("software.amazon.awssdk:athena:2.42.22")
-  implementation("software.amazon.awssdk:sts:2.42.22")
+  implementation("software.amazon.awssdk:athena:2.42.23")
+  implementation("software.amazon.awssdk:sts:2.42.23")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
 
   runtimeOnly("org.postgresql:postgresql:42.7.10")
