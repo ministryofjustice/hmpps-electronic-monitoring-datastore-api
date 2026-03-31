@@ -6,11 +6,7 @@
 .idea/
 .gradle/
 .kotlin/
-.run/
 build/
-
-# Mac files
-.DS_Store
 
 # CMake
 cmake-build-debug/
@@ -76,9 +72,12 @@ sonar-project.properties
 #Helm
 **/Chart.lock
 
+# Mac files
+.DS_Store
+
 #Localstack
 localstack/
 
 ## env files
 .env
-/.run/
+.run/

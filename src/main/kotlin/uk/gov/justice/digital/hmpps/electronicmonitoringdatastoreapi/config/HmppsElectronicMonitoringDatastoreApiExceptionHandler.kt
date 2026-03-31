@@ -33,10 +33,43 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
       ),
     ).also { log.info("Validation exception: {}", e.message) }
 
+  @ExceptionHandler(NoResourceFoundException::class)
+  fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(NOT_FOUND)
+    .body(
+      ErrorResponse(
+        status = NOT_FOUND,
+        userMessage = "No resource found failure: ${e.message}",
+        developerMessage = e.message,
+      ),
+    ).also { log.info("No resource found exception: {}", e.message) }
+
+  @ExceptionHandler(AccessDeniedException::class)
+  fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(FORBIDDEN)
+    .body(
+      ErrorResponse(
+        status = FORBIDDEN,
+        userMessage = "Forbidden: ${e.message}",
+        developerMessage = e.message,
+      ),
+    ).also { log.debug("Forbidden (403) returned: {}", e.message) }
+
+  @ExceptionHandler(Exception::class)
+  fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(INTERNAL_SERVER_ERROR)
+    .body(
+      ErrorResponse(
+        status = INTERNAL_SERVER_ERROR,
+        userMessage = "Unexpected error: ${e.message}",
+        developerMessage = e.message,
+      ),
+    ).also { log.error("Unexpected exception", e) }
+
   @ExceptionHandler(MethodArgumentNotValidException::class)
   fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
     var message = e.message
-    if (message?.contains("[ValidOrderSearchCriteria.orderSearchCriteria,ValidOrderSearchCriteria]") ?: false) {
+    if (message.contains("[ValidOrderSearchCriteria.orderSearchCriteria,ValidOrderSearchCriteria]")) {
       message = "This request is malformed, there must be at least one search criteria present"
     }
 
@@ -51,17 +84,6 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
       ).also { log.info("Validation of OrderSearchCriteria exception: {}", message) }
   }
 
-  @ExceptionHandler(NoResourceFoundException::class)
-  fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(NOT_FOUND)
-    .body(
-      ErrorResponse(
-        status = NOT_FOUND,
-        userMessage = "No resource found failure: ${e.message}",
-        developerMessage = e.message,
-      ),
-    ).also { log.info("No resource found exception: {}", e.message) }
-
   @ExceptionHandler(InvalidBearerTokenException::class)
   fun handleInvalidBearerTokenException(e: InvalidBearerTokenException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(BAD_REQUEST)
@@ -72,17 +94,6 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
         developerMessage = e.message,
       ),
     ).also { log.debug("Invalid bearer token: {}", e.message) }
-
-  @ExceptionHandler(AccessDeniedException::class)
-  fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(FORBIDDEN)
-    .body(
-      ErrorResponse(
-        status = FORBIDDEN,
-        userMessage = "Forbidden: ${e.message}",
-        developerMessage = e.message,
-      ),
-    ).also { log.debug("Forbidden (403) returned: {}", e.message) }
 
   @ExceptionHandler(MissingRequestHeaderException::class)
   fun handleMissingRequestHeaderException(e: MissingRequestHeaderException): ResponseEntity<ErrorResponse> = ResponseEntity
@@ -116,17 +127,6 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
         developerMessage = e.message,
       ),
     ).also { log.warn("Bad request exception: {}", e.message) }
-
-  @ExceptionHandler(Exception::class)
-  fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(INTERNAL_SERVER_ERROR)
-    .body(
-      ErrorResponse(
-        status = INTERNAL_SERVER_ERROR,
-        userMessage = "Unexpected error: ${e.message}",
-        developerMessage = e.message,
-      ),
-    ).also { log.error("Unexpected exception", e) }
 
   @ExceptionHandler(AthenaClientException::class)
   fun handleException(e: AthenaClientException): ResponseEntity<ErrorResponse> = ResponseEntity
