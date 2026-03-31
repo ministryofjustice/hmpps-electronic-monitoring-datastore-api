@@ -6,25 +6,8 @@ spring:
   application:
     name: hmpps-electronic-monitoring-datastore-api
 
-  http:
-    codecs:
-      max-in-memory-size: 10MB
-
-  web:
-    error:
-      include-message: ALWAYS
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${services.hmpps-auth.url}/.well-known/jwks.json
-
-      client:
-        provider:
-          hmpps-auth:
-            token-uri: ${services.hmpps-auth.url}/oauth/token
-
+  #  This jackson configuration is only applied for java.util.Date.
+  #  It is ignored for LocalDateTime, and therefore unnecessary for most projects
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
     datatype:
@@ -42,6 +25,23 @@ spring:
 
   flyway:
     enabled: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${hmpps-auth.url}/.well-known/jwks.json
+
+      client:
+        provider:
+          hmpps-auth:
+            token-uri: ${hmpps-auth.url}/oauth/token
+  http:
+    codecs:
+      max-in-memory-size: 10MB
+  web:
+    error:
+      include-message: always
 
 server:
   port: 8080
@@ -75,14 +75,10 @@ management:
 
 springdoc:
   api-docs:
-    enabled: true
+    enabled: false
   swagger-ui:
-    enabled: true
+    enabled: false
     version: 5.32.1
-
-services:
-  hmpps-auth:
-    url: ${HMPPS_AUTH_URL}
 
 aws:
   region: eu-west-2

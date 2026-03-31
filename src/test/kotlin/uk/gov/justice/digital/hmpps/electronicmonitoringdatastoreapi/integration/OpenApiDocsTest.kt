@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration
 
-import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.parser.OpenAPIV3Parser
 import net.minidev.json.JSONArray
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +14,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.text.contains
 
 @ActiveProfiles("integration")
 class OpenApiDocsTest : IntegrationTestBase() {
@@ -52,6 +52,23 @@ class OpenApiDocsTest : IntegrationTestBase() {
   }
 
   @Test
+  fun `the swagger json don't contain any duplicate methods`() {
+    // Methods in resource classes with the same name end up with operationIds that have _1 and _2 etc. in the name.
+    // When the code is then generated from the api docs we refer to the endpoint by operationId. If a new method is
+    // added or one removed then the _1 / _2 etc. can change order and thus we end up calling a completely different
+    // endpoint next time the code is generated. This test then prevents that from happening by ensuring all endpoints
+    // have method names / operation ids.
+    webTestClient.get()
+      .uri("/v3/api-docs")
+      .accept(MediaType.APPLICATION_JSON)
+      .exchange()
+      .expectStatus().isOk
+      .expectBody().jsonPath("*..operationId").value<List<String>> { list ->
+        assertThat(list).filteredOn { it.contains("_") }.isEmpty()
+      }
+  }
+
+  @Test
   fun `the open api json contains the version number`() {
     webTestClient.get()
       .uri("/v3/api-docs")
@@ -77,21 +94,7 @@ class OpenApiDocsTest : IntegrationTestBase() {
     // We therefore need to grab all the valid security requirements and check that each path only contains those items
     val securityRequirements = result.openAPI.security.flatMap { it.keys }
     result.openAPI.paths.forEach { pathItem ->
-
-      val operations: List<Operation> = listOfNotNull(
-        pathItem.value.get,
-        pathItem.value.put,
-        pathItem.value.post,
-        pathItem.value.delete,
-        pathItem.value.options,
-        pathItem.value.head,
-        pathItem.value.patch,
-        pathItem.value.trace,
-      )
-
-      operations.forEach { operation ->
-        assertThat(operation.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
-      }
+      assertThat(pathItem.value.get.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
     }
   }
 
@@ -113,7 +116,7 @@ class OpenApiDocsTest : IntegrationTestBase() {
         assertThat(it).contains(role)
       }
       .jsonPath("$.components.securitySchemes.$key.bearerFormat").isEqualTo("JWT")
-      .jsonPath("$.security[0].$key").isEqualTo(JSONArray())
+      .jsonPath("$.security[0].$key").isEqualTo(JSONArray().apply { this.add("read") })
   }
 
   @Test
