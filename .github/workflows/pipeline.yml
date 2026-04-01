@@ -57,9 +57,9 @@ jobs:
       upload-test-artifacts: true
       java-version: "25"
       postgres-tag: '17'
-      postgres-db: postgres
-      postgres-username: postgres
-      postgres-password: ""
+      postgres-db: query-db
+      postgres-username: query-db
+      postgres-password: query-db
     needs:
       - app_version
 

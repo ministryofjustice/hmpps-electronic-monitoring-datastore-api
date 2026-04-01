@@ -15,9 +15,9 @@ spring:
       ddl-auto: create
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?sslmode=prefer
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/query-db?sslmode=prefer
+    username: query-db
+    password: query-db
 
   flyway:
     enabled: false
