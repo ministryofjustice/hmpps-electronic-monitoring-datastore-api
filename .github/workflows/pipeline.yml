@@ -55,11 +55,13 @@ jobs:
       gradle-command: 'BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check'
       upload-build-artifacts: ${{ github.ref == 'refs/heads/main' }}
       upload-test-artifacts: true
-      java-version: "25"
+      java-version: '25'
       postgres-tag: '17'
       postgres-db: query-db
       postgres-username: query-db
       postgres-password: query-db
+      localstack-tag: '4'
+
     needs:
       - app_version
 
