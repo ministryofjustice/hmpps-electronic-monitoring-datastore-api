@@ -37,8 +37,8 @@ spring:
 
   datasource:
     url: 'jdbc:h2:mem:query-db;MODE=PostgreSQL'
-    username: postgres
-    password:
+    username: query-db
+    password: query-db
 
 aws:
   endpoint-url: http://localhost:8091
