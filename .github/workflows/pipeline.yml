@@ -46,7 +46,7 @@ jobs:
     steps:
       - id: app_version
         name: Application version creators
-        uses: ministryofjustice/hmpps-github-actions/.github/actions/build-test-and-deploy/create_app_version@v2 # WORKFLOW_VERSION
+        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/build-test-and-deploy/create_app_version@6ca6653862e916a9221d915216228aee57717570 # WORKFLOW_VERSION
   gradle_verify:
     name: Validate the kotlin
     uses: ./.github/workflows/gradle_verify.yml
@@ -67,16 +67,16 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Download test artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: test-results
           path: build
 
       - name: Publish Coverage Report
-        uses: madrapps/jacoco-report@v1.7.2
+        uses: madrapps/jacoco-report@50d3aff4548aa991e6753342d9ba291084e63848 # v1.7.2
         with:
           paths: |
             build/reports/jacoco/integration/jacoco.xml
