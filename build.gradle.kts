@@ -1,37 +1,37 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.1.2"
-  kotlin("plugin.spring") version "2.3.20"
-  kotlin("plugin.jpa") version "2.3.20"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.2.3"
+  kotlin("plugin.spring") version "2.3.21"
+  kotlin("plugin.jpa") version "2.3.21"
   id("jacoco")
 }
 
 dependencies {
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.1.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.2.0")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-webclient")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
 
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.1.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.2.0")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
   testImplementation("org.wiremock:wiremock-standalone:3.13.2")
-  testImplementation("io.swagger.parser.v3:swagger-parser:2.1.39") {
+  testImplementation("io.swagger.parser.v3:swagger-parser:2.1.41") {
     exclude(group = "io.swagger.core.v3")
   }
 
   implementation("org.apache.commons:commons-lang3:3.20.0")
   implementation("org.springframework.boot:spring-boot-starter-flyway")
-  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.3.0")
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.5")
-  implementation("software.amazon.awssdk:athena:2.42.29")
-  implementation("software.amazon.awssdk:sts:2.42.29")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.3.1")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.6")
+  implementation("software.amazon.awssdk:athena:2.43.0")
+  implementation("software.amazon.awssdk:sts:2.43.0")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
   implementation("org.json:json:20251224")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.21")
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.21.2")
-  implementation("com.fasterxml.jackson.core:jackson-core:2.21.2")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.2")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.21.3")
+  implementation("com.fasterxml.jackson.core:jackson-core:2.21.3")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.3")
 
-  runtimeOnly("org.postgresql:postgresql:42.7.10")
+  runtimeOnly("org.postgresql:postgresql:42.7.11")
   runtimeOnly("org.flywaydb:flyway-core")
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
