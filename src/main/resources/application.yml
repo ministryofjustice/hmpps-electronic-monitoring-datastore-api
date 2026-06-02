@@ -15,6 +15,7 @@ spring:
         write-dates-as-timestamps: false
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
 

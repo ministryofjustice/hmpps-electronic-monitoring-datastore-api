@@ -56,7 +56,7 @@ in Intellij.
 
 ### Connecting to the cloud platform kubernetes cluster
 
-- Configure KubeCtl to let you connect to the Cloud Platform Kubernetes cluster - [follow this guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html)
+Configure KubeCtl to let you connect to the Cloud Platform Kubernetes cluster - [follow this guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html)
 
 ### Running the application with connection to dev Athena
 
