@@ -53,9 +53,5 @@ generic-service:
       DB_USER: "database_username"
       DB_PASS: "database_password"
 
-  allowlist:
-    groups:
-      - internal
-
 generic-prometheus-alerts:
   targetApplication: hmpps-electronic-monitoring-datastore-api
