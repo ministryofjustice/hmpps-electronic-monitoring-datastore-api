@@ -25,7 +25,7 @@ dependencies {
   implementation("software.amazon.awssdk:athena:2.46.0")
   implementation("software.amazon.awssdk:sts:2.46.0")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
-  implementation("org.json:json:20260522")
+  implementation("org.json:json:20260814")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.22.0")
   implementation("com.fasterxml.jackson.core:jackson-core:2.21.4")
