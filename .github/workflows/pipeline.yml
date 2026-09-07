@@ -51,10 +51,14 @@ jobs:
         uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/build-test-and-deploy/create_app_version@c241b9febb7a4fc11e88d0e781cbdfcf8abd84a5 # v1.0.17
   gradle_verify:
     name: Validate the kotlin
-    uses: ./.github/workflows/gradle_verify.yml
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/gradle_verify.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
-      gradle-command: 'BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check'
+      gradle-command: |
+        export AWS_ACCESS_KEY_ID=ASIAIOSFODNN7EXAMPLE
+        export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+        export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZVERYLONGSTRINGEXAMPLE
+        BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check
       upload-build-artifacts: ${{ github.ref == 'refs/heads/main' }}
       java-version: "25"
     needs:
