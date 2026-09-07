@@ -2,12 +2,7 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config
 
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.springframework.http.HttpStatus.FORBIDDEN
-import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
-import org.springframework.http.HttpStatus.NOT_FOUND
-import org.springframework.http.HttpStatus.UNAUTHORIZED
-import org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
@@ -24,10 +19,10 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
   @ExceptionHandler(ValidationException::class)
   fun handleValidationException(e: ValidationException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(BAD_REQUEST)
+    .status(HttpStatus.BAD_REQUEST)
     .body(
       ErrorResponse(
-        status = BAD_REQUEST,
+        status = HttpStatus.BAD_REQUEST,
         userMessage = "Validation failure: ${e.message}",
         developerMessage = e.message,
       ),
@@ -35,10 +30,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(NoResourceFoundException::class)
   fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(NOT_FOUND)
+    .status(HttpStatus.NOT_FOUND)
     .body(
       ErrorResponse(
-        status = NOT_FOUND,
+        status = HttpStatus.NOT_FOUND,
         userMessage = "No resource found failure: ${e.message}",
         developerMessage = e.message,
       ),
@@ -46,10 +41,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(AccessDeniedException::class)
   fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(FORBIDDEN)
+    .status(HttpStatus.FORBIDDEN)
     .body(
       ErrorResponse(
-        status = FORBIDDEN,
+        status = HttpStatus.FORBIDDEN,
         userMessage = "Forbidden: ${e.message}",
         developerMessage = e.message,
       ),
@@ -57,10 +52,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(Exception::class)
   fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(INTERNAL_SERVER_ERROR)
+    .status(HttpStatus.INTERNAL_SERVER_ERROR)
     .body(
       ErrorResponse(
-        status = INTERNAL_SERVER_ERROR,
+        status = HttpStatus.INTERNAL_SERVER_ERROR,
         userMessage = "Unexpected error: ${e.message}",
         developerMessage = e.message,
       ),
@@ -74,10 +69,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
     }
 
     return ResponseEntity
-      .status(UNPROCESSABLE_ENTITY)
+      .status(HttpStatus.UNPROCESSABLE_CONTENT)
       .body(
         ErrorResponse(
-          status = UNPROCESSABLE_ENTITY,
+          status = HttpStatus.UNPROCESSABLE_CONTENT,
           userMessage = "Validation failure: $message",
           developerMessage = message,
         ),
@@ -86,10 +81,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(InvalidBearerTokenException::class)
   fun handleInvalidBearerTokenException(e: InvalidBearerTokenException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(BAD_REQUEST)
+    .status(HttpStatus.BAD_REQUEST)
     .body(
       ErrorResponse(
-        status = BAD_REQUEST,
+        status = HttpStatus.BAD_REQUEST,
         userMessage = "Invalid bearer token: ${e.message}",
         developerMessage = e.message,
       ),
@@ -97,10 +92,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(MissingRequestHeaderException::class)
   fun handleMissingRequestHeaderException(e: MissingRequestHeaderException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(UNAUTHORIZED)
+    .status(HttpStatus.UNAUTHORIZED)
     .body(
       ErrorResponse(
-        status = UNAUTHORIZED,
+        status = HttpStatus.UNAUTHORIZED,
         userMessage = "Missing required header '${e.headerName}'",
         developerMessage = e.message,
       ),
@@ -108,10 +103,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(IllegalArgumentException::class, HttpMessageNotReadableException::class)
   fun handleIllegalArgumentException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(BAD_REQUEST)
+    .status(HttpStatus.BAD_REQUEST)
     .body(
       ErrorResponse(
-        status = BAD_REQUEST,
+        status = HttpStatus.BAD_REQUEST,
         userMessage = "This request is malformed, and may be missing a body",
         developerMessage = e.message,
       ),
@@ -119,10 +114,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(HandlerMethodValidationException::class)
   fun handleBadRequestException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(BAD_REQUEST)
+    .status(HttpStatus.BAD_REQUEST)
     .body(
       ErrorResponse(
-        status = BAD_REQUEST,
+        status = HttpStatus.BAD_REQUEST,
         userMessage = e.message,
         developerMessage = e.message,
       ),
@@ -130,10 +125,10 @@ class HmppsElectronicMonitoringDatastoreApiExceptionHandler {
 
   @ExceptionHandler(AthenaClientException::class)
   fun handleException(e: AthenaClientException): ResponseEntity<ErrorResponse> = ResponseEntity
-    .status(INTERNAL_SERVER_ERROR)
+    .status(HttpStatus.INTERNAL_SERVER_ERROR)
     .body(
       ErrorResponse(
-        status = INTERNAL_SERVER_ERROR,
+        status = HttpStatus.INTERNAL_SERVER_ERROR,
         userMessage = "Athena service error: ${e.message}",
         developerMessage = e.message,
       ),
