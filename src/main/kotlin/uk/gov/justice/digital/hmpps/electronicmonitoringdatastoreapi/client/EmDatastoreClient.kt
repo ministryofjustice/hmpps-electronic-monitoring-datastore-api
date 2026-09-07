@@ -27,7 +27,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 class EmDatastoreClient(
   @field:Qualifier("athenaGeneralClient") val athenaGeneralClient: AthenaClient,
   @field:Qualifier("athenaRestrictedClient") val athenaRestrictedClient: AthenaClient,
-  val properties: DatastoreProperties,
+  val properties: DatastoreProperties
 ) {
 
   private val log = LoggerFactory.getLogger(this::class.java)
@@ -121,12 +121,15 @@ class EmDatastoreClient(
               .queryExecution().status().stateChangeReason(),
           )
         }
+
         QueryExecutionState.CANCELLED.toString() -> {
           throw RuntimeException("The Amazon Athena query was cancelled.")
         }
+
         QueryExecutionState.SUCCEEDED.toString() -> {
           isQueryStillRunning = false
         }
+
         else -> {
           // Sleep an amount of time before retrying again.
           Thread.sleep(properties.retryIntervalMs)
