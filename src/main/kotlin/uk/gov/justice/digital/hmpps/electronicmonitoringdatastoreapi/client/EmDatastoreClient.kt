@@ -27,7 +27,7 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athen
 class EmDatastoreClient(
   @field:Qualifier("athenaGeneralClient") val athenaGeneralClient: AthenaClient,
   @field:Qualifier("athenaRestrictedClient") val athenaRestrictedClient: AthenaClient,
-  val properties: DatastoreProperties
+  val properties: DatastoreProperties,
 ) {
 
   private val log = LoggerFactory.getLogger(this::class.java)
