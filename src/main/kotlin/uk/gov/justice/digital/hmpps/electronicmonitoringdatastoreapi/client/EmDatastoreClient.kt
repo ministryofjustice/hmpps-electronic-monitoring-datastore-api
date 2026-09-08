@@ -121,12 +121,15 @@ class EmDatastoreClient(
               .queryExecution().status().stateChangeReason(),
           )
         }
+
         QueryExecutionState.CANCELLED.toString() -> {
           throw RuntimeException("The Amazon Athena query was cancelled.")
         }
+
         QueryExecutionState.SUCCEEDED.toString() -> {
           isQueryStillRunning = false
         }
+
         else -> {
           // Sleep an amount of time before retrying again.
           Thread.sleep(properties.retryIntervalMs)

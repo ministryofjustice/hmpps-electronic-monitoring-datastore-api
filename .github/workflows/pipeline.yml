@@ -20,6 +20,8 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write
+  attestations: write
 
 concurrency:
   # Only cancel in progress when on a branch - use SHA on main to ensure uniqueness.
@@ -46,13 +48,17 @@ jobs:
     steps:
       - id: app_version
         name: Application version creators
-        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/build-test-and-deploy/create_app_version@6ca6653862e916a9221d915216228aee57717570 # WORKFLOW_VERSION
+        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/build-test-and-deploy/create_app_version@876107aa4562ebd3968a06b564ab0cffa0f891aa # v1.1.3
   gradle_verify:
     name: Validate the kotlin
-    uses: ./.github/workflows/gradle_verify.yml
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/gradle_verify.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
-      gradle-command: 'BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check'
+      gradle-command: |
+        export AWS_ACCESS_KEY_ID=ASIAIOSFODNN7EXAMPLE
+        export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+        export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZ2luX2IQoJb3JpZVERYLONGSTRINGEXAMPLE
+        BUILD_NUMBER=${{ needs.app_version.outputs.version}} ./gradlew assemble check
       upload-build-artifacts: ${{ github.ref == 'refs/heads/main' }}
       java-version: "25"
     needs:
@@ -102,6 +108,9 @@ jobs:
       push: ${{ inputs.push || inputs.push == null }}
       docker_multiplatform: false
       download_build_artifacts: true
+      generate_sbom: true
+      attach_sbom_to_registry: true
+      sign_image: true
   deploy_dev:
     name: Deploy to the development environment
     needs:

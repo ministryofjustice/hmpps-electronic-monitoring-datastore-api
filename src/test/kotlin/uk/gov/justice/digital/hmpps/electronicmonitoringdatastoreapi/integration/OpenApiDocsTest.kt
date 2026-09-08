@@ -6,20 +6,21 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_GENERAL__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.ROLE_EM_DATASTORE_RESTRICTED__RO
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.TOKEN_HMPPS_AUTH
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import kotlin.text.contains
 
 @ActiveProfiles("integration")
-class OpenApiDocsTest : IntegrationTestBase() {
-  @LocalServerPort
-  private val port: Int = 0
+class OpenApiDocsTest(
+  @Autowired private val buildProperties: BuildProperties,
+  @LocalServerPort private val port: Int = 0,
+) : IntegrationTestBase() {
 
   @Test
   fun `open api docs are available`() {
@@ -75,9 +76,7 @@ class OpenApiDocsTest : IntegrationTestBase() {
       .accept(MediaType.APPLICATION_JSON)
       .exchange()
       .expectStatus().isOk
-      .expectBody().jsonPath("info.version").value<String> {
-        assertThat(it).startsWith(DateTimeFormatter.ISO_DATE.format(LocalDate.now()))
-      }
+      .expectBody().jsonPath("info.version").isEqualTo(buildProperties.version)
   }
 
   @Test
