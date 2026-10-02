@@ -22,7 +22,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-flyway")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.4.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.1")
-  implementation("software.amazon.awssdk:athena:2.55.9")
+  implementation("software.amazon.awssdk:athena:2.55.10")
   implementation("software.amazon.awssdk:sts:2.55.10")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
   implementation("org.json:json:20260814")
