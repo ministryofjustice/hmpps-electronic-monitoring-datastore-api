@@ -1,7 +1,7 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.11"
-  kotlin("plugin.spring") version "2.4.20"
-  kotlin("plugin.jpa") version "2.4.20"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.12"
+  kotlin("plugin.spring") version "2.4.21"
+  kotlin("plugin.jpa") version "2.4.21"
   id("jacoco")
 }
 
@@ -22,8 +22,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-flyway")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.4.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.1")
-  implementation("software.amazon.awssdk:athena:2.55.10")
-  implementation("software.amazon.awssdk:sts:2.55.10")
+  implementation("software.amazon.awssdk:athena:2.55.14")
+  implementation("software.amazon.awssdk:sts:2.55.14")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
   implementation("org.json:json:20260814")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
@@ -31,7 +31,7 @@ dependencies {
   implementation("com.fasterxml.jackson.core:jackson-core:2.22.3")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.3")
 
-  runtimeOnly("org.postgresql:postgresql:42.7.13")
+  runtimeOnly("org.postgresql:postgresql:42.7.14")
   runtimeOnly("org.flywaydb:flyway-core")
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
 
