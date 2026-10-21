@@ -3,7 +3,7 @@ services:
     image: ghcr.io/ministryofjustice/hmpps-electronic-monitoring-datastore-api:latest
     networks:
       - hmpps
-    container_name: hmpps-template-kotlin
+    container_name: hmpps-electronic-monitoring-datastore-api
     ports:
       - "8080:8080"
     healthcheck:
@@ -57,6 +57,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=query-db
       - POSTGRES_USER=query-db
+      - POSTGRES_DB=query-db
 
   local-stack-aws:
     image: localstack/localstack:4.14
