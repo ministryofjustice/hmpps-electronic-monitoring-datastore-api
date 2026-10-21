@@ -3,9 +3,13 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.client
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.health.contributor.Health
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import reactor.core.publisher.Mono
 import software.amazon.awssdk.services.athena.AthenaClient
 import software.amazon.awssdk.services.athena.model.AthenaException
 import software.amazon.awssdk.services.athena.model.GetQueryExecutionRequest
@@ -18,6 +22,7 @@ import software.amazon.awssdk.services.athena.model.ResultConfiguration
 import software.amazon.awssdk.services.athena.model.ResultSet
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionResponse
+import software.amazon.awssdk.services.sts.model.StsException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.AthenaClientException
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.config.datastore.DatastoreProperties
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
@@ -31,6 +36,23 @@ class EmDatastoreClient(
 ) {
 
   private val log = LoggerFactory.getLogger(this::class.java)
+
+  fun ping(): Mono<Health> = try {
+    this.getQueryResult(AthenaQuery("SELECT 1", arrayOf()), false).hasRows()
+    Mono.just(Health.up().withDetail("HttpStatus", HttpStatus.OK).build())
+  } catch (ex: WebClientResponseException) {
+    Mono.just(
+      Health.down(ex).withDetail("body", ex.responseBodyAsString).withDetail("HttpStatus", ex.statusCode).build(),
+    )
+  } catch (ex: StsException) {
+    Mono.just(
+      Health.down(ex).withDetail("body", ex.localizedMessage).withDetail("HttpStatus", ex.statusCode()).build(),
+    )
+  } catch (ex: Exception) {
+    Mono.just(
+      Health.down(ex).build(),
+    )
+  }
 
   @Cacheable("athenaQueryExecutions")
   @Transactional

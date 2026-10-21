@@ -6,7 +6,6 @@ import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.dto.OrderSe
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.AthenaMapper
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilder
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.helpers.queryBuilders.SqlQueryBuilderBase
-import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.model.athena.AthenaQuery
 import kotlin.reflect.KClass
 
 abstract class AthenaRepository<T : Any>(
@@ -23,11 +22,6 @@ abstract class AthenaRepository<T : Any>(
     val queryExecutionId = athenaClient.getQueryExecutionId(athenaQuery.build(athenaClient.properties.database))
     val resultSet = athenaClient.getQueryResult(queryExecutionId, restricted)
     return mapTo(resultSet)
-  }
-
-  fun isValid(restricted: Boolean = false): Boolean {
-    val queryResult = athenaClient.getQueryResult(AthenaQuery("SELECT 1", arrayOf()), restricted)
-    return queryResult.hasRows()
   }
 
   fun startSearch(criteria: OrderSearchCriteria, restricted: Boolean = false): String {
