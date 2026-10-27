@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.12"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.14"
   kotlin("plugin.spring") version "2.4.21"
   kotlin("plugin.jpa") version "2.4.21"
   id("jacoco")
@@ -9,7 +9,7 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.3")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-webclient")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0")
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:3.0.3")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
@@ -22,8 +22,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-flyway")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.4.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.2")
-  implementation("software.amazon.awssdk:athena:2.57.3")
-  implementation("software.amazon.awssdk:sts:2.57.3")
+  implementation("software.amazon.awssdk:athena:2.57.4")
+  implementation("software.amazon.awssdk:sts:2.57.4")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
   implementation("org.json:json:20260814")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
