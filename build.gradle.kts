@@ -26,7 +26,7 @@ dependencies {
   implementation("software.amazon.awssdk:sts:2.57.8")
   implementation("io.zeko:zeko-sql-builder:1.5.6")
   constraints {
-    implementation("io.vertx:vertx-core:4.5.35") {
+    implementation("io.vertx:vertx-core:5.2.3") {
       because("previous versions have a vulnerability impacting this application")
     }
   }
