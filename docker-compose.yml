@@ -60,7 +60,7 @@ services:
       - POSTGRES_DB=query-db
 
   local-stack-aws:
-    image: localstack/localstack:stable
+    image: localstack/localstack:4
     container_name: local-stack-aws
     networks:
       - hmpps
