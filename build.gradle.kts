@@ -24,7 +24,14 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.2")
   implementation("software.amazon.awssdk:athena:2.57.8")
   implementation("software.amazon.awssdk:sts:2.57.8")
-  implementation("io.zeko:zeko-sql-builder:1.5.6")
+  implementation("io.zeko:zeko-sql-builder:1.5.6") {
+    exclude(group = "io.zeko.model")
+  }
+  constraints {
+    implementation("io.vertx:vertx-core:4.5.35") {
+      because("previous versions have a vulnerability impacting this application")
+    }
+  }
   implementation("org.json:json:20260814")
   implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.22.4")
