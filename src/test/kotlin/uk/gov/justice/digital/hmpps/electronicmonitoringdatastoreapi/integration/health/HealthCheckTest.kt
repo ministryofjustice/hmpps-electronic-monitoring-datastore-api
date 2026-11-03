@@ -2,12 +2,29 @@ package uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integratio
 
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.electronicmonitoringdatastoreapi.testutils.MockAthenaResultSetBuilder
 
 class HealthCheckTest : IntegrationTestBase() {
 
   @Test
   fun `Health page reports ok`() {
     stubPingWithResponse(200)
+
+    stubQueryExecution(
+      "123",
+      1,
+      "SUCCEEDED",
+      MockAthenaResultSetBuilder(
+        mapOf(
+          "id" to "varchar",
+        ),
+        arrayOf(
+          arrayOf(
+            "1",
+          ),
+        ),
+      ).toString(),
+    )
 
     webTestClient.get()
       .uri("/health")
